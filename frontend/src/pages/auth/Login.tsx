@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import React from 'react';
 
@@ -143,12 +143,12 @@ const Login = () => {
 
         <p className='mt-6 text-center text-[color:var(--text-tertiary)]'>
           Don't have an account?{' '}
-          <a
-            href='/register'
+          <Link
+            to='/register'
             className='font-semibold text-[color:var(--primary)] transition-colors'
           >
             Register here
-          </a>
+          </Link>
         </p>
       </div>
     </div>
