@@ -617,27 +617,19 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(
-    135deg,
-    var(--primary) 0%,
-    var(--primary-dark) 100%
-  );
+  background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-100) 100%);
   border-radius: 10px;
   border: 2px solid var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    135deg,
-    var(--primary-light) 0%,
-    var(--primary) 100%
-  );
+  background: linear-gradient(135deg, var(--gray-300) 0%, var(--gray-100) 100%);
 }
 
 /* Firefox scrollbar */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--primary) var(--bg-secondary);
+  scrollbar-color: var(--gray-300) var(--bg-secondary);
 }
 
 /* Leaflet Map Custom Styles */

@@ -62,12 +62,12 @@ const StudentMajors = () => {
                 className='cursor-pointer rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 transition-all duration-200 ease-in-out hover:translate-y-[-2px] hover:shadow-md hover:border-[color:var(--success)]'
               >
                 <div className='mb-2 flex items-center gap-2'>
-                  <FaBook className='text-lg text-[color:var(--success)]' />
+                  <FaBook className='text-lg text-[var(--primary-light)]' />
                   <h3 className='m-0 text-base font-semibold text-[color:var(--text-primary)]'>
                     {major._id}
                   </h3>
                 </div>
-                <div className='text-xl font-bold text-[color:var(--success)]'>
+                <div className='text-xl font-bold text-[var(--primary-light)]'>
                   {major.count} Alumni
                 </div>
               </div>

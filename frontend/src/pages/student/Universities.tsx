@@ -89,7 +89,7 @@ const StudentUniversities = () => {
                 className='cursor-pointer rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 transition-all duration-200 ease-in-out hover:translate-y-[-2px] hover:shadow-md hover:border-[#8884d8]'
               >
                 <div className='mb-2 flex items-center gap-2'>
-                  <FaUniversity className='text-lg text-[#8884d8]' />
+                  <FaUniversity className='text-lg text-[var(--primary-light)]' />
                   <h3 className='m-0 text-base font-semibold text-[color:var(--text-primary)]'>
                     {uni._id.name}
                   </h3>
@@ -97,7 +97,7 @@ const StudentUniversities = () => {
                 <div className='mb-2 text-xs text-[color:var(--text-secondary)]'>
                   {formatUniversityType(uni._id.type)}
                 </div>
-                <div className='text-xl font-bold text-[#8884d8]'>
+                <div className='text-xl font-bold text-[var(--primary-light)]'>
                   {uni.count} Alumni
                 </div>
               </div>

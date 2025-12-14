@@ -134,10 +134,10 @@ const Login = () => {
             disabled={loading}
             className='w-full rounded-lg px-4 py-3 font-semibold text-white transition-all enabled:hover:scale-[1.02] enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50'
             style={{
-              background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+              background: 'linear-gradient(135deg, var(--primary) 0%)',
             }}
           >
-            {loading ? 'Logging in...' : '🚀 Login'}
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
 

@@ -81,7 +81,11 @@ const Jurusan = ({ data, chartWidth }: JurusanProps) => {
                   labelStyle={{ color: 'var(--text-primary)' }}
                 />
                 <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
-                <Bar dataKey='count' fill='#2563eb' radius={[8, 8, 0, 0]} />
+                <Bar
+                  dataKey='count'
+                  fill='var(--gray-300)'
+                  radius={[8, 8, 0, 0]}
+                />
               </BarChart>
             </div>
           </div>

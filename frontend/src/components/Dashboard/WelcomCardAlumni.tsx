@@ -32,7 +32,7 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
       }}
     >
       <div className='flex items-center gap-4'>
-        <FaUser className='text-5xl text-[color:var(--primary)]' />
+        <FaUser className='text-5xl text-[color:var(--gray-300)]' />
         <div>
           <h2 className='mb-1 text-xl text-[color:var(--text-primary)]'>
             Selamat Datang, {user?.username || 'Alumni'}!
