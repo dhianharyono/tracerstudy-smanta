@@ -40,11 +40,13 @@ npm install -g vercel
 ### Langkah 2: Setup Backend Project
 
 1. Masuk ke folder `backend`:
+
    ```bash
    cd backend
    ```
 
 2. Login ke Vercel:
+
    ```bash
    vercel login
    ```
@@ -76,6 +78,7 @@ npm install -g vercel
    ```
 
    **Catatan**: Ganti dengan nilai yang sesuai:
+
    - `MONGODB_URI`: Connection string dari MongoDB Atlas
    - `JWT_SECRET`: String acak yang kuat (gunakan generator atau `openssl rand -base64 32`)
 
@@ -171,6 +174,7 @@ Atau push ke repository yang terhubung dengan Vercel (auto-deploy).
 ### Langkah 1: Setup Frontend Project
 
 1. Masuk ke folder `frontend`:
+
    ```bash
    cd frontend
    ```
@@ -286,42 +290,49 @@ import cors from 'cors';
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5173',
-  'https://your-frontend-domain.vercel.app'
+  'https://your-frontend-domain.vercel.app',
 ];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
 ```
 
 ## Troubleshooting
 
 ### Error: Module not found
+
 - Pastikan semua dependencies terinstall
 - Cek `package.json` dan pastikan semua package ada
 
 ### Error: Cannot connect to MongoDB
+
 - Cek MongoDB Atlas connection string
 - Pastikan IP whitelist sudah benar
 - Pastikan environment variable `MONGODB_URI` sudah di-set
 
 ### Error: CORS
+
 - Tambahkan frontend URL ke allowed origins di backend
 - Pastikan credentials di-set dengan benar
 
 ### Build Fails
+
 - Cek build logs di Vercel dashboard
 - Pastikan Node.js version sesuai (set di `package.json` dengan `engines`)
 - Pastikan semua environment variables sudah di-set
 
 ### API Routes Not Working
+
 - Pastikan routing di `vercel.json` sudah benar
 - Cek bahwa backend export default app
 - Pastikan path `/api/*` diarahkan ke backend
@@ -347,6 +358,3 @@ app.use(cors({
 - [Vercel Documentation](https://vercel.com/docs)
 - [Vercel Node.js Guide](https://vercel.com/docs/concepts/functions/serverless-functions/runtimes/node-js)
 - [MongoDB Atlas Setup](https://docs.atlas.mongodb.com/getting-started/)
-
-
-
