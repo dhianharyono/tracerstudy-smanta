@@ -5,7 +5,6 @@ import axios from 'axios';
 import { FaMapMarkerAlt, FaSpinner, FaUniversity } from 'react-icons/fa';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icons in React-Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -35,7 +34,6 @@ interface GeocodedUniversity extends UniversityData {
   lng?: number;
 }
 
-// Component to fit map bounds
 function MapBounds({ universities }: { universities: GeocodedUniversity[] }) {
   const map = useMap();
 
@@ -50,7 +48,6 @@ function MapBounds({ universities }: { universities: GeocodedUniversity[] }) {
       );
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
-      // Default to Indonesia center if no valid coordinates
       map.setView([-2.5489, 118.0149], 5);
     }
   }, [map, universities]);
@@ -63,17 +60,16 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   const [loading, setLoading] = useState(true);
   const [geocodingProgress, setGeocodingProgress] = useState(0);
 
-  // Custom marker icons based on university type
-  const getMarkerIcon = (type?: string, count: number) => {
+  const getMarkerIcon = (count: number, type?: string) => {
     const size = Math.min(30 + count * 2, 50);
-    let color = '#3388ff'; // Default blue
+    let color = '#3388ff';
 
     if (type === 'negeri') {
-      color = '#10b981'; // Green
+      color = '#10b981';
     } else if (type === 'swasta') {
-      color = '#8b5cf6'; // Purple
+      color = '#8b5cf6';
     } else if (type === 'kedinasan') {
-      color = '#ec4899'; // Pink
+      color = '#ec4899';
     }
 
     return L.divIcon({
@@ -98,12 +94,10 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
     });
   };
 
-  // Geocoding function using Nominatim (OpenStreetMap)
   const geocodeUniversity = async (
     universityName: string
   ): Promise<{ lat: number; lng: number } | null> => {
     try {
-      // Add "Indonesia" to improve geocoding accuracy
       const query = encodeURIComponent(`${universityName}, Indonesia`);
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=1`,
@@ -135,7 +129,6 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         const response = await axios.get<UniversityData[]>(apiEndpoint);
         const universityData = response.data;
 
-        // Geocode universities with rate limiting
         const geocodedUniversities: GeocodedUniversity[] = [];
         const total = universityData.length;
 
@@ -150,7 +143,6 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
             lng: coords?.lng,
           });
 
-          // Rate limiting: wait 1 second between requests to respect Nominatim's usage policy
           if (i < universityData.length - 1) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
           }
@@ -179,7 +171,6 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
       case 'negeri':
         return 'PTN';
       case 'swasta':
-        return 'PTS';
       case 'kedinasan':
         return 'Kedinasan';
       default:
@@ -272,7 +263,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
             <Marker
               key={index}
               position={[university.lat!, university.lng!]}
-              icon={getMarkerIcon(university.type, university.count)}
+              icon={getMarkerIcon(university.count, university.type)}
             >
               <Popup>
                 <div style={{ minWidth: '200px', maxWidth: '300px' }}>
@@ -482,4 +473,3 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 };
 
 export default InteractiveAlumniMap;
-
