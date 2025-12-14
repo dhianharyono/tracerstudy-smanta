@@ -1,30 +1,5 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import {
-  FaUsers,
-  FaBriefcase,
-  FaGraduationCap,
-  FaUniversity,
-  FaChartBar,
-  FaChartLine,
-  FaNewspaper,
-} from 'react-icons/fa';
-import { stripHtml } from '../../utils/helpers';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Cell,
-  LineChart,
-  Line,
-} from 'recharts';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
 import Statistic from '@/components/Dashboard/Statistic';
 import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
@@ -33,7 +8,6 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 
 const AdminDashboard = () => {
-  const navigate = useNavigate();
   const [stats, setStats] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,7 +66,6 @@ const AdminDashboard = () => {
       <div className='page-header'>
         <h1 className='page-title'>Dashboard Administrator</h1>
       </div>
-      {/* Statistic */}
       <Statistic stats={stats} />
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6'>
@@ -100,7 +73,6 @@ const AdminDashboard = () => {
         <News data={news} />
       </div>
 
-      {/* Interactive Alumni Map */}
       <div className='mb-6 md:mb-8 max-w-sm md:max-w-md lg:max-w-full'>
         <InteractiveAlumniMap apiEndpoint='/api/admin/alumni-map' />
       </div>
