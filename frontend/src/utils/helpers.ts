@@ -1,0 +1,33 @@
+export const formatUniversityType = (type: string): string => {
+  const typeMap: { [key: string]: string } = {
+    negeri: 'Perguruan Tinggi Negeri (PTN)',
+    swasta: 'Perguruan Tinggi Swasta (PTS)',
+    kedinasan: 'Kedinasan',
+  };
+  return typeMap[type?.toLowerCase()] || type || '-';
+};
+
+export const formatEducation = (education: string): string => {
+  if (!education) return '-';
+  return education.charAt(0).toUpperCase() + education.slice(1).toLowerCase();
+};
+
+export const formatAlumniStatus = (
+  isWorking: boolean,
+  isStudying: boolean
+): string => {
+  if (isWorking) {
+    return '💼 Bekerja';
+  }
+  if (isStudying) {
+    return '🎓 Kuliah';
+  }
+  return '⏸️ Tidak Aktif';
+};
+
+export const stripHtml = (html: string): string => {
+  if (!html) return '';
+  const tmp = document.createElement('DIV');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+};
