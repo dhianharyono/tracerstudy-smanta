@@ -81,7 +81,7 @@ const TahunLulus = ({ data, chartWidth }: TahunLulusProps) => {
                 <Line
                   type='monotone'
                   dataKey='count'
-                  stroke='#8b5cf6'
+                  stroke='#2563eb'
                   strokeWidth={2}
                 />
               </LineChart>

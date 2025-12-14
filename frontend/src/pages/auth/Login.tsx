@@ -137,7 +137,7 @@ const Login = () => {
               background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
             }}
           >
-            {loading ? '⏳ Logging in...' : '🚀 Login'}
+            {loading ? 'Logging in...' : '🚀 Login'}
           </button>
         </form>
 

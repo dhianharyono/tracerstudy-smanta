@@ -384,7 +384,9 @@ const AlumniQuestionnaire = () => {
         className='bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8'
       >
         <h2 className='mb-6 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-          <FaUser className='text-3xl text-indigo-200 dark:text-indigo-700' />
+          <FaUser
+            style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
+          />
           <span>Informasi Personal</span>
         </h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
@@ -519,7 +521,9 @@ const AlumniQuestionnaire = () => {
         {formData.profile.isStudying === 'ya' && (
           <>
             <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-              <GiGraduateCap className='text-3xl text-indigo-200 dark:text-indigo-700' />
+              <GiGraduateCap
+                style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
+              />
               <span>Informasi Perguruan Tinggi</span>
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
@@ -674,7 +678,9 @@ const AlumniQuestionnaire = () => {
         {formData.profile.isWorking === 'ya' && (
           <>
             <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-              <PiBagSimpleFill className='text-3xl text-indigo-200 dark:text-indigo-700' />
+              <PiBagSimpleFill
+                style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
+              />
               <span>Informasi Pekerjaan</span>
             </h2>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
@@ -713,7 +719,9 @@ const AlumniQuestionnaire = () => {
         )}
 
         <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-          <IoPhonePortrait className='text-3xl text-indigo-200 dark:text-indigo-700' />
+          <IoPhonePortrait
+            style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
+          />
           <span>Media Sosial</span>
         </h2>
         <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>

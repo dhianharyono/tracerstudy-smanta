@@ -108,15 +108,6 @@ const Layout = () => {
             <span>Kuesioner</span>
           </Link>
           <Link
-            to='/alumni/profile'
-            className={`nav-link ${
-              location.pathname === '/alumni/profile' ? 'active' : ''
-            }`}
-          >
-            <FaUser />
-            <span>Profil</span>
-          </Link>
-          <Link
             to='/alumni/news'
             className={`nav-link ${
               location.pathname.startsWith('/alumni/news') ? 'active' : ''
@@ -136,6 +127,15 @@ const Layout = () => {
               <span>Kritik & Saran</span>
             </Link>
           )}
+          <Link
+            to='/alumni/profile'
+            className={`nav-link ${
+              location.pathname === '/alumni/profile' ? 'active' : ''
+            }`}
+          >
+            <FaUser />
+            <span>Profil</span>
+          </Link>
         </>
       );
     }

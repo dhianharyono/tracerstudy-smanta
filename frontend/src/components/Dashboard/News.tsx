@@ -55,7 +55,7 @@ const News = ({ data }: NewsProps) => {
             ))}
             <button
               onClick={() => navigate('/student/news')}
-              className='btn btn-primary mt-2 w-full'
+              className='btn mt-2 w-full bg-gray-700'
             >
               Read More
             </button>
