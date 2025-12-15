@@ -28,14 +28,56 @@ import StudentNews from './pages/student/News';
 import StudentNewsDetail from './pages/student/NewsDetail';
 import PrivateRoute from './components/PrivateRoute';
 import Layout from './components/Layout';
+import { useAuth } from './contexts/AuthContext';
+
+const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
+  switch (role) {
+    case 'alumni':
+      return '/alumni';
+    case 'admin':
+      return '/admin';
+    case 'student':
+      return '/student';
+    default:
+      return '/login';
+  }
+};
+
+const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (user) {
+    return <Navigate to={getDashboardPath(user.role)} replace />;
+  }
+
+  return children;
+};
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
           
           {/* Alumni Routes */}
           <Route
