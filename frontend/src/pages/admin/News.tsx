@@ -22,25 +22,35 @@ const AdminNews = () => {
 
   const quillModules = {
     toolbar: [
-      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+      [{ size: ['small', false, 'large', 'huge'] }],
       ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-      [{ 'script': 'sub'}, { 'script': 'super' }],
-      [{ 'indent': '-1'}, { 'indent': '+1' }],
-      [{ 'color': [] }, { 'background': [] }],
-      [{ 'align': [] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ indent: '-1' }, { indent: '+1' }],
+      [{ color: [] }, { background: [] }],
+      [{ align: [] }],
       ['link', 'image'],
-      ['clean']
+      ['clean'],
     ],
   };
 
   const quillFormats = [
-    'header', 'size',
-    'bold', 'italic', 'underline', 'strike',
-    'list', 'bullet', 'script', 'indent',
-    'color', 'background', 'align',
-    'link', 'image'
+    'header',
+    'size',
+    'bold',
+    'italic',
+    'underline',
+    'strike',
+    'list',
+    'bullet',
+    'script',
+    'indent',
+    'color',
+    'background',
+    'align',
+    'link',
+    'image',
   ];
 
   useEffect(() => {
@@ -110,12 +120,11 @@ const AdminNews = () => {
 
   if (loading) {
     return (
-      <div
-        className='loading'
-        style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-      >
-        <FaSpinner className='spinner' />
-        <span>Loading...</span>
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }
@@ -146,13 +155,15 @@ const AdminNews = () => {
             </div>
             <div className='form-group'>
               <label>Konten *</label>
-              <div style={{ 
-                background: 'var(--bg-secondary)',
-                borderRadius: '8px',
-                marginBottom: '8px'
-              }}>
+              <div
+                style={{
+                  background: 'var(--bg-secondary)',
+                  borderRadius: '8px',
+                  marginBottom: '8px',
+                }}
+              >
                 <ReactQuill
-                  theme="snow"
+                  theme='snow'
                   value={formData.content}
                   onChange={(value) =>
                     setFormData({ ...formData, content: value })
@@ -305,7 +316,9 @@ const AdminNews = () => {
                       whiteSpace: 'nowrap',
                     }}
                   >
-                    {newsItem.content ? stripHtml(newsItem.content).substring(0, 100) : '-'}
+                    {newsItem.content
+                      ? stripHtml(newsItem.content).substring(0, 100)
+                      : '-'}
                   </td>
                   <td>
                     <span

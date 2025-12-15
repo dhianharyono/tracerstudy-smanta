@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaSpinner } from 'react-icons/fa';
 
 interface NewsDetail {
   _id: string;
@@ -48,8 +48,11 @@ const AlumniNewsDetail = () => {
 
   if (loading) {
     return (
-      <div className='loading text-[color:var(--text-secondary)]'>
-        ⏳ Loading...
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }

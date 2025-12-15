@@ -5,7 +5,7 @@ import {
   formatEducation,
   formatAlumniStatus,
 } from '../../utils/helpers';
-import { FaUser } from 'react-icons/fa';
+import { FaSpinner, FaUser } from 'react-icons/fa';
 import { GiGraduateCap } from 'react-icons/gi';
 import { PiBagSimpleFill } from 'react-icons/pi';
 import { IoPhonePortrait } from 'react-icons/io5';
@@ -30,7 +30,12 @@ const AlumniProfile = () => {
   }, []);
 
   if (loading) {
-    return <div className='loading'>⏳ Loading...</div>;
+    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+        <FaSpinner className='animate-spin text-xl' />
+        <span>Loading...</span>
+      </div>
+    </div>;
   }
 
   return (

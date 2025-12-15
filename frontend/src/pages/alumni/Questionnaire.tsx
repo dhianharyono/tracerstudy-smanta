@@ -333,9 +333,11 @@ const AlumniQuestionnaire = () => {
 
   if (initialLoading) {
     return (
-      <div className='flex items-center justify-center p-8 text-lg font-medium text-gray-700'>
-        <FaSpinner className='animate-spin mr-3 text-2xl' />
-        <span>Memuat...</span>
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }

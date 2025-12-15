@@ -17,7 +17,7 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaSpinner,
+  // FaSpinner,
 } from 'react-icons/fa';
 import './Layout.css';
 
@@ -26,7 +26,7 @@ const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -43,14 +43,14 @@ const Layout = () => {
   }, [location.pathname]);
 
   // Loading overlay on route change
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500); // Show loading for 500ms
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   const timer = setTimeout(() => {
+  //     setIsLoading(false);
+  //   }, 500); // Show loading for 500ms
 
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
+  //   return () => clearTimeout(timer);
+  // }, [location.pathname]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -336,13 +336,13 @@ const Layout = () => {
       <div className='main-content-wrapper'>
         <main className='main-content'>
           <div className='page-fade-in'>
-            {isLoading && (
+            {/* {isLoading && (
               <div className='loading-overlay'>
                 <div className='loading-spinner'>
                   <FaSpinner className='spinner' />
                 </div>
               </div>
-            )}
+            )} */}
             <Outlet />
           </div>
         </main>

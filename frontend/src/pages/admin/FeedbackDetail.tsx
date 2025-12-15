@@ -21,7 +21,9 @@ const AdminFeedbackDetail = () => {
       const response = await axios.get(`/api/admin/feedback/${id}`);
       setFeedback(response.data);
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal memuat detail feedback');
+      toast.error(
+        error.response?.data?.message || 'Gagal memuat detail feedback'
+      );
       navigate('/admin/feedback');
     } finally {
       setLoading(false);
@@ -57,12 +59,11 @@ const AdminFeedbackDetail = () => {
 
   if (loading) {
     return (
-      <div
-        className='loading'
-        style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-      >
-        <FaSpinner className='spinner' />
-        <span>Loading...</span>
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }
@@ -121,7 +122,9 @@ const AdminFeedbackDetail = () => {
             }}
           >
             <div>
-              <span style={{ color: 'var(--text-secondary)', fontSize: '14px' }}>
+              <span
+                style={{ color: 'var(--text-secondary)', fontSize: '14px' }}
+              >
                 Dari:{' '}
                 <strong style={{ color: 'var(--text-primary)' }}>
                   {feedback.user?.username || '-'}
@@ -200,9 +203,3 @@ const AdminFeedbackDetail = () => {
 };
 
 export default AdminFeedbackDetail;
-
-
-
-
-
-

@@ -6,6 +6,7 @@ import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
+import { FaSpinner } from 'react-icons/fa';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<any>(null);
@@ -50,7 +51,12 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) {
-    return <div className='loading'>Loading...</div>;
+    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+        <FaSpinner className='animate-spin text-xl' />
+        <span>Loading...</span>
+      </div>
+    </div>;
   }
 
   const universityTypeData = stats?.universityTypes

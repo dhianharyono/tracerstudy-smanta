@@ -126,9 +126,11 @@ const StudentDashboard = () => {
 
   if (loading) {
     return (
-      <div className='loading flex items-center gap-3'>
-        <FaSpinner className='spinner' />
-        <span>Loading...</span>
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
     );
   }

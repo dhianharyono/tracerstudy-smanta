@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { FaSpinner } from 'react-icons/fa';
 
 const StudentNewsDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +31,12 @@ const StudentNewsDetail = () => {
   };
 
   if (loading) {
-    return <div className='loading'>⏳ Loading...</div>;
+    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+        <FaSpinner className='animate-spin text-xl' />
+        <span>Loading...</span>
+      </div>
+    </div>;
   }
 
   if (!news) {

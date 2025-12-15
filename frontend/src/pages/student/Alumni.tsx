@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { BsInstagram } from 'react-icons/bs';
+import { FaSpinner } from 'react-icons/fa';
 
 const StudentAlumni = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -230,7 +231,12 @@ const StudentAlumni = () => {
   };
 
   if (loading) {
-    return <div className='loading'>Loading...</div>;
+    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+        <FaSpinner className='animate-spin text-xl' />
+        <span>Loading...</span>
+      </div>
+    </div>;
   }
 
   return (
