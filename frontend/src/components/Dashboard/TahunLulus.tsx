@@ -23,73 +23,62 @@ interface TahunLulusProps {
 }
 
 const TahunLulus = ({ data, chartWidth }: TahunLulusProps) => {
+  const yearStats = data?.yearStats || [];
+  const hasData = yearStats.length > 0;
+
   return (
-    <>
-      {data?.yearStats && data?.yearStats.length > 0 && (
-        <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
-          <h2
-            className='mb-6'
-            style={{
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '20px',
-            }}
-          >
-            <FaChartLine />
-            <span>Statistik Berdasarkan Tahun Lulus</span>
-          </h2>
-          <div className='chart-container'>
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                overflowX: 'auto',
-              }}
+    <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
+      <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
+        <FaChartLine />
+        <span>Statistik Berdasarkan Tahun Lulus</span>
+      </h2>
+      {!hasData ? (
+        <div className='h-[350px] content-center'>
+          <p className='text-center text-gray-500 py-10'>No data available</p>
+        </div>
+      ) : (
+        <div className='chart-container'>
+          <div className='w-full flex justify-center overflow-x-auto'>
+            <LineChart
+              width={Math.min(500, chartWidth)}
+              height={400}
+              data={yearStats}
             >
-              <LineChart
-                width={Math.min(500, chartWidth)}
-                height={400}
-                data={data?.yearStats}
-              >
-                <CartesianGrid
-                  strokeDasharray='3 3'
-                  stroke='rgba(148, 163, 184, 0.2)'
-                />
-                <XAxis
-                  dataKey='_id'
-                  stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)' }}
-                />
-                <YAxis
-                  stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)' }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '8px',
-                    boxShadow: 'var(--shadow-lg)',
-                    color: 'var(--text-primary)',
-                  }}
-                  labelStyle={{ color: 'var(--text-primary)' }}
-                />
-                <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
-                <Line
-                  type='monotone'
-                  dataKey='count'
-                  stroke='var(--gray-300)'
-                  strokeWidth={2}
-                />
-              </LineChart>
-            </div>
+              <CartesianGrid
+                strokeDasharray='3 3'
+                stroke='rgba(148, 163, 184, 0.2)'
+              />
+              <XAxis
+                dataKey='_id'
+                stroke='var(--text-tertiary)'
+                tick={{ fill: 'var(--text-secondary)' }}
+              />
+              <YAxis
+                stroke='var(--text-tertiary)'
+                tick={{ fill: 'var(--text-secondary)' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '8px',
+                  boxShadow: 'var(--shadow-lg)',
+                  color: 'var(--text-primary)',
+                }}
+                labelStyle={{ color: 'var(--text-primary)' }}
+              />
+              <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
+              <Line
+                type='monotone'
+                dataKey='count'
+                stroke='var(--gray-300)'
+                strokeWidth={2}
+              />
+            </LineChart>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

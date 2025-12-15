@@ -475,3 +475,4 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 export default InteractiveAlumniMap;
 
 
+

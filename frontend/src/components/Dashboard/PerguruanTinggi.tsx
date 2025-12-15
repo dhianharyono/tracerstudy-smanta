@@ -12,7 +12,63 @@ interface PerguruanTinggiProps {
   chartWidth: number;
 }
 
+const GRAY_COLOR = '#A0AEC0';
+
 const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
+  const totalValue = data.reduce((sum, item) => sum + item.value, 0);
+  const isAllZero = data.length > 0 && totalValue === 0;
+
+  let displayData = data;
+  let displayColors = data.map((_, index) => COLORS[index % COLORS.length]);
+  let isDisplayingZeroChart = false;
+
+  if (data.length === 0) {
+    return (
+      <div className='card max-w-sm md:max-w-md lg:max-w-full'>
+        <h2
+          style={{
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '20px',
+          }}
+        >
+          <FaUniversity />
+          <span>Daftar Perguruan Tinggi</span>
+        </h2>
+        <p
+          style={{
+            textAlign: 'center',
+            color: 'var(--gray-500)',
+            padding: '40px',
+          }}
+        >
+          No data available
+        </p>
+      </div>
+    );
+  }
+
+  if (isAllZero) {
+    displayData = [{ name: 'Semua Data Nol', value: 1 }];
+    displayColors = [GRAY_COLOR];
+    isDisplayingZeroChart = true;
+  }
+
+  const renderLabel = ({
+    name,
+    percent,
+  }: {
+    name: string;
+    percent: number;
+  }) => {
+    if (isDisplayingZeroChart) {
+      return name;
+    }
+    return `${name}: ${(percent * 100).toFixed(0)}%`;
+  };
+
   return (
     <div className='card max-w-sm md:max-w-md lg:max-w-full'>
       <h2
@@ -27,61 +83,47 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
         <FaUniversity />
         <span>Daftar Perguruan Tinggi</span>
       </h2>
-      {data.length > 0 ? (
-        <div className='chart-container'>
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              overflowX: 'auto',
-            }}
-          >
-            <PieChart width={Math.min(500, chartWidth)} height={350}>
-              <Pie
-                data={data}
-                cx={250}
-                cy={175}
-                labelLine={false}
-                label={({ name, percent }) =>
-                  `${name}: ${(percent * 100).toFixed(0)}%`
-                }
-                outerRadius={100}
-                fill='#8884d8'
-                dataKey='value'
-              >
-                {data.map((_, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '8px',
-                  boxShadow: 'var(--shadow-lg)',
-                  color: 'var(--text-primary)',
-                }}
-                labelStyle={{ color: 'var(--text-primary)' }}
-              />
-              <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
-            </PieChart>
-          </div>
-        </div>
-      ) : (
-        <p
+      <div className='chart-container'>
+        <div
           style={{
-            textAlign: 'center',
-            color: 'var(--gray-500)',
-            padding: '40px',
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            overflowX: 'auto',
           }}
         >
-          No data available
-        </p>
-      )}
+          <PieChart width={Math.min(500, chartWidth)} height={350}>
+            <Pie
+              data={displayData}
+              cx={250}
+              cy={175}
+              labelLine={false}
+              label={renderLabel}
+              outerRadius={100}
+              fill='#8884d8'
+              dataKey='value'
+            >
+              {displayData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={displayColors[index % displayColors.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-color)',
+                borderRadius: '8px',
+                boxShadow: 'var(--shadow-lg)',
+                color: 'var(--text-primary)',
+              }}
+              labelStyle={{ color: 'var(--text-primary)' }}
+            />
+            <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
+          </PieChart>
+        </div>
+      </div>
     </div>
   );
 };

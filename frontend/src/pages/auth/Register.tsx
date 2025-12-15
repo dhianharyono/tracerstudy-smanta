@@ -214,7 +214,7 @@ const Register = () => {
           </div>
           {error && <div className='error'>⚠️ {error}</div>}
           <button type='submit' className='btn btn-primary' disabled={loading}>
-            {loading ? '⏳ Registering...' : '🚀 Register'}
+            {loading ? 'Registering...' : 'Register'}
           </button>
         </form>
         <p>

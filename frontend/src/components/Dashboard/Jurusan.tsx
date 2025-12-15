@@ -23,75 +23,64 @@ interface JurusanProps {
 }
 
 const Jurusan = ({ data, chartWidth }: JurusanProps) => {
+  const majorStats = data?.majorStats || [];
+  const hasData = majorStats.length > 0;
+
   return (
-    <>
-      {data?.majorStats && data?.majorStats.length > 0 && (
-        <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
-          <h2
-            className='mb-6'
-            style={{
-              color: 'var(--text-primary)',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              fontSize: '20px',
-            }}
-          >
-            <FaChartBar />
-            <span>Statistik Jurusan</span>
-          </h2>
-          <div className='chart-container'>
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                justifyContent: 'center',
-                overflowX: 'auto',
-              }}
+    <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
+      <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
+        <FaChartBar />
+        <span>Statistik Jurusan</span>
+      </h2>
+      {!hasData ? (
+        <div className='h-[350px] content-center'>
+          <p className='text-center text-gray-500 py-10'>No data available</p>
+        </div>
+      ) : (
+        <div className='chart-container'>
+          <div className='w-full flex justify-center overflow-x-auto'>
+            <BarChart
+              width={Math.min(500, chartWidth)}
+              height={400}
+              data={majorStats}
             >
-              <BarChart
-                width={Math.min(500, chartWidth)}
-                height={400}
-                data={data?.majorStats}
-              >
-                <CartesianGrid
-                  strokeDasharray='3 3'
-                  stroke='rgba(148, 163, 184, 0.2)'
-                />
-                <XAxis
-                  dataKey='_id'
-                  stroke='var(--text-tertiary)'
-                  angle={-45}
-                  textAnchor='end'
-                  height={100}
-                  tick={{ fill: 'var(--text-secondary)' }}
-                />
-                <YAxis
-                  stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)' }}
-                />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'var(--bg-card)',
-                    border: '1px solid var(--border-color)',
-                    borderRadius: '8px',
-                    boxShadow: 'var(--shadow-lg)',
-                    color: 'var(--text-primary)',
-                  }}
-                  labelStyle={{ color: 'var(--text-primary)' }}
-                />
-                <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
-                <Bar
-                  dataKey='count'
-                  fill='var(--gray-300)'
-                  radius={[8, 8, 0, 0]}
-                />
-              </BarChart>
-            </div>
+              <CartesianGrid
+                strokeDasharray='3 3'
+                stroke='rgba(148, 163, 184, 0.2)'
+              />
+              <XAxis
+                dataKey='_id'
+                stroke='var(--text-tertiary)'
+                angle={-45}
+                textAnchor='end'
+                height={100}
+                tick={{ fill: 'var(--text-secondary)' }}
+              />
+              <YAxis
+                stroke='var(--text-tertiary)'
+                tick={{ fill: 'var(--text-secondary)' }}
+              />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border-color)',
+                  borderRadius: '8px',
+                  boxShadow: 'var(--shadow-lg)',
+                  color: 'var(--text-primary)',
+                }}
+                labelStyle={{ color: 'var(--text-primary)' }}
+              />
+              <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
+              <Bar
+                dataKey='count'
+                fill='var(--gray-300)'
+                radius={[8, 8, 0, 0]}
+              />
+            </BarChart>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -23,12 +23,12 @@ const News = ({ data }: NewsProps) => {
 
   return (
     <>
-      {data.length > 0 && (
-        <div className='card'>
-          <h2 className='mb-6 flex items-center gap-3 text-xl font-semibold text-[color:var(--text-primary)]'>
-            <FaNewspaper />
-            <span>News</span>
-          </h2>
+      <div className='card'>
+        <h2 className='mb-6 flex items-center gap-3 text-xl font-semibold text-[color:var(--text-primary)]'>
+          <FaNewspaper />
+          <span>News</span>
+        </h2>
+        {data.length > 0 ? (
           <div className='flex flex-col gap-4'>
             {data.slice(0, 2).map((newsItem: NewsData) => (
               <div
@@ -60,8 +60,20 @@ const News = ({ data }: NewsProps) => {
               Read More
             </button>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className='h-[350px] content-center'>
+            <p
+              style={{
+                textAlign: 'center',
+                color: 'var(--gray-500)',
+                padding: '40px',
+              }}
+            >
+              No data available
+            </p>
+          </div>
+        )}
+      </div>
     </>
   );
 };
