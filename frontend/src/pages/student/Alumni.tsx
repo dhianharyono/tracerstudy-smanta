@@ -179,11 +179,7 @@ const StudentAlumni = () => {
                   <td>{alum.job?.institution || '-'}</td>
                   <td>
                     {alum.socialMedia?.instagram ? (
-                      <a
-                        href={`mailto:${alum.socialMedia?.instagram}`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                      >
+                      <a href={alum.socialMedia?.instagram} target='_blank'>
                         <div className='flex items-center'>
                           <BsInstagram size={15} />
                         </div>

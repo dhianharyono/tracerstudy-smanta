@@ -436,6 +436,7 @@ const AlumniQuestionnaire = () => {
               className={baseInputClass}
               min='1900'
               max={new Date().getFullYear().toString()}
+              placeholder='Contoh: 2012'
             />
             {validationErrors['profile.entryYear'] && (
               <span className={validationErrorClass}>
@@ -454,6 +455,7 @@ const AlumniQuestionnaire = () => {
               className={baseInputClass}
               min='1900'
               max={new Date().getFullYear().toString()}
+              placeholder='Contoh: 2015'
             />
             {validationErrors['profile.graduationYear'] && (
               <span className={validationErrorClass}>
@@ -610,6 +612,7 @@ const AlumniQuestionnaire = () => {
                   className={baseInputClass}
                   min='1900'
                   max={new Date().getFullYear().toString()}
+                  placeholder='Contoh: 2015'
                 />
               </div>
               <div className={formGroupClass}>
@@ -733,6 +736,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.email}
               onChange={handleChange}
               className={baseInputClass}
+              placeholder='youremail@gmail.com'
             />
           </div>
           <div className={formGroupClass}>
@@ -743,6 +747,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.linkedin}
               onChange={handleChange}
               className={baseInputClass}
+              placeholder='https://www.linkedin.com/in/your-username'
             />
           </div>
           <div className={formGroupClass}>
@@ -753,6 +758,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.instagram}
               onChange={handleChange}
               className={baseInputClass}
+              placeholder='https://www.instagram.com/your-username'
             />
           </div>
         </div>
