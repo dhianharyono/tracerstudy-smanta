@@ -14,28 +14,32 @@ const AlumniProfile = () => {
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get('/api/alumni/profile');
-        setProfile(response.data);
-      } catch (error) {
-        console.error('Error fetching profile:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  console.log(loading);
 
+  useEffect(() => {
     fetchProfile();
   }, []);
 
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get('/api/alumni/profile');
+      setProfile(response.data);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (loading) {
-    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-        <FaSpinner className='animate-spin text-xl' />
-        <span>Loading...</span>
+    return (
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   return (

@@ -51,12 +51,14 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) {
-    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-        <FaSpinner className='animate-spin text-xl' />
-        <span>Loading...</span>
+    return (
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
       </div>
-    </div>;
+    );
   }
 
   const universityTypeData = stats?.universityTypes

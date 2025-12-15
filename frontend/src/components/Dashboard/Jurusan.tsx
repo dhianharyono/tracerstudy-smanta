@@ -41,7 +41,7 @@ const Jurusan = ({ data, chartWidth }: JurusanProps) => {
           <div className='w-full flex justify-center overflow-x-auto'>
             <BarChart
               width={Math.min(500, chartWidth)}
-              height={400}
+              height={470}
               data={majorStats}
             >
               <CartesianGrid

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaSave, FaPaperPlane, FaStar } from 'react-icons/fa';
+import { FaSave, FaPaperPlane, FaStar, FaSpinner } from 'react-icons/fa';
 import React from 'react';
 
 interface FeedbackState {
@@ -22,7 +22,8 @@ const AlumniFeedback = () => {
     rating: 0,
   });
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingSubmit, setLoadingSubmit] = useState(true);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -39,6 +40,8 @@ const AlumniFeedback = () => {
         if (axios.isAxiosError(error) && error.response?.status !== 404) {
           console.error('Error checking feedback:', error);
         }
+      } finally {
+        setLoading(false);
       }
     };
     checkFeedback();
@@ -57,7 +60,7 @@ const AlumniFeedback = () => {
       return;
     }
 
-    setLoading(true);
+    setLoadingSubmit(true);
     try {
       if (submitted) {
         await axios.put('/api/alumni/feedback', feedback);
@@ -98,6 +101,17 @@ const AlumniFeedback = () => {
       />
     );
   };
+
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -162,9 +176,9 @@ const AlumniFeedback = () => {
                   ? 'cursor-not-allowed opacity-50'
                   : 'cursor-pointer opacity-100'
               }`}
-              disabled={loading || feedback.rating === 0}
+              disabled={loadingSubmit || feedback.rating === 0}
             >
-              {loading ? (
+              {loadingSubmit ? (
                 <>
                   <span className='animate-spin'>⏳</span>
                   <span>Mengirim...</span>

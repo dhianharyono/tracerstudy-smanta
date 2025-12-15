@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaSave, FaPaperPlane } from 'react-icons/fa';
+import { FaSave, FaPaperPlane, FaSpinner } from 'react-icons/fa';
 import React from 'react';
 
 interface FeedbackState {
@@ -17,7 +17,8 @@ const StudentFeedback = () => {
     rating: 0,
   });
   const [hoveredRating, setHoveredRating] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingSubmit, setLoadingSubmit] = useState(true);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -35,6 +36,8 @@ const StudentFeedback = () => {
         if (axios.isAxiosError(error) && error.response?.status !== 404) {
           console.error('Error checking feedback:', error);
         }
+      } finally {
+        setLoading(false);
       }
     };
     checkFeedback();
@@ -53,7 +56,7 @@ const StudentFeedback = () => {
       return;
     }
 
-    setLoading(true);
+    setLoadingSubmit(true);
     try {
       if (submitted) {
         await axios.put('/api/student/feedback', feedback);
@@ -97,6 +100,17 @@ const StudentFeedback = () => {
       </span>
     );
   };
+
+  if (loading) {
+    return (
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -157,15 +171,15 @@ const StudentFeedback = () => {
             <button
               type='submit'
               className={`btn btn-primary ${
-                loading ? 'opacity-50 cursor-not-allowed' : ''
+                loadingSubmit ? 'opacity-50 cursor-not-allowed' : ''
               } ${
                 feedback.rating === 0
                   ? 'opacity-50 cursor-not-allowed'
                   : 'cursor-pointer'
               }`}
-              disabled={loading || feedback.rating === 0}
+              disabled={loadingSubmit || feedback.rating === 0}
             >
-              {loading ? (
+              {loadingSubmit ? (
                 <>
                   <span>⏳</span>
                   <span>Mengirim...</span>
