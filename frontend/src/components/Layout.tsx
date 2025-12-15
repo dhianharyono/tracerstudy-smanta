@@ -20,6 +20,7 @@ import {
   // FaSpinner,
 } from 'react-icons/fa';
 import './Layout.css';
+import { Analytics } from '@vercel/analytics/next';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -344,6 +345,7 @@ const Layout = () => {
               </div>
             )} */}
             <Outlet />
+            <Analytics />
           </div>
         </main>
       </div>
