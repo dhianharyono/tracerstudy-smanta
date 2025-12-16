@@ -17,17 +17,15 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  // FaSpinner,
 } from 'react-icons/fa';
 import './Layout.css';
-import { Analytics } from '@vercel/analytics/next';
+import Analytics from '@vercel/analytics';
 
 const Layout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  // const [isLoading, setIsLoading] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -42,16 +40,6 @@ const Layout = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
-
-  // Loading overlay on route change
-  // useEffect(() => {
-  //   setIsLoading(true);
-  //   const timer = setTimeout(() => {
-  //     setIsLoading(false);
-  //   }, 500); // Show loading for 500ms
-
-  //   return () => clearTimeout(timer);
-  // }, [location.pathname]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -84,6 +72,7 @@ const Layout = () => {
       }
     };
     checkFeedbackVisibility();
+    Analytics.inject();
   }, []);
 
   const getNavLinks = () => {
@@ -341,15 +330,7 @@ const Layout = () => {
       <div className='main-content-wrapper'>
         <main className='main-content'>
           <div className='page-fade-in'>
-            {/* {isLoading && (
-              <div className='loading-overlay'>
-                <div className='loading-spinner'>
-                  <FaSpinner className='spinner' />
-                </div>
-              </div>
-            )} */}
             <Outlet />
-            <Analytics />
           </div>
         </main>
       </div>
