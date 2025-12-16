@@ -92,7 +92,7 @@ const AdminFeedbackDetail = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/admin/feedback')}
@@ -101,7 +101,7 @@ const AdminFeedbackDetail = () => {
         >
           ← Kembali
         </button>
-        <h1 className='page-title'>Detail Kritik & Saran</h1>
+        <h1 className='text-xl md:text-2xl'>Detail Kritik & Saran</h1>
       </div>
 
       <div className='card'>

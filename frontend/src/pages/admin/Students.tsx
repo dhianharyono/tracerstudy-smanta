@@ -99,10 +99,13 @@ const AdminStudents = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Kelola Data Student</h1>
-        <button onClick={() => setShowForm(true)} className='btn btn-primary'>
+        <h1 className='text-xl md:text-2xl'>Kelola Data Student</h1>
+        <button
+          onClick={() => setShowForm(true)}
+          className='btn btn-primary mb-5'
+        >
           + Tambah Student
         </button>
       </div>

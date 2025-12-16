@@ -19,19 +19,17 @@ const WelcomeCard = ({ username }: { username: string }) => {
         }}
       >
         <FaGraduationCap
-          style={{ fontSize: '48px', color: 'var(--primary)' }}
+          className='text-4xl md:text-5xl'
+          style={{ color: 'var(--primary)' }}
         />
         <div>
-          <h2
-            style={{
-              fontSize: '20px',
-              marginBottom: '4px',
-              color: 'var(--text-primary)',
-            }}
-          >
+          <h2 className='mb-1 text-lg md:text-xl text-[color:var(--text-)]'>
             Selamat Datang, {username}!
           </h2>
-          <p style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}>
+          <p
+            className='text-xs md:text-sm'
+            style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}
+          >
             Jelajahi data alumni dan informasi terkini
           </p>
         </div>

@@ -125,9 +125,9 @@ const AdminFeedback = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Kritik & Saran</h1>
+        <h1 className='text-xl md:text-2xl'>Kritik & Saran</h1>
       </div>
 
       {/* Accumulated Rating Info */}
@@ -354,7 +354,7 @@ const AdminFeedback = () => {
             <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>
               Statistik Semua Bintang
             </h3>
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4'>
+            <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4'>
               {[5, 4, 3, 2, 1].map((rating) => {
                 const count = stats.ratings?.[rating] || 0;
                 const percentage =

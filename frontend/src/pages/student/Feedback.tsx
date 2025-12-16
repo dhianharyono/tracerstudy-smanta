@@ -110,7 +110,7 @@ const StudentFeedback = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <h1 className='text-xl md:text-2xl'>Kritik & Saran</h1>
       </div>

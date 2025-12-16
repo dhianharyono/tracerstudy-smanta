@@ -56,28 +56,23 @@ const StudentNewsDetail = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/student/news')}
-          className='btn btn-secondary mr-4'
+          className='btn btn-secondary mr-4 mb-5'
         >
           ← Kembali
         </button>
-        <h1 className='page-title'>{news.title}</h1>
+        <h1 className='text-lg md:text-xl'>{news.title}</h1>
       </div>
 
       <div className='card'>
-        <div
-          className='mb-6 pb-4'
-          style={{
-            borderBottom: '1px solid var(--border-color)',
-          }}
-        >
-          <div className='flex justify-center items-center flex-wrap gap-3'>
+        <div className='mb-6 border-b border-[color:var(--border-color)] pb-4'>
+          <div className='flex flex-wrap items-center justify-between gap-3'>
             <div>
               <span className='text-sm text-[var(--text-secondary)]'>
-                Oleh:{' '}
+                Oleh:
                 <strong className='text[var(--text-primary)]'>
                   {news.author?.username || 'Admin'}
                 </strong>
@@ -132,6 +127,7 @@ const StudentNewsDetail = () => {
           .ql-editor p {
             margin: 12px 0;
           }
+          text-xs md:text-sm
         `}</style>
       </div>
     </div>

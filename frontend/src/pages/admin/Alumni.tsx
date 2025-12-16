@@ -91,9 +91,9 @@ const AdminAlumni = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Data Alumni</h1>
+        <h1 className='text-xl md:text-2xl'>Data Alumni</h1>
       </div>
 
       <div className='card mb-6 max-w-sm md:max-w-md lg:max-w-full'>

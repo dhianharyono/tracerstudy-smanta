@@ -50,9 +50,9 @@ const StudentUniversities = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Perguruan Tinggi</h1>
+        <h1 className='text-xl md:text-2xl'>Perguruan Tinggi</h1>
       </div>
       <div className='card'>
         <div className='form-group w-full max-w-xs'>
@@ -70,7 +70,7 @@ const StudentUniversities = () => {
       </div>
 
       <div className='card mt-6'>
-        <h2 className='mb-6 flex items-center gap-3 text-xl font-semibold'>
+        <h2 className='mb-6 text-lg md:text-xl flex items-center gap-3 font-semibold'>
           <FaUniversity />
           <span>Daftar Perguruan Tinggi</span>
         </h2>

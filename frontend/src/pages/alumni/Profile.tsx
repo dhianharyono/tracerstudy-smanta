@@ -43,7 +43,7 @@ const AlumniProfile = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <h1 className='text-xl md:text-2xl'>Profil Saya</h1>
       </div>
@@ -119,15 +119,14 @@ const AlumniProfile = () => {
 
       {profile?.university && (
         <div className='card'>
-          <h2 className='mb-6 flex items-center gap-3 text-2xl'>
-            <GiGraduateCap className='text-[30px] text-purple-300/20' />
+          <h2 className='mb-6 flex items-center gap-3 text-lg md:text-xl'>
+            <GiGraduateCap className='text-[25px] text-purple-300/20' />
             <span>Perguruan Tinggi</span>
           </h2>
           <div className='grid grid-cols-profile-auto gap-5'>
             <div
               className='p-4 rounded-xl border-2 border-solid border-purple-300/20'
               style={{
-                // Kelas kustom untuk gradient mungkin lebih baik, tapi untuk konversi langsung, inline style gradient dipertahankan
                 background:
                   'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
               }}
@@ -190,7 +189,7 @@ const AlumniProfile = () => {
 
       {profile?.job && (
         <div className='card'>
-          <h2 className='mb-6 flex items-center gap-3 text-2xl'>
+          <h2 className='mb-6 flex items-center gap-3 text-lg md:text-xl'>
             <PiBagSimpleFill className='text-[25px] text-purple-300/20' />
             <span>Pekerjaan</span>
           </h2>
@@ -248,8 +247,8 @@ const AlumniProfile = () => {
           profile.socialMedia.linkedin ||
           profile.socialMedia.instagram) && (
           <div className='card'>
-            <h2 className='mb-6 flex items-center gap-3 text-2xl'>
-              <IoPhonePortrait className='text-[30px] text-purple-300/20' />
+            <h2 className='mb-6 flex items-center gap-3 text-lg md:text-xl'>
+              <IoPhonePortrait className='text-[25px] text-purple-300/20' />
               <span>Media Sosial</span>
             </h2>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5'>

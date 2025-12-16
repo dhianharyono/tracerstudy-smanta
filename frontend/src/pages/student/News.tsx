@@ -52,15 +52,15 @@ const StudentNews = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>News</h1>
+        <h1 className='text-xl md:text-2xl'>News</h1>
       </div>
 
       {news.length === 0 ? (
         <div className='card'>
-          <div className='p-10 text-center text-[color:var(--text-tertiary)]'>
-            <div className='mb-4 text-6xl'>📰</div>
+          <div className='p-10 text-xs md:text-sm text-center text-[color:var(--text-tertiary)]'>
+            <div className='mb-4 text-3xl sm:text-6xl'>📰</div>
             <p>Belum ada news yang tersedia</p>
           </div>
         </div>
@@ -72,10 +72,10 @@ const StudentNews = () => {
               onClick={() => handleNewsClick(newsItem._id)}
               className='cursor-pointer rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 transition-all duration-200 ease-in-out hover:translate-y-[-4px] hover:shadow-lg hover:bg-[color:var(--bg-card-hover)]'
             >
-              <h3 className='mb-3 text-xl font-semibold leading-snug text-[color:var(--text-primary)]'>
+              <h3 className='mb-3 text-sm md:text-xl font-semibold leading-snug text-[color:var(--text-primary)]'>
                 {newsItem.title}
               </h3>
-              <p className='mb-4 text-sm leading-relaxed text-[color:var(--text-secondary)] line-clamp-3'>
+              <p className='mb-4 text-xs md:text-sm leading-relaxed text-[color:var(--text-secondary)] line-clamp-3'>
                 {(() => {
                   const plainText = stripHtml(newsItem.content || '');
                   return plainText.length > 90

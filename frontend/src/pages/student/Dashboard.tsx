@@ -136,9 +136,9 @@ const StudentDashboard = () => {
   }
 
   return (
-    <div className='w-full'>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='relative flex justify-between'>
-        <h1 className='page-title'>Dashboard</h1>
+        <h1 className='text-xl md:text-2xl'>Dashboard</h1>
         <Notifications
           notificationRef={notificationRef}
           isNotificationOpen={isNotificationOpen}

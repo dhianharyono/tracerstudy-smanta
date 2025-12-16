@@ -130,10 +130,13 @@ const AdminNews = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Kelola News</h1>
-        <button onClick={() => setShowForm(true)} className='btn btn-primary'>
+        <h1 className='text-xl md:text-2xl'>Kelola News</h1>
+        <button
+          onClick={() => setShowForm(true)}
+          className='btn btn-primary mb-5'
+        >
           + Tambah News
         </button>
       </div>
@@ -364,9 +367,7 @@ const AdminNews = () => {
                     {new Date(newsItem.createdAt).toLocaleDateString('id-ID')}
                   </td>
                   <td>
-                    <div
-                      style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}
-                    >
+                    <div style={{ display: 'flex', gap: '5px' }}>
                       <button
                         onClick={() => navigate(`/admin/news/${newsItem._id}`)}
                         className='btn btn-secondary'
@@ -378,7 +379,6 @@ const AdminNews = () => {
                           gap: '4px',
                         }}
                       >
-                        <FaEye />
                         View
                       </button>
                       <button

@@ -63,7 +63,7 @@ const AdminNewsDetail = () => {
   }
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/admin/news')}
@@ -72,7 +72,7 @@ const AdminNewsDetail = () => {
         >
           ← Kembali
         </button>
-        <h1 className='page-title'>{news.title}</h1>
+        <h1 className='text-xl md:text-2xl'>{news.title}</h1>
       </div>
 
       <div className='card'>

@@ -82,19 +82,20 @@ const AlumniNewsDetail = () => {
     [&_ol]:list-decimal [&_ul]:list-disc [&_ol]:pl-6 [&_ul]:pl-6 [&_ol]:my-3 [&_ul]:my-3
     [&_h1]:mt-4 [&_h2]:mt-4 [&_h3]:mt-4 [&_h4]:mt-4 [&_h5]:mt-4 [&_h6]:mt-4 [&_h1]:mb-2 [&_h2]:mb-2 [&_h3]:mb-2 [&_h4]:mb-2 [&_h5]:mb-2 [&_h6]:mb-2
     [&_p]:my-3
+    text-xs md:text-sm
   `;
 
   return (
-    <div>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/alumni/news')}
-          className='btn btn-secondary mr-4 flex items-center gap-2'
+          className='btn btn-secondary mr-4 flex items-center gap-2 mb-5'
         >
           <FaArrowLeft />
           <span>Kembali</span>
         </button>
-        <h1 className='page-title'>{news.title}</h1>
+        <h1 className='text-lg md:text-xl'>{news.title}</h1>
       </div>
 
       <div className='card'>
@@ -102,13 +103,13 @@ const AlumniNewsDetail = () => {
           <div className='flex flex-wrap items-center justify-between gap-3'>
             <div>
               <span className='text-sm text-[color:var(--text-secondary)]'>
-                Oleh:{' '}
+                Oleh:
                 <strong className='text-[color:var(--text-primary)]'>
                   {news.author?.username || 'Admin'}
                 </strong>
               </span>
             </div>
-            <div className='text-sm text-[color:var(--text-tertiary)]'>
+            <div className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>
               {new Date(news.createdAt).toLocaleDateString('id-ID', {
                 year: 'numeric',
                 month: 'long',

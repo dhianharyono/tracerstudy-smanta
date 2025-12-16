@@ -70,9 +70,9 @@ const AdminDashboard = () => {
     : [];
 
   return (
-    <div className='w-full'>
+    <div className='p-4 sm:p-6 lg:p-8'>
       <div className='page-header'>
-        <h1 className='page-title'>Dashboard Administrator</h1>
+        <h1 className='text-xl md:text-2xl'>Dashboard Administrator</h1>
       </div>
       <Statistic stats={stats} />
 
