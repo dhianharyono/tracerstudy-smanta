@@ -155,14 +155,14 @@ const AlumniDashboard = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='relative flex justify-between'>
         <h1 className='text-xl md:text-2xl'>Dashboard Alumni</h1>
-        <Notifications
+        {/* <Notifications
           notificationRef={notificationRef}
           isNotificationOpen={isNotificationOpen}
           setIsNotificationOpen={(e) => setIsNotificationOpen(e)}
           unreadNewsCount={unreadNewsCount}
           unreadNews={unreadNews}
           handleNewsClick={(e) => handleNewsClick(e)}
-        />
+        /> */}
       </div>
 
       <WelcomCardAlumni
