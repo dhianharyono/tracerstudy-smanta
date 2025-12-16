@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { FaSpinner } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
@@ -10,17 +10,17 @@ import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
-import Notifications from '@/components/Dashboard/Notifications';
+// import Notifications from '@/components/Dashboard/Notifications';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [stats, setStats] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [chartWidth, setChartWidth] = useState(900);
-  const [unreadNewsCount, setUnreadNewsCount] = useState(0);
-  const [unreadNews, setUnreadNews] = useState<any[]>([]);
+  // const [unreadNewsCount, setUnreadNewsCount] = useState(0);
+  // const [unreadNews, setUnreadNews] = useState<any[]>([]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -37,9 +37,9 @@ const StudentDashboard = () => {
         setStats(statsRes.data);
         setNews(newsRes.data);
 
-        const unread = newsRes.data.filter((item: any) => !item.isRead);
-        setUnreadNewsCount(unread.length || 0);
-        setUnreadNews(unread);
+        // const unread = newsRes.data.filter((item: any) => !item.isRead);
+        // setUnreadNewsCount(unread.length || 0);
+        // setUnreadNews(unread);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -49,22 +49,22 @@ const StudentDashboard = () => {
 
     fetchData();
 
-    const interval = setInterval(() => {
-      axios
-        .get('/api/student/news/unread-count')
-        .then((res) => setUnreadNewsCount(res.data.count || 0))
-        .catch(() => {});
+    // const interval = setInterval(() => {
+    //   axios
+    //     .get('/api/student/news/unread-count')
+    //     .then((res) => setUnreadNewsCount(res.data.count || 0))
+    //     .catch(() => {});
 
-      axios
-        .get('/api/student/news')
-        .then((res) => {
-          const unread = res.data.filter((item: any) => !item.isRead);
-          setUnreadNews(unread);
-        })
-        .catch(() => {});
-    }, 30000);
+    //   axios
+    //     .get('/api/student/news')
+    //     .then((res) => {
+    //       const unread = res.data.filter((item: any) => !item.isRead);
+    //       setUnreadNews(unread);
+    //     })
+    //     .catch(() => {});
+    // }, 30000);
 
-    return () => clearInterval(interval);
+    // return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -86,18 +86,18 @@ const StudentDashboard = () => {
     };
   }, [isNotificationOpen]);
 
-  const handleNewsClick = async (newsId: string) => {
-    try {
-      await axios.post(`/api/student/news/${newsId}/read`);
-      setUnreadNewsCount((prev) => Math.max(0, prev - 1));
-      setUnreadNews((prev) => prev.filter((item) => item._id !== newsId));
-      setIsNotificationOpen(false);
-      navigate(`/student/news/${newsId}`);
-    } catch (error) {
-      console.error('Error marking news as read:', error);
-      navigate(`/student/news/${newsId}`);
-    }
-  };
+  // const handleNewsClick = async (newsId: string) => {
+  //   try {
+  //     await axios.post(`/api/student/news/${newsId}/read`);
+  //     setUnreadNewsCount((prev) => Math.max(0, prev - 1));
+  //     setUnreadNews((prev) => prev.filter((item) => item._id !== newsId));
+  //     setIsNotificationOpen(false);
+  //     navigate(`/student/news/${newsId}`);
+  //   } catch (error) {
+  //     console.error('Error marking news as read:', error);
+  //     navigate(`/student/news/${newsId}`);
+  //   }
+  // };
 
   useEffect(() => {
     const updateChartWidth = () => {
