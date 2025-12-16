@@ -26,23 +26,27 @@ const Jurusan = ({ data, chartWidth }: JurusanProps) => {
   const majorStats = data?.majorStats || [];
   const hasData = majorStats.length > 0;
 
+  const responsiveChartWidth = Math.min(350, chartWidth);
+  const chartHeight = 470;
+
   return (
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
       <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
         <FaChartBar />
-        <span>Statistik Jurusan</span>
+        <span>Statistik Jurusan</span> 
       </h2>
       {!hasData ? (
         <div className='h-[350px] content-center'>
-          <p className='text-center text-gray-500 py-10'>No data available</p>
+          <p className='text-center text-gray-500 py-10'>No data available</p> 
         </div>
       ) : (
         <div className='chart-container'>
-          <div className='w-full flex justify-center overflow-x-auto'>
+          <div className='w-full flex justify-center'>
             <BarChart
-              width={Math.min(500, chartWidth)}
-              height={470}
+              width={responsiveChartWidth}
+              height={chartHeight}
               data={majorStats}
+              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid
                 strokeDasharray='3 3'

@@ -7,7 +7,7 @@ const AdminReports = () => {
   const [reportType, setReportType] = useState('');
   const [reportData, setReportData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [loadingGenerate, setLoadingGenerate] = useState(true);
+  const [loadingGenerate, setLoadingGenerate] = useState(false);
 
   useEffect(() => {
     setLoading(true);

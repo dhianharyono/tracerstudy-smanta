@@ -45,79 +45,29 @@ const AlumniProfile = () => {
   return (
     <div>
       <div className='page-header'>
-        <h1 className='page-title'>Profil Saya</h1>
+        <h1 className='text-xl md:text-2xl'>Profil Saya</h1>
       </div>
 
       <div className='card'>
-        <h2
-          style={{
-            marginBottom: '24px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-          }}
-        >
-          <FaUser
-            style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
-          />
+        <h2 className='mb-6 flex items-center gap-3 text-lg md:text-xl'>
+          <FaUser className='text-[25px] text-purple-300/20' />
           <span>Informasi Personal</span>
         </h2>
         <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-5'>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Nama Lengkap
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {profile?.profile?.fullName || '-'}
             </div>
           </div>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Jenis Kelamin
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {profile?.profile?.gender === 'male'
                 ? 'Laki-laki'
                 : profile?.profile?.gender === 'female'
@@ -125,119 +75,39 @@ const AlumniProfile = () => {
                 : '-'}
             </div>
           </div>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Tahun Masuk SMA
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {profile?.profile?.entryYear || '-'}
             </div>
           </div>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Tahun Lulus SMA
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {profile?.profile?.graduationYear || '-'}
             </div>
           </div>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Pendidikan Terakhir
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {formatEducation(profile?.profile?.lastEducation || '')}
             </div>
           </div>
-          <div
-            style={{
-              padding: '16px',
-              background: 'var(--bg-tertiary)',
-              borderRadius: '12px',
-              border: '2px solid rgba(102, 126, 234, 0.2)',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '12px',
-                color: 'var(--text-tertiary)',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-              }}
-            >
+
+          <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+            <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
               Status
             </div>
-            <div
-              style={{
-                fontSize: '18px',
-                fontWeight: '600',
-                color: 'var(--text-primary)',
-              }}
-            >
+            <div className='text-sm md:text-lg font-semibold text-primary'>
               {formatAlumniStatus(
                 profile?.profile?.isWorking || false,
                 profile?.profile?.isStudying || false
@@ -249,143 +119,68 @@ const AlumniProfile = () => {
 
       {profile?.university && (
         <div className='card'>
-          <h2
-            style={{
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <GiGraduateCap
-              style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
-            />
+          <h2 className='mb-6 flex items-center gap-3 text-2xl'>
+            <GiGraduateCap className='text-[30px] text-purple-300/20' />
             <span>Perguruan Tinggi</span>
           </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '20px',
-            }}
-          >
+          <div className='grid grid-cols-profile-auto gap-5'>
             <div
+              className='p-4 rounded-xl border-2 border-solid border-purple-300/20'
               style={{
-                padding: '16px',
+                // Kelas kustom untuk gradient mungkin lebih baik, tapi untuk konversi langsung, inline style gradient dipertahankan
                 background:
                   'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(102, 126, 234, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Nama Kampus
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.university.name || '-'}
               </div>
             </div>
+
             <div
+              className='p-4 rounded-xl border-2 border-solid border-purple-300/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(102, 126, 234, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Jenis
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {formatUniversityType(profile.university.type || '')}
               </div>
             </div>
+
             <div
+              className='p-4 rounded-xl border-2 border-solid border-purple-300/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(102, 126, 234, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Tahun Masuk
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.university.entryYear || '-'}
               </div>
             </div>
+
             <div
+              className='p-4 rounded-xl border-2 border-solid border-purple-300/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(102, 126, 234, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Jurusan
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.university.major || '-'}
               </div>
             </div>
@@ -395,113 +190,52 @@ const AlumniProfile = () => {
 
       {profile?.job && (
         <div className='card'>
-          <h2
-            style={{
-              marginBottom: '24px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-            }}
-          >
-            <PiBagSimpleFill
-              style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
-            />
+          <h2 className='mb-6 flex items-center gap-3 text-2xl'>
+            <PiBagSimpleFill className='text-[25px] text-purple-300/20' />
             <span>Pekerjaan</span>
           </h2>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '20px',
-            }}
-          >
+          <div className='grid grid-cols-profile-auto gap-5'>
             <div
+              className='p-4 rounded-xl border-2 border-solid border-amber-500/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(245, 158, 11, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Posisi
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.job.position || '-'}
               </div>
             </div>
+
             <div
+              className='p-4 rounded-xl border-2 border-solid border-amber-500/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(245, 158, 11, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Instansi
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.job.institution || '-'}
               </div>
             </div>
+
             <div
+              className='p-4 rounded-xl border-2 border-solid border-amber-500/20'
               style={{
-                padding: '16px',
                 background:
                   'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)',
-                borderRadius: '12px',
-                border: '2px solid rgba(245, 158, 11, 0.2)',
               }}
             >
-              <div
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.5px',
-                }}
-              >
+              <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                 Nama Pekerjaan
               </div>
-              <div
-                style={{
-                  fontSize: '18px',
-                  fontWeight: '600',
-                  color: 'var(--text-primary)',
-                }}
-              >
+              <div className='text-sm md:text-lg font-semibold text-primary'>
                 {profile.job.jobTitle || '-'}
               </div>
             </div>
@@ -514,72 +248,24 @@ const AlumniProfile = () => {
           profile.socialMedia.linkedin ||
           profile.socialMedia.instagram) && (
           <div className='card'>
-            <h2
-              style={{
-                marginBottom: '24px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-              }}
-            >
-              <IoPhonePortrait
-                style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
-              />
+            <h2 className='mb-6 flex items-center gap-3 text-2xl'>
+              <IoPhonePortrait className='text-[30px] text-purple-300/20' />
               <span>Media Sosial</span>
             </h2>
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5'>
               {profile.socialMedia.email && (
-                <div
-                  style={{
-                    padding: '16px',
-                    background: 'var(--bg-tertiary)',
-                    borderRadius: '12px',
-                    border: '2px solid rgba(102, 126, 234, 0.2)',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: 'var(--text-tertiary)',
-                      marginBottom: '8px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
+                <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+                  <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                     Email
                   </div>
-                  <div
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: '600',
-                      color: 'var(--text-primary)',
-                      textDecoration: 'none',
-                      wordBreak: 'break-all',
-                      overflowWrap: 'break-word',
-                    }}
-                  >
+                  <div className='text-sm md:text-lg font-semibold text-primary break-all'>
                     {profile.socialMedia.email}
                   </div>
                 </div>
               )}
               {profile.socialMedia.linkedin && (
-                <div
-                  style={{
-                    padding: '16px',
-                    background: 'var(--bg-tertiary)',
-                    borderRadius: '12px',
-                    border: '2px solid rgba(102, 126, 234, 0.2)',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: 'var(--text-tertiary)',
-                      marginBottom: '8px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
+                <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+                  <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                     LinkedIn
                   </div>
                   <a
@@ -590,37 +276,15 @@ const AlumniProfile = () => {
                     }
                     target='_blank'
                     rel='noopener noreferrer'
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: '600',
-                      color: 'var(--primary)',
-                      textDecoration: 'none',
-                      wordBreak: 'break-all',
-                      overflowWrap: 'break-word',
-                    }}
+                    className='text-sm md:text-lg font-semibold text-primary no-underline break-all'
                   >
                     {profile.socialMedia.linkedin}
                   </a>
                 </div>
               )}
               {profile.socialMedia.instagram && (
-                <div
-                  style={{
-                    padding: '16px',
-                    background: 'var(--bg-tertiary)',
-                    borderRadius: '12px',
-                    border: '2px solid rgba(102, 126, 234, 0.2)',
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '12px',
-                      color: 'var(--text-tertiary)',
-                      marginBottom: '8px',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.5px',
-                    }}
-                  >
+                <div className='p-4 bg-tertiary rounded-xl border-2 border-solid border-purple-300/20'>
+                  <div className='text-[10px] md:text-xs text-tertiary mb-2 uppercase tracking-wider'>
                     Instagram
                   </div>
                   <a
@@ -634,14 +298,7 @@ const AlumniProfile = () => {
                     }
                     target='_blank'
                     rel='noopener noreferrer'
-                    style={{
-                      fontSize: '18px',
-                      fontWeight: '600',
-                      color: 'var(--primary)',
-                      textDecoration: 'none',
-                      wordBreak: 'break-all',
-                      overflowWrap: 'break-word',
-                    }}
+                    className='text-sm md:text-lg font-semibold text-primary no-underline break-all'
                   >
                     {profile.socialMedia.instagram}
                   </a>

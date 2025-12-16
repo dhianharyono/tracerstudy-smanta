@@ -23,7 +23,7 @@ const AlumniFeedback = () => {
   });
   const [hoveredRating, setHoveredRating] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadingSubmit, setLoadingSubmit] = useState(true);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const AlumniFeedback = () => {
         onClick={() => handleRatingClick(index)}
         onMouseEnter={() => setHoveredRating(index)}
         onMouseLeave={() => setHoveredRating(0)}
-        className={`cursor-pointer text-4xl transition-all duration-200 ${colorClass}`}
+        className={`cursor-pointer text-xl md:text-2xl lg:text-3xl transition-all duration-200 ${colorClass}`}
       />
     );
   };
@@ -116,12 +116,12 @@ const AlumniFeedback = () => {
   return (
     <div>
       <div className='page-header'>
-        <h1 className='page-title'>Kritik & Saran</h1>
+        <h1 className='text-xl md:text-2xl'>Kritik & Saran</h1>
       </div>
 
       <div className='card'>
         <div className='mb-6'>
-          <h2 className='mb-2 text-xl text-[color:var(--text-primary)]'>
+          <h2 className='mb-2 text-lg md:text-xl text-[color:var(--text-primary)]'>
             Berikan Rating untuk Website
           </h2>
           <p className='text-sm text-[color:var(--text-secondary)]'>
@@ -180,7 +180,6 @@ const AlumniFeedback = () => {
             >
               {loadingSubmit ? (
                 <>
-                  <span className='animate-spin'>⏳</span>
                   <span>Mengirim...</span>
                 </>
               ) : submitted ? (

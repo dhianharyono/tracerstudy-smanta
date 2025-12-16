@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaSave, FaPaperPlane, FaSpinner } from 'react-icons/fa';
+import { FaSave, FaPaperPlane, FaSpinner, FaStar } from 'react-icons/fa';
 import React from 'react';
 
 interface FeedbackState {
@@ -18,7 +18,7 @@ const StudentFeedback = () => {
   });
   const [hoveredRating, setHoveredRating] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [loadingSubmit, setLoadingSubmit] = useState(true);
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -85,19 +85,16 @@ const StudentFeedback = () => {
 
   const renderStar = (index: number) => {
     const isFilled = index <= (hoveredRating || feedback.rating);
-    const starColor = isFilled ? '#fbbf24' : '#6b7280';
+    const colorClass = isFilled ? 'text-yellow-400' : 'text-gray-400';
 
     return (
-      <span
+      <FaStar
         key={index}
         onClick={() => handleRatingClick(index)}
         onMouseEnter={() => setHoveredRating(index)}
         onMouseLeave={() => setHoveredRating(0)}
-        className='cursor-pointer text-4xl transition-all duration-200 inline-block'
-        style={{ color: starColor }}
-      >
-        ★
-      </span>
+        className={`cursor-pointer text-xl md:text-2xl lg:text-3xl transition-all duration-200 ${colorClass}`}
+      />
     );
   };
 
@@ -115,12 +112,12 @@ const StudentFeedback = () => {
   return (
     <div>
       <div className='page-header'>
-        <h1 className='page-title'>Kritik & Saran</h1>
+        <h1 className='text-xl md:text-2xl'>Kritik & Saran</h1>
       </div>
 
       <div className='card'>
         <div className='mb-6'>
-          <h2 className='mb-2 text-[color:var(--text-primary)]'>
+          <h2 className='mb-2 text-lg md:text-xl text-[color:var(--text-primary)]'>
             Berikan Rating untuk Website
           </h2>
           <p className='text-sm text-[color:var(--text-secondary)]'>
@@ -181,7 +178,6 @@ const StudentFeedback = () => {
             >
               {loadingSubmit ? (
                 <>
-                  <span>⏳</span>
                   <span>Mengirim...</span>
                 </>
               ) : submitted ? (

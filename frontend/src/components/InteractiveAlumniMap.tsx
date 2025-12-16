@@ -226,13 +226,13 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   return (
     <div className='card h-[500px]'>
       <h2
+        className='text-lg md:text-xl'
         style={{
           marginBottom: '24px',
           color: 'var(--text-primary)',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          fontSize: '20px',
         }}
       >
         <FaMapMarkerAlt />
@@ -395,12 +395,12 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         </MapContainer>
       </div>
       <div
+        className='text-xs'
         style={{
           marginTop: '16px',
           padding: '12px',
           background: 'var(--bg-tertiary)',
           borderRadius: '8px',
-          fontSize: '13px',
           color: 'var(--text-secondary)',
         }}
       >
@@ -473,6 +473,3 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 };
 
 export default InteractiveAlumniMap;
-
-
-

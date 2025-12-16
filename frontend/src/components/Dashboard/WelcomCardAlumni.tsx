@@ -32,12 +32,15 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
       }}
     >
       <div className='flex items-center gap-4'>
-        <FaUser className='text-5xl' style={{ color: 'var(--primary)' }} />
+        <FaUser
+          className='text-4xl md:text-5xl'
+          style={{ color: 'var(--primary)' }}
+        />
         <div>
-          <h2 className='mb-1 text-xl text-[color:var(--text-)]'>
+          <h2 className='mb-1 text-lg md:text-xl text-[color:var(--text-)]'>
             Selamat Datang, {user?.username || 'Alumni'}!
           </h2>
-          <p className='text-sm text-[color:var(--text-tertiary)]'>
+          <p className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>
             Jelajahi data alumni dan informasi terkini. Kelola data dan profil
             Anda!
           </p>

@@ -26,6 +26,9 @@ const TahunLulus = ({ data, chartWidth }: TahunLulusProps) => {
   const yearStats = data?.yearStats || [];
   const hasData = yearStats.length > 0;
 
+  const responsiveChartWidth = Math.min(350, chartWidth);
+  const chartHeight = 400;
+
   return (
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
       <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
@@ -38,11 +41,12 @@ const TahunLulus = ({ data, chartWidth }: TahunLulusProps) => {
         </div>
       ) : (
         <div className='chart-container'>
-          <div className='w-full flex justify-center overflow-x-auto'>
+          <div className='w-full flex justify-center'>
             <LineChart
-              width={Math.min(500, chartWidth)}
-              height={400}
+              width={responsiveChartWidth}
+              height={chartHeight}
               data={yearStats}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
               <CartesianGrid
                 strokeDasharray='3 3'

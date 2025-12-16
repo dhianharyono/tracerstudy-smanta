@@ -154,7 +154,7 @@ const AlumniDashboard = () => {
   return (
     <div>
       <div className='relative flex justify-between'>
-        <h1 className='page-title'>Dashboard Alumni</h1>
+        <h1 className='text-xl md:text-2xl'>Dashboard Alumni</h1>
         <Notifications
           notificationRef={notificationRef}
           isNotificationOpen={isNotificationOpen}

@@ -69,6 +69,9 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
     return `${name}: ${(percent * 100).toFixed(0)}%`;
   };
 
+  const smallChartWidth = Math.min(300, chartWidth);
+  const chartHeight = 350;
+
   return (
     <div className='card max-w-sm md:max-w-md lg:max-w-full'>
       <h2
@@ -92,14 +95,14 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
             overflowX: 'auto',
           }}
         >
-          <PieChart width={Math.min(500, chartWidth)} height={350}>
+          <PieChart width={smallChartWidth} height={chartHeight}>
             <Pie
               data={displayData}
-              cx={250}
-              cy={175}
+              cx={smallChartWidth / 2}
+              cy={chartHeight / 2}
               labelLine={false}
               label={renderLabel}
-              outerRadius={100}
+              outerRadius={smallChartWidth / 4}
               fill='#8884d8'
               dataKey='value'
             >

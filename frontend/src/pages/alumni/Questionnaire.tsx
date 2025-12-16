@@ -352,7 +352,7 @@ const AlumniQuestionnaire = () => {
   return (
     <div className='p-4 sm:p-6 lg:p-8'>
       <div className='mb-6'>
-        <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>
+        <h1 className='text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white'>
           {isEditMode
             ? 'Edit Kuesioner Tracer Study'
             : 'Kuesioner Tracer Study'}
@@ -368,10 +368,10 @@ const AlumniQuestionnaire = () => {
           }}
         >
           <div className='flex items-center gap-3'>
-            <FaEdit size={35} className='text-green-600 dark:text-green-400' />
             <div>
-              <h3 className='font-semibold mb-1 text-gray-900 dark:text-white'>
-                Mode Edit
+              <h3 className='text-lg flex gap-2 items-center font-semibold mb-1 text-gray-900 dark:text-white'>
+                <FaEdit />
+                <span>Mode Edit</span>
               </h3>
               <p className='text-sm text-gray-600 dark:text-gray-400'>
                 Anda sedang mengedit data kuesioner yang sudah ada. Perubahan
@@ -385,7 +385,7 @@ const AlumniQuestionnaire = () => {
         onSubmit={handleSubmit}
         className='bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8'
       >
-        <h2 className='mb-6 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
+        <h2 className='mb-6 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
           <FaUser
             style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
           />
@@ -524,7 +524,7 @@ const AlumniQuestionnaire = () => {
 
         {formData.profile.isStudying === 'ya' && (
           <>
-            <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
+            <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
               <GiGraduateCap
                 style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
               />
@@ -682,7 +682,7 @@ const AlumniQuestionnaire = () => {
 
         {formData.profile.isWorking === 'ya' && (
           <>
-            <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
+            <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
               <PiBagSimpleFill
                 style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
               />
@@ -723,7 +723,7 @@ const AlumniQuestionnaire = () => {
           </>
         )}
 
-        <h2 className='mb-6 mt-8 text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
+        <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
           <IoPhonePortrait
             style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
           />
