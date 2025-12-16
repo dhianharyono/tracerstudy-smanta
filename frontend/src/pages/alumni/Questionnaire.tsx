@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaSave, FaSpinner, FaUser } from 'react-icons/fa';
+import { FaEdit, FaSpinner, FaUser } from 'react-icons/fa';
 import { GiGraduateCap } from 'react-icons/gi';
 import { PiBagSimpleFill } from 'react-icons/pi';
 import { IoPhonePortrait } from 'react-icons/io5';
