@@ -31,7 +31,7 @@ const TahunLulus = ({ data, chartWidth }: TahunLulusProps) => {
 
   return (
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
-      <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
+      <h2 className='mb-6 text-lg md:text-xl flex items-center gap-3 text-text-primary'>
         <FaChartLine />
         <span>Statistik Berdasarkan Tahun Lulus</span>
       </h2>

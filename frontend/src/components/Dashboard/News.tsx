@@ -24,7 +24,7 @@ const News = ({ data }: NewsProps) => {
   return (
     <>
       <div className='card'>
-        <h2 className='mb-6 flex items-center gap-3 text-xl font-semibold text-[color:var(--text-primary)]'>
+        <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 font-semibold text-[color:var(--text-primary)]'>
           <FaNewspaper />
           <span>News</span>
         </h2>

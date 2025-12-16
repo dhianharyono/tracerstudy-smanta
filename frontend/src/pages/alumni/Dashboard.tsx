@@ -91,7 +91,7 @@ const AlumniDashboard = () => {
   useEffect(() => {
     const hidden = localStorage.getItem('hideQuestionnaireCard');
     if (hidden === 'true') {
-      setHideQuestionnaireCard(true);
+      setHideQuestionnaireCard(false);
     }
   }, []);
 

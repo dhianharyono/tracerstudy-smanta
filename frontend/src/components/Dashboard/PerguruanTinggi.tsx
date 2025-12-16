@@ -24,14 +24,13 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
 
   if (data.length === 0) {
     return (
-      <div className='card max-w-sm md:max-w-md lg:max-w-full'>
+      <div className='text-lg md:text-xl card max-w-sm md:max-w-md lg:max-w-full'>
         <h2
           style={{
             marginBottom: '24px',
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
-            fontSize: '20px',
           }}
         >
           <FaUniversity />
@@ -75,12 +74,12 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
   return (
     <div className='card max-w-sm md:max-w-md lg:max-w-full'>
       <h2
+        className='text-lg md:text-xl'
         style={{
           marginBottom: '24px',
           display: 'flex',
           alignItems: 'center',
           gap: '12px',
-          fontSize: '20px',
         }}
       >
         <FaUniversity />

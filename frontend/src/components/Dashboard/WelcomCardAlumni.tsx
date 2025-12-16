@@ -78,10 +78,10 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
               <FaTimes />
             </button>
             <div className='mb-4 flex items-center gap-3'>
-              <FaCheckCircle className='text-3xl text-[color:var(--success)]' />
+              <FaCheckCircle className='text-xl md:text-3xl text-[color:var(--success)]' />
               <div>
-                <h3 className='mb-1'>Kuesioner Lengkap</h3>
-                <p className='text-sm text-[color:var(--text-secondary)]'>
+                <h3 className='mb-1 text-sm md:text-lg'>Kuesioner Lengkap</h3>
+                <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
                   Data kuesioner Anda sudah lengkap
                 </p>
               </div>

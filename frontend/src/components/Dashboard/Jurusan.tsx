@@ -31,7 +31,7 @@ const Jurusan = ({ data, chartWidth }: JurusanProps) => {
 
   return (
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
-      <h2 className='mb-6 flex items-center gap-3 text-xl text-text-primary'>
+      <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 text-text-primary'>
         <FaChartBar />
         <span>Statistik Jurusan</span> 
       </h2>
