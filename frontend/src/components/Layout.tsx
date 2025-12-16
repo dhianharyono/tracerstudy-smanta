@@ -19,7 +19,6 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 import './Layout.css';
-import Analytics from '@vercel/analytics';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -72,7 +71,6 @@ const Layout = () => {
       }
     };
     checkFeedbackVisibility();
-    Analytics.inject();
   }, []);
 
   const getNavLinks = () => {
