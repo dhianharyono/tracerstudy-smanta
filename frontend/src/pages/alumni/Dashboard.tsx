@@ -152,7 +152,7 @@ const AlumniDashboard = () => {
   }
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8'>
+    <div className='p-4 sm:p-6 lg:p-8 animate-fadeIn'>
       <div className='relative flex justify-between'>
         <h1 className='text-xl md:text-2xl'>Dashboard Alumni</h1>
         <Notifications

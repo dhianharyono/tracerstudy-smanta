@@ -86,7 +86,7 @@ const AlumniNewsDetail = () => {
   `;
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8'>
+    <div className='p-4 sm:p-6 lg:p-8 animate-fadeIn'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/alumni/news')}
