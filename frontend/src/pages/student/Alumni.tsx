@@ -89,7 +89,7 @@ const StudentAlumni = () => {
 
   const renderFilter = () => {
     return (
-      <div className='card mb-6 max-w-xs md:max-w-sm lg:max-w-full'>
+      <div className='card mb-6 max-w-xs md:max-w-sm lg:max-w-full page-fade-in'>
         <h2 className='text-xl font-semibold mb-4'>Filter</h2>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 lg:gap-5'>
           <div className='form-group'>

@@ -350,7 +350,7 @@ const AlumniQuestionnaire = () => {
   const validationErrorClass = 'text-red-500 text-sm mt-1 block';
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8 animate-fadeIn'>
+    <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='mb-6'>
         <h1 className='text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white'>
           {isEditMode

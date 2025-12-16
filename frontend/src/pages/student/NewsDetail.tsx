@@ -56,7 +56,7 @@ const StudentNewsDetail = () => {
   }
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8'>
+    <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='page-header'>
         <button
           onClick={() => navigate('/student/news')}
