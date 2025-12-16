@@ -18,7 +18,7 @@ interface statsObject {
 
 const Statistic = ({ stats }: { stats: statsObject }) => {
   return (
-    <div className='grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-6 md:mb-8'>
+    <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-6 md:mb-8'>
       <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
         <div className='icon'>
           <FaUsers />
