@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { FaNewspaper } from 'react-icons/fa';
 import { stripHtml } from '../../utils/helpers';
-
+import { useAuth } from '../../contexts/AuthContext';
 interface NewsAuthor {
   username: string;
 }
@@ -20,6 +20,9 @@ interface NewsProps {
 
 const News = ({ data }: NewsProps) => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAlumni = user?.role === 'alumni';
+  const isAdmin = user?.role === 'admin';
 
   return (
     <>
@@ -54,7 +57,15 @@ const News = ({ data }: NewsProps) => {
               </div>
             ))}
             <button
-              onClick={() => navigate('/student/news')}
+              onClick={() =>
+                navigate(
+                  isAdmin
+                    ? '/admin/news'
+                    : isAlumni
+                    ? '/alumni/news'
+                    : '/student/news'
+                )
+              }
               className='btn mt-2 w-full bg-gray-700'
             >
               Read More
