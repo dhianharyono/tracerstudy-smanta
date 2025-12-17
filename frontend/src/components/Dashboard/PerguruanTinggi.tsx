@@ -24,7 +24,7 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
 
   if (data.length === 0) {
     return (
-      <div className='text-lg md:text-xl card max-w-sm md:max-w-md lg:max-w-full'>
+      <div className='card max-w-sm md:max-w-md lg:max-w-full'>
         <h2
           style={{
             marginBottom: '24px',
@@ -36,15 +36,9 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
           <FaUniversity />
           <span>Daftar Perguruan Tinggi</span>
         </h2>
-        <p
-          style={{
-            textAlign: 'center',
-            color: 'var(--gray-500)',
-            padding: '40px',
-          }}
-        >
-          No data available
-        </p>
+        <div className='h-[350px] content-center'>
+          <p className='text-center text-gray-500 py-10'>No data available</p> 
+        </div>
       </div>
     );
   }
@@ -114,7 +108,7 @@ const PerguruanTinggi = ({ data, chartWidth }: PerguruanTinggiProps) => {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: 'var(--bg-card)',
+                backgroundColor: 'white',
                 border: '1px solid var(--border-color)',
                 borderRadius: '8px',
                 boxShadow: 'var(--shadow-lg)',

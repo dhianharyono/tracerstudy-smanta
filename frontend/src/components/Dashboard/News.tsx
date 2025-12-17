@@ -62,15 +62,8 @@ const News = ({ data }: NewsProps) => {
           </div>
         ) : (
           <div className='h-[350px] content-center'>
-            <p
-              style={{
-                textAlign: 'center',
-                color: 'var(--gray-500)',
-                padding: '40px',
-              }}
-            >
-              No data available
-            </p>
+            <p className='text-center text-gray-500 py-10'>No data available</p>
+             
           </div>
         )}
       </div>
