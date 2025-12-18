@@ -22,6 +22,7 @@ import StudentFeedback from './pages/student/Feedback';
 import AlumniFeedback from './pages/alumni/Feedback';
 import AlumniNews from './pages/alumni/News';
 import AlumniNewsDetail from './pages/alumni/NewsDetail';
+import MutualAlumni from './pages/alumni/MutualAlumni';
 import AdminFeedback from './pages/admin/Feedback';
 import AdminFeedbackDetail from './pages/admin/FeedbackDetail';
 import StudentNews from './pages/student/News';
@@ -78,7 +79,7 @@ function App() {
               </PublicRoute>
             }
           />
-          
+
           {/* Alumni Routes */}
           <Route
             path="/alumni"
@@ -94,6 +95,7 @@ function App() {
             <Route path="feedback" element={<AlumniFeedback />} />
             <Route path="news" element={<AlumniNews />} />
             <Route path="news/:id" element={<AlumniNewsDetail />} />
+            <Route path="mutual-alumni" element={<MutualAlumni />} />
           </Route>
 
           {/* Admin Routes */}

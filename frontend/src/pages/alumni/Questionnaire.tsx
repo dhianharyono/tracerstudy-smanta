@@ -14,6 +14,99 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
+const InputField = ({
+  label,
+  name,
+  value,
+  onChange,
+  type = 'text',
+  required = false,
+  placeholder = '',
+  min,
+  max,
+  validationErrors = {},
+}: any) => (
+  <div className='form-group'>
+    <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+      {label} {required && <span className='text-red-500'>*</span>}
+    </label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      onChange={onChange}
+      required={required}
+      min={min}
+      max={max}
+      placeholder={placeholder}
+      className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+        : ''
+        }`}
+    />
+    {validationErrors[name] && (
+      <span className='mt-1 text-xs text-red-500'>
+        {validationErrors[name]}
+      </span>
+    )}
+  </div>
+);
+
+const SelectField = ({
+  label,
+  name,
+  value,
+  onChange,
+  options,
+  required = false,
+  validationErrors = {},
+}: any) => (
+  <div className='form-group'>
+    <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+      {label} {required && <span className='text-red-500'>*</span>}
+    </label>
+    <div className='relative'>
+      <select
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+          : ''
+          }`}
+      >
+        <option value=''>Pilih</option>
+        {options.map((opt: any) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+        <svg
+          className='h-4 w-4'
+          fill='none'
+          stroke='currentColor'
+          viewBox='0 0 24 24'
+        >
+          <path
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            strokeWidth='2'
+            d='M19 9l-7 7-7-7'
+          />
+        </svg>
+      </div>
+    </div>
+    {validationErrors[name] && (
+      <span className='mt-1 text-xs text-red-500'>
+        {validationErrors[name]}
+      </span>
+    )}
+  </div>
+);
+
 interface ProfileData {
   fullName: string;
   gender: '' | 'male' | 'female';
@@ -168,13 +261,13 @@ const AlumniQuestionnaire = () => {
               isStudying: profile.profile?.isStudying
                 ? 'ya'
                 : profile.profile?.isStudying === false
-                ? 'tidak'
-                : '',
+                  ? 'tidak'
+                  : '',
               isWorking: profile.profile?.isWorking
                 ? 'ya'
                 : profile.profile?.isWorking === false
-                ? 'tidak'
-                : '',
+                  ? 'tidak'
+                  : '',
             },
             university: {
               name: profile.university?.name || '',
@@ -307,11 +400,11 @@ const AlumniQuestionnaire = () => {
         university:
           formData.profile.isStudying === 'ya'
             ? {
-                ...formData.university,
-                entryYear: formData.university.entryYear
-                  ? parseInt(formData.university.entryYear)
-                  : undefined,
-              }
+              ...formData.university,
+              entryYear: formData.university.entryYear
+                ? parseInt(formData.university.entryYear)
+                : undefined,
+            }
             : undefined,
         job: formData.profile.isWorking === 'ya' ? formData.job : undefined,
         socialMedia: {
@@ -328,11 +421,12 @@ const AlumniQuestionnaire = () => {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
       toast.success('Kuesioner berhasil diperbarui!');
+      window.scrollTo(0, 0);
       navigate('/alumni');
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
+        `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
       );
     } finally {
       setSubmitLoading(false);
@@ -343,98 +437,7 @@ const AlumniQuestionnaire = () => {
     return <LoadingSpinner />;
   }
 
-  const InputField = ({
-    label,
-    name,
-    value,
-    onChange,
-    type = 'text',
-    required = false,
-    placeholder = '',
-    min,
-    max,
-  }: any) => (
-    <div className='form-group'>
-      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className='text-red-500'>*</span>}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-        min={min}
-        max={max}
-        placeholder={placeholder}
-        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
-          validationErrors[name]
-            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-            : ''
-        }`}
-      />
-      {validationErrors[name] && (
-        <span className='mt-1 text-xs text-red-500'>
-          {validationErrors[name]}
-        </span>
-      )}
-    </div>
-  );
 
-  const SelectField = ({
-    label,
-    name,
-    value,
-    onChange,
-    options,
-    required = false,
-  }: any) => (
-    <div className='form-group'>
-      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className='text-red-500'>*</span>}
-      </label>
-      <div className='relative'>
-        <select
-          name={name}
-          value={value}
-          onChange={onChange}
-          required={required}
-          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
-            validationErrors[name]
-              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-              : ''
-          }`}
-        >
-          <option value=''>Pilih</option>
-          {options.map((opt: any) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
-          <svg
-            className='h-4 w-4'
-            fill='none'
-            stroke='currentColor'
-            viewBox='0 0 24 24'
-          >
-            <path
-              strokeLinecap='round'
-              strokeLinejoin='round'
-              strokeWidth='2'
-              d='M19 9l-7 7-7-7'
-            />
-          </svg>
-        </div>
-      </div>
-      {validationErrors[name] && (
-        <span className='mt-1 text-xs text-red-500'>
-          {validationErrors[name]}
-        </span>
-      )}
-    </div>
-  );
 
   return (
     <div className='p-4 md:p-8 animate-fade-in'>
@@ -486,6 +489,7 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               required
               placeholder='Masukkan nama lengkap'
+              validationErrors={validationErrors}
             />
 
             <SelectField
@@ -498,6 +502,7 @@ const AlumniQuestionnaire = () => {
                 { value: 'male', label: 'Laki-laki' },
                 { value: 'female', label: 'Perempuan' },
               ]}
+              validationErrors={validationErrors}
             />
 
             <InputField
@@ -510,6 +515,7 @@ const AlumniQuestionnaire = () => {
               min='1900'
               max={new Date().getFullYear()}
               placeholder='Ex: 2018'
+              validationErrors={validationErrors}
             />
 
             <InputField
@@ -522,6 +528,7 @@ const AlumniQuestionnaire = () => {
               min='1900'
               max={new Date().getFullYear()}
               placeholder='Ex: 2021'
+              validationErrors={validationErrors}
             />
 
             <SelectField
@@ -531,13 +538,14 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               required
               options={[
-                { value: 'tidak kuliah', label: 'Tidak Kuliah' },
+                { value: 'sma', label: 'SMA' },
                 { value: 'd3', label: 'D3' },
                 { value: 'd4', label: 'D4' },
                 { value: 's1', label: 'S1' },
                 { value: 's2', label: 'S2' },
                 { value: 's3', label: 'S3' },
               ]}
+              validationErrors={validationErrors}
             />
           </div>
 
@@ -653,14 +661,15 @@ const AlumniQuestionnaire = () => {
                   </div>
                 ) : (
                   <div className='flex gap-2'>
-                    <input
-                      type='text'
-                      name='university.name'
-                      value={formData.university.name}
-                      onChange={handleChange}
-                      placeholder='Tulis nama kampus'
-                      className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
-                    />
+                    <div className='flex-1'>
+                      <InputField
+                        name='university.name'
+                        value={formData.university.name}
+                        onChange={handleChange}
+                        placeholder='Tulis nama kampus'
+                        validationErrors={validationErrors}
+                      />
+                    </div>
                     <button
                       type='button'
                       onClick={() => {
@@ -671,7 +680,7 @@ const AlumniQuestionnaire = () => {
                         }));
                       }}
                       title='Kembali ke daftar'
-                      className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
+                      className='flex h-[46px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
                     </button>
@@ -689,6 +698,7 @@ const AlumniQuestionnaire = () => {
                   { value: 'swasta', label: 'Swasta' },
                   { value: 'kedinasan', label: 'Kedinasan' },
                 ]}
+                validationErrors={validationErrors}
               />
 
               <InputField
@@ -700,6 +710,7 @@ const AlumniQuestionnaire = () => {
                 min='1900'
                 max={new Date().getFullYear()}
                 placeholder='Ex: 2021'
+                validationErrors={validationErrors}
               />
 
               <div className='form-group'>
@@ -754,14 +765,15 @@ const AlumniQuestionnaire = () => {
                   </div>
                 ) : (
                   <div className='flex gap-2'>
-                    <input
-                      type='text'
-                      name='university.major'
-                      value={formData.university.major}
-                      onChange={handleChange}
-                      placeholder='Tulis nama jurusan'
-                      className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
-                    />
+                    <div className='flex-1'>
+                      <InputField
+                        name='university.major'
+                        value={formData.university.major}
+                        onChange={handleChange}
+                        placeholder='Tulis nama jurusan'
+                        validationErrors={validationErrors}
+                      />
+                    </div>
                     <button
                       type='button'
                       onClick={() => {
@@ -772,7 +784,7 @@ const AlumniQuestionnaire = () => {
                         }));
                       }}
                       title='Kembali ke daftar'
-                      className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
+                      className='flex h-[46px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
                     </button>
@@ -802,6 +814,7 @@ const AlumniQuestionnaire = () => {
                 value={formData.job.position}
                 onChange={handleChange}
                 placeholder='Ex: Staff IT'
+                validationErrors={validationErrors}
               />
               <InputField
                 label='Nama Instansi/Perusahaan'
@@ -809,6 +822,7 @@ const AlumniQuestionnaire = () => {
                 value={formData.job.institution}
                 onChange={handleChange}
                 placeholder='Ex: PT. Maju Jaya'
+                validationErrors={validationErrors}
               />
               <InputField
                 label='Nama Pekerjaan'
@@ -816,6 +830,7 @@ const AlumniQuestionnaire = () => {
                 value={formData.job.jobTitle}
                 onChange={handleChange}
                 placeholder='Ex: Web Developer'
+                validationErrors={validationErrors}
               />
             </div>
           </div>
@@ -840,6 +855,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.email}
               onChange={handleChange}
               placeholder='nama@email.com'
+              validationErrors={validationErrors}
             />
             <InputField
               label='LinkedIn (URL/Username)'
@@ -847,6 +863,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.linkedin}
               onChange={handleChange}
               placeholder='linkedin.com/in/username'
+              validationErrors={validationErrors}
             />
             <InputField
               label='Instagram (URL/Username)'
@@ -854,6 +871,7 @@ const AlumniQuestionnaire = () => {
               value={formData.socialMedia.instagram}
               onChange={handleChange}
               placeholder='@username'
+              validationErrors={validationErrors}
             />
           </div>
         </div>

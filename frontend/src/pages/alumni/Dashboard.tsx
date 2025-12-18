@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 // import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '@/components/LoadingSpinner';
@@ -11,6 +12,7 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 // import Notifications from '@/components/Dashboard/Notifications';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
+import { FaUserCircle, FaChevronRight, FaUserGraduate } from 'react-icons/fa';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
@@ -18,6 +20,7 @@ const AlumniDashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
+  const [mutualAlumni, setMutualAlumni] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   // const [setUnreadNewsCount] = useState(0);
   // const [setUnreadNews] = useState<any[]>([]);
@@ -27,19 +30,19 @@ const AlumniDashboard = () => {
   const [hideQuestionnaireCard, setHideQuestionnaireCard] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        const [profileRes, statsRes, newsRes] = await Promise.all([
+        const [profileRes, statsRes, newsRes, mutualRes] = await Promise.all([
           axios.get('/api/alumni/profile'),
           axios.get('/api/alumni/dashboard'),
           axios.get('/api/alumni/news'),
-          axios
-            .get('/api/alumni/news/unread-count')
-            .catch(() => ({ data: { count: 0 } })),
+          axios.get('/api/alumni/mutual-alumni').catch(() => ({ data: [] })),
         ]);
         setProfile(profileRes.data);
         setStats(statsRes.data);
         setNews(newsRes.data);
+        setMutualAlumni(mutualRes.data);
 
         // const unread = newsRes.data.filter((item: any) => !item.isRead);
         // setUnreadNewsCount(unread.length || 0);
@@ -167,9 +170,65 @@ const AlumniDashboard = () => {
         <Statistic stats={stats} />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
+
+        {/* Mutual Alumni Section */}
+        <div className='card flex flex-col'>
+          <div className='mb-4 flex items-center justify-between'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'>
+                <FaUserGraduate className='text-lg' />
+              </div>
+              <div>
+                <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>Rekan Sepantaran</h2>
+                <p className='text-xs text-[color:var(--text-secondary)]'>Lulus di tahun yang sama</p>
+              </div>
+            </div>
+            {mutualAlumni.length > 0 && (
+              <Link
+                to='/alumni/mutual-alumni'
+                className='text-xs font-semibold text-[var(--primary)] hover:underline flex items-center gap-1'
+              >
+                Lihat Semua <FaChevronRight className='text-[10px]' />
+              </Link>
+            )}
+          </div>
+
+          <div className='flex-1 space-y-4'>
+            {mutualAlumni.length === 0 ? (
+              <div className='flex flex-col items-center justify-center h-full py-8 text-center'>
+                <FaUserCircle className='text-4xl text-gray-200 dark:text-gray-700 mb-2' />
+                <p className='text-sm text-[color:var(--text-secondary)]'>Tidak ada data alumni yang ditemukan</p>
+              </div>
+            ) : (
+              mutualAlumni.slice(0, 5).map((person: any) => (
+                <div key={person._id} className='flex items-center gap-3 group'>
+                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800 group-hover:bg-[var(--primary-light)]/20 group-hover:text-[var(--primary)] transition-colors'>
+                    <FaUserCircle className='text-2xl' />
+                  </div>
+                  <div className='flex-1 min-w-0'>
+                    <h4 className='text-sm font-semibold text-[color:var(--text-primary)] truncate'>
+                      {person.profile?.fullName || 'Anonymous'}
+                    </h4>
+                    <p className='text-[10px] text-[color:var(--text-tertiary)] truncate uppercase tracking-wider'>
+                      {person.university?.name || person.job?.institution || 'Belum ada info'}
+                    </p>
+                  </div>
+                </div>
+              ))
+            )}
+            {mutualAlumni.length > 5 && (
+              <Link
+                to='/alumni/mutual-alumni'
+                className='block mt-2 text-center text-xs font-medium text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors'
+              >
+                +{mutualAlumni.length - 5} alumni lainnya
+              </Link>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className='w-full rounded-2xl bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
