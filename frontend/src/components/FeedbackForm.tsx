@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoadingSpinner from './LoadingSpinner';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import {
   FaSave,
   FaPaperPlane,
@@ -61,12 +61,12 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
     e.preventDefault();
 
     if (feedback.rating === 0) {
-      toast.error('Silakan berikan rating dengan menekan bintang');
+      Toast('Silakan berikan rating dengan menekan bintang', 'error');
       return;
     }
 
     if (!feedback.kritik && !feedback.saran) {
-      toast.error('Silakan isi kritik atau saran');
+      Toast('Silakan isi kritik atau saran', 'error');
       return;
     }
 
@@ -74,10 +74,10 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
     try {
       if (submitted) {
         await axios.put(`/api/${role}/feedback`, feedback);
-        toast.success('Kritik dan saran berhasil diperbarui!');
+        Toast('Kritik dan saran berhasil diperbarui!', 'success');
       } else {
         await axios.post(`/api/${role}/feedback`, feedback);
-        toast.success('Terima kasih atas kritik dan saran Anda!');
+        Toast('Terima kasih atas kritik dan saran Anda!', 'success');
         setSubmitted(true);
       }
     } catch (error) {
@@ -87,7 +87,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
           (error.response.data as { message?: string })?.message ||
           errorMessage;
       }
-      toast.error(errorMessage);
+      Toast(errorMessage, 'error');
     } finally {
       setLoadingSubmit(false);
     }

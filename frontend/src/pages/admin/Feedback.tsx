@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaEye,
@@ -61,13 +61,15 @@ const AdminFeedback = () => {
         visible: !feedbackVisible,
       });
       setFeedbackVisible(!feedbackVisible);
-      toast.success(
+      Toast(
         `Menu kritik dan saran ${!feedbackVisible ? 'ditampilkan' : 'disembunyikan'
-        }`
+        }`,
+        'success'
       );
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || 'Gagal mengubah visibilitas'
+      Toast(
+        error.response?.data?.message || 'Gagal mengubah visibilitas',
+        'error'
       );
     }
   };
@@ -79,11 +81,11 @@ const AdminFeedback = () => {
 
     try {
       await axios.delete(`/api/admin/feedback/${id}`);
-      toast.success('Feedback berhasil dihapus');
+      Toast('Feedback berhasil dihapus', 'success');
       fetchFeedbacks();
       fetchStats();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal menghapus feedback');
+      Toast(error.response?.data?.message || 'Gagal menghapus feedback', 'error');
     }
   };
 

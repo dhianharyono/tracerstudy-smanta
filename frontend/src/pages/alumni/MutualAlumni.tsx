@@ -58,7 +58,7 @@ const MutualAlumni = () => {
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       <div className='mb-8 text-center md:text-left'>
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Rekan Sepantaran
+          Rekan Seangkatan
         </h1>
         <p className='text-[color:var(--text-secondary)]'>
           Rekan alumni yang lulus pada tahun yang sama dengan Anda

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaPlus, FaEdit, FaTrash, FaEye, FaTimes, FaSave } from 'react-icons/fa';
 import ReactQuill from 'react-quill';
@@ -63,17 +63,17 @@ const AdminNews = () => {
     try {
       if (editingNews) {
         await axios.put(`/api/admin/news/${editingNews._id}`, formData);
-        toast.success('News berhasil diperbarui!');
+        Toast('News berhasil diperbarui!', 'success');
       } else {
         await axios.post('/api/admin/news', formData);
-        toast.success('News berhasil ditambahkan!');
+        Toast('News berhasil ditambahkan!', 'success');
       }
       setShowForm(false);
       setEditingNews(null);
       setFormData({ title: '', content: '', type: 'all', isPublished: false });
       fetchNews();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal menyimpan news');
+      Toast(error.response?.data?.message || 'Gagal menyimpan news', 'error');
     }
   };
 
@@ -95,10 +95,10 @@ const AdminNews = () => {
 
     try {
       await axios.delete(`/api/admin/news/${id}`);
-      toast.success('News berhasil dihapus!');
+      Toast('News berhasil dihapus!', 'success');
       fetchNews();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal menghapus berita');
+      Toast(error.response?.data?.message || 'Gagal menghapus berita', 'error');
     }
   };
 

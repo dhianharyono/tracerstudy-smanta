@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import { FaChartBar, FaFileAlt, FaSpinner, FaUniversity, FaGraduationCap } from 'react-icons/fa';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
@@ -22,7 +22,7 @@ const AdminReports = () => {
 
   const generateReport = async () => {
     if (!reportType) {
-      toast.error('Silakan pilih jenis laporan');
+      Toast('Silakan pilih jenis laporan', 'error');
       return;
     }
 
@@ -30,10 +30,10 @@ const AdminReports = () => {
     try {
       const response = await axios.get(`/api/admin/reports?type=${reportType}`);
       setReportData(response.data);
-      toast.success('Laporan berhasil digenerate!');
+      Toast('Laporan berhasil digenerate!', 'success');
     } catch (error: any) {
       console.error('Error generating report:', error);
-      toast.error(error.response?.data?.message || 'Gagal generate laporan');
+      Toast(error.response?.data?.message || 'Gagal generate laporan', 'error');
     } finally {
       setLoadingGenerate(false);
     }

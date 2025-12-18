@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaFilter, FaTimes, FaTrash, FaEnvelope, FaLinkedin, FaInstagram, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
@@ -73,11 +73,11 @@ const AdminAlumni = () => {
 
     try {
       await axios.delete(`/api/admin/alumni/${id}`);
-      toast.success('Alumni berhasil dihapus!');
+      Toast('Alumni berhasil dihapus!', 'success');
       fetchAlumni();
     } catch (error: any) {
       console.error('Error deleting alumni:', error);
-      toast.error(error.response?.data?.message || 'Gagal menghapus alumni');
+      Toast(error.response?.data?.message || 'Gagal menghapus alumni', 'error');
     }
   };
 

@@ -1,12 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { AuthProvider } from './contexts/AuthContext';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import AlumniDashboard from './pages/alumni/Dashboard';
 import AlumniQuestionnaire from './pages/alumni/Questionnaire';
-import AlumniProfile from './pages/alumni/Profile';
+import Profile from './pages/Profile';
 import AdminDashboard from './pages/admin/Dashboard';
 import AdminAlumni from './pages/admin/Alumni';
 import AdminReports from './pages/admin/Reports';
@@ -91,7 +89,7 @@ function App() {
           >
             <Route index element={<AlumniDashboard />} />
             <Route path="questionnaire" element={<AlumniQuestionnaire />} />
-            <Route path="profile" element={<AlumniProfile />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="feedback" element={<AlumniFeedback />} />
             <Route path="news" element={<AlumniNews />} />
             <Route path="news/:id" element={<AlumniNewsDetail />} />
@@ -116,6 +114,7 @@ function App() {
             <Route path="news/:id" element={<AdminNewsDetail />} />
             <Route path="feedback" element={<AdminFeedback />} />
             <Route path="feedback/:id" element={<AdminFeedbackDetail />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
           {/* Student Routes */}
@@ -134,26 +133,12 @@ function App() {
             <Route path="feedback" element={<StudentFeedback />} />
             <Route path="news" element={<StudentNews />} />
             <Route path="news/:id" element={<StudentNewsDetail />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
 
           <Route path="/" element={<Navigate to="/login" replace />} />
         </Routes>
       </Router>
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-        style={{
-          top: '80px',
-        }}
-      />
     </AuthProvider>
   );
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsDetail from '../../components/News/NewsDetail';
 
@@ -40,7 +40,7 @@ const AlumniNewsDetail = () => {
           (error.response.data as { message?: string })?.message ||
           errorMessage;
       }
-      toast.error(errorMessage);
+      Toast(errorMessage, 'error');
       navigate('/alumni/news');
     } finally {
       setLoading(false);

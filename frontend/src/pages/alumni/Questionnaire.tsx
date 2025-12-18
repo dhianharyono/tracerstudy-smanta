@@ -12,7 +12,7 @@ import {
   FaTimes,
   FaGraduationCap,
 } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 
 const InputField = ({
   label,
@@ -26,11 +26,12 @@ const InputField = ({
   max,
   validationErrors = {},
   noMargin = false,
+  disabled = false,
 }: any) => (
   <div className={noMargin ? '' : 'form-group'}>
     {label && (
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className='text-red-500'>*</span>}
+        {label} {required && !disabled && <span className='text-red-500'>*</span>}
       </label>
     )}
     <input
@@ -41,8 +42,9 @@ const InputField = ({
       required={required}
       min={min}
       max={max}
+      disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+      className={`w-full rounded-xl border border-[color:var(--border-color)] ${disabled ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]' : 'bg-[color:var(--bg-secondary)]'} px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
         ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
         : ''
         }`}
@@ -63,11 +65,12 @@ const SelectField = ({
   options,
   required = false,
   validationErrors = {},
+  disabled = false,
 }: any) => (
   <div className='form-group'>
     {label && (
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className='text-red-500'>*</span>}
+        {label} {required && !disabled && <span className='text-red-500'>*</span>}
       </label>
     )}
     <div className='relative'>
@@ -76,7 +79,8 @@ const SelectField = ({
         value={value}
         onChange={onChange}
         required={required}
-        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+        disabled={disabled}
+        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]' : 'bg-[color:var(--bg-secondary)]'} px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
           : ''
           }`}
@@ -212,6 +216,7 @@ const AlumniQuestionnaire = () => {
   const [universities, setUniversities] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isReadOnly, setIsReadOnly] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -239,6 +244,7 @@ const AlumniQuestionnaire = () => {
 
         if (profileRes.data?.questionnaireCompleted) {
           setIsEditMode(true);
+          setIsReadOnly(true);
           const profile = profileRes.data;
 
           if (
@@ -383,7 +389,7 @@ const AlumniQuestionnaire = () => {
 
     if (!validateForm()) {
       setError('Mohon lengkapi semua field yang wajib diisi');
-      toast.error('Mohon lengkapi semua field yang wajib diisi');
+      Toast('Mohon lengkapi semua field yang wajib diisi', 'error');
       return;
     }
 
@@ -425,7 +431,7 @@ const AlumniQuestionnaire = () => {
       } else {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
-      toast.success('Kuesioner berhasil diperbarui!');
+      Toast('Kuesioner berhasil diperbarui!', 'success');
       navigate('/alumni');
     } catch (err: any) {
       setError(
@@ -455,7 +461,32 @@ const AlumniQuestionnaire = () => {
         </p>
       </div>
 
-      {isEditMode && (
+      {isReadOnly ? (
+        <div className='mb-8 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg shadow-green-500/5'>
+          <div className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
+            <div className='flex items-start md:items-center gap-4'>
+              <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-500/10 text-green-500'>
+                <FaGraduationCap className='text-2xl' />
+              </div>
+              <div className='space-y-1'>
+                <h3 className='text-base md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                  Kuesioner Selesai
+                </h3>
+                <p className='text-sm text-[color:var(--text-secondary)] leading-relaxed'>
+                  Anda telah mengisi kuesioner. Klik tombol edit untuk memperbarui data Anda.
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsReadOnly(false)}
+              className='flex w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
+            >
+              <FaEdit className='text-base' />
+              <span>Edit Data</span>
+            </button>
+          </div>
+        </div>
+      ) : isEditMode && (
         <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
           <div className='flex items-center gap-3'>
             <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
@@ -494,6 +525,7 @@ const AlumniQuestionnaire = () => {
               required
               placeholder='Masukkan nama lengkap'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
 
             <SelectField
@@ -507,6 +539,7 @@ const AlumniQuestionnaire = () => {
                 { value: 'female', label: 'Perempuan' },
               ]}
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
 
             <InputField
@@ -520,6 +553,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2018'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
 
             <InputField
@@ -533,6 +567,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2021'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
 
             <SelectField
@@ -550,6 +585,7 @@ const AlumniQuestionnaire = () => {
                 { value: 's3', label: 'S3' },
               ]}
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
           </div>
 
@@ -573,7 +609,8 @@ const AlumniQuestionnaire = () => {
                         setShowManualMajorInput(false);
                       }
                     }}
-                    className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                    disabled={isReadOnly}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>
@@ -588,7 +625,8 @@ const AlumniQuestionnaire = () => {
                     name='profile.isWorking'
                     value={formData.profile.isWorking}
                     onChange={handleChange}
-                    className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                    disabled={isReadOnly}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>
@@ -626,6 +664,7 @@ const AlumniQuestionnaire = () => {
                           ? formData.university.name
                           : ''
                       }
+                      disabled={isReadOnly}
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualUniversityInput(true);
@@ -637,7 +676,7 @@ const AlumniQuestionnaire = () => {
                           handleChange(e);
                         }
                       }}
-                      className='w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                      className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
                     >
                       <option value=''>Pilih Kampus</option>
                       {universities.map((univ) => (
@@ -645,7 +684,7 @@ const AlumniQuestionnaire = () => {
                           {univ}
                         </option>
                       ))}
-                      <option value='other'>+ Lainnya (ketik manual)</option>
+                      {!isReadOnly && <option value='other'>+ Lainnya (ketik manual)</option>}
                     </select>
                     <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
                       <svg
@@ -673,6 +712,7 @@ const AlumniQuestionnaire = () => {
                         placeholder='Tulis nama kampus'
                         validationErrors={validationErrors}
                         noMargin
+                        disabled={isReadOnly}
                       />
                     </div>
                     <button
@@ -704,6 +744,7 @@ const AlumniQuestionnaire = () => {
                   { value: 'kedinasan', label: 'Kedinasan' },
                 ]}
                 validationErrors={validationErrors}
+                disabled={isReadOnly}
               />
 
               <InputField
@@ -716,6 +757,7 @@ const AlumniQuestionnaire = () => {
                 max={new Date().getFullYear()}
                 placeholder='Ex: 2021'
                 validationErrors={validationErrors}
+                disabled={isReadOnly}
               />
 
               <div className='form-group'>
@@ -731,6 +773,7 @@ const AlumniQuestionnaire = () => {
                           ? formData.university.major
                           : ''
                       }
+                      disabled={isReadOnly}
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualMajorInput(true);
@@ -742,7 +785,7 @@ const AlumniQuestionnaire = () => {
                           handleChange(e);
                         }
                       }}
-                      className='w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                      className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
                     >
                       <option value=''>Pilih Jurusan</option>
                       {majors.map((major) => (
@@ -750,7 +793,7 @@ const AlumniQuestionnaire = () => {
                           {major}
                         </option>
                       ))}
-                      <option value='other'>+ Lainnya (ketik manual)</option>
+                      {!isReadOnly && <option value='other'>+ Lainnya (ketik manual)</option>}
                     </select>
                     <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
                       <svg
@@ -778,6 +821,7 @@ const AlumniQuestionnaire = () => {
                         placeholder='Tulis nama jurusan'
                         validationErrors={validationErrors}
                         noMargin
+                        disabled={isReadOnly}
                       />
                     </div>
                     <button
@@ -821,6 +865,7 @@ const AlumniQuestionnaire = () => {
                 onChange={handleChange}
                 placeholder='Ex: Staff IT'
                 validationErrors={validationErrors}
+                disabled={isReadOnly}
               />
               <InputField
                 label='Nama Instansi/Perusahaan'
@@ -829,6 +874,7 @@ const AlumniQuestionnaire = () => {
                 onChange={handleChange}
                 placeholder='Ex: PT. Maju Jaya'
                 validationErrors={validationErrors}
+                disabled={isReadOnly}
               />
               <InputField
                 label='Nama Pekerjaan'
@@ -837,6 +883,7 @@ const AlumniQuestionnaire = () => {
                 onChange={handleChange}
                 placeholder='Ex: Web Developer'
                 validationErrors={validationErrors}
+                disabled={isReadOnly}
               />
             </div>
           </div>
@@ -862,6 +909,7 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               placeholder='nama@email.com'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
             <InputField
               label='LinkedIn (URL/Username)'
@@ -870,6 +918,7 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               placeholder='linkedin.com/in/username'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
             <InputField
               label='Instagram (URL/Username)'
@@ -878,6 +927,7 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               placeholder='@username'
               validationErrors={validationErrors}
+              disabled={isReadOnly}
             />
           </div>
         </div>
@@ -889,36 +939,44 @@ const AlumniQuestionnaire = () => {
         )}
 
         {/* Action Buttons */}
-        <div className='flex flex-col-reverse gap-4 sm:flex-row sm:justify-end'>
-          <button
-            type='button'
-            onClick={() => navigate('/alumni')}
-            className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3 font-semibold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)]'
-            disabled={submitLoading}
-          >
-            Batal
-          </button>
+        {!isReadOnly && (
+          <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4'>
+            <button
+              type='button'
+              onClick={() => {
+                if (isEditMode) {
+                  setIsReadOnly(true);
+                } else {
+                  navigate('/alumni');
+                }
+              }}
+              className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3.5 font-bold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)] hover:border-[color:var(--text-tertiary)] active:scale-[0.98]'
+              disabled={submitLoading}
+            >
+              Batal
+            </button>
 
-          <button
-            type='submit'
-            disabled={submitLoading}
-            className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
-          >
-            {submitLoading ? (
-              <>
-                <FaSpinner className='animate-spin' />
-                <span>Menyimpan...</span>
-              </>
-            ) : (
-              <>
-                <FaSave />
-                <span>
-                  {isEditMode ? 'Simpan Perubahan' : 'Kirim Kuesioner'}
-                </span>
-              </>
-            )}
-          </button>
-        </div>
+            <button
+              type='submit'
+              disabled={submitLoading}
+              className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-10 py-3.5 font-extrabold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
+            >
+              {submitLoading ? (
+                <>
+                  <FaSpinner className='animate-spin' />
+                  <span>Menyimpan...</span>
+                </>
+              ) : (
+                <>
+                  <FaSave />
+                  <span>
+                    {isEditMode ? 'Simpan Perubahan' : 'Kirim Kuesioner'}
+                  </span>
+                </>
+              )}
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );

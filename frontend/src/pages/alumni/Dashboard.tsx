@@ -131,10 +131,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -184,7 +184,7 @@ const AlumniDashboard = () => {
               </div>
               <div>
                 <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
-                  Rekan Sepantaran
+                  Rekan Seangkatan
                 </h2>
                 <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
                   Lulus di tahun yang sama

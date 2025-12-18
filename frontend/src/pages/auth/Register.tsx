@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import {
   FaGraduationCap,
   FaUser,
@@ -60,7 +60,7 @@ const Register = () => {
         formData.password,
         formData.role
       );
-      toast.success('Pendaftaran berhasil! Silakan login untuk masuk.');
+      Toast('Pendaftaran berhasil! Silakan login untuk masuk.', 'success');
       navigate('/login');
     } catch (err: any) {
       setError(err.message || 'Pendaftaran gagal');

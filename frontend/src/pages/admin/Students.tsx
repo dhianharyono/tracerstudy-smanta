@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaUserPlus, FaEdit, FaTrash, FaTimes, FaSave, FaUser } from 'react-icons/fa';
 
@@ -44,17 +44,17 @@ const AdminStudents = () => {
     try {
       if (editingStudent) {
         await axios.put(`/api/admin/students/${editingStudent._id}`, formData);
-        toast.success('Student berhasil diperbarui!');
+        Toast('Student berhasil diperbarui!', 'success');
       } else {
         await axios.post('/api/admin/students', formData);
-        toast.success('Student berhasil ditambahkan!');
+        Toast('Student berhasil ditambahkan!', 'success');
       }
       setShowForm(false);
       setEditingStudent(null);
       setFormData({ username: '', email: '', password: '' });
       fetchStudents();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal menyimpan student');
+      Toast(error.response?.data?.message || 'Gagal menyimpan student', 'error');
     }
   };
 
@@ -75,10 +75,10 @@ const AdminStudents = () => {
 
     try {
       await axios.delete(`/api/admin/students/${id}`);
-      toast.success('Student berhasil dihapus!');
+      Toast('Student berhasil dihapus!', 'success');
       fetchStudents();
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Gagal menghapus student');
+      Toast(error.response?.data?.message || 'Gagal menghapus student', 'error');
     }
   };
 

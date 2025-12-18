@@ -361,3 +361,16 @@
   font-size: 48px;
   animation: spin 1s linear infinite;
 }
+
+.Toastify__toast-container--top-center {
+  padding-left: 3rem;
+  padding-right: 3rem;
+  padding-top: 15px;
+  width: 100%;
+  max-width: 500px;
+  /* Opsional: agar di desktop tidak terlalu lebar */
+}
+
+.Toastify__toast {
+  margin-bottom: 1rem;
+}

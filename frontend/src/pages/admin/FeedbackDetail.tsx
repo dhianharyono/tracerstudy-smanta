@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaArrowLeft, FaUserCircle, FaStar, FaQuoteLeft } from 'react-icons/fa';
 
@@ -22,8 +22,9 @@ const AdminFeedbackDetail = () => {
       const response = await axios.get(`/api/admin/feedback/${id}`);
       setFeedback(response.data);
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message || 'Gagal memuat detail feedback'
+      Toast(
+        error.response?.data?.message || 'Gagal memuat detail feedback',
+        'error'
       );
       navigate('/admin/feedback');
     } finally {
