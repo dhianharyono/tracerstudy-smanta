@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { BsInstagram, BsBuilding } from 'react-icons/bs';
-import { FaSpinner, FaGraduationCap, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
+import { BsInstagram } from 'react-icons/bs';
+import {
+  FaSpinner,
+  FaGraduationCap,
+  FaFilter,
+  FaSearch,
+  FaTimes,
+} from 'react-icons/fa';
 
 const StudentAlumni = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -54,7 +60,8 @@ const StudentAlumni = () => {
       });
 
       if (filters.university) params.append('university', filters.university);
-      if (filters.graduationYear) params.append('graduationYear', filters.graduationYear);
+      if (filters.graduationYear)
+        params.append('graduationYear', filters.graduationYear);
       if (filters.major) params.append('major', filters.major);
       if (filters.name) params.append('name', filters.name);
 
@@ -79,7 +86,7 @@ const StudentAlumni = () => {
     setPagination({ ...pagination, page: 1 });
 
     const params = new URLSearchParams();
-    Object.keys(newFilters).forEach(k => {
+    Object.keys(newFilters).forEach((k) => {
       if (newFilters[k as keyof typeof newFilters]) {
         params.set(k, newFilters[k as keyof typeof newFilters]);
       }
@@ -126,7 +133,11 @@ const StudentAlumni = () => {
       </div>
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
-      <div className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'}`}>
+      <div
+        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
+      >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}
           <div className='relative'>
@@ -149,11 +160,25 @@ const StudentAlumni = () => {
             >
               <option value=''>Semua Universitas</option>
               {filterOptions.universities.map((univ) => (
-                <option key={univ} value={univ}>{univ}</option>
+                <option key={univ} value={univ}>
+                  {univ}
+                </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -166,11 +191,25 @@ const StudentAlumni = () => {
             >
               <option value=''>Semua Jurusan</option>
               {filterOptions.majors.map((major) => (
-                <option key={major} value={major}>{major}</option>
+                <option key={major} value={major}>
+                  {major}
+                </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -179,21 +218,37 @@ const StudentAlumni = () => {
             <div className='relative flex-1'>
               <select
                 value={filters.graduationYear}
-                onChange={(e) => handleFilterChange('graduationYear', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('graduationYear', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none cursor-pointer border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
               >
                 <option value=''>Tahun Lulus</option>
                 {filterOptions.graduationYears.map((year) => (
-                  <option key={year} value={year.toString()}>{year}</option>
+                  <option key={year} value={year.toString()}>
+                    {year}
+                  </option>
                 ))}
               </select>
               <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
               </div>
             </div>
             <button
               onClick={handleClearFilters}
-              title="Reset Filter"
+              title='Reset Filter'
               className='px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 transition-colors'
             >
               <FaTimes />
@@ -211,9 +266,7 @@ const StudentAlumni = () => {
           <h3 className='text-lg font-medium text-[color:var(--text-primary)]'>
             Tidak ditemukan
           </h3>
-          <p className='text-gray-500'>
-            Coba sesuaikan filter pencarian Anda.
-          </p>
+          <p className='text-gray-500'>Coba sesuaikan filter pencarian Anda.</p>
         </div>
       ) : (
         <div className='max-w-sm md:max-w-full'>
@@ -257,26 +310,40 @@ const StudentAlumni = () => {
                       </td>
                       <td className='px-6 py-4'>
                         <div className='flex flex-col max-w-[200px]'>
-                          <span className='font-medium text-[color:var(--text-primary)] truncate' title={alum.university?.name}>
+                          <span
+                            className='font-medium text-[color:var(--text-primary)] truncate'
+                            title={alum.university?.name}
+                          >
                             {alum.university?.name || '-'}
                           </span>
-                          <span className='text-xs text-[color:var(--text-secondary)] truncate' title={alum.university?.major}>
+                          <span
+                            className='text-xs text-[color:var(--text-secondary)] truncate'
+                            title={alum.university?.major}
+                          >
                             {alum.university?.major || '-'}
                           </span>
                         </div>
                       </td>
                       <td className='px-6 py-4'>
-                        {(alum.job?.position || alum.job?.institution) ? (
+                        {alum.job?.position || alum.job?.institution ? (
                           <div className='flex flex-col max-w-[200px]'>
-                            <span className='font-medium text-[color:var(--text-primary)] truncate' title={alum.job?.position}>
+                            <span
+                              className='font-medium text-[color:var(--text-primary)] truncate'
+                              title={alum.job?.position}
+                            >
                               {alum.job?.position || 'Bekerja'}
                             </span>
-                            <span className='text-xs text-[color:var(--text-secondary)] truncate' title={alum.job?.institution}>
+                            <span
+                              className='text-xs text-[color:var(--text-secondary)] truncate'
+                              title={alum.job?.institution}
+                            >
                               {alum.job?.institution || '-'}
                             </span>
                           </div>
                         ) : (
-                          <span className='text-[color:var(--text-secondary)] italic'>-</span>
+                          <span className='text-[color:var(--text-secondary)] italic'>
+                            -
+                          </span>
                         )}
                       </td>
                       <td className='px-6 py-4 text-center'>
@@ -284,7 +351,7 @@ const StudentAlumni = () => {
                           <a
                             href={alum.socialMedia.instagram}
                             target='_blank'
-                            rel="noreferrer"
+                            rel='noreferrer'
                             className='inline-flex items-center justify-center h-8 w-8 rounded-full bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors dark:bg-pink-900/20 dark:hover:bg-pink-900/40'
                           >
                             <BsInstagram size={14} />
@@ -303,11 +370,18 @@ const StudentAlumni = () => {
           {/* Pagination */}
           <div className='mt-6 flex flex-col sm:flex-row items-center justify-between gap-4'>
             <div className='text-sm text-[color:var(--text-secondary)]'>
-              Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} data
+              Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{' '}
+              {Math.min(pagination.page * pagination.limit, pagination.total)}{' '}
+              dari {pagination.total} data
             </div>
             <div className='flex items-center gap-2'>
               <button
-                onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+                onClick={() =>
+                  setPagination({
+                    ...pagination,
+                    page: Math.max(1, pagination.page - 1),
+                  })
+                }
                 disabled={pagination.page === 1}
                 className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
               >
@@ -325,7 +399,12 @@ const StudentAlumni = () => {
                 </span>
               </div>
               <button
-                onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+                onClick={() =>
+                  setPagination({
+                    ...pagination,
+                    page: Math.min(pagination.pages, pagination.page + 1),
+                  })
+                }
                 disabled={pagination.page >= pagination.pages}
                 className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
               >
