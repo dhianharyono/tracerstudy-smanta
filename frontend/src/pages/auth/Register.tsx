@@ -2,7 +2,16 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { toast } from 'react-toastify';
-import { FaGraduationCap, FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUserGraduate, FaUserTag } from 'react-icons/fa';
+import {
+  FaGraduationCap,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+  FaUserGraduate,
+  FaUserTag,
+} from 'react-icons/fa';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -33,12 +42,12 @@ const Register = () => {
     setError('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Password tidak cocok');
       return;
     }
 
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Password harus minimal 6 karakter');
       return;
     }
 
@@ -51,10 +60,10 @@ const Register = () => {
         formData.password,
         formData.role
       );
-      toast.success('Registration successful! Please login.');
+      toast.success('Pendaftaran berhasil! Silakan login untuk masuk.');
       navigate('/login');
     } catch (err: any) {
-      setError(err.message || 'Registration failed');
+      setError(err.message || 'Pendaftaran gagal');
     } finally {
       setLoading(false);
     }
@@ -63,9 +72,9 @@ const Register = () => {
   return (
     <div className='flex min-h-screen items-center justify-center bg-[color:var(--bg-primary)] p-4 relative overflow-hidden'>
       {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
-        <div className="absolute top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[var(--primary)] opacity-10 blur-3xl"></div>
-        <div className="absolute -bottom-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl"></div>
+      <div className='absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none'>
+        <div className='absolute top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[var(--primary)] opacity-10 blur-3xl'></div>
+        <div className='absolute -bottom-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl'></div>
       </div>
 
       <div className='w-full max-w-md z-10 animate-fade-in'>
@@ -75,23 +84,39 @@ const Register = () => {
             <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white shadow-lg shadow-blue-500/30'>
               <FaUserGraduate className='text-3xl' />
             </div>
-            <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>Buat Akun Baru</h1>
-            <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>Mulai perjalanan karir Anda dengan Tracer Study</p>
+            <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+              Buat Akun Baru
+            </h1>
+            <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>
+              Mulai perjalanan karir Anda dengan Tracer Study
+            </p>
           </div>
 
           <div className='p-8'>
             {error && (
               <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
-                <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
+                <svg
+                  className='h-5 w-5 shrink-0'
+                  fill='currentColor'
+                  viewBox='0 0 20 20'
+                >
+                  <path
+                    fillRule='evenodd'
+                    d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+                    clipRule='evenodd'
+                  />
+                </svg>
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className="space-y-1.5">
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Role</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+              <div className='space-y-1.5'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+                  Role
+                </label>
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
                     <FaUserTag />
                   </div>
                   <select
@@ -105,15 +130,29 @@ const Register = () => {
                     <option value='student'>Student</option>
                   </select>
                   <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
-                    <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+                    <svg
+                      className='h-4 w-4'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth='2'
+                        d='M19 9l-7 7-7-7'
+                      />
+                    </svg>
                   </div>
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Username</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+              <div className='space-y-1.5'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+                  Username
+                </label>
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
                     <FaUser />
                   </div>
                   <input
@@ -128,10 +167,12 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Email</label>
-                <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+              <div className='space-y-1.5'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+                  Email
+                </label>
+                <div className='relative'>
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
                     <FaEnvelope />
                   </div>
                   <input
@@ -146,10 +187,12 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Password</label>
+              <div className='space-y-1.5'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+                  Password
+                </label>
                 <div className='relative'>
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
                     <FaLock />
                   </div>
                   <input
@@ -171,10 +214,12 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Konfirmasi Password</label>
+              <div className='space-y-1.5'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+                  Konfirmasi Password
+                </label>
                 <div className='relative'>
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
                     <FaLock />
                   </div>
                   <input
@@ -202,11 +247,13 @@ const Register = () => {
                 className='w-full transform rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-4'
               >
                 {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <FaGraduationCap className="animate-pulse" />
+                  <span className='flex items-center justify-center gap-2'>
+                    <FaGraduationCap className='animate-pulse' />
                     Mendaftar...
                   </span>
-                ) : 'Daftar Sekarang'}
+                ) : (
+                  'Daftar Sekarang'
+                )}
               </button>
             </form>
 
@@ -223,10 +270,6 @@ const Register = () => {
             </div>
           </div>
         </div>
-
-        <p className="mt-8 text-center text-xs text-[color:var(--text-tertiary)]">
-          &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
-        </p>
       </div>
     </div>
   );

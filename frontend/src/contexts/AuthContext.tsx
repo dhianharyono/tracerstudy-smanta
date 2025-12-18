@@ -62,19 +62,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const register = async (username: string, email: string, password: string, role: string) => {
     try {
-      const response = await axios.post('/api/auth/register', {
+      await axios.post('/api/auth/register', {
         username,
         email,
         password,
         role,
       });
-      const { token: newToken, user: newUser } = response.data;
-
-      setToken(newToken);
-      setUser(newUser);
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      // Removed automatic login logic
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }

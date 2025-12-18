@@ -896,11 +896,6 @@ const AlumniQuestionnaire = () => {
           </button>
         </div>
       </form>
-
-      <div className='mt-8 text-center text-sm text-[color:var(--text-tertiary)]'>
-        &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. Data
-        Anda aman dan terlindungi.
-      </div>
     </div>
   );
 };
