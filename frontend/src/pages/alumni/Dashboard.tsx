@@ -12,12 +12,7 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 // import Notifications from '@/components/Dashboard/Notifications';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
-import {
-  FaUserCircle,
-  FaChevronRight,
-  FaUserGraduate,
-  FaUsers,
-} from 'react-icons/fa';
+import { FaUserCircle, FaChevronRight, FaUsers } from 'react-icons/fa';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
