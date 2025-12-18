@@ -168,13 +168,13 @@ const AlumniQuestionnaire = () => {
               isStudying: profile.profile?.isStudying
                 ? 'ya'
                 : profile.profile?.isStudying === false
-                  ? 'tidak'
-                  : '',
+                ? 'tidak'
+                : '',
               isWorking: profile.profile?.isWorking
                 ? 'ya'
                 : profile.profile?.isWorking === false
-                  ? 'tidak'
-                  : '',
+                ? 'tidak'
+                : '',
             },
             university: {
               name: profile.university?.name || '',
@@ -307,11 +307,11 @@ const AlumniQuestionnaire = () => {
         university:
           formData.profile.isStudying === 'ya'
             ? {
-              ...formData.university,
-              entryYear: formData.university.entryYear
-                ? parseInt(formData.university.entryYear)
-                : undefined,
-            }
+                ...formData.university,
+                entryYear: formData.university.entryYear
+                  ? parseInt(formData.university.entryYear)
+                  : undefined,
+              }
             : undefined,
         job: formData.profile.isWorking === 'ya' ? formData.job : undefined,
         socialMedia: {
@@ -332,7 +332,7 @@ const AlumniQuestionnaire = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-        `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
+          `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
       );
     } finally {
       setSubmitLoading(false);
@@ -367,10 +367,11 @@ const AlumniQuestionnaire = () => {
         min={min}
         max={max}
         placeholder={placeholder}
-        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
-          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-          : ''
-          }`}
+        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+          validationErrors[name]
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+            : ''
+        }`}
       />
       {validationErrors[name] && (
         <span className='mt-1 text-xs text-red-500'>
@@ -398,10 +399,11 @@ const AlumniQuestionnaire = () => {
           value={value}
           onChange={onChange}
           required={required}
-          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
-            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-            : ''
-            }`}
+          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+            validationErrors[name]
+              ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+              : ''
+          }`}
         >
           <option value=''>Pilih</option>
           {options.map((opt: any) => (
@@ -442,7 +444,7 @@ const AlumniQuestionnaire = () => {
           {isEditMode ? 'Edit Kuesioner' : 'Kuesioner Tracer Study'}
         </h1>
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Lengkapi data Anda untuk kegiatan tracer study
+          Lengkapi data Anda untuk mendukung tracer study
         </p>
       </div>
 
