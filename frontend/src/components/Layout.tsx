@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
@@ -29,6 +29,14 @@ const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [feedbackMenuVisible, setFeedbackMenuVisible] = useState(true);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Scroll to top when route changes
+  useEffect(() => {
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, 0);
+    }
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -269,7 +277,7 @@ const Layout = () => {
         </div>
 
         {/* Page Content */}
-        <main className='flex-1 flex flex-col overflow-y-auto scroll-smooth'>
+        <main ref={mainRef} className='flex-1 flex flex-col overflow-y-auto scroll-smooth'>
           <div className='mx-auto max-w-7xl w-full flex-grow animate-fade-in pb-8'>
             <Outlet />
           </div>

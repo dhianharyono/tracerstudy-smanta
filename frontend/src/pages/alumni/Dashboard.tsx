@@ -30,7 +30,6 @@ const AlumniDashboard = () => {
   const [hideQuestionnaireCard, setHideQuestionnaireCard] = useState(false);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         const [profileRes, statsRes, newsRes, mutualRes] = await Promise.all([
@@ -182,14 +181,14 @@ const AlumniDashboard = () => {
                 <FaUserGraduate className='text-lg' />
               </div>
               <div>
-                <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>Rekan Sepantaran</h2>
-                <p className='text-xs text-[color:var(--text-secondary)]'>Lulus di tahun yang sama</p>
+                <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>Rekan Sepantaran</h2>
+                <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>Lulus di tahun yang sama</p>
               </div>
             </div>
             {mutualAlumni.length > 0 && (
               <Link
                 to='/alumni/mutual-alumni'
-                className='text-xs font-semibold text-[var(--primary)] hover:underline flex items-center gap-1'
+                className='text-[10px] md:text-xs font-semibold text-[var(--primary)] hover:underline flex items-center gap-1'
               >
                 Lihat Semua <FaChevronRight className='text-[10px]' />
               </Link>

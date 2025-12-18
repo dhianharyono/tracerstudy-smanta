@@ -25,11 +25,14 @@ const InputField = ({
   min,
   max,
   validationErrors = {},
+  noMargin = false,
 }: any) => (
-  <div className='form-group'>
-    <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-      {label} {required && <span className='text-red-500'>*</span>}
-    </label>
+  <div className={noMargin ? '' : 'form-group'}>
+    {label && (
+      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+        {label} {required && <span className='text-red-500'>*</span>}
+      </label>
+    )}
     <input
       type={type}
       name={name}
@@ -62,9 +65,11 @@ const SelectField = ({
   validationErrors = {},
 }: any) => (
   <div className='form-group'>
-    <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-      {label} {required && <span className='text-red-500'>*</span>}
-    </label>
+    {label && (
+      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+        {label} {required && <span className='text-red-500'>*</span>}
+      </label>
+    )}
     <div className='relative'>
       <select
         name={name}
@@ -421,7 +426,6 @@ const AlumniQuestionnaire = () => {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
       toast.success('Kuesioner berhasil diperbarui!');
-      window.scrollTo(0, 0);
       navigate('/alumni');
     } catch (err: any) {
       setError(
@@ -660,7 +664,7 @@ const AlumniQuestionnaire = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className='flex gap-2'>
+                  <div className='flex items-center gap-2'>
                     <div className='flex-1'>
                       <InputField
                         name='university.name'
@@ -668,6 +672,7 @@ const AlumniQuestionnaire = () => {
                         onChange={handleChange}
                         placeholder='Tulis nama kampus'
                         validationErrors={validationErrors}
+                        noMargin
                       />
                     </div>
                     <button
@@ -680,7 +685,7 @@ const AlumniQuestionnaire = () => {
                         }));
                       }}
                       title='Kembali ke daftar'
-                      className='flex h-[46px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
+                      className='flex h-[50px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
                     </button>
@@ -764,7 +769,7 @@ const AlumniQuestionnaire = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className='flex gap-2'>
+                  <div className='flex items-center gap-2'>
                     <div className='flex-1'>
                       <InputField
                         name='university.major'
@@ -772,6 +777,7 @@ const AlumniQuestionnaire = () => {
                         onChange={handleChange}
                         placeholder='Tulis nama jurusan'
                         validationErrors={validationErrors}
+                        noMargin
                       />
                     </div>
                     <button
@@ -784,7 +790,7 @@ const AlumniQuestionnaire = () => {
                         }));
                       }}
                       title='Kembali ke daftar'
-                      className='flex h-[46px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
+                      className='flex h-[50px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
                     </button>
