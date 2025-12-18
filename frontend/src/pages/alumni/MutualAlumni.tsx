@@ -82,7 +82,7 @@ const MutualAlumni = () => {
           {alumni.map((person) => (
             <div
               key={person._id}
-              className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg'
+              className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col'
             >
               <div className='mb-4 flex items-center gap-4'>
                 <div className='flex h-8 w-8 md:h-12 md:w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-md'>
@@ -98,7 +98,7 @@ const MutualAlumni = () => {
                 </div>
               </div>
 
-              <div className='space-y-3'>
+              <div className='space-y-3 flex-1'>
                 {person.university?.name && (
                   <div className='flex items-start gap-3'>
                     <FaUniversity className='mt-1 shrink-0 text-blue-500' />
@@ -134,7 +134,7 @@ const MutualAlumni = () => {
                 )}
 
                 {!person.university?.name && !person.job?.institution && (
-                  <div className='py-2 text-center'>
+                  <div className='py-2 text-center h-full flex items-center justify-center'>
                     <p className='text-xs italic text-[color:var(--text-tertiary)]'>
                       Belum melengkapi data kuesioner
                     </p>
@@ -144,42 +144,42 @@ const MutualAlumni = () => {
 
               {(person.socialMedia?.linkedin ||
                 person.socialMedia?.instagram) && (
-                <div className='mt-6 pt-4 border-t border-[color:var(--border-color)] flex items-center gap-3'>
-                  {person.socialMedia.linkedin && (
-                    <a
-                      href={
-                        person.socialMedia.linkedin.startsWith('http')
-                          ? person.socialMedia.linkedin
-                          : `https://linkedin.com/in/${person.socialMedia.linkedin}`
-                      }
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
-                    >
-                      <FaLinkedin className='text-sm' />
-                      LinkedIn
-                    </a>
-                  )}
-                  {person.socialMedia.instagram && (
-                    <a
-                      href={
-                        person.socialMedia.instagram.startsWith('http')
-                          ? person.socialMedia.instagram
-                          : `https://instagram.com/${person.socialMedia.instagram.replace(
+                  <div className='mt-6 pt-4 border-t border-[color:var(--border-color)] flex items-center gap-3'>
+                    {person.socialMedia.linkedin && (
+                      <a
+                        href={
+                          person.socialMedia.linkedin.startsWith('http')
+                            ? person.socialMedia.linkedin
+                            : `https://linkedin.com/in/${person.socialMedia.linkedin}`
+                        }
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                      >
+                        <FaLinkedin className='text-sm' />
+                        LinkedIn
+                      </a>
+                    )}
+                    {person.socialMedia.instagram && (
+                      <a
+                        href={
+                          person.socialMedia.instagram.startsWith('http')
+                            ? person.socialMedia.instagram
+                            : `https://instagram.com/${person.socialMedia.instagram.replace(
                               '@',
                               ''
                             )}`
-                      }
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
-                    >
-                      <FaInstagram className='text-sm' />
-                      Instagram
-                    </a>
-                  )}
-                </div>
-              )}
+                        }
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                      >
+                        <FaInstagram className='text-sm' />
+                        Instagram
+                      </a>
+                    )}
+                  </div>
+                )}
             </div>
           ))}
         </div>
