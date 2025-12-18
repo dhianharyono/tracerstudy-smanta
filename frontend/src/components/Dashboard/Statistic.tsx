@@ -5,62 +5,96 @@ import {
   FaUniversity,
 } from 'react-icons/fa';
 
-interface statsObject {
-  totalAlumni: '';
-  workingAlumni: '';
-  studyingAlumni: '';
+interface StatsObject {
+  totalAlumni: number | string;
+  workingAlumni: number | string;
+  studyingAlumni: number | string;
   universityTypes: {
-    negeri: '';
-    swasta: '';
-    kedinasan: '';
+    negeri: number | string;
+    swasta: number | string;
+    kedinasan: number | string;
   };
 }
 
-const Statistic = ({ stats }: { stats: statsObject }) => {
+interface StatCardProps {
+  title: string;
+  value: number | string;
+  colorClass: string;
+  bgClass: string;
+}
+
+const StatCard = ({ title, value, colorClass, bgClass }: StatCardProps) => (
+  <div className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
+    <div className={`absolute -right-6 -top-6 h-24 w-24 rounded-full ${bgClass} opacity-20 transition-transform group-hover:scale-110`} />
+
+    <div className='relative z-10 flex items-start justify-between'>
+      <div>
+        <p className='text-xs font-semibold uppercase tracking-wider text-[color:var(--text-secondary)] mb-1'>
+          {title}
+        </p>
+        <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
+          {value || 0}
+        </h3>
+      </div>
+      <div className={`hidden md:show flex h-12 w-12 items-center justify-center rounded-xl ${bgClass} ${colorClass}`} />
+    </div>
+  </div>
+);
+
+const Statistic = ({ stats }: { stats: StatsObject }) => {
+  const statItems = [
+    {
+      title: 'Total Alumni',
+      value: stats?.totalAlumni,
+      icon: FaUsers,
+      colorClass: 'text-blue-600 dark:text-blue-400',
+      bgClass: 'bg-blue-100 dark:bg-blue-900/50'
+    },
+    {
+      title: 'Alumni Bekerja',
+      value: stats?.workingAlumni,
+      icon: FaBriefcase,
+      colorClass: 'text-amber-600 dark:text-amber-400',
+      bgClass: 'bg-amber-100 dark:bg-amber-900/50'
+    },
+    {
+      title: 'Alumni Kuliah',
+      value: stats?.studyingAlumni,
+      icon: FaGraduationCap,
+      colorClass: 'text-green-600 dark:text-green-400',
+      bgClass: 'bg-green-100 dark:bg-green-900/50'
+    },
+    {
+      title: 'PTN',
+      value: stats?.universityTypes?.negeri,
+      icon: FaUniversity,
+      colorClass: 'text-purple-600 dark:text-purple-400',
+      bgClass: 'bg-purple-100 dark:bg-purple-900/50'
+    },
+    {
+      title: 'PTS',
+      value: stats?.universityTypes?.swasta,
+      icon: FaUniversity,
+      colorClass: 'text-pink-600 dark:text-pink-400',
+      bgClass: 'bg-pink-100 dark:bg-pink-900/50'
+    },
+    {
+      title: 'Kedinasan',
+      value: stats?.universityTypes?.kedinasan,
+      icon: FaUniversity,
+      colorClass: 'text-indigo-600 dark:text-indigo-400',
+      bgClass: 'bg-indigo-100 dark:bg-indigo-900/50'
+    },
+  ];
+
   return (
-    <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-6 md:mb-8'>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaUsers />
-        </div>
-        <h3>Total Alumni</h3>
-        <div className='value'>{stats?.totalAlumni || 0}</div>
-      </div>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaBriefcase />
-        </div>
-        <h3>Alumni Bekerja</h3>
-        <div className='value'>{stats?.workingAlumni || 0}</div>
-      </div>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaGraduationCap />
-        </div>
-        <h3>Alumni Kuliah</h3>
-        <div className='value'>{stats?.studyingAlumni || 0}</div>
-      </div>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaUniversity />
-        </div>
-        <h3>PTN</h3>
-        <div className='value'>{stats?.universityTypes?.negeri || 0}</div>
-      </div>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaUniversity />
-        </div>
-        <h3>PTS</h3>
-        <div className='value'>{stats?.universityTypes?.swasta || 0}</div>
-      </div>
-      <div className='stat-card' style={{ background: 'var(--bg-secondary)' }}>
-        <div className='icon'>
-          <FaUniversity />
-        </div>
-        <h3>Kedinasan</h3>
-        <div className='value'>{stats?.universityTypes?.kedinasan || 0}</div>
-      </div>
+    <div className='grid grid-cols-3 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 mb-8'>
+      {statItems.map((item, index) => (
+        <StatCard
+          key={index}
+          {...item}
+        />
+      ))}
     </div>
   );
 };

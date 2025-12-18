@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import './Auth.css';
 import { toast } from 'react-toastify';
+import { FaGraduationCap, FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUserGraduate, FaUserTag } from 'react-icons/fa';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -51,7 +51,7 @@ const Register = () => {
         formData.password,
         formData.role
       );
-      toast.dark('Registration successful! Please login.');
+      toast.success('Registration successful! Please login.');
       navigate('/login');
     } catch (err: any) {
       setError(err.message || 'Registration failed');
@@ -61,163 +61,171 @@ const Register = () => {
   };
 
   return (
-    <div className='auth-container'>
-      <div className='auth-card'>
-        <div className='auth-logo'>🎓</div>
-        <h1>Register</h1>
-        <p className='subtitle'>Buat akun baru untuk mengakses Tracer Study</p>
-        <form onSubmit={handleSubmit}>
-          <div className='form-group'>
-            <label>Role</label>
-            <select
-              name='role'
-              value={formData.role}
-              onChange={handleChange}
-              required
-            >
-              <option value='alumni'>Alumni</option>
-              <option value='student'>Student</option>
-            </select>
+    <div className='flex min-h-screen items-center justify-center bg-[color:var(--bg-primary)] p-4 relative overflow-hidden'>
+      {/* Background decoration */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <div className="absolute top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[var(--primary)] opacity-10 blur-3xl"></div>
+        <div className="absolute -bottom-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl"></div>
+      </div>
+
+      <div className='w-full max-w-md z-10 animate-fade-in'>
+        <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
+          {/* Header */}
+          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)]'>
+            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white shadow-lg shadow-blue-500/30'>
+              <FaUserGraduate className='text-3xl' />
+            </div>
+            <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>Buat Akun Baru</h1>
+            <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>Mulai perjalanan karir Anda dengan Tracer Study</p>
           </div>
-          <div className='form-group'>
-            <label>Username</label>
-            <input
-              type='text'
-              name='username'
-              value={formData.username}
-              onChange={handleChange}
-              required
-              placeholder='Masukkan username Anda'
-            />
-          </div>
-          <div className='form-group'>
-            <label>Email</label>
-            <input
-              type='email'
-              name='email'
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder='Masukkan email Anda'
-            />
-          </div>
-          <div className='form-group'>
-            <label>Password</label>
-            <div className='relative'>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                name='password'
-                value={formData.password}
-                onChange={handleChange}
-                required
-                placeholder='Minimal 6 karakter'
-              />
+
+          <div className='p-8'>
+            {error && (
+              <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+                <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className='space-y-4'>
+              <div className="space-y-1.5">
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Role</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                    <FaUserTag />
+                  </div>
+                  <select
+                    name='role'
+                    value={formData.role}
+                    onChange={handleChange}
+                    required
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base appearance-none'
+                  >
+                    <option value='alumni'>Alumni</option>
+                    <option value='student'>Student</option>
+                  </select>
+                  <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+                    <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Username</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                    <FaUser />
+                  </div>
+                  <input
+                    type='text'
+                    name='username'
+                    value={formData.username}
+                    onChange={handleChange}
+                    required
+                    placeholder='Buat username unik'
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Email</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                    <FaEnvelope />
+                  </div>
+                  <input
+                    type='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    placeholder='alamat@email.com'
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Password</label>
+                <div className='relative'>
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                    <FaLock />
+                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name='password'
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    placeholder='Minimal 6 karakter'
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-0 top-0 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>Konfirmasi Password</label>
+                <div className='relative'>
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]">
+                    <FaLock />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    name='confirmPassword'
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    placeholder='Ulangi password'
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className='absolute right-0 top-0 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+
               <button
-                type='button'
-                onClick={() => setShowPassword(!showPassword)}
-                className='absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none transition-colors text-[var(--text-tertiary)]'
-                tabIndex={-1}
+                type='submit'
+                disabled={loading}
+                className='w-full transform rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-4'
               >
-                {showPassword ? (
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21'
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
-                    />
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
-                    />
-                  </svg>
-                )}
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <FaGraduationCap className="animate-pulse" />
+                    Mendaftar...
+                  </span>
+                ) : 'Daftar Sekarang'}
               </button>
+            </form>
+
+            <div className='mt-8 text-center'>
+              <p className='text-sm text-[color:var(--text-tertiary)]'>
+                Sudah punya akun?{' '}
+                <Link
+                  to='/login'
+                  className='font-semibold text-[color:var(--primary)] transition-colors hover:text-blue-400'
+                >
+                  Login di sini
+                </Link>
+              </p>
             </div>
           </div>
-          <div className='form-group'>
-            <label>Confirm Password</label>
-            <div className='relative'>
-              <input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name='confirmPassword'
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                required
-                placeholder='Konfirmasi password Anda'
-              />
-              <button
-                type='button'
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className='absolute right-3 top-1/2 transform -translate-y-1/2 focus:outline-none transition-colors text-[var(--text-tertiary)]'
-                tabIndex={-1}
-              >
-                {showConfirmPassword ? (
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21'
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    className='w-5 h-5'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
-                    />
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z'
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
-          </div>
-          {error && <div className='error'>⚠️ {error}</div>}
-          <button type='submit' className='btn btn-primary' disabled={loading}>
-            {loading ? 'Registering...' : 'Register'}
-          </button>
-        </form>
-        <p>
-          Already have an account? <a href='/login'>Login here</a>
+        </div>
+
+        <p className="mt-8 text-center text-xs text-[color:var(--text-tertiary)]">
+          &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
         </p>
       </div>
     </div>

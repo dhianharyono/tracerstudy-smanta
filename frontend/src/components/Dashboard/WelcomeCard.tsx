@@ -23,7 +23,7 @@ const WelcomeCard = ({ username }: { username: string }) => {
           style={{ color: 'var(--primary)' }}
         />
         <div>
-          <h2 className='mb-1 text-lg md:text-xl text-[color:var(--text-)]'>
+          <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
             Selamat Datang, {username}!
           </h2>
           <p

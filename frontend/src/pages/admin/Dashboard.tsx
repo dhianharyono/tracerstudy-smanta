@@ -63,29 +63,33 @@ const AdminDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='page-header'>
-        <h1 className='text-xl md:text-2xl'>Dashboard Administrator</h1>
+      <div className='mb-6 text-center md:text-left'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Dashboard Administrator</h1>
+        <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+          Ringkasan data tracer study siswa dan alumni
+        </p>
       </div>
+
       <Statistic stats={stats} />
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6'>
-        <PerguruanTinggi data={universityTypeData} chartWidth={chartWidth} />
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 md:mb-8'>
+        <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
       </div>
 
-      <div className='mb-6 md:mb-8 max-w-sm md:max-w-md lg:max-w-full'>
+      <div className='mb-6 md:mb-8 w-full rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
         <InteractiveAlumniMap apiEndpoint='/api/admin/alumni-map' />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <Jurusan data={stats} chartWidth={chartWidth} />
         <TahunLulus data={stats} chartWidth={chartWidth} />
       </div>

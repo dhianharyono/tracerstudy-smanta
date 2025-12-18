@@ -1,23 +1,25 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { BsInstagram } from 'react-icons/bs';
-import { FaSpinner } from 'react-icons/fa';
+import { BsInstagram, BsBuilding } from 'react-icons/bs';
+import { FaSpinner, FaGraduationCap, FaFilter, FaSearch, FaTimes } from 'react-icons/fa';
 
 const StudentAlumni = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [alumni, setAlumni] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 10,
+    limit: 12,
     total: 0,
     pages: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     university: searchParams.get('university') || '',
     graduationYear: searchParams.get('graduationYear') || '',
     major: searchParams.get('major') || '',
+    name: searchParams.get('name') || '',
   });
   const [filterOptions, setFilterOptions] = useState({
     universities: [] as string[],
@@ -29,11 +31,13 @@ const StudentAlumni = () => {
     const university = searchParams.get('university') || '';
     const major = searchParams.get('major') || '';
     const graduationYear = searchParams.get('graduationYear') || '';
+    const name = searchParams.get('name') || '';
 
     setFilters({
       university,
       graduationYear,
       major,
+      name,
     });
   }, [searchParams]);
 
@@ -42,6 +46,7 @@ const StudentAlumni = () => {
   }, [pagination.page, filters]);
 
   const fetchAlumni = async () => {
+    setLoading(true);
     try {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
@@ -49,9 +54,9 @@ const StudentAlumni = () => {
       });
 
       if (filters.university) params.append('university', filters.university);
-      if (filters.graduationYear)
-        params.append('graduationYear', filters.graduationYear);
+      if (filters.graduationYear) params.append('graduationYear', filters.graduationYear);
       if (filters.major) params.append('major', filters.major);
+      if (filters.name) params.append('name', filters.name);
 
       const response = await axios.get(
         `/api/student/alumni?${params.toString()}`
@@ -74,178 +79,262 @@ const StudentAlumni = () => {
     setPagination({ ...pagination, page: 1 });
 
     const params = new URLSearchParams();
-    if (newFilters.university) params.set('university', newFilters.university);
-    if (newFilters.major) params.set('major', newFilters.major);
-    if (newFilters.graduationYear)
-      params.set('graduationYear', newFilters.graduationYear);
+    Object.keys(newFilters).forEach(k => {
+      if (newFilters[k as keyof typeof newFilters]) {
+        params.set(k, newFilters[k as keyof typeof newFilters]);
+      }
+    });
     setSearchParams(params);
   };
 
   const handleClearFilters = () => {
-    setFilters({ university: '', graduationYear: '', major: '' });
+    setFilters({ university: '', graduationYear: '', major: '', name: '' });
     setPagination({ ...pagination, page: 1 });
     setSearchParams({});
   };
 
-  const renderFilter = () => {
+  if (loading && alumni.length === 0) {
     return (
-      <div className='card mb-6 max-w-xs md:max-w-sm lg:max-w-full page-fade-in'>
-        <h2 className='text-xl font-semibold mb-4'>Filter</h2>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1 lg:gap-5'>
-          <div className='form-group'>
-            <label>Universitas</label>
+      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
+          <FaSpinner className='animate-spin text-xl' />
+          <span>Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
+      {/* Header Section */}
+      <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+        <div>
+          <h1 className='text-2xl font-bold text-[color:var(--text-primary)] sm:text-3xl'>
+            Data Alumni
+          </h1>
+          <p className='mt-1 text-sm text-[color:var(--text-secondary)]'>
+            Temukan rekan alumni dan jejak karir mereka
+          </p>
+        </div>
+
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className='max-w-sm md:hidden flex items-center justify-center gap-2 w-full py-2 bg-[var(--primary)] text-white rounded-lg'
+        >
+          <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Alumni'}
+        </button>
+      </div>
+
+      {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
+      <div className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'}`}>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+          {/* Search Name */}
+          <div className='relative'>
+            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
+            <input
+              type='text'
+              placeholder='Cari Nama Alumni...'
+              value={filters.name}
+              onChange={(e) => handleFilterChange('name', e.target.value)}
+              className='w-full rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-9 pr-4 text-sm outline-none border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
+            />
+          </div>
+
+          {/* University Filter */}
+          <div className='relative'>
             <select
               value={filters.university}
               onChange={(e) => handleFilterChange('university', e.target.value)}
-              className='w-full'
+              className='w-full appearance-none rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none cursor-pointer border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
             >
               <option value=''>Semua Universitas</option>
               {filterOptions.universities.map((univ) => (
-                <option key={univ} value={univ}>
-                  {univ}
-                </option>
+                <option key={univ} value={univ}>{univ}</option>
               ))}
             </select>
+            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+            </div>
           </div>
-          <div className='form-group'>
-            <label>Tahun Lulus</label>
-            <select
-              value={filters.graduationYear}
-              onChange={(e) =>
-                handleFilterChange('graduationYear', e.target.value)
-              }
-              className='w-full'
-            >
-              <option value=''>Semua Tahun</option>
-              {filterOptions.graduationYears.map((year) => (
-                <option key={year} value={year.toString()}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className='form-group'>
-            <label>Jurusan</label>
+
+          {/* Major Filter */}
+          <div className='relative'>
             <select
               value={filters.major}
               onChange={(e) => handleFilterChange('major', e.target.value)}
-              className='w-full'
+              className='w-full appearance-none rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none cursor-pointer border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
             >
               <option value=''>Semua Jurusan</option>
               {filterOptions.majors.map((major) => (
-                <option key={major} value={major}>
-                  {major}
-                </option>
+                <option key={major} value={major}>{major}</option>
               ))}
             </select>
+            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+            </div>
           </div>
-          <div className='form-group flex items-end'>
+
+          {/* Year Filter */}
+          <div className='flex gap-2'>
+            <div className='relative flex-1'>
+              <select
+                value={filters.graduationYear}
+                onChange={(e) => handleFilterChange('graduationYear', e.target.value)}
+                className='w-full appearance-none rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none cursor-pointer border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
+              >
+                <option value=''>Tahun Lulus</option>
+                {filterOptions.graduationYears.map((year) => (
+                  <option key={year} value={year.toString()}>{year}</option>
+                ))}
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              </div>
+            </div>
             <button
               onClick={handleClearFilters}
-              className='btn btn-secondary w-full'
-              type='button'
+              title="Reset Filter"
+              className='px-3 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 transition-colors'
             >
-              Reset Filter
+              <FaTimes />
             </button>
           </div>
         </div>
       </div>
-    );
-  };
 
-  const renderTable = () => {
-    return (
-      <div className='card mb-6 max-w-xs md:max-w-sm lg:max-w-full'>
-        <div className='table-container'>
-          <table>
-            <thead>
-              <tr>
-                <th>Nama</th>
-                <th>Tahun Lulus</th>
-                <th>Universitas</th>
-                <th>Jurusan</th>
-                <th>Pekerjaan</th>
-                <th>Tempat Kerja</th>
-                <th>IG</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alumni.map((alum) => (
-                <tr key={alum._id}>
-                  <td>{alum.profile?.fullName || '-'}</td>
-                  <td>{alum.profile?.graduationYear || '-'}</td>
-                  <td>{alum.university?.name || '-'}</td>
-                  <td>{alum.university?.major || '-'}</td>
-                  <td>{alum.job?.position || '-'}</td>
-                  <td>{alum.job?.institution || '-'}</td>
-                  <td>
-                    {alum.socialMedia?.instagram ? (
-                      <a href={alum.socialMedia?.instagram} target='_blank'>
-                        <div className='flex items-center'>
-                          <BsInstagram size={15} />
+      {/* Alumni Table */}
+      {alumni.length === 0 ? (
+        <div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[color:var(--bg-card)] p-12 text-center dark:border-gray-700'>
+          <div className='mb-4 rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
+            <FaGraduationCap className='text-4xl text-gray-400' />
+          </div>
+          <h3 className='text-lg font-medium text-[color:var(--text-primary)]'>
+            Tidak ditemukan
+          </h3>
+          <p className='text-gray-500'>
+            Coba sesuaikan filter pencarian Anda.
+          </p>
+        </div>
+      ) : (
+        <div className='max-w-sm md:max-w-full'>
+          <div className='overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
+            <div className='overflow-x-auto'>
+              <table className='w-full text-left text-sm'>
+                <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
+                  <tr>
+                    <th className='px-6 py-4'>Nama Alumni</th>
+                    <th className='px-6 py-4'>Tahun</th>
+                    <th className='px-6 py-4'>Pendidikan Lanjutan</th>
+                    <th className='px-6 py-4'>Pekerjaan Saat Ini</th>
+                    <th className='px-6 py-4 text-center'>Sosial Media</th>
+                  </tr>
+                </thead>
+                <tbody className='divide-y divide-[color:var(--border-color)]'>
+                  {alumni.map((alum) => (
+                    <tr
+                      key={alum._id}
+                      className='group hover:bg-[color:var(--bg-tertiary)]/50 transition-colors duration-200'
+                    >
+                      <td className='px-6 py-4'>
+                        <div className='flex items-center gap-3'>
+                          <div className='h-10 w-10 shrink-0 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center font-bold text-lg'>
+                            {alum.profile?.fullName?.charAt(0) || 'A'}
+                          </div>
+                          <div>
+                            <div className='font-semibold text-[color:var(--text-primary)]'>
+                              {alum.profile?.fullName || '-'}
+                            </div>
+                            <div className='text-xs text-[color:var(--text-secondary)]'>
+                              Alumni
+                            </div>
+                          </div>
                         </div>
-                      </a>
-                    ) : (
-                      '-'
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <div className='flex flex-wrap gap-3 justify-center items-center mt-6'>
-          <button
-            onClick={() =>
-              setPagination({ ...pagination, page: pagination.page - 1 })
-            }
-            disabled={pagination.page === 1}
-            className='btn btn-secondary max-w-fit lg:mx-0'
-            style={{
-              opacity: pagination.page === 1 ? 0.5 : 1,
-              cursor: pagination.page === 1 ? 'not-allowed' : 'pointer',
-            }}
-          >
-            ← Previous
-          </button>
-          <span className='p-2 lg:py-3 lg:px-3 bg-gray-100 rounded-lg font-semibold text-gray-700'>
-            Page {pagination.page} of {pagination.pages}
-          </span>
-          <button
-            onClick={() =>
-              setPagination({ ...pagination, page: pagination.page + 1 })
-            }
-            disabled={pagination.page >= pagination.pages}
-            className='btn btn-secondary max-w-fit lg:mx-0'
-            style={{
-              opacity: pagination.page >= pagination.pages ? 0.5 : 1,
-              cursor:
-                pagination.page >= pagination.pages ? 'not-allowed' : 'pointer',
-            }}
-          >
-            Next →
-          </button>
-        </div>
-      </div>
-    );
-  };
+                      </td>
+                      <td className='px-6 py-4'>
+                        <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
+                          {alum.profile?.graduationYear || '-'}
+                        </span>
+                      </td>
+                      <td className='px-6 py-4'>
+                        <div className='flex flex-col max-w-[200px]'>
+                          <span className='font-medium text-[color:var(--text-primary)] truncate' title={alum.university?.name}>
+                            {alum.university?.name || '-'}
+                          </span>
+                          <span className='text-xs text-[color:var(--text-secondary)] truncate' title={alum.university?.major}>
+                            {alum.university?.major || '-'}
+                          </span>
+                        </div>
+                      </td>
+                      <td className='px-6 py-4'>
+                        {(alum.job?.position || alum.job?.institution) ? (
+                          <div className='flex flex-col max-w-[200px]'>
+                            <span className='font-medium text-[color:var(--text-primary)] truncate' title={alum.job?.position}>
+                              {alum.job?.position || 'Bekerja'}
+                            </span>
+                            <span className='text-xs text-[color:var(--text-secondary)] truncate' title={alum.job?.institution}>
+                              {alum.job?.institution || '-'}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className='text-[color:var(--text-secondary)] italic'>-</span>
+                        )}
+                      </td>
+                      <td className='px-6 py-4 text-center'>
+                        {alum.socialMedia?.instagram ? (
+                          <a
+                            href={alum.socialMedia.instagram}
+                            target='_blank'
+                            rel="noreferrer"
+                            className='inline-flex items-center justify-center h-8 w-8 rounded-full bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors dark:bg-pink-900/20 dark:hover:bg-pink-900/40'
+                          >
+                            <BsInstagram size={14} />
+                          </a>
+                        ) : (
+                          <span className='text-gray-300'>-</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-  if (loading) {
-    <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-      <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-        <FaSpinner className='animate-spin text-xl' />
-        <span>Loading...</span>
-      </div>
-    </div>;
-  }
-
-  return (
-    <div className='p-4 sm:p-6 lg:p-8'>
-      <div className='page-header'>
-        <h1 className='text-xl md:text-2xl'>Data Alumni</h1>
-      </div>
-      {renderFilter()}
-      {renderTable()}
+          {/* Pagination */}
+          <div className='mt-6 flex flex-col sm:flex-row items-center justify-between gap-4'>
+            <div className='text-sm text-[color:var(--text-secondary)]'>
+              Menampilkan {((pagination.page - 1) * pagination.limit) + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} dari {pagination.total} data
+            </div>
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+                disabled={pagination.page === 1}
+                className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+              >
+                Previous
+              </button>
+              <div className='flex items-center gap-1'>
+                {Array.from({ length: Math.min(5, pagination.pages) }, (_) => {
+                  // Logic to show a window of pages could be complex, for simple usage just showing nearby or all if small
+                  // For now keeping simple numeric display or just Current/Total
+                  // Let's just stick to the Previous [Page X] Next style for simplicity unless requested
+                  return null;
+                })}
+                <span className='px-4 py-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium'>
+                  Page {pagination.page} of {pagination.pages}
+                </span>
+              </div>
+              <button
+                onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+                disabled={pagination.page >= pagination.pages}
+                className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

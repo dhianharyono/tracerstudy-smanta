@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaEdit, FaSpinner, FaUser } from 'react-icons/fa';
-import { GiGraduateCap } from 'react-icons/gi';
-import { PiBagSimpleFill } from 'react-icons/pi';
-import { IoPhonePortrait } from 'react-icons/io5';
+import { FaEdit, FaSpinner, FaUser, FaBriefcase, FaShareAlt, FaSave, FaTimes, FaGraduationCap } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 interface ProfileData {
@@ -161,13 +158,13 @@ const AlumniQuestionnaire = () => {
               isStudying: profile.profile?.isStudying
                 ? 'ya'
                 : profile.profile?.isStudying === false
-                ? 'tidak'
-                : '',
+                  ? 'tidak'
+                  : '',
               isWorking: profile.profile?.isWorking
                 ? 'ya'
                 : profile.profile?.isWorking === false
-                ? 'tidak'
-                : '',
+                  ? 'tidak'
+                  : '',
             },
             university: {
               name: profile.university?.name || '',
@@ -278,6 +275,7 @@ const AlumniQuestionnaire = () => {
 
     if (!validateForm()) {
       setError('Mohon lengkapi semua field yang wajib diisi');
+      toast.error('Mohon lengkapi semua field yang wajib diisi');
       return;
     }
 
@@ -299,11 +297,11 @@ const AlumniQuestionnaire = () => {
         university:
           formData.profile.isStudying === 'ya'
             ? {
-                ...formData.university,
-                entryYear: formData.university.entryYear
-                  ? parseInt(formData.university.entryYear)
-                  : undefined,
-              }
+              ...formData.university,
+              entryYear: formData.university.entryYear
+                ? parseInt(formData.university.entryYear)
+                : undefined,
+            }
             : undefined,
         job: formData.profile.isWorking === 'ya' ? formData.job : undefined,
         socialMedia: {
@@ -324,7 +322,7 @@ const AlumniQuestionnaire = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-          `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
+        `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
       );
     } finally {
       setLoading(false);
@@ -333,215 +331,225 @@ const AlumniQuestionnaire = () => {
 
   if (initialLoading) {
     return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
+      <div className='flex items-center justify-center min-h-[60vh]'>
+        <div className='flex items-center gap-3 text-lg font-medium text-[color:var(--text-secondary)]'>
+          <FaSpinner className='animate-spin text-xl text-[var(--primary)]' />
+          <span>Memuat data...</span>
         </div>
       </div>
     );
   }
 
-  const baseInputClass =
-    'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-indigo-500 dark:focus:border-indigo-500';
-  const baseLabelClass =
-    'block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1';
-  const formGroupClass = 'mb-4';
-  const validationErrorClass = 'text-red-500 text-sm mt-1 block';
+  const InputField = ({ label, name, value, onChange, type = 'text', required = false, placeholder = '', min, max }: any) => (
+    <div className='form-group'>
+      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+        min={min}
+        max={max}
+        placeholder={placeholder}
+        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name] ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+      />
+      {validationErrors[name] && (
+        <span className='mt-1 text-xs text-red-500'>{validationErrors[name]}</span>
+      )}
+    </div>
+  );
+
+  const SelectField = ({ label, name, value, onChange, options, required = false }: any) => (
+    <div className='form-group'>
+      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+        {label} {required && <span className="text-red-500">*</span>}
+      </label>
+      <div className="relative">
+        <select
+          name={name}
+          value={value}
+          onChange={onChange}
+          required={required}
+          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name] ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+        >
+          <option value=''>Pilih</option>
+          {options.map((opt: any) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
+        </select>
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
+          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+      </div>
+      {validationErrors[name] && (
+        <span className='mt-1 text-xs text-red-500'>{validationErrors[name]}</span>
+      )}
+    </div>
+  );
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='mb-6'>
-        <h1 className='text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white'>
-          {isEditMode
-            ? 'Edit Kuesioner Tracer Study'
-            : 'Kuesioner Tracer Study'}
+    <div className='p-4 md:p-8 animate-fade-in'>
+      {/* Header Section */}
+      <div className='mb-8 text-center md:text-left'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          {isEditMode ? 'Edit Kuesioner' : 'Kuesioner Tracer Study'}
         </h1>
+        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
+          Lengkapi data Anda untuk membantu pengembangan sekolah
+        </p>
       </div>
+
       {isEditMode && (
-        <div
-          className='mb-6 p-4 rounded-lg shadow-md'
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(5, 150, 105, 0.1) 100%)',
-            border: '2px solid rgba(16, 185, 129, 0.3)',
-          }}
-        >
+        <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
           <div className='flex items-center gap-3'>
+            <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
+              <FaEdit />
+            </div>
             <div>
-              <h3 className='text-lg flex gap-2 items-center font-semibold mb-1 text-gray-900 dark:text-white'>
-                <FaEdit />
-                <span>Mode Edit</span>
-              </h3>
-              <p className='text-sm text-gray-600 dark:text-gray-400'>
-                Anda sedang mengedit data kuesioner yang sudah ada. Perubahan
-                akan memperbarui data Anda.
+              <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>Mode Edit</h3>
+              <p className='text-xs md:text-sm text-blue-700 dark:text-blue-300'>
+                Anda sedang memperbarui data kuesioner yang sudah ada.
               </p>
             </div>
           </div>
         </div>
       )}
-      <form
-        onSubmit={handleSubmit}
-        className='bg-white dark:bg-gray-800 shadow-xl rounded-lg p-6 md:p-8'
-      >
-        <h2 className='mb-6 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-          <FaUser
-            style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
-          />
-          <span>Informasi Personal</span>
-        </h2>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Nama Lengkap *</label>
-            <input
-              type='text'
-              name='profile.fullName'
+
+      <form onSubmit={handleSubmit} className='space-y-6'>
+        {/* Personal Information Card */}
+        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
+          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
+              <FaUser className="text-xl" />
+            </div>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Informasi Personal</h2>
+          </div>
+
+          <div className='grid gap-6 md:grid-cols-2'>
+            <InputField
+              label="Nama Lengkap"
+              name="profile.fullName"
               value={formData.profile.fullName}
               onChange={handleChange}
               required
-              className={baseInputClass}
+              placeholder="Masukkan nama lengkap"
             />
-            {validationErrors['profile.fullName'] && (
-              <span className={validationErrorClass}>
-                {validationErrors['profile.fullName']}
-              </span>
-            )}
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Jenis Kelamin *</label>
-            <select
-              name='profile.gender'
+
+            <SelectField
+              label="Jenis Kelamin"
+              name="profile.gender"
               value={formData.profile.gender}
               onChange={handleChange}
               required
-              className={baseInputClass}
-            >
-              <option value=''>Pilih</option>
-              <option value='male'>Laki-laki</option>
-              <option value='female'>Perempuan</option>
-            </select>
-            {validationErrors['profile.gender'] && (
-              <span className={validationErrorClass}>
-                {validationErrors['profile.gender']}
-              </span>
-            )}
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Tahun Masuk SMA *</label>
-            <input
-              type='number'
-              name='profile.entryYear'
+              options={[
+                { value: 'male', label: 'Laki-laki' },
+                { value: 'female', label: 'Perempuan' }
+              ]}
+            />
+
+            <InputField
+              label="Tahun Masuk SMA"
+              name="profile.entryYear"
+              type="number"
               value={formData.profile.entryYear}
               onChange={handleChange}
               required
-              className={baseInputClass}
-              min='1900'
-              max={new Date().getFullYear().toString()}
-              placeholder='Contoh: 2012'
+              min="1900"
+              max={new Date().getFullYear()}
+              placeholder="Ex: 2018"
             />
-            {validationErrors['profile.entryYear'] && (
-              <span className={validationErrorClass}>
-                {validationErrors['profile.entryYear']}
-              </span>
-            )}
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Tahun Lulus SMA *</label>
-            <input
-              type='number'
-              name='profile.graduationYear'
+
+            <InputField
+              label="Tahun Lulus SMA"
+              name="profile.graduationYear"
+              type="number"
               value={formData.profile.graduationYear}
               onChange={handleChange}
               required
-              className={baseInputClass}
-              min='1900'
-              max={new Date().getFullYear().toString()}
-              placeholder='Contoh: 2015'
+              min="1900"
+              max={new Date().getFullYear()}
+              placeholder="Ex: 2021"
             />
-            {validationErrors['profile.graduationYear'] && (
-              <span className={validationErrorClass}>
-                {validationErrors['profile.graduationYear']}
-              </span>
-            )}
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Pendidikan Terakhir *</label>
-            <select
-              name='profile.lastEducation'
+
+            <SelectField
+              label="Pendidikan Terakhir"
+              name="profile.lastEducation"
               value={formData.profile.lastEducation}
               onChange={handleChange}
               required
-              className={baseInputClass}
-            >
-              <option value=''>Pilih</option>
-              <option value='tidak kuliah'>Tidak Kuliah</option>
-              <option value='d3'>D3</option>
-              <option value='d4'>D4</option>
-              <option value='s1'>S1</option>
-              <option value='s2'>S2</option>
-              <option value='s3'>S3</option>
-            </select>
-            {validationErrors['profile.lastEducation'] && (
-              <span className={validationErrorClass}>
-                {validationErrors['profile.lastEducation']}
-              </span>
-            )}
+              options={[
+                { value: 'tidak kuliah', label: 'Tidak Kuliah' },
+                { value: 'd3', label: 'D3' },
+                { value: 'd4', label: 'D4' },
+                { value: 's1', label: 'S1' },
+                { value: 's2', label: 'S2' },
+                { value: 's3', label: 'S3' }
+              ]}
+            />
           </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Kuliah</label>
-            <select
-              name='profile.isStudying'
-              value={formData.profile.isStudying}
-              onChange={(e) => {
-                handleChange(e);
-                if (e.target.value !== 'ya') {
-                  setShowManualUniversityInput(false);
-                  setShowManualMajorInput(false);
-                }
-              }}
-              className={baseInputClass}
-            >
-              <option value=''>Pilih</option>
-              <option value='ya'>Ya</option>
-              <option value='tidak'>Tidak</option>
-            </select>
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Bekerja</label>
-            <select
-              name='profile.isWorking'
-              value={formData.profile.isWorking}
-              onChange={handleChange}
-              className={baseInputClass}
-            >
-              <option value=''>Pilih</option>
-              <option value='ya'>Ya</option>
-              <option value='tidak'>Tidak</option>
-            </select>
+
+          <div className='mt-6 grid gap-6 md:grid-cols-2'>
+            <div className='form-group'>
+              <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Status Saat Ini</label>
+              <div className='space-y-4 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] p-4'>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-[color:var(--text-primary)] w-52">Sedang Kuliah?</span>
+                  <select
+                    name='profile.isStudying'
+                    value={formData.profile.isStudying}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.value !== 'ya') {
+                        setShowManualUniversityInput(false);
+                        setShowManualMajorInput(false);
+                      }
+                    }}
+                    className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                  >
+                    <option value=''>Pilih</option>
+                    <option value='ya'>Ya</option>
+                    <option value='tidak'>Tidak</option>
+                  </select>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium text-[color:var(--text-primary)] w-52">Sedang Bekerja?</span>
+                  <select
+                    name='profile.isWorking'
+                    value={formData.profile.isWorking}
+                    onChange={handleChange}
+                    className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
+                  >
+                    <option value=''>Pilih</option>
+                    <option value='ya'>Ya</option>
+                    <option value='tidak'>Tidak</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
+        {/* University Section */}
         {formData.profile.isStudying === 'ya' && (
-          <>
-            <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-              <GiGraduateCap
-                style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
-              />
-              <span>Informasi Perguruan Tinggi</span>
-            </h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Nama Kampus</label>
+          <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
+                <FaGraduationCap className="text-xl" />
+              </div>
+              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Data Perguruan Tinggi</h2>
+            </div>
+
+            <div className='grid gap-6 md:grid-cols-2'>
+              <div className='form-group'>
+                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Nama Kampus</label>
                 {!showManualUniversityInput ? (
-                  <>
+                  <div className="relative">
                     <select
                       name='university.name'
-                      value={
-                        universities.includes(formData.university.name)
-                          ? formData.university.name
-                          : ''
-                      }
+                      value={universities.includes(formData.university.name) ? formData.university.name : ''}
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualUniversityInput(true);
@@ -553,236 +561,213 @@ const AlumniQuestionnaire = () => {
                           handleChange(e);
                         }
                       }}
-                      className={baseInputClass}
+                      className='w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
                     >
                       <option value=''>Pilih Kampus</option>
                       {universities.map((univ) => (
-                        <option key={univ} value={univ}>
-                          {univ}
-                        </option>
+                        <option key={univ} value={univ}>{univ}</option>
                       ))}
-                      <option value='other'>Lainnya (tulis manual)</option>
+                      <option value='other'>+ Lainnya (ketik manual)</option>
                     </select>
-                  </>
+                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex gap-2">
                     <input
                       type='text'
                       name='university.name'
                       value={formData.university.name}
                       onChange={handleChange}
                       placeholder='Tulis nama kampus'
-                      className={baseInputClass}
+                      className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
                     />
                     <button
                       type='button'
                       onClick={() => {
                         setShowManualUniversityInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          university: { ...prev.university, name: '' },
-                        }));
+                        setFormData((prev) => ({ ...prev, university: { ...prev.university, name: '' } }));
                       }}
-                      className='mt-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'
+                      title="Kembali ke daftar"
+                      className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
-                      Pilih dari Daftar
+                      <FaTimes />
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Jenis Perguruan Tinggi</label>
-                <select
-                  name='university.type'
-                  value={formData.university.type}
-                  onChange={handleChange}
-                  className={baseInputClass}
-                >
-                  <option value=''>Pilih</option>
-                  <option value='negeri'>Negeri</option>
-                  <option value='swasta'>Swasta</option>
-                  <option value='kedinasan'>Kedinasan</option>
-                </select>
-              </div>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Tahun Masuk</label>
-                <input
-                  type='number'
-                  name='university.entryYear'
-                  value={formData.university.entryYear}
-                  onChange={handleChange}
-                  className={baseInputClass}
-                  min='1900'
-                  max={new Date().getFullYear().toString()}
-                  placeholder='Contoh: 2015'
-                />
-              </div>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Jurusan</label>
+
+              <SelectField
+                label="Jenis PT"
+                name="university.type"
+                value={formData.university.type}
+                onChange={handleChange}
+                options={[
+                  { value: 'negeri', label: 'Negeri' },
+                  { value: 'swasta', label: 'Swasta' },
+                  { value: 'kedinasan', label: 'Kedinasan' }
+                ]}
+              />
+
+              <InputField
+                label="Tahun Masuk"
+                name="university.entryYear"
+                type="number"
+                value={formData.university.entryYear}
+                onChange={handleChange}
+                min="1900"
+                max={new Date().getFullYear()}
+                placeholder="Ex: 2021"
+              />
+
+              <div className='form-group'>
+                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Jurusan</label>
                 {!showManualMajorInput ? (
-                  <>
+                  <div className="relative">
                     <select
                       name='university.major'
-                      value={
-                        majors.includes(formData.university.major)
-                          ? formData.university.major
-                          : ''
-                      }
+                      value={majors.includes(formData.university.major) ? formData.university.major : ''}
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualMajorInput(true);
-                          setFormData((prev) => ({
-                            ...prev,
-                            university: { ...prev.university, major: '' },
-                          }));
+                          setFormData((prev) => ({ ...prev, university: { ...prev.university, major: '' } }));
                         } else {
                           handleChange(e);
                         }
                       }}
-                      className={baseInputClass}
+                      className='w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
                     >
                       <option value=''>Pilih Jurusan</option>
                       {majors.map((major) => (
-                        <option key={major} value={major}>
-                          {major}
-                        </option>
+                        <option key={major} value={major}>{major}</option>
                       ))}
-                      <option value='other'>Lainnya (tulis manual)</option>
+                      <option value='other'>+ Lainnya (ketik manual)</option>
                     </select>
-                  </>
+                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
+                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    </div>
+                  </div>
                 ) : (
-                  <>
+                  <div className="flex gap-2">
                     <input
                       type='text'
                       name='university.major'
                       value={formData.university.major}
                       onChange={handleChange}
                       placeholder='Tulis nama jurusan'
-                      className={baseInputClass}
+                      className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)]'
                     />
                     <button
                       type='button'
                       onClick={() => {
                         setShowManualMajorInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          university: { ...prev.university, major: '' },
-                        }));
+                        setFormData((prev) => ({ ...prev, university: { ...prev.university, major: '' } }));
                       }}
-                      className='mt-2 px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600'
+                      title="Kembali ke daftar"
+                      className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
-                      Pilih dari Daftar
+                      <FaTimes />
                     </button>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
-          </>
+          </div>
         )}
 
+        {/* Job Section */}
         {formData.profile.isWorking === 'ya' && (
-          <>
-            <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-              <PiBagSimpleFill
-                style={{ fontSize: '25px', color: 'rgba(102, 126, 234, 0.2)' }}
-              />
-              <span>Informasi Pekerjaan</span>
-            </h2>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Posisi/Jabatan</label>
-                <input
-                  type='text'
-                  name='job.position'
-                  value={formData.job.position}
-                  onChange={handleChange}
-                  className={baseInputClass}
-                />
+          <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
+                <FaBriefcase className="text-xl" />
               </div>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Instansi</label>
-                <input
-                  type='text'
-                  name='job.institution'
-                  value={formData.job.institution}
-                  onChange={handleChange}
-                  className={baseInputClass}
-                />
-              </div>
-              <div className={formGroupClass}>
-                <label className={baseLabelClass}>Nama Pekerjaan</label>
-                <input
-                  type='text'
-                  name='job.jobTitle'
-                  value={formData.job.jobTitle}
-                  onChange={handleChange}
-                  className={baseInputClass}
-                />
-              </div>
+              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Data Pekerjaan</h2>
             </div>
-          </>
+
+            <div className='grid gap-6 md:grid-cols-2'>
+              <InputField
+                label="Posisi/Jabatan"
+                name="job.position"
+                value={formData.job.position}
+                onChange={handleChange}
+                placeholder="Ex: Staff IT"
+              />
+              <InputField
+                label="Nama Instansi/Perusahaan"
+                name="job.institution"
+                value={formData.job.institution}
+                onChange={handleChange}
+                placeholder="Ex: PT. Maju Jaya"
+              />
+              <InputField
+                label="Nama Pekerjaan"
+                name="job.jobTitle"
+                value={formData.job.jobTitle}
+                onChange={handleChange}
+                placeholder="Ex: Web Developer"
+              />
+            </div>
+          </div>
         )}
 
-        <h2 className='mb-6 mt-8 text-lg md:text-xl font-semibold text-gray-800 dark:text-gray-100 flex items-center gap-3 border-b pb-3 border-gray-200 dark:border-gray-700'>
-          <IoPhonePortrait
-            style={{ fontSize: '30px', color: 'rgba(102, 126, 234, 0.2)' }}
-          />
-          <span>Media Sosial</span>
-        </h2>
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Email</label>
-            <input
-              type='email'
-              name='socialMedia.email'
+        {/* Social Media Section */}
+        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
+          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
+              <FaShareAlt className="text-xl" />
+            </div>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Media Sosial</h2>
+          </div>
+
+          <div className='grid gap-6 md:grid-cols-2'>
+            <InputField
+              label="Email"
+              name="socialMedia.email"
+              type="email"
               value={formData.socialMedia.email}
               onChange={handleChange}
-              className={baseInputClass}
-              placeholder='youremail@gmail.com'
+              placeholder="nama@email.com"
             />
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>LinkedIn</label>
-            <input
-              type='text'
-              name='socialMedia.linkedin'
+            <InputField
+              label="LinkedIn (URL/Username)"
+              name="socialMedia.linkedin"
               value={formData.socialMedia.linkedin}
               onChange={handleChange}
-              className={baseInputClass}
-              placeholder='https://www.linkedin.com/in/your-username'
+              placeholder="linkedin.com/in/username"
             />
-          </div>
-          <div className={formGroupClass}>
-            <label className={baseLabelClass}>Instagram</label>
-            <input
-              type='text'
-              name='socialMedia.instagram'
+            <InputField
+              label="Instagram (URL/Username)"
+              name="socialMedia.instagram"
               value={formData.socialMedia.instagram}
               onChange={handleChange}
-              className={baseInputClass}
-              placeholder='https://www.instagram.com/your-username'
+              placeholder="@username"
             />
           </div>
         </div>
 
         {error && (
-          <div className='mt-6 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 border border-red-400 dark:border-red-700 rounded-md flex items-center gap-2'>
-            <span className='font-bold'>⚠️</span> <span>{error}</span>
+          <div className='rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+            <p className="font-semibold">{error}</p>
           </div>
         )}
-        <div className='flex gap-3 justify-end mt-8'>
+
+        {/* Action Buttons */}
+        <div className='flex flex-col-reverse gap-4 sm:flex-row sm:justify-end'>
           <button
             type='button'
-            className='px-6 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out'
             onClick={() => navigate('/alumni')}
+            className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3 font-semibold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)]'
             disabled={loading}
           >
             Batal
           </button>
+
           <button
             type='submit'
-            className='min-w-[150px] px-6 py-2 border border-transparent rounded-md shadow-sm text-xs md:text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 flex items-center justify-center gap-2'
             disabled={loading}
+            className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
           >
             {loading ? (
               <>
@@ -791,14 +776,17 @@ const AlumniQuestionnaire = () => {
               </>
             ) : (
               <>
-                <span>
-                  {isEditMode ? 'Update Kuesioner' : 'Simpan Kuesioner'}
-                </span>
+                <FaSave />
+                <span>{isEditMode ? 'Simpan Perubahan' : 'Kirim Kuesioner'}</span>
               </>
             )}
           </button>
         </div>
       </form>
+
+      <div className="mt-8 text-center text-sm text-[color:var(--text-tertiary)]">
+        &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. Data Anda aman dan terlindungi.
+      </div>
     </div>
   );
 };

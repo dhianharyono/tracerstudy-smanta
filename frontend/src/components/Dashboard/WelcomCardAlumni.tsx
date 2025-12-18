@@ -37,7 +37,7 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
           style={{ color: 'var(--primary)' }}
         />
         <div>
-          <h2 className='mb-1 text-lg md:text-xl text-[color:var(--text-)]'>
+          <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
             Selamat Datang, {user?.username || 'Alumni'}!
           </h2>
           <p className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>

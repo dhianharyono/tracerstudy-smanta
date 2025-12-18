@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaArrowLeft, FaSpinner } from 'react-icons/fa';
+import { FaSpinner } from 'react-icons/fa';
+import NewsDetail from '../../components/News/NewsDetail';
 
 interface NewsDetail {
   _id: string;
@@ -46,6 +47,10 @@ const AlumniNewsDetail = () => {
     }
   };
 
+  const handleBack = () => {
+    navigate('/alumni/news');
+  };
+
   if (loading) {
     return (
       <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
@@ -63,7 +68,7 @@ const AlumniNewsDetail = () => {
         <div className='p-10 text-center text-[color:var(--text-tertiary)]'>
           <p>News tidak ditemukan</p>
           <button
-            onClick={() => navigate('/alumni/news')}
+            onClick={handleBack}
             className='btn btn-primary mt-4'
           >
             Kembali ke News
@@ -73,59 +78,7 @@ const AlumniNewsDetail = () => {
     );
   }
 
-  // Tailwind CSS classes for content styling (simulating prose/typography styles)
-  const contentClasses = `
-    prose max-w-none text-[color:var(--text-primary)] leading-relaxed text-base
-    // Overriding default Quill/HTML styles using Tailwind JIT/Custom Utilities
-    [&_img]:max-w-full [&_img]:h-auto [&_img]:rounded-lg [&_img]:my-4
-    [&_a]:text-[color:var(--primary)] [&_a]:underline
-    [&_ol]:list-decimal [&_ul]:list-disc [&_ol]:pl-6 [&_ul]:pl-6 [&_ol]:my-3 [&_ul]:my-3
-    [&_h1]:mt-4 [&_h2]:mt-4 [&_h3]:mt-4 [&_h4]:mt-4 [&_h5]:mt-4 [&_h6]:mt-4 [&_h1]:mb-2 [&_h2]:mb-2 [&_h3]:mb-2 [&_h4]:mb-2 [&_h5]:mb-2 [&_h6]:mb-2
-    [&_p]:my-3
-    text-xs md:text-sm
-  `;
-
-  return (
-    <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='page-header'>
-        <button
-          onClick={() => navigate('/alumni/news')}
-          className='btn btn-secondary mr-4 flex items-center gap-2 mb-5'
-        >
-          <FaArrowLeft />
-          <span>Kembali</span>
-        </button>
-        <h1 className='text-lg md:text-xl'>{news.title}</h1>
-      </div>
-
-      <div className='card'>
-        <div className='mb-6 border-b border-[color:var(--border-color)] pb-4'>
-          <div className='flex flex-wrap items-center justify-between gap-3'>
-            <div>
-              <span className='text-sm text-[color:var(--text-secondary)]'>
-                Oleh:
-                <strong className='text-[color:var(--text-primary)]'>
-                  {news.author?.username || 'Admin'}
-                </strong>
-              </span>
-            </div>
-            <div className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>
-              {new Date(news.createdAt).toLocaleDateString('id-ID', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </div>
-          </div>
-        </div>
-
-        <div
-          className={contentClasses}
-          dangerouslySetInnerHTML={{ __html: news.content }}
-        />
-      </div>
-    </div>
-  );
+  return <NewsDetail news={news} onBack={handleBack} />;
 };
 
 export default AlumniNewsDetail;

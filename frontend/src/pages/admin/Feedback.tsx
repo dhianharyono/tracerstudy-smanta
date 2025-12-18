@@ -8,6 +8,9 @@ import {
   FaEye,
   FaEyeSlash,
   FaSpinner,
+  FaStar,
+  FaTrash,
+  FaUserCircle
 } from 'react-icons/fa';
 
 const AdminFeedback = () => {
@@ -59,8 +62,7 @@ const AdminFeedback = () => {
       });
       setFeedbackVisible(!feedbackVisible);
       toast.success(
-        `Menu kritik dan saran ${
-          !feedbackVisible ? 'ditampilkan' : 'disembunyikan'
+        `Menu kritik dan saran ${!feedbackVisible ? 'ditampilkan' : 'disembunyikan'
         }`
       );
     } catch (error: any) {
@@ -87,28 +89,14 @@ const AdminFeedback = () => {
 
   const renderStarRating = (rating: number) => {
     return (
-      <div style={{ display: 'flex', gap: '4px' }}>
+      <div className='flex items-center gap-1'>
         {[1, 2, 3, 4, 5].map((index) => (
-          <span
+          <FaStar
             key={index}
-            style={{
-              fontSize: '20px',
-              color: index <= rating ? '#fbbf24' : '#6b7280',
-            }}
-          >
-            ★
-          </span>
+            className={`text-sm ${index <= rating ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'
+              }`}
+          />
         ))}
-        <span
-          style={{
-            marginLeft: '8px',
-            color: 'var(--text-primary)',
-            fontWeight: '600',
-            placeContent: 'center',
-          }}
-        >
-          {rating}/5
-        </span>
       </div>
     );
   };
@@ -126,92 +114,44 @@ const AdminFeedback = () => {
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='page-header'>
-        <h1 className='text-xl md:text-2xl'>Kritik & Saran</h1>
+      <div className='mb-6 text-center md:text-left'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Kritik & Saran</h1>
+        <p className='text-sm text-[color:var(--text-secondary)] text-sm md:text-base'>Kelola dan analisis feedback dari pengguna</p>
       </div>
 
       {/* Accumulated Rating Info */}
       {stats && (
-        <div className='card mb-6  max-w-sm md:max-w-md lg:max-w-full'>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '24px',
-              flexWrap: 'wrap',
-              gap: '16px',
-            }}
-          >
+        <div className='card mb-6 max-w-sm md:max-w-md lg:max-w-full'>
+          <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-6'>
             <div>
-              <h2
-                style={{
-                  color: 'var(--text-primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  marginBottom: '8px',
-                }}
-              >
-                <FaChartBar />
-                <span>Akumulasi Rating</span>
-              </h2>
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '16px',
-                  flexWrap: 'wrap',
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: '48px',
-                    fontWeight: '700',
-                    color: '#fbbf24',
-                  }}
-                >
+              <div className='flex items-center gap-2 mb-2'>
+                <div className='p-2 rounded-lg bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'>
+                  <FaChartBar />
+                </div>
+                <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Akumulasi Rating</h2>
+              </div>
+              <div className='flex items-center gap-4'>
+                <div className='text-5xl font-bold text-yellow-400'>
                   {stats.average ? stats.average.toFixed(1) : '0.0'}
                 </div>
-                <div>
-                  {[1, 2, 3, 4, 5].map((index) => (
-                    <span
-                      key={index}
-                      style={{
-                        fontSize: '28px',
-                        color:
-                          index <= Math.round(stats.average || 0)
-                            ? '#fbbf24'
-                            : '#6b7280',
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
-                </div>
-                <div
-                  style={{ color: 'var(--text-secondary)', fontSize: '14px' }}
-                >
-                  dari {stats.total} rating
+                <div className='flex flex-col justify-center'>
+                  <div className='flex text-yellow-400 text-lg mb-1'>
+                    {[1, 2, 3, 4, 5].map((index) => (
+                      <FaStar key={index} className={index <= Math.round(stats.average || 0) ? '' : 'text-gray-300 dark:text-gray-600'} />
+                    ))}
+                  </div>
+                  <span className='text-sm text-[color:var(--text-secondary)]'>dari {stats.total} ulasan</span>
                 </div>
               </div>
             </div>
+
             <button
               onClick={handleToggleVisibility}
-              className='btn btn-primary'
-              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              className={`flex justify-center items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all ${feedbackVisible ? 'bg-red-500 hover:bg-red-600' : 'bg-blue-500 hover:bg-blue-600'
+                }`}
             >
-              {feedbackVisible ? (
-                <>
-                  <FaEyeSlash />
-                  <span>Sembunyikan Menu</span>
-                </>
-              ) : (
-                <>
-                  <FaEye />
-                  <span>Tampilkan Menu</span>
-                </>
-              )}
+              {feedbackVisible ? <FaEyeSlash /> : <FaEye />}
+              {feedbackVisible ? 'Sembunyikan Menu' : 'Tampilkan Menu'}
             </button>
           </div>
         </div>
@@ -219,420 +159,141 @@ const AdminFeedback = () => {
 
       {/* Stats Card */}
       {stats && (
-        <div className='card mb-6  max-w-sm md:max-w-md lg:max-w-full'>
-          <div style={{ marginBottom: '24px' }}>
-            <h2
-              style={{
-                color: 'var(--text-primary)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-              }}
-            >
+        <div className='card mb-8 max-w-sm md:max-w-md lg:max-w-full'>
+          <div className='mb-6 flex items-center gap-2'>
+            <div className='p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'>
               <FaChartLine />
-              <span>Statistik Rating</span>
-            </h2>
+            </div>
+            <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Analisis Rating</h2>
           </div>
 
-          <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <div
-              style={{
-                padding: '20px',
-                background: 'var(--bg-tertiary)',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                }}
-              >
-                Total Rating
-              </div>
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: '700',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                {stats.total}
-              </div>
-            </div>
-
-            <div
-              style={{
-                padding: '20px',
-                background: 'var(--bg-tertiary)',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                }}
-              >
-                Rating Rata-rata
-              </div>
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: '700',
-                  color: 'var(--text-primary)',
-                }}
-              >
-                {stats.average ? stats.average.toFixed(1) : '0.0'}
-              </div>
-              {stats.average && renderStarRating(Math.round(stats.average))}
-            </div>
-
-            <div
-              style={{
-                padding: '20px',
-                background: 'var(--bg-tertiary)',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                }}
-              >
-                Rating 5 Bintang
-              </div>
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: '700',
-                  color: '#fbbf24',
-                }}
-              >
-                {stats.ratings?.[5] || 0}
-              </div>
-            </div>
-
-            <div
-              style={{
-                padding: '20px',
-                background: 'var(--bg-tertiary)',
-                borderRadius: '12px',
-                border: '1px solid var(--border-color)',
-              }}
-            >
-              <div
-                style={{
-                  fontSize: '14px',
-                  color: 'var(--text-tertiary)',
-                  marginBottom: '8px',
-                }}
-              >
-                Rating 1 Bintang
-              </div>
-              <div
-                style={{
-                  fontSize: '32px',
-                  fontWeight: '700',
-                  color: '#ef4444',
-                }}
-              >
-                {stats.ratings?.[1] || 0}
-              </div>
-            </div>
-          </div>
-
-          {/* Statistik Semua Bintang - Google Play Store Style */}
-          <div style={{ marginTop: '32px' }}>
-            <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>
-              Statistik Semua Bintang
-            </h3>
-            <div className='grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-4'>
+          <div className='grid gap-6 lg:grid-cols-2'>
+            {/* Rating Distribution - Progress Bars */}
+            <div className='space-y-4'>
+              <h3 className='font-medium text-[color:var(--text-primary)] mb-4'>Distribusi Bintang</h3>
               {[5, 4, 3, 2, 1].map((rating) => {
                 const count = stats.ratings?.[rating] || 0;
-                const percentage =
-                  stats.total > 0 ? (count / stats.total) * 100 : 0;
+                const percentage = stats.total > 0 ? (count / stats.total) * 100 : 0;
                 return (
-                  <div
-                    key={rating}
-                    style={{
-                      padding: '20px',
-                      background: 'var(--bg-tertiary)',
-                      borderRadius: '12px',
-                      border: '1px solid var(--border-color)',
-                      transition: 'all 0.3s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-4px)';
-                      e.currentTarget.style.boxShadow = 'var(--shadow-md)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = 'none';
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        marginBottom: '12px',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '18px',
-                          fontWeight: '600',
-                          color: 'var(--text-primary)',
-                        }}
-                      >
-                        {rating}
-                      </span>
-                      <div style={{ display: 'flex', gap: '2px' }}>
-                        {[1, 2, 3, 4, 5].map((index) => (
-                          <span
-                            key={index}
-                            style={{
-                              fontSize: '16px',
-                              color: index <= rating ? '#fbbf24' : '#6b7280',
-                            }}
-                          >
-                            ★
-                          </span>
-                        ))}
-                      </div>
+                  <div key={rating} className='flex items-center gap-3'>
+                    <div className='flex items-center gap-1 w-12 font-medium text-[color:var(--text-primary)]'>
+                      {rating} <FaStar className='text-xs text-[color:var(--text-secondary)]' />
                     </div>
-                    <div
-                      style={{
-                        fontSize: '36px',
-                        fontWeight: '700',
-                        color:
-                          rating >= 4
-                            ? '#10b981'
-                            : rating >= 3
-                            ? '#fbbf24'
-                            : '#ef4444',
-                        marginBottom: '8px',
-                      }}
-                    >
+                    <div className='flex-1 h-3 rounded-full bg-[color:var(--bg-tertiary)] overflow-hidden'>
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${rating >= 4 ? 'bg-green-500' : rating >= 3 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <div className='w-12 text-right text-sm text-[color:var(--text-secondary)]'>
                       {count}
                     </div>
-                    <div
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--text-secondary)',
-                        marginBottom: '12px',
-                      }}
-                    >
-                      {percentage.toFixed(1)}% dari total
-                    </div>
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '8px',
-                        background: 'var(--bg-secondary)',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${percentage}%`,
-                          height: '100%',
-                          background:
-                            rating >= 4
-                              ? 'linear-gradient(90deg, #10b981, #059669)'
-                              : rating >= 3
-                              ? 'linear-gradient(90deg, #fbbf24, #f59e0b)'
-                              : 'linear-gradient(90deg, #ef4444, #dc2626)',
-                          transition: 'width 0.3s ease',
-                          borderRadius: '4px',
-                        }}
-                      />
-                    </div>
                   </div>
-                );
+                )
               })}
             </div>
-          </div>
 
-          {/* Rating Distribution */}
-          <div style={{ marginTop: '32px' }}>
-            <h3 style={{ color: 'var(--text-primary)', marginBottom: '16px' }}>
-              Distribusi Rating
-            </h3>
-            <div
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-            >
-              {[5, 4, 3, 2, 1].map((rating) => {
-                const count = stats.ratings?.[rating] || 0;
-                const percentage =
-                  stats.total > 0 ? (count / stats.total) * 100 : 0;
-                return (
-                  <div key={rating}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: '4px',
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                        }}
-                      >
-                        <span
-                          style={{
-                            color: 'var(--text-primary)',
-                            fontWeight: '600',
-                          }}
-                        >
-                          {rating} Bintang
-                        </span>
-                        {renderStarRating(rating)}
-                      </div>
-                      <span
-                        style={{
-                          color: 'var(--text-secondary)',
-                          fontSize: '14px',
-                        }}
-                      >
-                        {count} ({percentage.toFixed(1)}%)
-                      </span>
-                    </div>
-                    <div
-                      style={{
-                        width: '100%',
-                        height: '12px',
-                        background: 'var(--bg-secondary)',
-                        borderRadius: '6px',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${percentage}%`,
-                          height: '100%',
-                          background:
-                            rating >= 4
-                              ? 'linear-gradient(90deg, #10b981, #059669)'
-                              : rating >= 3
-                              ? 'linear-gradient(90deg, #fbbf24, #f59e0b)'
-                              : 'linear-gradient(90deg, #ef4444, #dc2626)',
-                          transition: 'width 0.3s ease',
-                        }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
+            {/* Key Metrics Grid */}
+            <div className='grid grid-cols-2 gap-4'>
+              <div className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 text-center'>
+                <p className='text-sm text-[color:var(--text-secondary)] mb-1'>Total Ulasan</p>
+                <p className='text-3xl font-bold text-[color:var(--text-primary)]'>{stats.total}</p>
+              </div>
+              <div className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 text-center'>
+                <p className='text-sm text-[color:var(--text-secondary)] mb-1'>Rata-rata</p>
+                <p className='text-3xl font-bold text-[color:var(--text-primary)]'>{stats.average ? stats.average.toFixed(1) : '0.0'}</p>
+              </div>
+              <div className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 text-center'>
+                <p className='text-sm text-[color:var(--text-secondary)] mb-1'>Positif (4-5)</p>
+                <p className='text-3xl font-bold text-green-500'>
+                  {(stats.ratings?.[5] || 0) + (stats.ratings?.[4] || 0)}
+                </p>
+              </div>
+              <div className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 text-center'>
+                <p className='text-sm text-[color:var(--text-secondary)] mb-1'>Negatif (1-2)</p>
+                <p className='text-3xl font-bold text-red-500'>
+                  {(stats.ratings?.[1] || 0) + (stats.ratings?.[2] || 0)}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Feedback List */}
-      <div className='card max-w-sm md:max-w-md lg:max-w-full'>
-        <h2 style={{ marginBottom: '24px', color: 'var(--text-primary)' }}>
-          Daftar Kritik & Saran
-        </h2>
-        <div className='table-container'>
-          <table>
-            <thead>
+      {/* Feedback List Table */}
+      <div className='max-w-sm md:max-w-full overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
+        <div className='border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-4'>
+          <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Daftar Masukan Terbaru</h2>
+        </div>
+        <div className='overflow-x-auto'>
+          <table className='w-full text-left text-sm'>
+            <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
               <tr>
-                <th>User</th>
-                <th>Role</th>
-                <th>Rating</th>
-                <th>Kritik</th>
-                <th>Saran</th>
-                <th>Tanggal</th>
-                <th>Aksi</th>
+                <th className='px-6 py-4'>Pengguna</th>
+                <th className='px-6 py-4'>Rating</th>
+                <th className='px-6 py-4'>Kritik & Saran</th>
+                <th className='px-6 py-4'>Tanggal</th>
+                <th className='px-6 py-4 text-center'>Aksi</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className='divide-y divide-[color:var(--border-color)]'>
               {feedbacks.length === 0 ? (
                 <tr>
-                  <td
-                    colSpan={7}
-                    style={{
-                      textAlign: 'center',
-                      padding: '40px',
-                      color: 'var(--text-tertiary)',
-                    }}
-                  >
-                    Belum ada kritik dan saran
+                  <td colSpan={5} className='p-8 text-center text-[color:var(--text-secondary)]'>
+                    Belum ada kritik dan saran yang masuk.
                   </td>
                 </tr>
               ) : (
                 feedbacks.map((feedback) => (
-                  <tr key={feedback._id}>
-                    <td>{feedback.user?.username || '-'}</td>
-                    <td>{feedback.user?.role || '-'}</td>
-                    <td>{renderStarRating(feedback.rating)}</td>
-                    <td
-                      style={{
-                        maxWidth: '300px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {feedback.kritik || '-'}
+                  <tr key={feedback._id} className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'>
+                    <td className='px-6 py-4'>
+                      <div className='flex items-center gap-3'>
+                        <div className='flex h-8 w-8 items-center justify-center rounded-full bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)]'>
+                          <FaUserCircle size={20} />
+                        </div>
+                        <div>
+                          <p className='font-medium text-[color:var(--text-primary)]'>{feedback.user?.username || 'Anonymous'}</p>
+                          <span className='inline-flex items-center rounded bg-[color:var(--bg-tertiary)] px-2 py-0.5 text-xs font-medium text-[color:var(--text-secondary)] capitalize border border-[color:var(--border-color)]'>
+                            {feedback.user?.role || 'User'}
+                          </span>
+                        </div>
+                      </div>
                     </td>
-                    <td
-                      style={{
-                        maxWidth: '300px',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap',
-                      }}
-                    >
-                      {feedback.saran || '-'}
+                    <td className='px-6 py-4'>
+                      <div className='flex items-center'>
+                        <span className='mr-2 font-bold text-[color:var(--text-primary)]'>{feedback.rating}</span>
+                        {renderStarRating(feedback.rating)}
+                      </div>
                     </td>
-                    <td>
-                      {new Date(feedback.createdAt).toLocaleDateString('id-ID')}
+                    <td className='px-6 py-4 max-w-xs'>
+                      <div className='mb-1'>
+                        <span className='text-xs font-semibold text-red-500 uppercase tracking-wide'>Kritik:</span>
+                        <span className='ml-1 text-[color:var(--text-secondary)] truncate block'>{feedback.kritik || '-'}</span>
+                      </div>
+                      <div>
+                        <span className='text-xs font-semibold text-green-500 uppercase tracking-wide'>Saran:</span>
+                        <span className='ml-1 text-[color:var(--text-secondary)] truncate block'>{feedback.saran || '-'}</span>
+                      </div>
                     </td>
-                    <td>
-                      <div
-                        style={{
-                          display: 'flex',
-                          gap: '8px',
-                          flexWrap: 'wrap',
-                        }}
-                      >
+                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                      {new Date(feedback.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </td>
+                    <td className='px-6 py-4'>
+                      <div className='flex items-center justify-center gap-2'>
                         <button
-                          onClick={() =>
-                            navigate(`/admin/feedback/${feedback._id}`)
-                          }
-                          className='btn btn-secondary'
-                          style={{
-                            padding: '5px 10px',
-                            fontSize: '14px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px',
-                          }}
+                          onClick={() => navigate(`/admin/feedback/${feedback._id}`)}
+                          className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20'
+                          title="Lihat Detail"
                         >
                           <FaEye />
-                          View
                         </button>
                         <button
                           onClick={() => handleDelete(feedback._id)}
-                          className='btn btn-secondary'
-                          style={{ padding: '5px 10px', fontSize: '14px' }}
+                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
+                          title="Hapus"
                         >
-                          Hapus
+                          <FaTrash />
                         </button>
                       </div>
                     </td>

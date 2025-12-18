@@ -180,14 +180,14 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 
   if (loading) {
     return (
-      <div className='card h-[500px]'>
+      <div className='card h-[400px] md:h-[500px]'>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            height: '430px',
+            height: '100%',
             gap: '16px',
           }}
         >
@@ -204,14 +204,14 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 
   if (validUniversities.length === 0) {
     return (
-      <div className='card' style={{ minHeight: '500px' }}>
+      <div className='card' style={{ minHeight: '400px' }}>
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            minHeight: '500px',
+            minHeight: '400px',
             gap: '16px',
             color: 'var(--text-tertiary)',
           }}
@@ -224,7 +224,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   }
 
   return (
-    <div className='card h-[500px]'>
+    <div className='card h-auto md:h-[500px]'>
       <h2
         className='text-lg md:text-xl'
         style={{
@@ -236,18 +236,9 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         }}
       >
         <FaMapMarkerAlt />
-        <span>Persebaran Alumni Berdasarkan Universitas</span>
+        <span>Persebaran Alumni</span>
       </h2>
-      <div
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '290px',
-          borderRadius: '8px',
-          overflow: 'hidden',
-          border: '1px solid var(--border-color)',
-        }}
-      >
+      <div className='relative w-full h-[300px] md:h-[290px] rounded-lg overflow-hidden border border-[var(--border-color)]'>
         <MapContainer
           center={[-2.5489, 118.0149]}
           zoom={5}

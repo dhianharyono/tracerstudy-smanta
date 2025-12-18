@@ -25,37 +25,51 @@ const News = ({ data }: NewsProps) => {
   const isAdmin = user?.role === 'admin';
 
   return (
-    <>
-      <div className='card'>
-        <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 font-semibold text-[color:var(--text-primary)]'>
-          <FaNewspaper />
-          <span>News</span>
-        </h2>
-        {data.length > 0 ? (
-          <div className='flex flex-col gap-4'>
-            {data.slice(0, 2).map((newsItem: NewsData) => (
-              <div
-                key={newsItem._id}
-                onClick={() => navigate(`/student/news/${newsItem._id}`)}
-                className='cursor-pointer rounded-lg border border-[color:var(--border-color)] p-4 shadow-sm transition-all duration-200 ease-in-out hover:bg-[color:var(--bg-card-hover)] hover:shadow-md hover:-translate-y-0.5 bg-[color:var(--bg-tertiary)]'
-              >
-                <h3 className='mb-2 text-sm font-bold text-[color:var(--text-primary)]'>
-                  {newsItem.title}
-                </h3>
-                <p className='mb-2 text-xs text-[color:var(--text-secondary)]'>
-                  {(() => {
-                    const plainText = stripHtml(newsItem.content || '');
-                    return plainText.length > 150
-                      ? `${plainText.substring(0, 150)}...`
-                      : plainText;
-                  })()}
-                </p>
-                <div className='text-xs text-[color:var(--text-tertiary)]'>
-                  {newsItem.author?.username} •{' '}
-                  {new Date(newsItem.createdAt).toLocaleDateString('id-ID')}
-                </div>
+    <div className='card flex flex-col'>
+      <h2 className='text-lg md:text-xl mb-4 flex items-center gap-3 font-semibold text-[color:var(--text-primary)]'>
+        <FaNewspaper />
+        <span>Berita Terbaru</span>
+      </h2>
+
+      {data.length > 0 ? (
+        <div className='flex flex-col flex-1 gap-0'>
+          {data.slice(0, 3).map((newsItem: NewsData) => (
+            <div
+              key={newsItem._id}
+              onClick={() =>
+                navigate(
+                  isAdmin
+                    ? `/admin/news/${newsItem._id}`
+                    : isAlumni
+                    ? `/alumni/news/${newsItem._id}`
+                    : `/student/news/${newsItem._id}`
+                )
+              }
+              className='cursor-pointer py-4 border-b border-[color:var(--border-color)] last:border-0 hover:bg-[color:var(--bg-card-hover)] transition-colors -mx-2 px-2 rounded-lg group'
+            >
+              <h3 className='mb-1.5 text-sm md:text-base font-bold text-[color:var(--text-primary)] group-hover:text-[color:var(--primary)] transition-colors leading-snug line-clamp-2'>
+                {newsItem.title}
+              </h3>
+              <p className='text-xs text-[color:var(--text-secondary)] line-clamp-2 mb-2 leading-relaxed'>
+                {stripHtml(newsItem.content || '')}
+              </p>
+              <div className='flex items-center gap-2 text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
+                <span className='font-medium'>
+                  {newsItem.author?.username || 'Admin'}
+                </span>
+                <span>•</span>
+                <span>
+                  {new Date(newsItem.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </span>
               </div>
-            ))}
+            </div>
+          ))}
+
+          <div className='mt-auto pt-4'>
             <button
               onClick={() =>
                 navigate(
@@ -66,19 +80,19 @@ const News = ({ data }: NewsProps) => {
                     : '/student/news'
                 )
               }
-              className='btn mt-2 w-full bg-gray-700'
+              className='text-xs font-semibold text-[color:var(--text-tertiary)] hover:text-[color:var(--primary)] flex items-center gap-1'
             >
-              Read More
+              Lihat Semua Berita →
             </button>
           </div>
-        ) : (
-          <div className='h-[350px] content-center'>
-            <p className='text-center text-gray-500 py-10'>No data available</p>
-             
-          </div>
-        )}
-      </div>
-    </>
+        </div>
+      ) : (
+        <div className='flex-1 flex flex-col items-center justify-center min-h-[200px] text-[color:var(--text-tertiary)]'>
+          <FaNewspaper className='text-4xl mb-3 opacity-20' />
+          <p className='text-sm'>Belum ada berita terbaru</p>
+        </div>
+      )}
+    </div>
   );
 };
 
