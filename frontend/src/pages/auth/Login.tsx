@@ -61,7 +61,7 @@ const Login = () => {
               <FaGraduationCap className='text-3xl' />
             </div>
             <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>
-              Selamat Datang Kembali
+              Selamat Datang
             </h1>
             <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>
               Masuk ke akun Tracer Study SMANTA
