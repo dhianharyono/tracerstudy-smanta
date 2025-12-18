@@ -15,31 +15,7 @@ interface AuthenticatedRequest extends Request {
 
 const router = express.Router();
 
-router.get(
-  '/mutual-alumni',
-  authenticate,
-  authorize('alumni'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const user = await User.findById(req.user!._id);
-      if (!user || !user.profile?.graduationYear) {
-        return res.json([]);
-      }
 
-      const mutualAlumni = await User.find({
-        role: 'alumni',
-        'profile.graduationYear': user.profile.graduationYear,
-        _id: { $ne: user._id },
-      })
-        .select('-password -email -socialMedia.email')
-        .sort({ 'profile.fullName': 1 });
-
-      res.json(mutualAlumni);
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-);
 
 router.get(
   '/profile',
@@ -54,6 +30,28 @@ router.get(
     }
   }
 );
+
+// Get mutual alumni (same graduation year)
+router.get('/mutual-alumni', authenticate, authorize('alumni'), async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const user = await User.findById(req.user!._id);
+    if (!user || !user.profile?.graduationYear) {
+      return res.json([]);
+    }
+
+    const mutualAlumni = await User.find({
+      role: 'alumni',
+      'profile.graduationYear': user.profile.graduationYear,
+      _id: { $ne: user._id },
+    })
+      .select('-password -email -socialMedia.email')
+      .sort({ 'profile.fullName': 1 });
+
+    res.json(mutualAlumni);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 router.put(
   '/profile',

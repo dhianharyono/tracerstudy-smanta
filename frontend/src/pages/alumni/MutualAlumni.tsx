@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaUserGraduate, FaUniversity, FaBuilding, FaUserCircle } from 'react-icons/fa';
+import { FaUserGraduate, FaUniversity, FaBuilding, FaUserCircle, FaLinkedin, FaInstagram } from 'react-icons/fa';
 
 interface AlumniData {
     _id: string;
@@ -17,6 +17,10 @@ interface AlumniData {
     job?: {
         position?: string;
         institution?: string;
+    };
+    socialMedia?: {
+        linkedin?: string;
+        instagram?: string;
     };
 }
 
@@ -47,7 +51,7 @@ const MutualAlumni = () => {
         <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
             <div className='mb-8 text-center md:text-left'>
                 <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-                    Mutual Alumni
+                    Rekan Sepantaran
                 </h1>
                 <p className='text-[color:var(--text-secondary)]'>
                     Rekan alumni yang lulus pada tahun yang sama dengan Anda
@@ -78,7 +82,7 @@ const MutualAlumni = () => {
                                     <FaUserCircle className='text-3xl' />
                                 </div>
                                 <div>
-                                    <h3 className='font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-1'>
+                                    <h3 className='font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-1 !mb-0'>
                                         {person.profile?.fullName || 'Anonymous'}
                                     </h3>
                                     <p className='text-xs text-[color:var(--text-tertiary)]'>
@@ -124,6 +128,33 @@ const MutualAlumni = () => {
                                     </div>
                                 )}
                             </div>
+
+                            {(person.socialMedia?.linkedin || person.socialMedia?.instagram) && (
+                                <div className='mt-6 pt-4 border-t border-[color:var(--border-color)] flex items-center gap-3'>
+                                    {person.socialMedia.linkedin && (
+                                        <a
+                                            href={person.socialMedia.linkedin.startsWith('http') ? person.socialMedia.linkedin : `https://linkedin.com/in/${person.socialMedia.linkedin}`}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                                        >
+                                            <FaLinkedin className='text-sm' />
+                                            LinkedIn
+                                        </a>
+                                    )}
+                                    {person.socialMedia.instagram && (
+                                        <a
+                                            href={person.socialMedia.instagram.startsWith('http') ? person.socialMedia.instagram : `https://instagram.com/${person.socialMedia.instagram.replace('@', '')}`}
+                                            target='_blank'
+                                            rel='noopener noreferrer'
+                                            className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                                        >
+                                            <FaInstagram className='text-sm' />
+                                            Instagram
+                                        </a>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     ))}
                 </div>
