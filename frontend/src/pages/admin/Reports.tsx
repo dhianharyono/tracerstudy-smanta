@@ -66,7 +66,7 @@ const AdminReports = () => {
             <FaChartBar className='text-lg' />
           </div>
           <div>
-            <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Generate Laporan Baru</h2>
+            <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>Generate Laporan Baru</h2>
             <p className='text-xs text-[color:var(--text-secondary)]'>Pilih jenis laporan yang ingin ditampilkan</p>
           </div>
         </div>

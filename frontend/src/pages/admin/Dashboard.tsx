@@ -73,12 +73,12 @@ const AdminDashboard = () => {
 
       <Statistic stats={stats} />
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 md:mb-8'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 '>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
       </div>
 
-      <div className='mb-6 md:mb-8 w-full rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
+      <div className='w-full rounded-2xl bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
         <InteractiveAlumniMap apiEndpoint='/api/admin/alumni-map' />
       </div>
 

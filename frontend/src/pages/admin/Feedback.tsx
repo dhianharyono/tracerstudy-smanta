@@ -122,7 +122,7 @@ const AdminFeedback = () => {
                 <div className='p-2 rounded-lg bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'>
                   <FaChartBar />
                 </div>
-                <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Akumulasi Rating</h2>
+                <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>Akumulasi Rating</h2>
               </div>
               <div className='flex items-center gap-4'>
                 <div className='text-5xl font-bold text-yellow-400'>
@@ -158,7 +158,7 @@ const AdminFeedback = () => {
             <div className='p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'>
               <FaChartLine />
             </div>
-            <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>Analisis Rating</h2>
+            <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>Analisis Rating</h2>
           </div>
 
           <div className='grid gap-6 lg:grid-cols-2'>

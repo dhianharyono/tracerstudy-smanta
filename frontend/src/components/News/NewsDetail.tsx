@@ -36,7 +36,7 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
   };
 
   return (
-    <article className='p-4 sm:p-6 lg:p-8  max-w-3xl mx-auto pb-20 page-fade-in'>
+    <article className='p-4 sm:p-6 lg:p-8 pb-20 page-fade-in'>
       <button
         onClick={handleBack}
         className='group flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--primary)] mb-8 transition-colors'
@@ -75,11 +75,10 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
                 <>
                   <span>•</span>
                   <span
-                    className={`px-2 py-0.5 rounded text-xs ${
-                      news.isPublished
-                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                    }`}
+                    className={`px-2 py-0.5 rounded text-xs ${news.isPublished
+                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                      }`}
                   >
                     {news.isPublished ? 'Published' : 'Draft'}
                   </span>
@@ -128,20 +127,6 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
           color: var(--text-primary);
         }
       `}</style>
-
-      <div className='border-t border-[var(--border-color)] my-12 pt-8'>
-        <div className='bg-[var(--bg-secondary)] p-6 rounded-xl flex items-center justify-between'>
-          <div>
-            <h3 className='font-bold text-[var(--text-primary)] text-sm md:text-base mb-1'>
-              Tracer Study SMA N 1 Tawangsari
-            </h3>
-            <p className='text-[var(--text-secondary)] text-xs md:text-base'>
-              Platform Tracking Alumni & Informasi Sekolah.
-            </p>
-          </div>
-          {/* <button className='btn btn-primary text-sm'>Follow</button> */}
-        </div>
-      </div>
     </article>
   );
 };
