@@ -88,7 +88,7 @@ const Register = () => {
               Buat Akun Baru
             </h1>
             <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>
-              Mulai perjalanan karir Anda dengan Tracer Study
+              Bergabung dan mulai berkontribusi untuk Tracer Study SMANTA
             </p>
           </div>
 
