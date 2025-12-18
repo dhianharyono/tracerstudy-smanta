@@ -18,7 +18,7 @@ import {
   FaSignOutAlt,
   FaBars,
   FaTimes,
-  FaChevronRight
+  FaChevronRight,
 } from 'react-icons/fa';
 import './Layout.css';
 
@@ -54,7 +54,17 @@ const Layout = () => {
     checkFeedbackVisibility();
   }, []);
 
-  const NavLink = ({ to, icon: Icon, label, activeCheck = false }: { to: string; icon: any; label: string; activeCheck?: boolean }) => {
+  const NavLink = ({
+    to,
+    icon: Icon,
+    label,
+    activeCheck = false,
+  }: {
+    to: string;
+    icon: any;
+    label: string;
+    activeCheck?: boolean;
+  }) => {
     const isActive = activeCheck
       ? location.pathname.startsWith(to)
       : location.pathname === to;
@@ -62,17 +72,23 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-          }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        }`}
       >
-        <span className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive ? 'bg-white/20' : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-          }`}>
-          <Icon className="text-lg" />
+        <span
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            isActive
+              ? 'bg-white/20'
+              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          }`}
+        >
+          <Icon className='text-lg' />
         </span>
-        <span className="font-medium text-sm">{label}</span>
-        {isActive && <FaChevronRight className="ml-auto text-xs opacity-60" />}
+        <span className='font-medium text-sm'>{label}</span>
+        {isActive && <FaChevronRight className='ml-auto text-xs opacity-60' />}
       </Link>
     );
   };
@@ -80,42 +96,72 @@ const Layout = () => {
   const getNavLinks = () => {
     if (user?.role === 'alumni') {
       return (
-        <div className="space-y-1">
-          <NavLink to='/alumni' icon={FaChartBar} label="Dashboard" />
-          <NavLink to='/alumni/questionnaire' icon={FaEdit} label="Kuesioner" />
-          <NavLink to='/alumni/news' icon={FaNewspaper} label="News" activeCheck />
+        <div className='space-y-1'>
+          <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
+          <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
+          <NavLink
+            to='/alumni/news'
+            icon={FaNewspaper}
+            label='News'
+            activeCheck
+          />
           {feedbackMenuVisible && (
-            <NavLink to='/alumni/feedback' icon={FaCommentDots} label="Kritik & Saran" />
+            <NavLink
+              to='/alumni/feedback'
+              icon={FaCommentDots}
+              label='Kritik & Saran'
+            />
           )}
-          <NavLink to='/alumni/profile' icon={FaUser} label="Profil" />
+          <NavLink to='/alumni/profile' icon={FaUser} label='Profil' />
         </div>
       );
     }
 
     if (user?.role === 'admin') {
       return (
-        <div className="space-y-1">
-          <NavLink to='/admin' icon={FaChartBar} label="Dashboard" />
-          <NavLink to='/admin/alumni' icon={FaUsers} label="Data Alumni" />
-          <NavLink to='/admin/students' icon={FaGraduationCap} label="Data Student" />
-          <NavLink to='/admin/admins' icon={FaUserTie} label="Data Admin" />
-          <NavLink to='/admin/news' icon={FaNewspaper} label="Kelola Berita" />
-          <NavLink to='/admin/reports' icon={FaChartLine} label="Laporan" />
-          <NavLink to='/admin/feedback' icon={FaCommentDots} label="Kritik & Saran" />
+        <div className='space-y-1'>
+          <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
+          <NavLink to='/admin/alumni' icon={FaUsers} label='Data Alumni' />
+          <NavLink
+            to='/admin/students'
+            icon={FaGraduationCap}
+            label='Data Student'
+          />
+          <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
+          <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
+          <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
+          <NavLink
+            to='/admin/feedback'
+            icon={FaCommentDots}
+            label='Kritik & Saran'
+          />
         </div>
       );
     }
 
     if (user?.role === 'student') {
       return (
-        <div className="space-y-1">
-          <NavLink to='/student' icon={FaChartBar} label="Dashboard" />
-          <NavLink to='/student/universities' icon={FaUniversity} label="Perguruan Tinggi" />
-          <NavLink to='/student/majors' icon={FaBook} label="Jurusan" />
-          <NavLink to='/student/alumni' icon={FaUsers} label="Alumni" />
-          <NavLink to='/student/news' icon={FaNewspaper} label="News" activeCheck />
+        <div className='space-y-1'>
+          <NavLink to='/student' icon={FaChartBar} label='Dashboard' />
+          <NavLink
+            to='/student/universities'
+            icon={FaUniversity}
+            label='Perguruan Tinggi'
+          />
+          <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
+          <NavLink
+            to='/student/news'
+            icon={FaNewspaper}
+            label='News'
+            activeCheck
+          />
           {feedbackMenuVisible && (
-            <NavLink to='/student/feedback' icon={FaCommentDots} label="Kritik & Saran" />
+            <NavLink
+              to='/student/feedback'
+              icon={FaCommentDots}
+              label='Kritik & Saran'
+            />
           )}
         </div>
       );
@@ -146,8 +192,9 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}
@@ -169,7 +216,9 @@ const Layout = () => {
 
           {/* Nav Links */}
           <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
-            <p className='mb-4 px-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--text-tertiary)]'>Menu Utama</p>
+            <p className='mb-4 px-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--text-tertiary)]'>
+              Menu Utama
+            </p>
             {getNavLinks()}
           </nav>
 
@@ -191,7 +240,7 @@ const Layout = () => {
                 <button
                   onClick={() => setIsLogoutModalOpen(true)}
                   className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-white/50 dark:hover:bg-black/20 transition-colors'
-                  title="Logout"
+                  title='Logout'
                 >
                   <FaSignOutAlt />
                 </button>
@@ -209,7 +258,9 @@ const Layout = () => {
             <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--primary)] text-white'>
               <FaChartLine className='text-sm' />
             </div>
-            <span className='font-bold text-[color:var(--text-primary)]'>Tracer Study</span>
+            <span className='font-bold text-[color:var(--text-primary)]'>
+              Tracer Study
+            </span>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -224,8 +275,8 @@ const Layout = () => {
           <div className='mx-auto max-w-7xl w-full flex-grow animate-fade-in pb-8'>
             <Outlet />
           </div>
-          <div className="w-full shrink-0 py-4 text-center text-xs text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]">
-            &copy; 2025 Tracer Study SMAN 1 Tawangsari. Data Anda aman dan terlindungi.
+          <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
+            &copy; 2025 Tracer Study SMAN 1 Tawangsari | SMANTAUPDATE
           </div>
         </main>
       </div>
@@ -233,10 +284,10 @@ const Layout = () => {
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}
-        title="Konfirmasi Logout"
-        message="Apakah Anda yakin ingin keluar dari aplikasi?"
-        confirmText="Ya, Keluar"
-        cancelText="Batal"
+        title='Konfirmasi Logout'
+        message='Apakah Anda yakin ingin keluar dari aplikasi?'
+        confirmText='Ya, Keluar'
+        cancelText='Batal'
       />
     </div>
   );

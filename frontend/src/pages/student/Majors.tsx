@@ -135,29 +135,33 @@ const StudentMajors = () => {
                 </div>
               </div>
 
-              <div className='mb-4 min-h-[3.5rem]'>
+              <div className='mb-4 min-h-[6rem]'>
                 <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
                   {major._id}
                 </h3>
 
                 {/* Universities List */}
-                <div className='flex flex-wrap gap-2 mt-2'>
-                  {Array.from(new Set(major.alumni?.map(a => a.university)))
-                    .filter(Boolean)
-                    .slice(0, 3)
-                    .map((univ, i) => (
-                      <span
-                        key={i}
-                        className='text-[10px] px-2 py-0.5 rounded-full bg-gray-50 border border-gray-100 text-[color:var(--text-secondary)] dark:bg-gray-800 dark:border-gray-700'
-                      >
-                        {univ}
-                      </span>
-                    ))}
-                  {new Set(major.alumni?.map(a => a.university)).size > 3 && (
-                    <span className='text-[10px] text-[color:var(--text-tertiary)] flex items-center'>
-                      +{new Set(major.alumni?.map(a => a.university)).size - 3} lainnya
-                    </span>
-                  )}
+                <div className='flex flex-wrap gap-1.5 mt-2'>
+                  {(() => {
+                    const uniqueUnivs = Array.from(new Set(major.alumni?.map(a => a.university))).filter(Boolean);
+                    return (
+                      <>
+                        {uniqueUnivs.slice(0, 3).map((univ, i) => (
+                          <span
+                            key={i}
+                            className='text-[10px] px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400'
+                          >
+                            {univ}
+                          </span>
+                        ))}
+                        {uniqueUnivs.length > 3 && (
+                          <span className='text-[10px] text-[color:var(--text-tertiary)] flex items-center ml-0.5'>
+                            +{uniqueUnivs.length - 3} lainnya
+                          </span>
+                        )}
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
 

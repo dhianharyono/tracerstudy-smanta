@@ -47,18 +47,18 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
         <span className='font-medium'>Kembali</span>
       </button>
 
-      <header className='mb-10'>
+      <header className='mb-5'>
         <h1 className='text-sm md:text-3xl font-bold text-[var(--text-primary)] mb-6 leading-tight'>
           {news.title}
         </h1>
 
         <div className='flex items-center gap-3'>
-          <FaUserCircle className='text-4xl text-[var(--text-tertiary)]' />
-          <div>
+          <FaUserCircle className='text-xl md:text-3xl text-[var(--text-tertiary)]' />
+          <div className='text-xs md:text-sm'>
             <div className='font-medium text-[var(--text-primary)]'>
               {news.author?.username || 'Admin'}
             </div>
-            <div className='flex items-center gap-2 text-sm text-[var(--text-secondary)]'>
+            <div className='flex items-center gap-2 text-[var(--text-secondary)]'>
               <span>
                 {new Date(news.createdAt).toLocaleDateString('id-ID', {
                   month: 'short',
@@ -68,17 +68,18 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
               </span>
               <span>•</span>
               <span className='flex items-center gap-1'>
-                <FaClock className='text-xs' />
+                <FaClock />
                 {calculateReadTime(news.content)}
               </span>
               {news.isPublished !== undefined && (
                 <>
                   <span>•</span>
                   <span
-                    className={`px-2 py-0.5 rounded text-xs ${news.isPublished
-                      ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                      : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
-                      }`}
+                    className={`px-2 py-0.5 rounded text-xs ${
+                      news.isPublished
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                    }`}
                   >
                     {news.isPublished ? 'Published' : 'Draft'}
                   </span>
@@ -89,7 +90,7 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
         </div>
       </header>
 
-      <div className='border-t border-[var(--border-color)] my-8'></div>
+      <div className='border-t border-[var(--border-color)] my-5'></div>
 
       <div
         className='prose prose-lg dark:prose-invert max-w-none text-sm md:text-base'
