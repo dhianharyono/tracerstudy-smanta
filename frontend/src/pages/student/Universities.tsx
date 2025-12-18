@@ -3,12 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { formatUniversityType } from '../../utils/helpers';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import {
-  FaUniversity,
-  FaSearch,
-  FaFilter,
-  FaUsers,
-} from 'react-icons/fa';
+import { FaUniversity, FaSearch, FaFilter, FaUsers } from 'react-icons/fa';
 
 interface UniversityAggregate {
   _id: {
@@ -179,7 +174,7 @@ const StudentUniversities = () => {
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
             >
               <div className='flex items-start justify-between'>
-                <div className='rounded-lg bg-[var(--primary-light)]/10 p-3 text-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white transition-colors duration-300'>
+                <div className='rounded-lg bg-[var(--primary)] p-3 text-[var(--primary)]/10 group-hover:bg-[var(--primary)] group-hover:text-white transition-colors duration-300'>
                   <FaUniversity className='text-xl' />
                 </div>
                 <span

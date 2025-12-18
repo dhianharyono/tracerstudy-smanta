@@ -7,7 +7,6 @@ import {
   FaEye,
   FaEyeSlash,
   FaStar,
-  FaArrowLeft,
   FaChartBar,
   FaChartLine,
   FaUserCircle,

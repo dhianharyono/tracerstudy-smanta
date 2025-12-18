@@ -12,6 +12,12 @@ import {
 interface MajorData {
   _id: string;
   count: number;
+  alumni: {
+    id: string;
+    name: string;
+    university: string;
+    graduationYear: number;
+  }[];
 }
 
 const StudentMajors = () => {
@@ -130,9 +136,29 @@ const StudentMajors = () => {
               </div>
 
               <div className='mb-4 min-h-[3.5rem]'>
-                <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
+                <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
                   {major._id}
                 </h3>
+
+                {/* Universities List */}
+                <div className='flex flex-wrap gap-2 mt-2'>
+                  {Array.from(new Set(major.alumni?.map(a => a.university)))
+                    .filter(Boolean)
+                    .slice(0, 3)
+                    .map((univ, i) => (
+                      <span
+                        key={i}
+                        className='text-[10px] px-2 py-0.5 rounded-full bg-gray-50 border border-gray-100 text-[color:var(--text-secondary)] dark:bg-gray-800 dark:border-gray-700'
+                      >
+                        {univ}
+                      </span>
+                    ))}
+                  {new Set(major.alumni?.map(a => a.university)).size > 3 && (
+                    <span className='text-[10px] text-[color:var(--text-tertiary)] flex items-center'>
+                      +{new Set(major.alumni?.map(a => a.university)).size - 3} lainnya
+                    </span>
+                  )}
+                </div>
               </div>
 
               <div className='flex items-center justify-between border-t border-[color:var(--border-color)] pt-4'>
