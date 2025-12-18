@@ -61,7 +61,7 @@ const MutualAlumni = () => {
           Rekan Seangkatan
         </h1>
         <p className='text-[color:var(--text-secondary)]'>
-          Rekan alumni yang lulus pada tahun yang sama dengan Anda
+          Alumni yang lulus pada tahun yang sama dengan Anda
         </p>
       </div>
 
@@ -144,42 +144,42 @@ const MutualAlumni = () => {
 
               {(person.socialMedia?.linkedin ||
                 person.socialMedia?.instagram) && (
-                  <div className='mt-6 pt-4 border-t border-[color:var(--border-color)] flex items-center gap-3'>
-                    {person.socialMedia.linkedin && (
-                      <a
-                        href={
-                          person.socialMedia.linkedin.startsWith('http')
-                            ? person.socialMedia.linkedin
-                            : `https://linkedin.com/in/${person.socialMedia.linkedin}`
-                        }
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
-                      >
-                        <FaLinkedin className='text-sm' />
-                        LinkedIn
-                      </a>
-                    )}
-                    {person.socialMedia.instagram && (
-                      <a
-                        href={
-                          person.socialMedia.instagram.startsWith('http')
-                            ? person.socialMedia.instagram
-                            : `https://instagram.com/${person.socialMedia.instagram.replace(
+                <div className='mt-6 pt-4 border-t border-[color:var(--border-color)] flex items-center gap-3'>
+                  {person.socialMedia.linkedin && (
+                    <a
+                      href={
+                        person.socialMedia.linkedin.startsWith('http')
+                          ? person.socialMedia.linkedin
+                          : `https://linkedin.com/in/${person.socialMedia.linkedin}`
+                      }
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                    >
+                      <FaLinkedin className='text-sm' />
+                      LinkedIn
+                    </a>
+                  )}
+                  {person.socialMedia.instagram && (
+                    <a
+                      href={
+                        person.socialMedia.instagram.startsWith('http')
+                          ? person.socialMedia.instagram
+                          : `https://instagram.com/${person.socialMedia.instagram.replace(
                               '@',
                               ''
                             )}`
-                        }
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
-                      >
-                        <FaInstagram className='text-sm' />
-                        Instagram
-                      </a>
-                    )}
-                  </div>
-                )}
+                      }
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='flex items-center gap-2 text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-3 py-1.5 rounded-full'
+                    >
+                      <FaInstagram className='text-sm' />
+                      Instagram
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>
