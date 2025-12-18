@@ -2,7 +2,16 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaEdit, FaSpinner, FaUser, FaBriefcase, FaShareAlt, FaSave, FaTimes, FaGraduationCap } from 'react-icons/fa';
+import {
+  FaEdit,
+  FaSpinner,
+  FaUser,
+  FaBriefcase,
+  FaShareAlt,
+  FaSave,
+  FaTimes,
+  FaGraduationCap,
+} from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 interface ProfileData {
@@ -105,10 +114,10 @@ const AlumniQuestionnaire = () => {
   const [universities, setUniversities] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [initialLoading, setInitialLoading] = useState(true);
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [submitLoading, setSubmitLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
   );
@@ -188,7 +197,7 @@ const AlumniQuestionnaire = () => {
       } catch (err) {
         console.error('Failed to fetch data:', err);
       } finally {
-        setInitialLoading(false);
+        setLoading(false);
       }
     };
 
@@ -280,7 +289,7 @@ const AlumniQuestionnaire = () => {
       return;
     }
 
-    setLoading(true);
+    setSubmitLoading(true);
 
     try {
       const submitData = {
@@ -326,18 +335,28 @@ const AlumniQuestionnaire = () => {
         `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
       );
     } finally {
-      setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
-  if (loading) {
+  if (loading || submitLoading) {
     return <LoadingSpinner />;
   }
 
-  const InputField = ({ label, name, value, onChange, type = 'text', required = false, placeholder = '', min, max }: any) => (
+  const InputField = ({
+    label,
+    name,
+    value,
+    onChange,
+    type = 'text',
+    required = false,
+    placeholder = '',
+    min,
+    max,
+  }: any) => (
     <div className='form-group'>
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className="text-red-500">*</span>}
+        {label} {required && <span className='text-red-500'>*</span>}
       </label>
       <input
         type={type}
@@ -348,38 +367,69 @@ const AlumniQuestionnaire = () => {
         min={min}
         max={max}
         placeholder={placeholder}
-        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name] ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+        className={`w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+          : ''
+          }`}
       />
       {validationErrors[name] && (
-        <span className='mt-1 text-xs text-red-500'>{validationErrors[name]}</span>
+        <span className='mt-1 text-xs text-red-500'>
+          {validationErrors[name]}
+        </span>
       )}
     </div>
   );
 
-  const SelectField = ({ label, name, value, onChange, options, required = false }: any) => (
+  const SelectField = ({
+    label,
+    name,
+    value,
+    onChange,
+    options,
+    required = false,
+  }: any) => (
     <div className='form-group'>
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && <span className="text-red-500">*</span>}
+        {label} {required && <span className='text-red-500'>*</span>}
       </label>
-      <div className="relative">
+      <div className='relative'>
         <select
           name={name}
           value={value}
           onChange={onChange}
           required={required}
-          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name] ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+          className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+            : ''
+            }`}
         >
           <option value=''>Pilih</option>
           {options.map((opt: any) => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
           ))}
         </select>
-        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
-          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+        <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+          <svg
+            className='h-4 w-4'
+            fill='none'
+            stroke='currentColor'
+            viewBox='0 0 24 24'
+          >
+            <path
+              strokeLinecap='round'
+              strokeLinejoin='round'
+              strokeWidth='2'
+              d='M19 9l-7 7-7-7'
+            />
+          </svg>
         </div>
       </div>
       {validationErrors[name] && (
-        <span className='mt-1 text-xs text-red-500'>{validationErrors[name]}</span>
+        <span className='mt-1 text-xs text-red-500'>
+          {validationErrors[name]}
+        </span>
       )}
     </div>
   );
@@ -403,7 +453,9 @@ const AlumniQuestionnaire = () => {
               <FaEdit />
             </div>
             <div>
-              <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>Mode Edit</h3>
+              <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>
+                Mode Edit
+              </h3>
               <p className='text-xs md:text-sm text-blue-700 dark:text-blue-300'>
                 Anda sedang memperbarui data kuesioner yang sudah ada.
               </p>
@@ -417,60 +469,62 @@ const AlumniQuestionnaire = () => {
         <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
-              <FaUser className="text-xl" />
+              <FaUser className='text-xl' />
             </div>
-            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Informasi Personal</h2>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              Informasi Personal
+            </h2>
           </div>
 
           <div className='grid gap-6 md:grid-cols-2'>
             <InputField
-              label="Nama Lengkap"
-              name="profile.fullName"
+              label='Nama Lengkap'
+              name='profile.fullName'
               value={formData.profile.fullName}
               onChange={handleChange}
               required
-              placeholder="Masukkan nama lengkap"
+              placeholder='Masukkan nama lengkap'
             />
 
             <SelectField
-              label="Jenis Kelamin"
-              name="profile.gender"
+              label='Jenis Kelamin'
+              name='profile.gender'
               value={formData.profile.gender}
               onChange={handleChange}
               required
               options={[
                 { value: 'male', label: 'Laki-laki' },
-                { value: 'female', label: 'Perempuan' }
+                { value: 'female', label: 'Perempuan' },
               ]}
             />
 
             <InputField
-              label="Tahun Masuk SMA"
-              name="profile.entryYear"
-              type="number"
+              label='Tahun Masuk SMA'
+              name='profile.entryYear'
+              type='number'
               value={formData.profile.entryYear}
               onChange={handleChange}
               required
-              min="1900"
+              min='1900'
               max={new Date().getFullYear()}
-              placeholder="Ex: 2018"
+              placeholder='Ex: 2018'
             />
 
             <InputField
-              label="Tahun Lulus SMA"
-              name="profile.graduationYear"
-              type="number"
+              label='Tahun Lulus SMA'
+              name='profile.graduationYear'
+              type='number'
               value={formData.profile.graduationYear}
               onChange={handleChange}
               required
-              min="1900"
+              min='1900'
               max={new Date().getFullYear()}
-              placeholder="Ex: 2021"
+              placeholder='Ex: 2021'
             />
 
             <SelectField
-              label="Pendidikan Terakhir"
-              name="profile.lastEducation"
+              label='Pendidikan Terakhir'
+              name='profile.lastEducation'
               value={formData.profile.lastEducation}
               onChange={handleChange}
               required
@@ -480,17 +534,21 @@ const AlumniQuestionnaire = () => {
                 { value: 'd4', label: 'D4' },
                 { value: 's1', label: 'S1' },
                 { value: 's2', label: 'S2' },
-                { value: 's3', label: 'S3' }
+                { value: 's3', label: 'S3' },
               ]}
             />
           </div>
 
           <div className='mt-6 grid gap-6 md:grid-cols-2'>
             <div className='form-group'>
-              <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Status Saat Ini</label>
+              <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+                Status Saat Ini
+              </label>
               <div className='space-y-4 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] p-4'>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-[color:var(--text-primary)] w-52">Sedang Kuliah?</span>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
+                    Sedang Kuliah?
+                  </span>
                   <select
                     name='profile.isStudying'
                     value={formData.profile.isStudying}
@@ -508,8 +566,10 @@ const AlumniQuestionnaire = () => {
                     <option value='tidak'>Tidak</option>
                   </select>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-[color:var(--text-primary)] w-52">Sedang Bekerja?</span>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
+                    Sedang Bekerja?
+                  </span>
                   <select
                     name='profile.isWorking'
                     value={formData.profile.isWorking}
@@ -531,19 +591,27 @@ const AlumniQuestionnaire = () => {
           <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
               <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
-                <FaGraduationCap className="text-xl" />
+                <FaGraduationCap className='text-xl' />
               </div>
-              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Data Perguruan Tinggi</h2>
+              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+                Data Perguruan Tinggi
+              </h2>
             </div>
 
             <div className='grid gap-6 md:grid-cols-2'>
               <div className='form-group'>
-                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Nama Kampus</label>
+                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+                  Nama Kampus
+                </label>
                 {!showManualUniversityInput ? (
-                  <div className="relative">
+                  <div className='relative'>
                     <select
                       name='university.name'
-                      value={universities.includes(formData.university.name) ? formData.university.name : ''}
+                      value={
+                        universities.includes(formData.university.name)
+                          ? formData.university.name
+                          : ''
+                      }
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualUniversityInput(true);
@@ -559,16 +627,30 @@ const AlumniQuestionnaire = () => {
                     >
                       <option value=''>Pilih Kampus</option>
                       {universities.map((univ) => (
-                        <option key={univ} value={univ}>{univ}</option>
+                        <option key={univ} value={univ}>
+                          {univ}
+                        </option>
                       ))}
                       <option value='other'>+ Lainnya (ketik manual)</option>
                     </select>
-                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+                      <svg
+                        className='h-4 w-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M19 9l-7 7-7-7'
+                        />
+                      </svg>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <input
                       type='text'
                       name='university.name'
@@ -581,9 +663,12 @@ const AlumniQuestionnaire = () => {
                       type='button'
                       onClick={() => {
                         setShowManualUniversityInput(false);
-                        setFormData((prev) => ({ ...prev, university: { ...prev.university, name: '' } }));
+                        setFormData((prev) => ({
+                          ...prev,
+                          university: { ...prev.university, name: '' },
+                        }));
                       }}
-                      title="Kembali ke daftar"
+                      title='Kembali ke daftar'
                       className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
@@ -593,39 +678,48 @@ const AlumniQuestionnaire = () => {
               </div>
 
               <SelectField
-                label="Jenis PT"
-                name="university.type"
+                label='Jenis PT'
+                name='university.type'
                 value={formData.university.type}
                 onChange={handleChange}
                 options={[
                   { value: 'negeri', label: 'Negeri' },
                   { value: 'swasta', label: 'Swasta' },
-                  { value: 'kedinasan', label: 'Kedinasan' }
+                  { value: 'kedinasan', label: 'Kedinasan' },
                 ]}
               />
 
               <InputField
-                label="Tahun Masuk"
-                name="university.entryYear"
-                type="number"
+                label='Tahun Masuk'
+                name='university.entryYear'
+                type='number'
                 value={formData.university.entryYear}
                 onChange={handleChange}
-                min="1900"
+                min='1900'
                 max={new Date().getFullYear()}
-                placeholder="Ex: 2021"
+                placeholder='Ex: 2021'
               />
 
               <div className='form-group'>
-                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>Jurusan</label>
+                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+                  Jurusan
+                </label>
                 {!showManualMajorInput ? (
-                  <div className="relative">
+                  <div className='relative'>
                     <select
                       name='university.major'
-                      value={majors.includes(formData.university.major) ? formData.university.major : ''}
+                      value={
+                        majors.includes(formData.university.major)
+                          ? formData.university.major
+                          : ''
+                      }
                       onChange={(e) => {
                         if (e.target.value === 'other') {
                           setShowManualMajorInput(true);
-                          setFormData((prev) => ({ ...prev, university: { ...prev.university, major: '' } }));
+                          setFormData((prev) => ({
+                            ...prev,
+                            university: { ...prev.university, major: '' },
+                          }));
                         } else {
                           handleChange(e);
                         }
@@ -634,16 +728,30 @@ const AlumniQuestionnaire = () => {
                     >
                       <option value=''>Pilih Jurusan</option>
                       {majors.map((major) => (
-                        <option key={major} value={major}>{major}</option>
+                        <option key={major} value={major}>
+                          {major}
+                        </option>
                       ))}
                       <option value='other'>+ Lainnya (ketik manual)</option>
                     </select>
-                    <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]">
-                      <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                    <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+                      <svg
+                        className='h-4 w-4'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth='2'
+                          d='M19 9l-7 7-7-7'
+                        />
+                      </svg>
                     </div>
                   </div>
                 ) : (
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <input
                       type='text'
                       name='university.major'
@@ -656,9 +764,12 @@ const AlumniQuestionnaire = () => {
                       type='button'
                       onClick={() => {
                         setShowManualMajorInput(false);
-                        setFormData((prev) => ({ ...prev, university: { ...prev.university, major: '' } }));
+                        setFormData((prev) => ({
+                          ...prev,
+                          university: { ...prev.university, major: '' },
+                        }));
                       }}
-                      title="Kembali ke daftar"
+                      title='Kembali ke daftar'
                       className='flex items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
                     >
                       <FaTimes />
@@ -675,32 +786,34 @@ const AlumniQuestionnaire = () => {
           <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
               <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
-                <FaBriefcase className="text-xl" />
+                <FaBriefcase className='text-xl' />
               </div>
-              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Data Pekerjaan</h2>
+              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+                Data Pekerjaan
+              </h2>
             </div>
 
             <div className='grid gap-6 md:grid-cols-2'>
               <InputField
-                label="Posisi/Jabatan"
-                name="job.position"
+                label='Posisi/Jabatan'
+                name='job.position'
                 value={formData.job.position}
                 onChange={handleChange}
-                placeholder="Ex: Staff IT"
+                placeholder='Ex: Staff IT'
               />
               <InputField
-                label="Nama Instansi/Perusahaan"
-                name="job.institution"
+                label='Nama Instansi/Perusahaan'
+                name='job.institution'
                 value={formData.job.institution}
                 onChange={handleChange}
-                placeholder="Ex: PT. Maju Jaya"
+                placeholder='Ex: PT. Maju Jaya'
               />
               <InputField
-                label="Nama Pekerjaan"
-                name="job.jobTitle"
+                label='Nama Pekerjaan'
+                name='job.jobTitle'
                 value={formData.job.jobTitle}
                 onChange={handleChange}
-                placeholder="Ex: Web Developer"
+                placeholder='Ex: Web Developer'
               />
             </div>
           </div>
@@ -710,40 +823,42 @@ const AlumniQuestionnaire = () => {
         <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
-              <FaShareAlt className="text-xl" />
+              <FaShareAlt className='text-xl' />
             </div>
-            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>Media Sosial</h2>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              Media Sosial
+            </h2>
           </div>
 
           <div className='grid gap-6 md:grid-cols-2'>
             <InputField
-              label="Email"
-              name="socialMedia.email"
-              type="email"
+              label='Email'
+              name='socialMedia.email'
+              type='email'
               value={formData.socialMedia.email}
               onChange={handleChange}
-              placeholder="nama@email.com"
+              placeholder='nama@email.com'
             />
             <InputField
-              label="LinkedIn (URL/Username)"
-              name="socialMedia.linkedin"
+              label='LinkedIn (URL/Username)'
+              name='socialMedia.linkedin'
               value={formData.socialMedia.linkedin}
               onChange={handleChange}
-              placeholder="linkedin.com/in/username"
+              placeholder='linkedin.com/in/username'
             />
             <InputField
-              label="Instagram (URL/Username)"
-              name="socialMedia.instagram"
+              label='Instagram (URL/Username)'
+              name='socialMedia.instagram'
               value={formData.socialMedia.instagram}
               onChange={handleChange}
-              placeholder="@username"
+              placeholder='@username'
             />
           </div>
         </div>
 
         {error && (
           <div className='rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
-            <p className="font-semibold">{error}</p>
+            <p className='font-semibold'>{error}</p>
           </div>
         )}
 
@@ -753,17 +868,17 @@ const AlumniQuestionnaire = () => {
             type='button'
             onClick={() => navigate('/alumni')}
             className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3 font-semibold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)]'
-            disabled={loading}
+            disabled={submitLoading}
           >
             Batal
           </button>
 
           <button
             type='submit'
-            disabled={loading}
+            disabled={submitLoading}
             className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
           >
-            {loading ? (
+            {submitLoading ? (
               <>
                 <FaSpinner className='animate-spin' />
                 <span>Menyimpan...</span>
@@ -771,15 +886,18 @@ const AlumniQuestionnaire = () => {
             ) : (
               <>
                 <FaSave />
-                <span>{isEditMode ? 'Simpan Perubahan' : 'Kirim Kuesioner'}</span>
+                <span>
+                  {isEditMode ? 'Simpan Perubahan' : 'Kirim Kuesioner'}
+                </span>
               </>
             )}
           </button>
         </div>
       </form>
 
-      <div className="mt-8 text-center text-sm text-[color:var(--text-tertiary)]">
-        &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. Data Anda aman dan terlindungi.
+      <div className='mt-8 text-center text-sm text-[color:var(--text-tertiary)]'>
+        &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. Data
+        Anda aman dan terlindungi.
       </div>
     </div>
   );
