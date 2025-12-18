@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaBook, FaSpinner, FaSearch, FaUsers, FaGraduationCap } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import {
+  FaBook,
+  FaSearch,
+  FaUsers,
+  FaGraduationCap,
+} from 'react-icons/fa';
 
 interface MajorData {
   _id: string;
@@ -47,7 +53,7 @@ const StudentMajors = () => {
       'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
       'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
       'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-      'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300'
+      'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
     ];
     let hash = 0;
     for (let i = 0; i < name.length; i++) {
@@ -57,26 +63,19 @@ const StudentMajors = () => {
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       {/* Header Section */}
       <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold text-[color:var(--text-primary)] sm:text-3xl'>
+        <div className='text-center md:text-left mb-2'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Jurusan & Program Studi
           </h1>
-          <p className='mt-1 text-sm text-[color:var(--text-secondary)]'>
-            Eksplorasi sebaran alumni berdasarkan jurusan
+          <p className='text-[color:var(--text-secondary)]'>
+            Persebaran Alumni berdasarkan jurusan
           </p>
         </div>
 
@@ -121,7 +120,11 @@ const StudentMajors = () => {
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
             >
               <div className='flex items-start justify-between mb-4'>
-                <div className={`rounded-lg p-3 ${getBadgeColor(major._id)} transition-colors duration-300`}>
+                <div
+                  className={`rounded-lg p-3 ${getBadgeColor(
+                    major._id
+                  )} transition-colors duration-300`}
+                >
                   <FaGraduationCap className='text-xl' />
                 </div>
               </div>

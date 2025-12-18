@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaEdit, FaSpinner, FaUser, FaBriefcase, FaShareAlt, FaSave, FaTimes, FaGraduationCap } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -329,15 +330,8 @@ const AlumniQuestionnaire = () => {
     }
   };
 
-  if (initialLoading) {
-    return (
-      <div className='flex items-center justify-center min-h-[60vh]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-[color:var(--text-secondary)]'>
-          <FaSpinner className='animate-spin text-xl text-[var(--primary)]' />
-          <span>Memuat data...</span>
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   const InputField = ({ label, name, value, onChange, type = 'text', required = false, placeholder = '', min, max }: any) => (
@@ -398,7 +392,7 @@ const AlumniQuestionnaire = () => {
           {isEditMode ? 'Edit Kuesioner' : 'Kuesioner Tracer Study'}
         </h1>
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Lengkapi data Anda untuk membantu pengembangan sekolah
+          Lengkapi data Anda untuk kegiatan tracer study
         </p>
       </div>
 

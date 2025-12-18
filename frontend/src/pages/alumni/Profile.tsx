@@ -5,7 +5,8 @@ import {
   formatEducation,
   formatAlumniStatus,
 } from '../../utils/helpers';
-import { FaSpinner, FaUser, FaPhone } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { FaUser, FaPhone } from 'react-icons/fa';
 import { GiGraduateCap } from 'react-icons/gi';
 import { PiBagSimpleFill } from 'react-icons/pi';
 
@@ -29,14 +30,7 @@ const AlumniProfile = () => {
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center min-h-[50vh]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-[color:var(--text-secondary)]'>
-          <FaSpinner className='animate-spin text-xl text-[var(--primary)]' />
-          <span>Memuat profil...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   const InfoCard = ({ title, icon: Icon, children, colorClass }: any) => (

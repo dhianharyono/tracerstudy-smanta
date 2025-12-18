@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { BsInstagram } from 'react-icons/bs';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import {
-  FaSpinner,
   FaGraduationCap,
   FaFilter,
   FaSearch,
@@ -101,26 +101,19 @@ const StudentAlumni = () => {
   };
 
   if (loading && alumni.length === 0) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       {/* Header Section */}
       <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold text-[color:var(--text-primary)] sm:text-3xl'>
+        <div className='text-center md:text-left mb-2'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Data Alumni
           </h1>
-          <p className='mt-1 text-sm text-[color:var(--text-secondary)]'>
-            Temukan rekan alumni dan jejak karir mereka
+          <p className='text-[color:var(--text-secondary)]'>
+            Temukan informasi Alumni
           </p>
         </div>
 
@@ -134,9 +127,8 @@ const StudentAlumni = () => {
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
       <div
-        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}

@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { formatUniversityType } from '../../utils/helpers';
-import { FaUniversity, FaSpinner, FaSearch, FaFilter, FaUsers } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import {
+  FaUniversity,
+  FaSearch,
+  FaFilter,
+  FaUsers,
+} from 'react-icons/fa';
 
 interface UniversityAggregate {
   _id: {
@@ -15,7 +21,9 @@ interface UniversityAggregate {
 const StudentUniversities = () => {
   const navigate = useNavigate();
   const [universities, setUniversities] = useState<UniversityAggregate[]>([]);
-  const [filteredUniversities, setFilteredUniversities] = useState<UniversityAggregate[]>([]);
+  const [filteredUniversities, setFilteredUniversities] = useState<
+    UniversityAggregate[]
+  >([]);
   const [filterType, setFilterType] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
@@ -27,7 +35,7 @@ const StudentUniversities = () => {
   useEffect(() => {
     // Client-side search filtering
     const lowerTerm = searchTerm.toLowerCase();
-    const filtered = universities.filter(uni =>
+    const filtered = universities.filter((uni) =>
       uni._id.name.toLowerCase().includes(lowerTerm)
     );
     setFilteredUniversities(filtered);
@@ -53,33 +61,29 @@ const StudentUniversities = () => {
 
   const getBadgeColor = (type: string) => {
     const t = type?.toLowerCase();
-    if (t === 'negeri') return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
-    if (t === 'swasta') return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
-    if (t === 'kedinasan') return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
+    if (t === 'negeri')
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300';
+    if (t === 'swasta')
+      return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
+    if (t === 'kedinasan')
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
     return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       {/* Header Section */}
       <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div>
-          <h1 className='text-2xl font-bold text-[color:var(--text-primary)] sm:text-3xl'>
+        <div className='text-center md:text-left mb-2'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Perguruan Tinggi
           </h1>
-          <p className='mt-1 text-sm text-[color:var(--text-secondary)]'>
-            Daftar universitas tempat alumni melanjutkan studi
+          <p className='text-[color:var(--text-secondary)]'>
+            Persebaran Alumni berdasarkan Universitas
           </p>
         </div>
 
@@ -103,16 +107,28 @@ const StudentUniversities = () => {
               onChange={(e) => setFilterType(e.target.value)}
               className='w-full cursor-pointer appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-10 text-sm text-[color:var(--text-primary)] outline-none transition-colors hover:border-[var(--primary)] focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] sm:w-auto'
             >
-              <option className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]' value=''>
+              <option
+                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
+                value=''
+              >
                 Semua Jenis
               </option>
-              <option className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]' value='negeri'>
+              <option
+                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
+                value='negeri'
+              >
                 Negeri
               </option>
-              <option className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]' value='swasta'>
+              <option
+                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
+                value='swasta'
+              >
                 Swasta
               </option>
-              <option className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]' value='kedinasan'>
+              <option
+                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
+                value='kedinasan'
+              >
                 Kedinasan
               </option>
             </select>
@@ -155,7 +171,9 @@ const StudentUniversities = () => {
               key={index}
               onClick={() => {
                 navigate(
-                  `/student/alumni?university=${encodeURIComponent(uni._id.name)}`
+                  `/student/alumni?university=${encodeURIComponent(
+                    uni._id.name
+                  )}`
                 );
               }}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
@@ -164,7 +182,11 @@ const StudentUniversities = () => {
                 <div className='rounded-lg bg-[var(--primary-light)]/10 p-3 text-[var(--primary)] group-hover:bg-[var(--primary)] group-hover:text-white transition-colors duration-300'>
                   <FaUniversity className='text-xl' />
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${getBadgeColor(uni._id.type)}`}>
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${getBadgeColor(
+                    uni._id.type
+                  )}`}
+                >
                   {uni._id.type || 'Umum'}
                 </span>
               </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FaSpinner } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsList, { NewsItem } from '../../components/News/NewsList';
 
 const StudentNews = () => {
@@ -29,22 +29,17 @@ const StudentNews = () => {
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='page-header mb-8 items-center'>
-        <h1 className='text-xl md:text-3xl font-bold'>Berita & Artikel</h1>
-        <p className='text-[var(--text-secondary)]'>
-          Informasi terbaru seputar Alumni dan Sekolah
+      <div className='text-center md:text-left mb-10'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          Berita & Artikel
+        </h1>
+        <p className='text-[color:var(--text-secondary)]'>
+          Informasi terbaru seputar Alumni dan SMANTA
         </p>
       </div>
 

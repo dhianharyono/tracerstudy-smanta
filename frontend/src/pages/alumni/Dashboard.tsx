@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 // import { useNavigate } from 'react-router-dom';
-import { FaSpinner } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
 import Statistic from '@/components/Dashboard/Statistic';
 import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
@@ -141,14 +141,7 @@ const AlumniDashboard = () => {
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -174,12 +167,12 @@ const AlumniDashboard = () => {
         <Statistic stats={stats} />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6 md:mb-8'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
       </div>
 
-      <div className='mb-6 md:mb-8 w-full rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
+      <div className='w-full rounded-2xl bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
         <InteractiveAlumniMap apiEndpoint='/api/alumni/alumni-map' />
       </div>
 

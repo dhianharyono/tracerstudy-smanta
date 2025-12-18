@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaChartBar, FaFileAlt, FaSpinner, FaUniversity, FaGraduationCap } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const AdminReports = () => {
   const [reportType, setReportType] = useState('');
@@ -49,14 +50,7 @@ const AdminReports = () => {
   };
 
   if (loading) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (

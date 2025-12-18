@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { FaSpinner, FaUserPlus, FaEdit, FaTrash, FaTimes, FaSave, FaUserShield } from 'react-icons/fa';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import { FaUserPlus, FaEdit, FaTrash, FaTimes, FaSave, FaUserShield } from 'react-icons/fa';
 
 const AdminAdmins = () => {
   const [admins, setAdmins] = useState<any[]>([]);
@@ -87,15 +88,8 @@ const AdminAdmins = () => {
     setFormData({ username: '', email: '', password: '' });
   };
 
-  if (loading && admins.length === 0) {
-    return (
-      <div className='flex items-center justify-center h-[calc(100vh-64px)]'>
-        <div className='flex items-center gap-3 text-lg font-medium text-gray-400'>
-          <FaSpinner className='animate-spin text-xl' />
-          <span>Loading...</span>
-        </div>
-      </div>
-    );
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (
