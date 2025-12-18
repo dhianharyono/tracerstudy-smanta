@@ -12,7 +12,12 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 // import Notifications from '@/components/Dashboard/Notifications';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
-import { FaUserCircle, FaChevronRight, FaUserGraduate } from 'react-icons/fa';
+import {
+  FaUserCircle,
+  FaChevronRight,
+  FaUserGraduate,
+  FaUsers,
+} from 'react-icons/fa';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
@@ -131,10 +136,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -150,7 +155,9 @@ const AlumniDashboard = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='flex flex-col md:flex-row justify-between items-center mb-6 gap-4'>
         <div className='text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Dashboard Alumni</h1>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Dashboard Alumni
+          </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
             Selamat datang kembali di Tracer Study
           </p>
@@ -165,7 +172,7 @@ const AlumniDashboard = () => {
         handleCloseQuestionnaireCard={handleCloseQuestionnaireCard}
       />
 
-      <div className="mt-8">
+      <div className='mt-8'>
         <Statistic stats={stats} />
       </div>
 
@@ -178,11 +185,15 @@ const AlumniDashboard = () => {
           <div className='mb-4 flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'>
-                <FaUserGraduate className='text-lg' />
+                <FaUsers className='text-lg' />
               </div>
               <div>
-                <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>Rekan Sepantaran</h2>
-                <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>Lulus di tahun yang sama</p>
+                <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                  Rekan Sepantaran
+                </h2>
+                <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
+                  Lulus di tahun yang sama
+                </p>
               </div>
             </div>
             {mutualAlumni.length > 0 && (
@@ -199,7 +210,9 @@ const AlumniDashboard = () => {
             {mutualAlumni.length === 0 ? (
               <div className='flex flex-col items-center justify-center h-full py-8 text-center'>
                 <FaUserCircle className='text-4xl text-gray-200 dark:text-gray-700 mb-2' />
-                <p className='text-sm text-[color:var(--text-secondary)]'>Tidak ada data alumni yang ditemukan</p>
+                <p className='text-sm text-[color:var(--text-secondary)]'>
+                  Tidak ada data alumni yang ditemukan
+                </p>
               </div>
             ) : (
               mutualAlumni.slice(0, 5).map((person: any) => (
@@ -212,7 +225,9 @@ const AlumniDashboard = () => {
                       {person.profile?.fullName || 'Anonymous'}
                     </h4>
                     <p className='text-[10px] text-[color:var(--text-tertiary)] truncate uppercase tracking-wider'>
-                      {person.university?.name || person.job?.institution || 'Belum ada info'}
+                      {person.university?.name ||
+                        person.job?.institution ||
+                        'Belum ada info'}
                     </p>
                   </div>
                 </div>

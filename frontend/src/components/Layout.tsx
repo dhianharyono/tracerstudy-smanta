@@ -80,16 +80,18 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-          }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-            }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            isActive
+              ? 'bg-white/20'
+              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -118,7 +120,11 @@ const Layout = () => {
               label='Kritik & Saran'
             />
           )}
-          <NavLink to='/alumni/mutual-alumni' icon={FaUser} label='Rekan Sepantaran' />
+          <NavLink
+            to='/alumni/mutual-alumni'
+            icon={FaUsers}
+            label='Rekan Sepantaran'
+          />
           <NavLink to='/alumni/profile' icon={FaUser} label='Profil' />
         </div>
       );
@@ -199,8 +205,9 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}
@@ -277,7 +284,10 @@ const Layout = () => {
         </div>
 
         {/* Page Content */}
-        <main ref={mainRef} className='flex-1 flex flex-col overflow-y-auto scroll-smooth'>
+        <main
+          ref={mainRef}
+          className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
+        >
           <div className='mx-auto max-w-7xl w-full flex-grow animate-fade-in pb-8'>
             <Outlet />
           </div>
