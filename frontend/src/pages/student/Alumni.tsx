@@ -381,9 +381,6 @@ const StudentAlumni = () => {
               </button>
               <div className='flex items-center gap-1'>
                 {Array.from({ length: Math.min(5, pagination.pages) }, (_) => {
-                  // Logic to show a window of pages could be complex, for simple usage just showing nearby or all if small
-                  // For now keeping simple numeric display or just Current/Total
-                  // Let's just stick to the Previous [Page X] Next style for simplicity unless requested
                   return null;
                 })}
                 <span className='px-4 py-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium'>

@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-// import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
 import Statistic from '@/components/Dashboard/Statistic';
@@ -10,20 +9,16 @@ import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
-// import Notifications from '@/components/Dashboard/Notifications';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
 import { FaUserCircle, FaChevronRight, FaUsers } from 'react-icons/fa';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
-  // const navigate = useNavigate();
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
   const [mutualAlumni, setMutualAlumni] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  // const [setUnreadNewsCount] = useState(0);
-  // const [setUnreadNews] = useState<any[]>([]);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(900);
@@ -42,10 +37,6 @@ const AlumniDashboard = () => {
         setStats(statsRes.data);
         setNews(newsRes.data);
         setMutualAlumni(mutualRes.data);
-
-        // const unread = newsRes.data.filter((item: any) => !item.isRead);
-        // setUnreadNewsCount(unread.length || 0);
-        // setUnreadNews(unread);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -54,23 +45,6 @@ const AlumniDashboard = () => {
     };
 
     fetchData();
-
-    // const interval = setInterval(() => {
-    //   axios
-    //     .get('/api/alumni/news/unread-count')
-    //     .then((res) => setUnreadNewsCount(res.data.count || 0))
-    //     .catch(() => {});
-
-    //   axios
-    //     .get('/api/alumni/news')
-    //     .then((res) => {
-    //       const unread = res.data.filter((item: any) => !item.isRead);
-    //       setUnreadNews(unread);
-    //     })
-    //     .catch(() => {});
-    // }, 30000);
-
-    // return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
@@ -116,25 +90,12 @@ const AlumniDashboard = () => {
     };
   }, [isNotificationOpen]);
 
-  // const handleNewsClick = async (newsId: string) => {
-  //   try {
-  //     await axios.post(`/api/alumni/news/${newsId}/read`);
-  //     setUnreadNewsCount((prev) => Math.max(0, prev - 1));
-  //     setUnreadNews((prev) => prev.filter((item) => item._id !== newsId));
-  //     setIsNotificationOpen(false);
-  //     navigate(`/alumni/news/${newsId}`);
-  //   } catch (error) {
-  //     console.error('Error marking news as read:', error);
-  //     navigate(`/alumni/news/${newsId}`);
-  //   }
-  // };
-
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {

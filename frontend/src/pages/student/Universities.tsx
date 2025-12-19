@@ -28,7 +28,6 @@ const StudentUniversities = () => {
   }, [filterType]);
 
   useEffect(() => {
-    // Client-side search filtering
     const lowerTerm = searchTerm.toLowerCase();
     const filtered = universities.filter((uni) =>
       uni._id.name.toLowerCase().includes(lowerTerm)

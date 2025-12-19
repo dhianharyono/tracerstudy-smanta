@@ -29,16 +29,6 @@ const NewsReadSchema = new Schema<INewsRead>(
   }
 );
 
-// Ensure one read record per user per news
 NewsReadSchema.index({ user: 1, news: 1 }, { unique: true });
 
 export default mongoose.model<INewsRead>('NewsRead', NewsReadSchema);
-
-
-
-
-
-
-
-
-

@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import {
-  FaBook,
-  FaSearch,
-  FaUsers,
-  FaGraduationCap,
-} from 'react-icons/fa';
+import { FaBook, FaSearch, FaUsers, FaGraduationCap } from 'react-icons/fa';
 
 interface MajorData {
   _id: string;
@@ -51,7 +46,6 @@ const StudentMajors = () => {
     setFilteredMajors(filtered);
   }, [searchTerm, majors]);
 
-  // Function to generate deterministic colors based on string
   const getBadgeColor = (name: string) => {
     const colors = [
       'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
@@ -143,7 +137,9 @@ const StudentMajors = () => {
                 {/* Universities List */}
                 <div className='flex flex-wrap gap-1.5 mt-2'>
                   {(() => {
-                    const uniqueUnivs = Array.from(new Set(major.alumni?.map(a => a.university))).filter(Boolean);
+                    const uniqueUnivs = Array.from(
+                      new Set(major.alumni?.map((a) => a.university))
+                    ).filter(Boolean);
                     return (
                       <>
                         {uniqueUnivs.slice(0, 3).map((univ, i) => (

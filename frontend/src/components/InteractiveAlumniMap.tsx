@@ -129,6 +129,16 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         const response = await axios.get<UniversityData[]>(apiEndpoint);
         const universityData = response.data;
 
+        if (universityData.length === 0) {
+          setLoading(false);
+          return;
+        }
+
+        const cachedCoordsJson = localStorage.getItem('university_coords_cache');
+        const coordsCache = cachedCoordsJson ? JSON.parse(cachedCoordsJson) : {};
+        const newCache = { ...coordsCache };
+        let cacheUpdated = false;
+
         const geocodedUniversities: GeocodedUniversity[] = [];
         const total = universityData.length;
 
@@ -136,19 +146,36 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
           const university = universityData[i];
           setGeocodingProgress(((i + 1) / total) * 100);
 
-          const coords = await geocodeUniversity(university.university);
+          let coords = coordsCache[university.university];
+
+          if (!coords) {
+            coords = await geocodeUniversity(university.university);
+            if (coords) {
+              newCache[university.university] = coords;
+              cacheUpdated = true;
+            }
+
+            // Respect Nominatim's rate limit only if we actually made a request
+            if (i < universityData.length - 1) {
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+            }
+          }
+
           geocodedUniversities.push({
             ...university,
             lat: coords?.lat,
             lng: coords?.lng,
           });
 
-          if (i < universityData.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+          // Update state incrementally every 3 universities or at the end
+          if ((i + 1) % 3 === 0 || i === universityData.length - 1) {
+            setUniversities([...geocodedUniversities]);
           }
         }
 
-        setUniversities(geocodedUniversities);
+        if (cacheUpdated) {
+          localStorage.setItem('university_coords_cache', JSON.stringify(newCache));
+        }
       } catch (error) {
         console.error('Error fetching alumni map data:', error);
       } finally {
@@ -171,6 +198,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
       case 'negeri':
         return 'PTN';
       case 'swasta':
+        return 'PTS';
       case 'kedinasan':
         return 'Kedinasan';
       default:
@@ -202,26 +230,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
     );
   }
 
-  if (validUniversities.length === 0) {
-    return (
-      <div className='card' style={{ minHeight: '400px' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            minHeight: '400px',
-            gap: '16px',
-            color: 'var(--text-tertiary)',
-          }}
-        >
-          <FaMapMarkerAlt style={{ fontSize: '48px' }} />
-          <p>Tidak ada data universitas yang dapat ditampilkan di peta</p>
-        </div>
-      </div>
-    );
-  }
+  // Removed the empty state return to always show the map container
 
   return (
     <div className='card h-auto md:h-[500px]'>
@@ -249,141 +258,172 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
           />
-          <MapBounds universities={validUniversities} />
-          {validUniversities.map((university, index) => (
-            <Marker
-              key={index}
-              position={[university.lat!, university.lng!]}
-              icon={getMarkerIcon(university.count, university.type)}
-            >
-              <Popup>
-                <div style={{ minWidth: '200px', maxWidth: '300px' }}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    <FaUniversity style={{ color: 'var(--primary)' }} />
-                    <h3
-                      style={{
-                        margin: 0,
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        color: 'var(--text-primary)',
-                      }}
-                    >
-                      {university.university}
-                    </h3>
-                  </div>
-                  <div
-                    style={{
-                      marginBottom: '8px',
-                      padding: '8px',
-                      background: 'var(--bg-tertiary)',
-                      borderRadius: '6px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
-                      <strong>Jenis:</strong>{' '}
-                      {getUniversityTypeLabel(university.type)}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: '14px',
-                        color: 'var(--text-secondary)',
-                      }}
-                    >
-                      <strong>Jumlah Alumni:</strong> {university.count}
-                    </div>
-                  </div>
-                  {university.alumni && university.alumni.length > 0 && (
-                    <div style={{ marginTop: '12px' }}>
+          {validUniversities.length > 0 && (
+            <>
+              <MapBounds universities={validUniversities} />
+              {validUniversities.map((university, index) => (
+                <Marker
+                  key={index}
+                  position={[university.lat!, university.lng!]}
+                  icon={getMarkerIcon(university.count, university.type)}
+                >
+                  <Popup>
+                    <div style={{ minWidth: '200px', maxWidth: '300px' }}>
                       <div
                         style={{
-                          fontSize: '12px',
-                          fontWeight: 'bold',
-                          color: 'var(--text-primary)',
-                          marginBottom: '8px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          marginBottom: '12px',
                         }}
                       >
-                        Daftar Alumni:
+                        <FaUniversity style={{ color: 'var(--primary)' }} />
+                        <h3
+                          style={{
+                            margin: 0,
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                            color: 'var(--text-primary)',
+                          }}
+                        >
+                          {university.university}
+                        </h3>
                       </div>
                       <div
                         style={{
-                          maxHeight: '200px',
-                          overflowY: 'auto',
-                          fontSize: '12px',
+                          marginBottom: '8px',
+                          padding: '8px',
+                          background: 'var(--bg-tertiary)',
+                          borderRadius: '6px',
                         }}
                       >
-                        {university.alumni.slice(0, 10).map((alumni, idx) => (
+                        <div
+                          style={{
+                            fontSize: '14px',
+                            color: 'var(--text-secondary)',
+                          }}
+                        >
+                          <strong>Jenis:</strong>{' '}
+                          {getUniversityTypeLabel(university.type)}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '14px',
+                            color: 'var(--text-secondary)',
+                          }}
+                        >
+                          <strong>Jumlah Alumni:</strong> {university.count}
+                        </div>
+                      </div>
+                      {university.alumni && university.alumni.length > 0 && (
+                        <div style={{ marginTop: '12px' }}>
                           <div
-                            key={idx}
                             style={{
-                              padding: '6px',
-                              marginBottom: '4px',
-                              background: 'var(--bg-card)',
-                              borderRadius: '4px',
-                              border: '1px solid var(--border-color)',
+                              fontSize: '12px',
+                              fontWeight: 'bold',
+                              color: 'var(--text-primary)',
+                              marginBottom: '8px',
                             }}
                           >
-                            <div
-                              style={{
-                                fontWeight: '600',
-                                color: 'var(--text-primary)',
-                              }}
-                            >
-                              {alumni.name || 'N/A'}
-                            </div>
-                            {alumni.major && (
+                            Daftar Alumni:
+                          </div>
+                          <div
+                            style={{
+                              maxHeight: '200px',
+                              overflowY: 'auto',
+                              fontSize: '12px',
+                            }}
+                          >
+                            {university.alumni.slice(0, 10).map((alumni, idx) => (
                               <div
+                                key={idx}
                                 style={{
-                                  color: 'var(--text-secondary)',
-                                  fontSize: '11px',
+                                  padding: '6px',
+                                  marginBottom: '4px',
+                                  background: 'var(--bg-card)',
+                                  borderRadius: '4px',
+                                  border: '1px solid var(--border-color)',
                                 }}
                               >
-                                {alumni.major}
+                                <div
+                                  style={{
+                                    fontWeight: '600',
+                                    color: 'var(--text-primary)',
+                                  }}
+                                >
+                                  {alumni.name || 'N/A'}
+                                </div>
+                                {alumni.major && (
+                                  <div
+                                    style={{
+                                      color: 'var(--text-secondary)',
+                                      fontSize: '11px',
+                                    }}
+                                  >
+                                    {alumni.major}
+                                  </div>
+                                )}
+                                {alumni.graduationYear && (
+                                  <div
+                                    style={{
+                                      color: 'var(--text-tertiary)',
+                                      fontSize: '11px',
+                                    }}
+                                  >
+                                    Lulus: {alumni.graduationYear}
+                                  </div>
+                                )}
                               </div>
-                            )}
-                            {alumni.graduationYear && (
+                            ))}
+                            {university.alumni.length > 10 && (
                               <div
                                 style={{
+                                  textAlign: 'center',
                                   color: 'var(--text-tertiary)',
                                   fontSize: '11px',
+                                  marginTop: '8px',
                                 }}
                               >
-                                Lulus: {alumni.graduationYear}
+                                +{university.alumni.length - 10} alumni lainnya
                               </div>
                             )}
                           </div>
-                        ))}
-                        {university.alumni.length > 10 && (
-                          <div
-                            style={{
-                              textAlign: 'center',
-                              color: 'var(--text-tertiary)',
-                              fontSize: '11px',
-                              marginTop: '8px',
-                            }}
-                          >
-                            +{university.alumni.length - 10} alumni lainnya
-                          </div>
-                        )}
-                      </div>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </Popup>
-            </Marker>
-          ))}
+                  </Popup>
+                </Marker>
+              ))}
+            </>
+          )}
         </MapContainer>
+        {validUniversities.length === 0 && !loading && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000,
+              background: 'var(--bg-card)',
+              padding: '16px 24px',
+              borderRadius: '12px',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+              pointerEvents: 'none',
+              color: 'var(--text-secondary)',
+              fontSize: '14px',
+              border: '1px solid var(--border-color)',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            <FaMapMarkerAlt style={{ fontSize: '24px', color: 'var(--text-tertiary)' }} />
+            <span>Belum ada data universitas untuk ditampilkan</span>
+          </div>
+        )}
       </div>
       <div
         className='text-xs'

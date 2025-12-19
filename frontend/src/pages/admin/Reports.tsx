@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import { FaChartBar, FaFileAlt, FaSpinner, FaUniversity, FaGraduationCap } from 'react-icons/fa';
+import {
+  FaChartBar,
+  FaFileAlt,
+  FaSpinner,
+  FaUniversity,
+  FaGraduationCap,
+} from 'react-icons/fa';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
 const AdminReports = () => {
@@ -11,14 +17,13 @@ const AdminReports = () => {
   const [loadingGenerate, setLoadingGenerate] = useState(false);
 
   useEffect(() => {
-    // Simulate initial page load
     setLoading(true);
     const timer = setTimeout(() => {
       setLoading(false);
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []); // Fixed dependency array from [location.pathname] which was undefined to []
+  }, []);
 
   const generateReport = async () => {
     if (!reportType) {
@@ -41,11 +46,16 @@ const AdminReports = () => {
 
   const getReportTitle = (type: string) => {
     switch (type) {
-      case 'working': return 'Laporan Alumni Bekerja';
-      case 'studying': return 'Laporan Alumni Lanjut Studi';
-      case 'university-type': return 'Statistik Jenis Perguruan Tinggi';
-      case 'major': return 'Statistik Sebaran Jurusan';
-      default: return 'Hasil Laporan';
+      case 'working':
+        return 'Laporan Alumni Bekerja';
+      case 'studying':
+        return 'Laporan Alumni Lanjut Studi';
+      case 'university-type':
+        return 'Statistik Jenis Perguruan Tinggi';
+      case 'major':
+        return 'Statistik Sebaran Jurusan';
+      default:
+        return 'Hasil Laporan';
     }
   };
 
@@ -56,8 +66,12 @@ const AdminReports = () => {
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='mb-6 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Laporan & Statistik</h1>
-        <p className='text-sm text-[color:var(--text-secondary)] text-sm md:text-base'>Generate dan analisis data tracer study</p>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          Laporan & Statistik
+        </h1>
+        <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+          Generate dan analisis data tracer study
+        </p>
       </div>
 
       <div className='card mb-8 max-w-sm md:max-w-md lg:max-w-full'>
@@ -66,14 +80,20 @@ const AdminReports = () => {
             <FaChartBar className='text-lg' />
           </div>
           <div>
-            <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>Generate Laporan Baru</h2>
-            <p className='text-xs text-[color:var(--text-secondary)]'>Pilih jenis laporan yang ingin ditampilkan</p>
+            <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>
+              Generate Laporan Baru
+            </h2>
+            <p className='text-xs text-[color:var(--text-secondary)]'>
+              Pilih jenis laporan yang ingin ditampilkan
+            </p>
           </div>
         </div>
 
         <div className='grid gap-6 md:grid-cols-2 lg:grid-cols-3'>
           <div className='form-group md:col-span-2 lg:col-span-2'>
-            <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>Jenis Laporan</label>
+            <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+              Jenis Laporan
+            </label>
             <div className='relative'>
               <select
                 value={reportType}
@@ -83,16 +103,30 @@ const AdminReports = () => {
                 <option value=''>-- Pilih Kategori Laporan --</option>
                 <option value='working'>Alumni yang Bekerja</option>
                 <option value='studying'>Alumni yang Kuliah</option>
-                <option value='university-type'>Berdasarkan Jenis Perguruan Tinggi</option>
+                <option value='university-type'>
+                  Berdasarkan Jenis Perguruan Tinggi
+                </option>
                 <option value='major'>Berdasarkan Jurusan</option>
               </select>
               <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
               </div>
             </div>
           </div>
 
-          <div className='flex items-end pb-6 md:pb-0 items-center'>
+          <div className='flex pb-6 md:pb-0 items-center'>
             <button
               onClick={generateReport}
               disabled={loadingGenerate || !reportType}
@@ -122,8 +156,12 @@ const AdminReports = () => {
                 <FaFileAlt className='text-lg' />
               </div>
               <div>
-                <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>{getReportTitle(reportData.type)}</h2>
-                <p className='text-xs text-[color:var(--text-secondary)]'>Data terkini dari database</p>
+                <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>
+                  {getReportTitle(reportData.type)}
+                </h2>
+                <p className='text-xs text-[color:var(--text-secondary)]'>
+                  Data terkini dari database
+                </p>
               </div>
             </div>
             {/* <button className='flex items-center gap-2 rounded-lg border border-[color:var(--border-color)] px-3 py-1.5 text-xs font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)]'>
@@ -131,7 +169,8 @@ const AdminReports = () => {
              </button> */}
           </div>
 
-          {reportData.type === 'university-type' || reportData.type === 'major' ? (
+          {reportData.type === 'university-type' ||
+          reportData.type === 'major' ? (
             <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
               {reportData.data.map((item: any, index: number) => (
                 <div
@@ -140,15 +179,26 @@ const AdminReports = () => {
                 >
                   <div className='flex items-start justify-between mb-4'>
                     <div className='rounded-lg bg-[var(--bg-tertiary)] p-2 text-[var(--primary)]'>
-                      {reportData.type === 'university-type' ? <FaUniversity /> : <FaGraduationCap />}
+                      {reportData.type === 'university-type' ? (
+                        <FaUniversity />
+                      ) : (
+                        <FaGraduationCap />
+                      )}
                     </div>
-                    <span className='text-3xl font-bold text-[color:var(--text-primary)]'>{item.count}</span>
+                    <span className='text-3xl font-bold text-[color:var(--text-primary)]'>
+                      {item.count}
+                    </span>
                   </div>
                   <div>
-                    <h3 className='font-medium text-[color:var(--text-secondary)] text-sm line-clamp-2' title={item._id}>
+                    <h3
+                      className='font-medium text-[color:var(--text-secondary)] text-sm line-clamp-2'
+                      title={item._id}
+                    >
                       {item._id || 'Tidak Diketahui'}
                     </h3>
-                    <p className='text-xs text-[color:var(--text-muted)] mt-1'>Total Alumni</p>
+                    <p className='text-xs text-[color:var(--text-muted)] mt-1'>
+                      Total Alumni
+                    </p>
                   </div>
                   <div className='absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-light)] opacity-0 transition-opacity group-hover:opacity-100'></div>
                 </div>
@@ -176,26 +226,44 @@ const AdminReports = () => {
                   <tbody className='divide-y divide-[color:var(--border-color)]'>
                     {reportData.data.length === 0 ? (
                       <tr>
-                        <td colSpan={reportData.type === 'working' ? 7 : 5} className='p-8 text-center text-[color:var(--text-secondary)]'>
+                        <td
+                          colSpan={reportData.type === 'working' ? 7 : 5}
+                          className='p-8 text-center text-[color:var(--text-secondary)]'
+                        >
                           Tidak ada data untuk laporan ini.
                         </td>
                       </tr>
                     ) : (
                       reportData.data.map((alum: any) => (
-                        <tr key={alum._id} className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'>
-                          <td className='px-6 py-4 font-medium text-[color:var(--text-primary)]'>{alum.profile?.fullName || '-'}</td>
-                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>{alum.email}</td>
+                        <tr
+                          key={alum._id}
+                          className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'
+                        >
+                          <td className='px-6 py-4 font-medium text-[color:var(--text-primary)]'>
+                            {alum.profile?.fullName || '-'}
+                          </td>
+                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                            {alum.email}
+                          </td>
                           <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
                             <span className='inline-flex items-center rounded bg-[var(--bg-tertiary)] px-2 py-1 text-xs font-medium text-[color:var(--text-primary)] border border-[color:var(--border-color)]'>
                               {alum.profile?.graduationYear || '-'}
                             </span>
                           </td>
-                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>{alum.university?.name || '-'}</td>
-                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>{alum.university?.major || '-'}</td>
+                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                            {alum.university?.name || '-'}
+                          </td>
+                          <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                            {alum.university?.major || '-'}
+                          </td>
                           {reportData.type === 'working' && (
                             <>
-                              <td className='px-6 py-4 text-[color:var(--text-primary)]'>{alum.job?.position || '-'}</td>
-                              <td className='px-6 py-4 text-[color:var(--text-secondary)]'>{alum.job?.institution || '-'}</td>
+                              <td className='px-6 py-4 text-[color:var(--text-primary)]'>
+                                {alum.job?.position || '-'}
+                              </td>
+                              <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                                {alum.job?.institution || '-'}
+                              </td>
                             </>
                           )}
                         </tr>

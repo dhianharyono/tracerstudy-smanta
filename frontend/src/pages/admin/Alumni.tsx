@@ -2,7 +2,16 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaFilter, FaTimes, FaTrash, FaEnvelope, FaLinkedin, FaInstagram, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import {
+  FaFilter,
+  FaTimes,
+  FaTrash,
+  FaEnvelope,
+  FaLinkedin,
+  FaInstagram,
+  FaCheckCircle,
+  FaTimesCircle,
+} from 'react-icons/fa';
 
 const AdminAlumni = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
@@ -89,8 +98,12 @@ const AdminAlumni = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
         <div className='mb-2 text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Kelola Data Alumni</h1>
-          <p className='text-sm text-[color:var(--text-secondary)] text-sm md:text-base'>Memantau dan mengelola data alumni terdaftar</p>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Kelola Data Alumni
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+            Memantau dan mengelola data alumni terdaftar
+          </p>
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -101,7 +114,11 @@ const AdminAlumni = () => {
       </div>
 
       {/* Filters */}
-      <div className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'}`}>
+      <div
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
+      >
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           <div className='relative'>
             <select
@@ -111,27 +128,57 @@ const AdminAlumni = () => {
             >
               <option value=''>Semua Universitas</option>
               {filterOptions.universities.map((univ) => (
-                <option key={univ} value={univ}>{univ}</option>
+                <option key={univ} value={univ}>
+                  {univ}
+                </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
           <div className='relative'>
             <select
               value={filters.graduationYear}
-              onChange={(e) => handleFilterChange('graduationYear', e.target.value)}
+              onChange={(e) =>
+                handleFilterChange('graduationYear', e.target.value)
+              }
               className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             >
               <option value=''>Semua Tahun</option>
               {filterOptions.graduationYears.map((year) => (
-                <option key={year} value={year.toString()}>{year}</option>
+                <option key={year} value={year.toString()}>
+                  {year}
+                </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -143,11 +190,25 @@ const AdminAlumni = () => {
             >
               <option value=''>Semua Jurusan</option>
               {filterOptions.majors.map((major) => (
-                <option key={major} value={major}>{major}</option>
+                <option key={major} value={major}>
+                  {major}
+                </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -177,56 +238,101 @@ const AdminAlumni = () => {
             <tbody className='divide-y divide-[color:var(--border-color)]'>
               {alumni.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className='p-8 text-center text-[color:var(--text-secondary)]'>
+                  <td
+                    colSpan={6}
+                    className='p-8 text-center text-[color:var(--text-secondary)]'
+                  >
                     Tidak ada data alumni yang ditemukan.
                   </td>
                 </tr>
               ) : (
                 alumni.map((alum) => (
-                  <tr key={alum._id} className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'>
+                  <tr
+                    key={alum._id}
+                    className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'
+                  >
                     <td className='px-6 py-4'>
                       <div>
-                        <div className='font-semibold text-[color:var(--text-primary)]'>{alum.profile?.fullName || '-'}</div>
-                        <div className='text-xs text-[color:var(--text-secondary)]'>{alum.email}</div>
+                        <div className='font-semibold text-[color:var(--text-primary)]'>
+                          {alum.profile?.fullName || '-'}
+                        </div>
+                        <div className='text-xs text-[color:var(--text-secondary)]'>
+                          {alum.email}
+                        </div>
                       </div>
                     </td>
                     <td className='px-6 py-4'>
                       <div className='max-w-[200px]'>
-                        <div className='font-medium text-[color:var(--text-primary)] truncate' title={alum.university?.name}>{alum.university?.name || '-'}</div>
-                        <div className='text-xs text-[color:var(--text-secondary)] truncate' title={alum.university?.major}>
-                          {alum.university?.major || '-'} <span className='mx-1'>•</span> {alum.profile?.graduationYear}
+                        <div
+                          className='font-medium text-[color:var(--text-primary)] truncate'
+                          title={alum.university?.name}
+                        >
+                          {alum.university?.name || '-'}
+                        </div>
+                        <div
+                          className='text-xs text-[color:var(--text-secondary)] truncate'
+                          title={alum.university?.major}
+                        >
+                          {alum.university?.major || '-'}{' '}
+                          <span className='mx-1'>•</span>{' '}
+                          {alum.profile?.graduationYear}
                         </div>
                       </div>
                     </td>
                     <td className='px-6 py-4'>
                       {alum.profile?.isWorking ? (
-                        <span className='inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300'>Bekerja</span>
+                        <span className='inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300'>
+                          Bekerja
+                        </span>
                       ) : alum.profile?.isStudying ? (
-                        <span className='inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>Kuliah</span>
+                        <span className='inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
+                          Kuliah
+                        </span>
                       ) : (
-                        <span className='inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300'>-</span>
+                        <span className='inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300'>
+                          -
+                        </span>
                       )}
                     </td>
                     <td className='px-6 py-4'>
                       <div className='flex gap-2'>
                         {alum.socialMedia?.linkedin && (
-                          <a href={(alum.socialMedia.linkedin.startsWith('http') ? '' : 'https://') + alum.socialMedia.linkedin} target='_blank' rel='noreferrer' className='text-blue-600 hover:text-blue-800'>
+                          <a
+                            href={
+                              (alum.socialMedia.linkedin.startsWith('http')
+                                ? ''
+                                : 'https://') + alum.socialMedia.linkedin
+                            }
+                            target='_blank'
+                            rel='noreferrer'
+                            className='text-blue-600 hover:text-blue-800'
+                          >
                             <FaLinkedin size={16} />
                           </a>
                         )}
                         {alum.socialMedia?.instagram && (
-                          <a href={alum.socialMedia.instagram} target='_blank' rel='noreferrer' className='text-pink-600 hover:text-pink-800'>
+                          <a
+                            href={alum.socialMedia.instagram}
+                            target='_blank'
+                            rel='noreferrer'
+                            className='text-pink-600 hover:text-pink-800'
+                          >
                             <FaInstagram size={16} />
                           </a>
                         )}
                         {alum.socialMedia?.email && (
-                          <a href={`mailto:${alum.socialMedia.email}`} className='text-gray-600 hover:text-gray-800 dark:text-gray-400'>
+                          <a
+                            href={`mailto:${alum.socialMedia.email}`}
+                            className='text-gray-600 hover:text-gray-800 dark:text-gray-400'
+                          >
                             <FaEnvelope size={16} />
                           </a>
                         )}
-                        {(!alum.socialMedia?.linkedin && !alum.socialMedia?.instagram && !alum.socialMedia?.email) && (
-                          <span className='text-xs text-gray-400'>-</span>
-                        )}
+                        {!alum.socialMedia?.linkedin &&
+                          !alum.socialMedia?.instagram &&
+                          !alum.socialMedia?.email && (
+                            <span className='text-xs text-gray-400'>-</span>
+                          )}
                       </div>
                     </td>
                     <td className='px-6 py-4'>
@@ -244,7 +350,7 @@ const AdminAlumni = () => {
                       <button
                         onClick={() => handleDelete(alum._id)}
                         className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
-                        title="Hapus Alumni"
+                        title='Hapus Alumni'
                       >
                         <FaTrash size={14} />
                       </button>
@@ -260,11 +366,24 @@ const AdminAlumni = () => {
       {/* Pagination */}
       <div className='mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row'>
         <div className='text-sm text-[color:var(--text-secondary)]'>
-          Menampilkan <span className='font-medium'>{((pagination.page - 1) * pagination.limit) + 1}</span> - <span className='font-medium'>{Math.min(pagination.page * pagination.limit, pagination.total)}</span> dari <span className='font-medium'>{pagination.total}</span> data
+          Menampilkan{' '}
+          <span className='font-medium'>
+            {(pagination.page - 1) * pagination.limit + 1}
+          </span>{' '}
+          -{' '}
+          <span className='font-medium'>
+            {Math.min(pagination.page * pagination.limit, pagination.total)}
+          </span>{' '}
+          dari <span className='font-medium'>{pagination.total}</span> data
         </div>
         <div className='flex items-center gap-2'>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.max(1, pagination.page - 1),
+              })
+            }
             disabled={pagination.page === 1}
             className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
           >
@@ -274,7 +393,12 @@ const AdminAlumni = () => {
             {pagination.page} / {pagination.pages}
           </span>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.min(pagination.pages, pagination.page + 1),
+              })
+            }
             disabled={pagination.page >= pagination.pages}
             className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
           >

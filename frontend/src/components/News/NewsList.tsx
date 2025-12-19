@@ -68,7 +68,7 @@ const NewsList = ({ news, onNewsClick }: NewsListProps) => {
                                 <h2 className='text-sm md:text-xl font-bold text-[var(--text-primary)] mb-2 group-hover:text-[var(--primary)] transition-colors line-clamp-2 md:line-clamp-3 leading-tight'>
                                     {item.title}
                                 </h2>
-                                <p className='text-[var(--text-secondary)] text-xs md:text-sm leading-relaxed line-clamp-3 mb-4 font-serif'>
+                                <p className='text-[var(--text-secondary)] text-xs md:text-sm leading-relaxed line-clamp-3 mb-4'>
                                     {stripHtml(item.content)}
                                 </p>
                                 <div className='flex items-center gap-4'>

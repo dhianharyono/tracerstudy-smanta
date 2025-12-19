@@ -2,7 +2,14 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaUserPlus, FaEdit, FaTrash, FaTimes, FaSave, FaUser } from 'react-icons/fa';
+import {
+  FaUserPlus,
+  FaEdit,
+  FaTrash,
+  FaTimes,
+  FaSave,
+  FaUser,
+} from 'react-icons/fa';
 
 const AdminStudents = () => {
   const [students, setStudents] = useState<any[]>([]);
@@ -54,7 +61,10 @@ const AdminStudents = () => {
       setFormData({ username: '', email: '', password: '' });
       fetchStudents();
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal menyimpan student', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal menyimpan student',
+        'error'
+      );
     }
   };
 
@@ -78,7 +88,10 @@ const AdminStudents = () => {
       Toast('Student berhasil dihapus!', 'success');
       fetchStudents();
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal menghapus student', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal menghapus student',
+        'error'
+      );
     }
   };
 
@@ -96,8 +109,12 @@ const AdminStudents = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
         <div className='mb-2 text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Kelola Data Student</h1>
-          <p className='text-sm text-[color:var(--text-secondary)] text-sm md:text-base'>Manajemen akun mahasiswa</p>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Kelola Data Student
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+            Manajemen akun mahasiswa
+          </p>
         </div>
         {!showForm && (
           <button
@@ -115,40 +132,54 @@ const AdminStudents = () => {
             <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>
               {editingStudent ? 'Edit Student' : 'Tambah Student Baru'}
             </h2>
-            <button onClick={handleCancel} className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'>
+            <button
+              onClick={handleCancel}
+              className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+            >
               <FaTimes />
             </button>
           </div>
           <form onSubmit={handleSubmit}>
             <div className='grid gap-4 md:grid-cols-2'>
               <div className='form-group'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>Username *</label>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Username *
+                </label>
                 <input
                   type='text'
                   value={formData.username}
-                  onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, username: e.target.value })
+                  }
                   className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
                   required
                 />
               </div>
               <div className='form-group'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>Email *</label>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Email *
+                </label>
                 <input
                   type='email'
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                   className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
                   required
                 />
               </div>
               <div className='form-group md:col-span-2'>
                 <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
-                  Password {editingStudent ? '(kosongkan jika tidak ingin diubah)' : '*'}
+                  Password{' '}
+                  {editingStudent ? '(kosongkan jika tidak ingin diubah)' : '*'}
                 </label>
                 <input
                   type='password'
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
                   required={!editingStudent}
                 />
@@ -188,27 +219,37 @@ const AdminStudents = () => {
             <tbody className='divide-y divide-[color:var(--border-color)]'>
               {students.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className='p-8 text-center text-[color:var(--text-secondary)]'>
+                  <td
+                    colSpan={4}
+                    className='p-8 text-center text-[color:var(--text-secondary)]'
+                  >
                     Tidak ada data student.
                   </td>
                 </tr>
               ) : (
                 students.map((student) => (
-                  <tr key={student._id} className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'>
+                  <tr
+                    key={student._id}
+                    className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'
+                  >
                     <td className='px-6 py-4'>
                       <div className='flex items-center gap-3'>
                         <div className='h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
                           <FaUser size={12} />
                         </div>
-                        <span className='font-medium text-[color:var(--text-primary)]'>{student.username}</span>
+                        <span className='font-medium text-[color:var(--text-primary)]'>
+                          {student.username}
+                        </span>
                       </div>
                     </td>
-                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>{student.email}</td>
+                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                      {student.email}
+                    </td>
                     <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
                       {new Date(student.createdAt).toLocaleDateString('id-ID', {
                         day: 'numeric',
                         month: 'short',
-                        year: 'numeric'
+                        year: 'numeric',
                       })}
                     </td>
                     <td className='px-6 py-4'>
@@ -216,14 +257,14 @@ const AdminStudents = () => {
                         <button
                           onClick={() => handleEdit(student)}
                           className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
-                          title="Edit"
+                          title='Edit'
                         >
                           <FaEdit />
                         </button>
                         <button
                           onClick={() => handleDelete(student._id)}
                           className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
-                          title="Hapus"
+                          title='Hapus'
                         >
                           <FaTrash />
                         </button>
@@ -240,11 +281,24 @@ const AdminStudents = () => {
       {/* Pagination */}
       <div className='mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row'>
         <div className='text-sm text-[color:var(--text-secondary)]'>
-          Menampilkan <span className='font-medium'>{((pagination.page - 1) * pagination.limit) + 1}</span> - <span className='font-medium'>{Math.min(pagination.page * pagination.limit, pagination.total)}</span> dari <span className='font-medium'>{pagination.total}</span> data
+          Menampilkan{' '}
+          <span className='font-medium'>
+            {(pagination.page - 1) * pagination.limit + 1}
+          </span>{' '}
+          -{' '}
+          <span className='font-medium'>
+            {Math.min(pagination.page * pagination.limit, pagination.total)}
+          </span>{' '}
+          dari <span className='font-medium'>{pagination.total}</span> data
         </div>
         <div className='flex items-center gap-2'>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.max(1, pagination.page - 1),
+              })
+            }
             disabled={pagination.page === 1}
             className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
           >
@@ -254,7 +308,12 @@ const AdminStudents = () => {
             {pagination.page} / {pagination.pages}
           </span>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.min(pagination.pages, pagination.page + 1),
+              })
+            }
             disabled={pagination.page >= pagination.pages}
             className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
           >

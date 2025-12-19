@@ -42,16 +42,6 @@ const FeedbackSchema = new Schema<IFeedback>(
   }
 );
 
-// Ensure one feedback per user
 FeedbackSchema.index({ user: 1 }, { unique: true });
 
 export default mongoose.model<IFeedback>('Feedback', FeedbackSchema);
-
-
-
-
-
-
-
-
-
