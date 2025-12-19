@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaUserCircle, FaChevronRight, FaUsers } from 'react-icons/fa';
+import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const MutualSection = ({ mutualAlumni }: { mutualAlumni: string[] }) => {
