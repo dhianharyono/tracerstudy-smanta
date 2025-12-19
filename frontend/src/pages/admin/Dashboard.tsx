@@ -56,16 +56,18 @@ const AdminDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='mb-6 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Dashboard Administrator</h1>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          Dashboard Administrator
+        </h1>
         <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
           Ringkasan data tracer study siswa dan alumni
         </p>
@@ -73,7 +75,7 @@ const AdminDashboard = () => {
 
       <Statistic stats={stats} />
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 '>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
       </div>

@@ -1,6 +1,6 @@
 import { FaGraduationCap } from 'react-icons/fa';
 
-const WelcomeCard = ({ username }: { username: string }) => {
+const WelcomeCard = ({ username, fullName }: { username: string; fullName?: string }) => {
   return (
     <div
       className='card max-w-sm md:max-w-md lg:max-w-full'
@@ -24,7 +24,7 @@ const WelcomeCard = ({ username }: { username: string }) => {
         />
         <div>
           <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
-            Selamat Datang, {username}!
+            Selamat Datang, {fullName || username}!
           </h2>
           <p
             className='text-xs md:text-sm'

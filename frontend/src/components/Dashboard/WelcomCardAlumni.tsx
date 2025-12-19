@@ -8,11 +8,15 @@ interface User {
 
 interface Profile {
   questionnaireCompleted?: boolean;
+  fullName?: string;
 }
 
 interface WelcomeCardAlumniProps {
   user: User | null;
-  profile: Profile | null;
+  profile: {
+    profile: Profile;
+    questionnaireCompleted: boolean;
+  };
   hideQuestionnaireCard: boolean;
   handleCloseQuestionnaireCard: () => void;
 }
@@ -38,7 +42,7 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
         />
         <div>
           <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
-            Selamat Datang, {user?.username || 'Alumni'}!
+            Selamat Datang, {profile?.profile?.fullName || user?.username || 'Alumni'}!
           </h2>
           <p className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>
             Jelajahi data alumni dan informasi terkini. Kelola data dan profil

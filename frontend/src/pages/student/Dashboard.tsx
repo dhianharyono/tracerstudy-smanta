@@ -79,10 +79,10 @@ const StudentDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   if (loading) {
@@ -100,16 +100,18 @@ const StudentDashboard = () => {
             Selamat datang kembali di Tracer Study
           </p>
         </div>
-        {/* Notifications component placeholder */}
       </div>
 
-      <WelcomeCard username={user?.username || ''} />
+      <WelcomeCard
+        username={user?.username || ''}
+        fullName={user?.profile?.fullName}
+      />
 
       <div className='mt-8'>
         <Statistic stats={stats} />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
       </div>

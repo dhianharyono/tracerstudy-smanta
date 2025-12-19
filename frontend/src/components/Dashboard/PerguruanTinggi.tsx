@@ -71,7 +71,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
   const chartHeight = 350;
 
   return (
-    <div className='card max-w-sm md:max-w-md lg:max-w-full'>
+    <div className='card max-w-sm md:max-w-md lg:max-w-full h-full'>
       <h2
         className='text-lg md:text-xl'
         style={{

@@ -11,8 +11,10 @@ import {
   FaEye,
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Profile = () => {
+  const { updateUser } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -66,7 +68,8 @@ const Profile = () => {
         updateData.password = password;
       }
 
-      await axios.put('/api/users/profile', updateData);
+      const response = await axios.put('/api/users/profile', updateData);
+      updateUser(response.data);
       Toast('Profil berhasil diperbarui', 'success');
       setPassword('');
       setConfirmPassword('');
@@ -177,11 +180,10 @@ const Profile = () => {
                     setConfirmPassword('');
                   }
                 }}
-                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${
-                  showPasswordFields
+                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
                     ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
                     : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                }`}
+                  }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
               </button>

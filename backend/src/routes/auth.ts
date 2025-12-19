@@ -85,6 +85,7 @@ router.post(
           username: user.username,
           email: user.email,
           role: user.role,
+          profile: user.profile,
         },
       });
     } catch (error: any) {
@@ -134,6 +135,7 @@ router.post(
           email: user.email,
           role: user.role,
           questionnaireCompleted: user.questionnaireCompleted,
+          profile: user.profile,
         },
       });
     } catch (error: any) {

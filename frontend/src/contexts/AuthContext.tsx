@@ -7,6 +7,9 @@ interface User {
   email: string;
   role: 'alumni' | 'admin' | 'student';
   questionnaireCompleted?: boolean;
+  profile?: {
+    fullName?: string;
+  };
 }
 
 interface AuthContextType {
@@ -15,6 +18,7 @@ interface AuthContextType {
   login: (username: string, password: string) => Promise<void>;
   register: (username: string, email: string, password: string, role: string) => Promise<void>;
   logout: () => void;
+  updateUser: (newUser: any) => void;
   loading: boolean;
 }
 
@@ -81,9 +85,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('user');
     delete axios.defaults.headers.common['Authorization'];
   };
+  const updateUser = (newUser: any) => {
+    const formattedUser = {
+      ...newUser,
+      id: newUser.id || newUser._id,
+    };
+    setUser(formattedUser);
+    localStorage.setItem('user', JSON.stringify(formattedUser));
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, register, logout, updateUser, loading }}>
       {children}
     </AuthContext.Provider>
   );

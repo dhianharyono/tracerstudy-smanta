@@ -21,7 +21,7 @@ const router = express.Router();
 router.get('/settings/feedback-visible', async (req: Request, res: Response) => {
   try {
     let setting = await Settings.findOne({ key: 'feedbackVisible' });
-    
+
     if (!setting) {
       // Default to visible
       setting = new Settings({ key: 'feedbackVisible', value: true });
@@ -391,7 +391,7 @@ router.get('/students', async (req: Request, res: Response) => {
 // Create student
 router.post('/students', async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, fullName } = req.body;
 
     if (!username || !email || !password) {
       return res
@@ -407,6 +407,9 @@ router.post('/students', async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       role: 'student',
+      profile: {
+        fullName: fullName || '',
+      },
     });
 
     await user.save();
@@ -431,10 +434,14 @@ router.put('/students/:id', async (req: Request, res: Response) => {
   try {
     const { password, ...updateData } = req.body;
 
-    const update: any = updateData;
+    const update: any = { ...updateData };
     if (password) {
       const salt = await bcrypt.genSalt(10);
       update.password = await bcrypt.hash(password, salt);
+    }
+
+    if (updateData.fullName !== undefined) {
+      update.profile = { ...update.profile, fullName: updateData.fullName };
     }
 
     const student = await User.findOneAndUpdate(
@@ -503,7 +510,7 @@ router.get('/admins', async (req: Request, res: Response) => {
 // Create admin
 router.post('/admins', async (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, fullName } = req.body;
 
     if (!username || !email || !password) {
       return res
@@ -519,6 +526,9 @@ router.post('/admins', async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       role: 'admin',
+      profile: {
+        fullName: fullName || '',
+      },
     });
 
     await user.save();
@@ -543,10 +553,14 @@ router.put('/admins/:id', async (req: Request, res: Response) => {
   try {
     const { password, ...updateData } = req.body;
 
-    const update: any = updateData;
+    const update: any = { ...updateData };
     if (password) {
       const salt = await bcrypt.genSalt(10);
       update.password = await bcrypt.hash(password, salt);
+    }
+
+    if (updateData.fullName !== undefined) {
+      update.profile = { ...update.profile, fullName: updateData.fullName };
     }
 
     const admin = await User.findOneAndUpdate(
@@ -697,7 +711,7 @@ router.get('/feedback/stats', async (req: Request, res: Response) => {
   try {
     const feedbacks = await Feedback.find();
     const total = feedbacks.length;
-    
+
     const ratings: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     let sum = 0;
 

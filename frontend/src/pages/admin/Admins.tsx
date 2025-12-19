@@ -26,6 +26,7 @@ const AdminAdmins = () => {
     username: '',
     email: '',
     password: '',
+    fullName: '',
   });
 
   useEffect(() => {
@@ -58,7 +59,7 @@ const AdminAdmins = () => {
       }
       setShowForm(false);
       setEditingAdmin(null);
-      setFormData({ username: '', email: '', password: '' });
+      setFormData({ username: '', email: '', password: '', fullName: '' });
       fetchAdmins();
     } catch (error: any) {
       Toast(error.response?.data?.message || 'Gagal menyimpan admin', 'error');
@@ -71,6 +72,7 @@ const AdminAdmins = () => {
       username: admin.username,
       email: admin.email,
       password: '',
+      fullName: admin.profile?.fullName || '',
     });
     setShowForm(true);
   };
@@ -92,7 +94,7 @@ const AdminAdmins = () => {
   const handleCancel = () => {
     setShowForm(false);
     setEditingAdmin(null);
-    setFormData({ username: '', email: '', password: '' });
+    setFormData({ username: '', email: '', password: '', fullName: '' });
   };
 
   if (loading) {
@@ -135,6 +137,20 @@ const AdminAdmins = () => {
           </div>
           <form onSubmit={handleSubmit}>
             <div className='grid gap-4 md:grid-cols-2'>
+              <div className='form-group md:col-span-2'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Nama Lengkap
+                </label>
+                <input
+                  type='text'
+                  value={formData.fullName}
+                  onChange={(e) =>
+                    setFormData({ ...formData, fullName: e.target.value })
+                  }
+                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                  placeholder='Masukkan nama lengkap'
+                />
+              </div>
               <div className='form-group'>
                 <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
                   Username *
@@ -205,6 +221,7 @@ const AdminAdmins = () => {
             <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
               <tr>
                 <th className='px-6 py-4'>Username</th>
+                <th className='px-6 py-4'>Nama Lengkap</th>
                 <th className='px-6 py-4'>Email</th>
                 <th className='px-6 py-4'>Tanggal Dibuat</th>
                 <th className='px-6 py-4 text-center'>Aksi</th>
@@ -235,6 +252,11 @@ const AdminAdmins = () => {
                           {admin.username}
                         </span>
                       </div>
+                    </td>
+                    <td className='px-6 py-4'>
+                      <span className='font-medium text-[color:var(--text-primary)]'>
+                        {admin.profile?.fullName || '-'}
+                      </span>
                     </td>
                     <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
                       {admin.email}

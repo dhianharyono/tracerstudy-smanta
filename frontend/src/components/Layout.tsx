@@ -245,7 +245,7 @@ const Layout = () => {
                 </div>
                 <div className='min-w-0 flex-1'>
                   <p className='truncate text-sm font-semibold text-[color:var(--text-primary)]'>
-                    {user?.username}
+                    {user?.profile?.fullName || user?.username}
                   </p>
                   <p className='truncate text-xs text-[color:var(--text-secondary)]'>
                     {getRoleName()}
