@@ -47,7 +47,7 @@ const News = ({ data }: NewsProps) => {
               }
               className='cursor-pointer py-4 border-b border-[color:var(--border-color)] last:border-0 hover:bg-[color:var(--bg-card-hover)] transition-colors -mx-2 px-2 rounded-lg group'
             >
-              <h3 className='mb-1.5 text-sm md:text-base font-bold text-[color:var(--text-primary)] group-hover:text-[color:var(--primary)] transition-colors leading-snug line-clamp-2'>
+              <h3 className='mb-1.5 text-sm md:text-xs font-bold text-[color:var(--text-primary)] group-hover:text-[color:var(--primary)] transition-colors leading-snug line-clamp-2'>
                 {newsItem.title}
               </h3>
               <p className='text-xs text-[color:var(--text-secondary)] line-clamp-2 mb-2 leading-relaxed'>
