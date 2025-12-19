@@ -12,7 +12,7 @@ const MutualSection = ({ mutualAlumni }: { mutualAlumni: string[] }) => {
             <FaUsers className='text-lg' />
           </div>
           <div>
-            <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+            <h2 className='text-sm md:text-base font-bold text-[color:var(--text-primary)] !mb-0'>
               Rekan Seangkatan
             </h2>
             <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
