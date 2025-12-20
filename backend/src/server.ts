@@ -19,20 +19,21 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 // CORS configuration - restricted to allowed origins in production
-const allowedOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
-  : ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+const rawOrigins = process.env.ALLOWED_ORIGINS || process.env.allowed_origins || '';
+const customOrigins = rawOrigins.split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean);
+const defaultOrigins = ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
+const allowedOrigins = customOrigins.length > 0 ? customOrigins : defaultOrigins;
 
 app.use(cors({
   origin: (origin, callback) => {
     // allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
 
-    // Always allow localhost in development
+    const normalizedOrigin = origin.replace(/\/$/, '');
     const isDevelopment = process.env.NODE_ENV !== 'production';
-    const isLocalhost = origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1');
+    const isLocalhost = normalizedOrigin.startsWith('http://localhost') || normalizedOrigin.startsWith('http://127.0.0.1');
 
-    if (allowedOrigins.indexOf(origin) !== -1 || (isDevelopment && isLocalhost)) {
+    if (allowedOrigins.some(o => o === normalizedOrigin) || (isDevelopment && isLocalhost)) {
       return callback(null, true);
     } else {
       const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
