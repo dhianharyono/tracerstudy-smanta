@@ -16,7 +16,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, role: string) => Promise<void>;
+  register: (username: string, email: string, password: string, role: string, captchaToken: string) => Promise<void>;
   logout: () => void;
   updateUser: (newUser: any) => void;
   loading: boolean;
@@ -64,13 +64,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const register = async (username: string, email: string, password: string, role: string) => {
+  const register = async (username: string, email: string, password: string, role: string, captchaToken: string) => {
     try {
       await axios.post('/api/auth/register', {
         username,
         email,
         password,
         role,
+        captchaToken,
       });
       // Removed automatic login logic
     } catch (error: any) {

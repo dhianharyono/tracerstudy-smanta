@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
 import { body, validationResult } from 'express-validator';
+import axios from 'axios';
 import User from '../models/User';
 import { authenticate } from '../middleware/auth';
 
@@ -14,6 +15,26 @@ const authLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// Helper untuk verifikasi CAPTCHA
+const verifyCaptcha = async (token: string) => {
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY;
+
+  // Jika secret key tidak ada atau masih default, gunakan test key yang cocok dengan frontend
+  const finalSecretKey = (!secretKey || secretKey === 'your_recaptcha_secret_key_here')
+    ? '6LeIxAcTAAAAAGG-vFI1TnRWxMZ_S8yxS90vCPm5' // Global Google test secret key
+    : secretKey;
+
+  try {
+    const response = await axios.post(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${finalSecretKey}&response=${token}`
+    );
+    return response.data.success;
+  } catch (error) {
+    console.error('CAPTCHA verification error:', error);
+    return false;
+  }
+};
 
 // Definisi Custom Request untuk menangani req.user dari middleware authenticate
 interface AuthenticatedRequest extends Request {
@@ -42,6 +63,7 @@ router.post(
     body('role')
       .isIn(['alumni', 'admin', 'student'])
       .withMessage('Invalid role'),
+    body('captchaToken').notEmpty().withMessage('CAPTCHA is required'),
   ],
   async (req: Request, res: Response) => {
     try {
@@ -50,7 +72,13 @@ router.post(
         return res.status(400).json({ errors: errors.array() });
       }
 
-      const { username, email, password, role } = req.body;
+      const { username, email, password, role, captchaToken } = req.body;
+
+      // Verifikasi CAPTCHA
+      const isCaptchaValid = await verifyCaptcha(captchaToken);
+      if (!isCaptchaValid) {
+        return res.status(400).json({ message: 'Invalid CAPTCHA. Please try again.' });
+      }
 
       const existingUser = await User.findOne({
         $or: [{ email }, { username }],
@@ -72,9 +100,14 @@ router.post(
 
       await user.save();
 
+      const jwtSecret = process.env.JWT_SECRET;
+      if (!jwtSecret || jwtSecret === 'secret') {
+        console.warn('WARNING: Using default or missing JWT_SECRET. This is insecure for production.');
+      }
+
       const token = jwt.sign(
         { userId: user._id },
-        process.env.JWT_SECRET || 'secret',
+        jwtSecret || 'secret',
         { expiresIn: '7d' }
       );
 
@@ -121,9 +154,10 @@ router.post(
         return res.status(400).json({ message: 'Invalid credentials' });
       }
 
+      const jwtSecret = process.env.JWT_SECRET;
       const token = jwt.sign(
         { userId: user._id },
-        process.env.JWT_SECRET || 'secret',
+        jwtSecret || 'secret',
         { expiresIn: '7d' }
       );
 

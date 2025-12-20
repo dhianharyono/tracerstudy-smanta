@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth } from '../../contexts/AuthContext';
 import Toast from '@/components/toast';
 import {
@@ -21,12 +22,14 @@ const Register = () => {
     confirmPassword: '',
     role: 'alumni',
   });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const captchaRef = useRef<ReCAPTCHA>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -35,6 +38,11 @@ const Register = () => {
       ...formData,
       [e.target.name]: e.target.value,
     });
+  };
+
+  const onCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+    if (token) setError('');
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,6 +59,11 @@ const Register = () => {
       return;
     }
 
+    if (!captchaToken) {
+      setError('Silakan selesaikan CAPTCHA');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -58,16 +71,40 @@ const Register = () => {
         formData.username,
         formData.email,
         formData.password,
-        formData.role
+        formData.role,
+        captchaToken
       );
-      Toast('Pendaftaran berhasil! Silakan login untuk masuk.', 'success');
-      navigate('/login');
+
+      console.log('Registration successful, showing toast...');
+      Toast('Pendaftaran berhasil! Silakan login untuk masuk.');
+
+      console.log('Waiting before navigation...');
+      setTimeout(() => {
+        console.log('Navigating to login...');
+        navigate('/login');
+      }, 100);
     } catch (err: any) {
+      console.error('Registration error:', err);
       setError(err.message || 'Pendaftaran gagal');
+      // Reset captcha on failure
+      captchaRef.current?.reset();
+      setCaptchaToken(null);
     } finally {
       setLoading(false);
     }
   };
+
+  // NOTE: reCAPTCHA v2 Checkbox keys are required for this component.
+  // v3 keys will cause "Jenis kunci tidak valid" error.
+  const siteKey =
+    import.meta.env.VITE_RECAPTCHA_SITE_KEY ||
+    '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
+
+  if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+    console.warn(
+      'Using reCAPTCHA test site key. Ensure backend also uses test secret key.'
+    );
+  }
 
   return (
     <div className='flex min-h-screen items-center justify-center bg-[color:var(--bg-primary)] p-4 relative overflow-hidden'>
@@ -239,6 +276,16 @@ const Register = () => {
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+              </div>
+
+              {/* CAPTCHA Section */}
+              <div className='flex justify-center py-2'>
+                <ReCAPTCHA
+                  ref={captchaRef}
+                  sitekey={siteKey}
+                  onChange={onCaptchaChange}
+                  theme='light'
+                />
               </div>
 
               <button
