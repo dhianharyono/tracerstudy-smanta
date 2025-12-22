@@ -14,6 +14,7 @@ import {
 import Toast from '@/components/toast';
 import SearchableSelect from '@/components/SearchableSelect';
 import { COMMON_MAJORS, POLTEKKES_LIST } from '../constant';
+import { INDONESIA_UNIVERSITIES } from '../universityData';
 
 const InputField = ({
   label,
@@ -237,15 +238,13 @@ const AlumniQuestionnaire = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, universitiesRes] = await Promise.all([
+        const [profileRes] = await Promise.all([
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
-          axios.get<any[]>('https://universities.hipolabs.com/search?country=Indonesia'),
         ]);
 
-        const univFromApi = universitiesRes.data.map((u: any) => u.name);
-        const univList = [...new Set([...univFromApi, ...POLTEKKES_LIST])].sort() as string[];
+        const univList = [...new Set([...INDONESIA_UNIVERSITIES, ...POLTEKKES_LIST])].sort() as string[];
         setUniversities(univList);
         setMajors(COMMON_MAJORS);
 
