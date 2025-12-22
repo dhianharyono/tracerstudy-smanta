@@ -48,7 +48,7 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
       </button>
 
       <header className='mb-5'>
-        <h1 className='text-sm md:text-3xl font-bold text-[var(--text-primary)] mb-6 leading-tight'>
+        <h1 className='text-sm md:text-2xl font-bold text-[var(--text-primary)] mb-6 leading-tight'>
           {news.title}
         </h1>
 
@@ -93,7 +93,7 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
       <div className='border-t border-[var(--border-color)] my-5'></div>
 
       <div
-        className='prose prose-lg dark:prose-invert max-w-none text-sm md:text-base'
+        className='prose prose-lg dark:prose-invert max-w-none text-sm'
         dangerouslySetInnerHTML={{ __html: news.content }}
       />
 
@@ -101,32 +101,73 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
       <style>{`
         .prose img {
           border-radius: 8px;
-          margin: 2rem auto;
+          margin: 1.5rem auto;
           box-shadow: var(--shadow-md);
+          max-width: 100%;
+          height: auto;
+          display: block;
         }
         .prose p {
-          margin-bottom: 1.5em;
-          line-height: 1.8;
+          margin-bottom: 1.25rem;
+          line-height: 1.7;
           color: var(--text-primary);
         }
         .prose h1, .prose h2, .prose h3 {
           color: var(--text-primary);
           font-weight: 700;
-          margin-top: 2em;
-          margin-bottom: 1em;
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          line-height: 1.3;
         }
         .prose a {
           color: var(--primary);
           text-decoration: underline;
         }
         .prose blockquote {
-          border-left-color: var(--primary);
+          border-left: 4px solid var(--primary);
+          padding-left: 1rem;
+          margin: 1.5rem 0;
           font-style: italic;
           color: var(--text-secondary);
         }
-        .prose ul, .prose ol {
+        .prose ul {
+          list-style-type: disc;
+          margin-left: 1.5rem;
+          margin-bottom: 1.25rem;
+          padding-left: 0.5rem;
+        }
+        .prose ol {
+          list-style-type: decimal;
+          margin-left: 1.5rem;
+          margin-bottom: 1.25rem;
+          padding-left: 0.5rem;
+        }
+        .prose li {
+          margin-bottom: 0.5rem;
           color: var(--text-primary);
         }
+        .prose strong {
+          color: var(--text-primary);
+          font-weight: 700;
+        }
+        /* Quill Alignment Support */
+        .ql-align-center {
+          text-align: center;
+        }
+        .ql-align-right {
+          text-align: right;
+        }
+        .ql-align-justify {
+          text-align: justify;
+        }
+        /* Quill Indentation Support */
+        .ql-indent-1 { padding-left: 3em; }
+        .ql-indent-2 { padding-left: 6em; }
+        .ql-indent-3 { padding-left: 9em; }
+        /* Quill Size Support */
+        .ql-size-small { font-size: 0.8em; }
+        .ql-size-large { font-size: 1.5em; }
+        .ql-size-huge { font-size: 2.5em; }
       `}</style>
     </article>
   );
