@@ -97,29 +97,95 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   const geocodeUniversity = async (
     universityName: string
   ): Promise<{ lat: number; lng: number } | null> => {
-    try {
-      const query = encodeURIComponent(`${universityName}, Indonesia`);
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1&addressdetails=1`,
-        {
-          headers: {
-            'User-Agent': 'TracerStudyApp/1.0',
-          },
-        }
-      );
+    if (!universityName) return null;
 
-      const data = await response.json();
-      if (data && data.length > 0) {
-        return {
-          lat: parseFloat(data[0].lat),
-          lng: parseFloat(data[0].lon),
-        };
+    const generateQueries = (name: string) => {
+      const variations = [
+        `${name}, Indonesia`,
+        name,
+      ];
+
+      // Handle Surakarta/Solo interchangeable names
+      if (name.toLowerCase().includes('surakarta')) {
+        variations.push(name.replace(/surakarta/gi, 'Solo') + ', Indonesia');
+      } else if (name.toLowerCase().includes('solo')) {
+        variations.push(name.replace(/\bsolo\b/gi, 'Surakarta') + ', Indonesia');
       }
-      return null;
-    } catch (error) {
-      console.error(`Geocoding error for ${universityName}:`, error);
-      return null;
+
+      // Case: Swap Universitas <-> University
+      if (name.toLowerCase().includes('universitas')) {
+        variations.push(name.replace(/universitas/gi, 'University') + ', Indonesia');
+      } else if (name.toLowerCase().includes('university')) {
+        variations.push(name.replace(/university/gi, 'Universitas') + ', Indonesia');
+      }
+
+      // Case: Swap Institut <-> Institute
+      if (name.toLowerCase().includes('institut')) {
+        variations.push(name.replace(/institut/gi, 'Institute') + ', Indonesia');
+      }
+
+      // Special case: Poltekkes Kemenkes (often indexed without 'Kemenkes')
+      if (name.toLowerCase().includes('poltekkes') || name.toLowerCase().includes('kemenkes')) {
+        const simple = name
+          .replace(/kemenkes/gi, '')
+          .replace(/kementerian kesehatan/gi, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+        variations.push(simple + ', Indonesia');
+        variations.push(simple.replace(/poltekkes/gi, 'Politeknik Kesehatan') + ', Indonesia');
+      }
+
+      // Case: Handle Common Abbreviations
+      let expanded = name
+        .replace(/\bpoltekkes\b/gi, 'Politeknik Kesehatan')
+        .replace(/\bkemenkes\b/gi, 'Kementerian Kesehatan')
+        .replace(/\bstikes\b/gi, 'Sekolah Tinggi Ilmu Kesehatan');
+
+      if (expanded !== name) {
+        variations.push(`${expanded}, Indonesia`);
+      }
+
+      // Case: Shorten the query (take first and last words - often Type and City)
+      const words = name.split(' ');
+      if (words.length > 2) {
+        variations.push(`${words[0]} ${words[words.length - 1]}, Indonesia`);
+      }
+
+      return [...new Set(variations)];
+    };
+
+    const uniqueQueries = generateQueries(universityName);
+
+    for (const query of uniqueQueries) {
+      try {
+        const encodedQuery = encodeURIComponent(query);
+        // Use viewbox for Indonesia bias
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodedQuery}&format=json&limit=1&addressdetails=1&viewbox=95.0,-11.0,141.0,6.0`,
+          {
+            headers: {
+              'User-Agent': 'TracerStudyApp/1.0',
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (data && data.length > 0) {
+          return {
+            lat: parseFloat(data[0].lat),
+            lng: parseFloat(data[0].lon),
+          };
+        }
+
+        // Respect rate limits if we have more queries to try
+        if (uniqueQueries.indexOf(query) < uniqueQueries.length - 1) {
+          await new Promise(resolve => setTimeout(resolve, 300));
+        }
+      } catch (error) {
+        console.error(`Geocoding failed for attempt: ${query}`, error);
+      }
     }
+    return null;
   };
 
   useEffect(() => {

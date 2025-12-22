@@ -9,10 +9,11 @@ import {
   FaBriefcase,
   FaShareAlt,
   FaSave,
-  FaTimes,
   FaGraduationCap,
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
+import SearchableSelect from '@/components/SearchableSelect';
+import { COMMON_MAJORS, POLTEKKES_LIST } from '../constant';
 
 const InputField = ({
   label,
@@ -31,7 +32,8 @@ const InputField = ({
   <div className={noMargin ? '' : 'form-group'}>
     {label && (
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && !disabled && <span className='text-red-500'>*</span>}
+        {label}{' '}
+        {required && !disabled && <span className='text-red-500'>*</span>}
       </label>
     )}
     <input
@@ -44,9 +46,12 @@ const InputField = ({
       max={max}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-xl border border-[color:var(--border-color)] ${disabled ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]' : 'bg-[color:var(--bg-secondary)]'} px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
-        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-        : ''
+      className={`w-full rounded-xl border border-[color:var(--border-color)] ${disabled
+        ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+        : 'bg-[color:var(--bg-secondary)]'
+        } px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+          : ''
         }`}
     />
     {validationErrors[name] && (
@@ -70,7 +75,8 @@ const SelectField = ({
   <div className='form-group'>
     {label && (
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label} {required && !disabled && <span className='text-red-500'>*</span>}
+        {label}{' '}
+        {required && !disabled && <span className='text-red-500'>*</span>}
       </label>
     )}
     <div className='relative'>
@@ -80,9 +86,12 @@ const SelectField = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]' : 'bg-[color:var(--bg-secondary)]'} px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
-          ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-          : ''
+        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled
+          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+          : 'bg-[color:var(--bg-secondary)]'
+          } px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+            ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
+            : ''
           }`}
       >
         <option value=''>Pilih</option>
@@ -224,41 +233,26 @@ const AlumniQuestionnaire = () => {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
   );
-  const [showManualUniversityInput, setShowManualUniversityInput] =
-    useState(false);
-  const [showManualMajorInput, setShowManualMajorInput] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, universitiesRes, majorsRes] = await Promise.all([
+        const [profileRes, universitiesRes] = await Promise.all([
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
-          axios.get<string[]>('/api/alumni/universities'),
-          axios.get<string[]>('/api/alumni/majors'),
+          axios.get<any[]>('http://universities.hipolabs.com/search?country=Indonesia'),
         ]);
 
-        setUniversities(universitiesRes.data);
-        setMajors(majorsRes.data);
+        const univFromApi = universitiesRes.data.map((u: any) => u.name);
+        const univList = [...new Set([...univFromApi, ...POLTEKKES_LIST])].sort() as string[];
+        setUniversities(univList);
+        setMajors(COMMON_MAJORS);
 
         if (profileRes.data?.questionnaireCompleted) {
           setIsEditMode(true);
           setIsReadOnly(true);
           const profile = profileRes.data;
-
-          if (
-            profile.university?.name &&
-            !universitiesRes.data.includes(profile.university.name)
-          ) {
-            setShowManualUniversityInput(true);
-          }
-          if (
-            profile.university?.major &&
-            !majorsRes.data.includes(profile.university.major)
-          ) {
-            setShowManualMajorInput(true);
-          }
 
           setFormData({
             profile: {
@@ -309,7 +303,7 @@ const AlumniQuestionnaire = () => {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
   ) => {
     const { name, value } = e.target;
 
@@ -447,8 +441,6 @@ const AlumniQuestionnaire = () => {
     return <LoadingSpinner />;
   }
 
-
-
   return (
     <div className='p-4 md:p-8 animate-fade-in'>
       {/* Header Section */}
@@ -473,7 +465,8 @@ const AlumniQuestionnaire = () => {
                   Kuesioner Selesai
                 </h3>
                 <p className='text-sm text-[color:var(--text-secondary)] leading-relaxed'>
-                  Anda telah mengisi kuesioner. Klik tombol edit untuk memperbarui data Anda.
+                  Anda telah mengisi kuesioner. Klik tombol edit untuk
+                  memperbarui data Anda.
                 </p>
               </div>
             </div>
@@ -486,22 +479,24 @@ const AlumniQuestionnaire = () => {
             </button>
           </div>
         </div>
-      ) : isEditMode && (
-        <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
-          <div className='flex items-center gap-3'>
-            <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
-              <FaEdit />
-            </div>
-            <div>
-              <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>
-                Mode Edit
-              </h3>
-              <p className='text-xs md:text-sm text-blue-700 dark:text-blue-300'>
-                Anda sedang memperbarui data kuesioner yang sudah ada.
-              </p>
+      ) : (
+        isEditMode && (
+          <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
+            <div className='flex items-center gap-3'>
+              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
+                <FaEdit />
+              </div>
+              <div>
+                <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>
+                  Mode Edit
+                </h3>
+                <p className='text-xs md:text-sm text-blue-700 dark:text-blue-300'>
+                  Anda sedang memperbarui data kuesioner yang sudah ada.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )
       )}
 
       <form onSubmit={handleSubmit} className='space-y-6'>
@@ -592,25 +587,24 @@ const AlumniQuestionnaire = () => {
           <div className='mt-6 grid gap-6 md:grid-cols-2'>
             <div className='form-group'>
               <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-                Status Saat Ini
+                Status
               </label>
               <div className='space-y-4 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] p-4'>
                 <div className='flex items-center justify-between'>
                   <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
-                    Sedang Kuliah?
+                    Kuliah
                   </span>
                   <select
                     name='profile.isStudying'
                     value={formData.profile.isStudying}
                     onChange={(e) => {
                       handleChange(e);
-                      if (e.target.value !== 'ya') {
-                        setShowManualUniversityInput(false);
-                        setShowManualMajorInput(false);
-                      }
                     }}
                     disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
+                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                      : ''
+                      }`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>
@@ -619,14 +613,17 @@ const AlumniQuestionnaire = () => {
                 </div>
                 <div className='flex items-center justify-between'>
                   <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
-                    Sedang Bekerja?
+                    Bekerja
                   </span>
                   <select
                     name='profile.isWorking'
                     value={formData.profile.isWorking}
                     onChange={handleChange}
                     disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
+                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                      : ''
+                      }`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>
@@ -651,87 +648,17 @@ const AlumniQuestionnaire = () => {
             </div>
 
             <div className='grid gap-6 md:grid-cols-2'>
-              <div className='form-group'>
-                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-                  Nama Kampus
-                </label>
-                {!showManualUniversityInput ? (
-                  <div className='relative'>
-                    <select
-                      name='university.name'
-                      value={
-                        universities.includes(formData.university.name)
-                          ? formData.university.name
-                          : ''
-                      }
-                      disabled={isReadOnly}
-                      onChange={(e) => {
-                        if (e.target.value === 'other') {
-                          setShowManualUniversityInput(true);
-                          setFormData((prev) => ({
-                            ...prev,
-                            university: { ...prev.university, name: '' },
-                          }));
-                        } else {
-                          handleChange(e);
-                        }
-                      }}
-                      className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
-                    >
-                      <option value=''>Pilih Kampus</option>
-                      {universities.map((univ) => (
-                        <option key={univ} value={univ}>
-                          {univ}
-                        </option>
-                      ))}
-                      {!isReadOnly && <option value='other'>+ Lainnya (ketik manual)</option>}
-                    </select>
-                    <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
-                      <svg
-                        className='h-4 w-4'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M19 9l-7 7-7-7'
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                ) : (
-                  <div className='flex items-center gap-2'>
-                    <div className='flex-1'>
-                      <InputField
-                        name='university.name'
-                        value={formData.university.name}
-                        onChange={handleChange}
-                        placeholder='Tulis nama kampus'
-                        validationErrors={validationErrors}
-                        noMargin
-                        disabled={isReadOnly}
-                      />
-                    </div>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        setShowManualUniversityInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          university: { ...prev.university, name: '' },
-                        }));
-                      }}
-                      title='Kembali ke daftar'
-                      className='flex h-[50px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                )}
-              </div>
+              <SearchableSelect
+                label='Nama Kampus'
+                name='university.name'
+                value={formData.university.name}
+                options={universities}
+                onChange={handleChange}
+                required
+                placeholder='Pilih atau cari nama kampus...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
 
               <SelectField
                 label='Jenis PT'
@@ -760,87 +687,17 @@ const AlumniQuestionnaire = () => {
                 disabled={isReadOnly}
               />
 
-              <div className='form-group'>
-                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-                  Jurusan
-                </label>
-                {!showManualMajorInput ? (
-                  <div className='relative'>
-                    <select
-                      name='university.major'
-                      value={
-                        majors.includes(formData.university.major)
-                          ? formData.university.major
-                          : ''
-                      }
-                      disabled={isReadOnly}
-                      onChange={(e) => {
-                        if (e.target.value === 'other') {
-                          setShowManualMajorInput(true);
-                          setFormData((prev) => ({
-                            ...prev,
-                            university: { ...prev.university, major: '' },
-                          }));
-                        } else {
-                          handleChange(e);
-                        }
-                      }}
-                      className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly ? 'opacity-70 cursor-not-allowed grayscale-[0.5]' : ''}`}
-                    >
-                      <option value=''>Pilih Jurusan</option>
-                      {majors.map((major) => (
-                        <option key={major} value={major}>
-                          {major}
-                        </option>
-                      ))}
-                      {!isReadOnly && <option value='other'>+ Lainnya (ketik manual)</option>}
-                    </select>
-                    <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
-                      <svg
-                        className='h-4 w-4'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth='2'
-                          d='M19 9l-7 7-7-7'
-                        />
-                      </svg>
-                    </div>
-                  </div>
-                ) : (
-                  <div className='flex items-center gap-2'>
-                    <div className='flex-1'>
-                      <InputField
-                        name='university.major'
-                        value={formData.university.major}
-                        onChange={handleChange}
-                        placeholder='Tulis nama jurusan'
-                        validationErrors={validationErrors}
-                        noMargin
-                        disabled={isReadOnly}
-                      />
-                    </div>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        setShowManualMajorInput(false);
-                        setFormData((prev) => ({
-                          ...prev,
-                          university: { ...prev.university, major: '' },
-                        }));
-                      }}
-                      title='Kembali ke daftar'
-                      className='flex h-[50px] items-center justify-center rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-hover)]'
-                    >
-                      <FaTimes />
-                    </button>
-                  </div>
-                )}
-              </div>
+              <SearchableSelect
+                label='Jurusan'
+                name='university.major'
+                value={formData.university.major}
+                options={majors}
+                onChange={handleChange}
+                required
+                placeholder='Pilih atau cari jurusan...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
             </div>
           </div>
         )}
