@@ -241,7 +241,7 @@ const AlumniQuestionnaire = () => {
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
-          axios.get<any[]>('http://universities.hipolabs.com/search?country=Indonesia'),
+          axios.get<any[]>('https://universities.hipolabs.com/search?country=Indonesia'),
         ]);
 
         const univFromApi = universitiesRes.data.map((u: any) => u.name);
