@@ -1,5 +1,10 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import LoadingSpinner from './components/LoadingSpinner';
 import PrivateRoute from './components/PrivateRoute';
@@ -52,7 +57,9 @@ const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
   }
 };
 
-const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
+const PublicRoute: React.FC<{ children: React.ReactElement }> = ({
+  children,
+}) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -73,7 +80,7 @@ function App() {
         <Suspense fallback={<LoadingSpinner />}>
           <Routes>
             <Route
-              path="/login"
+              path='/login'
               element={
                 <PublicRoute>
                   <Login />
@@ -81,7 +88,7 @@ function App() {
               }
             />
             <Route
-              path="/register"
+              path='/register'
               element={
                 <PublicRoute>
                   <Register />
@@ -91,7 +98,7 @@ function App() {
 
             {/* Alumni Routes */}
             <Route
-              path="/alumni"
+              path='/alumni'
               element={
                 <PrivateRoute allowedRoles={['alumni']}>
                   <Layout />
@@ -99,17 +106,17 @@ function App() {
               }
             >
               <Route index element={<AlumniDashboard />} />
-              <Route path="questionnaire" element={<AlumniQuestionnaire />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="feedback" element={<AlumniFeedback />} />
-              <Route path="news" element={<AlumniNews />} />
-              <Route path="news/:id" element={<AlumniNewsDetail />} />
-              <Route path="mutual-alumni" element={<MutualAlumni />} />
+              <Route path='questionnaire' element={<AlumniQuestionnaire />} />
+              <Route path='profile' element={<Profile />} />
+              <Route path='feedback' element={<AlumniFeedback />} />
+              <Route path='news' element={<AlumniNews />} />
+              <Route path='news/:id' element={<AlumniNewsDetail />} />
+              <Route path='mutual-alumni' element={<MutualAlumni />} />
             </Route>
 
             {/* Admin Routes */}
             <Route
-              path="/admin"
+              path='/admin'
               element={
                 <PrivateRoute allowedRoles={['admin']}>
                   <Layout />
@@ -117,20 +124,20 @@ function App() {
               }
             >
               <Route index element={<AdminDashboard />} />
-              <Route path="alumni" element={<AdminAlumni />} />
-              <Route path="reports" element={<AdminReports />} />
-              <Route path="students" element={<AdminStudents />} />
-              <Route path="admins" element={<AdminAdmins />} />
-              <Route path="news" element={<AdminNews />} />
-              <Route path="news/:id" element={<AdminNewsDetail />} />
-              <Route path="feedback" element={<AdminFeedback />} />
-              <Route path="feedback/:id" element={<AdminFeedbackDetail />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path='alumni' element={<AdminAlumni />} />
+              <Route path='reports' element={<AdminReports />} />
+              <Route path='students' element={<AdminStudents />} />
+              <Route path='admins' element={<AdminAdmins />} />
+              <Route path='news' element={<AdminNews />} />
+              <Route path='news/:id' element={<AdminNewsDetail />} />
+              <Route path='feedback' element={<AdminFeedback />} />
+              <Route path='feedback/:id' element={<AdminFeedbackDetail />} />
+              <Route path='profile' element={<Profile />} />
             </Route>
 
             {/* Student Routes */}
             <Route
-              path="/student"
+              path='/student'
               element={
                 <PrivateRoute allowedRoles={['student']}>
                   <Layout />
@@ -138,16 +145,16 @@ function App() {
               }
             >
               <Route index element={<StudentDashboard />} />
-              <Route path="universities" element={<StudentUniversities />} />
-              <Route path="majors" element={<StudentMajors />} />
-              <Route path="alumni" element={<StudentAlumni />} />
-              <Route path="feedback" element={<StudentFeedback />} />
-              <Route path="news" element={<StudentNews />} />
-              <Route path="news/:id" element={<StudentNewsDetail />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path='universities' element={<StudentUniversities />} />
+              <Route path='majors' element={<StudentMajors />} />
+              <Route path='alumni' element={<StudentAlumni />} />
+              <Route path='feedback' element={<StudentFeedback />} />
+              <Route path='news' element={<StudentNews />} />
+              <Route path='news/:id' element={<StudentNewsDetail />} />
+              <Route path='profile' element={<Profile />} />
             </Route>
 
-            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path='/' element={<Navigate to='/login' replace />} />
           </Routes>
         </Suspense>
       </Router>
