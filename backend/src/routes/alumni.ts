@@ -263,63 +263,54 @@ router.get(
   authorize('alumni'),
   async (req: Request, res: Response) => {
     try {
-      const totalAlumni = await User.countDocuments({ role: 'alumni' });
-      const completedQuestionnaire = await User.countDocuments({
-        role: 'alumni',
-        questionnaireCompleted: true,
-      });
-      const workingAlumni = await User.countDocuments({
-        role: 'alumni',
-        'profile.isWorking': true,
-      });
-      const studyingAlumni = await User.countDocuments({
-        role: 'alumni',
-        'profile.isStudying': true,
-      });
-
-      const negeriCount = await User.countDocuments({
-        role: 'alumni',
-        'university.type': 'negeri',
-      });
-      const swastaCount = await User.countDocuments({
-        role: 'alumni',
-        'university.type': 'swasta',
-      });
-      const kedinasanCount = await User.countDocuments({
-        role: 'alumni',
-        'university.type': 'kedinasan',
-      });
-
-      const majorStats = await User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'university.major': { $exists: true, $ne: null },
+      const [
+        totalAlumni,
+        completedQuestionnaire,
+        workingAlumni,
+        studyingAlumni,
+        negeriCount,
+        swastaCount,
+        kedinasanCount,
+        majorStats,
+        yearStats,
+      ] = await Promise.all([
+        User.countDocuments({ role: 'alumni' }),
+        User.countDocuments({ role: 'alumni', questionnaireCompleted: true }),
+        User.countDocuments({ role: 'alumni', 'profile.isWorking': true }),
+        User.countDocuments({ role: 'alumni', 'profile.isStudying': true }),
+        User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
+        User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
+        User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
+        User.aggregate([
+          {
+            $match: {
+              role: 'alumni',
+              'university.major': { $exists: true, $ne: null },
+            },
           },
-        },
-        {
-          $group: {
-            _id: '$university.major',
-            count: { $sum: 1 },
+          {
+            $group: {
+              _id: '$university.major',
+              count: { $sum: 1 },
+            },
           },
-        },
-        { $sort: { count: -1 } },
-      ]);
-
-      const yearStats = await User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'profile.graduationYear': { $exists: true, $ne: null },
+          { $sort: { count: -1 } },
+        ]),
+        User.aggregate([
+          {
+            $match: {
+              role: 'alumni',
+              'profile.graduationYear': { $exists: true, $ne: null },
+            },
           },
-        },
-        {
-          $group: {
-            _id: '$profile.graduationYear',
-            count: { $sum: 1 },
+          {
+            $group: {
+              _id: '$profile.graduationYear',
+              count: { $sum: 1 },
+            },
           },
-        },
-        { $sort: { _id: -1 } },
+          { $sort: { _id: -1 } },
+        ]),
       ]);
 
       res.json({
@@ -340,6 +331,7 @@ router.get(
     }
   }
 );
+
 
 router.get(
   '/news/unread-count',
