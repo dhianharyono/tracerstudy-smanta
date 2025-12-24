@@ -163,6 +163,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const university = req.query.university as string;
     const graduationYear = req.query.graduationYear as string;
     const major = req.query.major as string;
+    const questionnaireStatus = req.query.questionnaireStatus as string;
 
     const filter: any = { role: 'alumni' };
 
@@ -176,6 +177,14 @@ router.get('/alumni', async (req: Request, res: Response) => {
 
     if (major) {
       filter['university.major'] = major;
+    }
+
+    if (questionnaireStatus) {
+      if (questionnaireStatus === 'completed') {
+        filter['questionnaireCompleted'] = true;
+      } else if (questionnaireStatus === 'incomplete') {
+        filter['questionnaireCompleted'] = { $ne: true };
+      }
     }
 
     const alumni = await User.find(filter)

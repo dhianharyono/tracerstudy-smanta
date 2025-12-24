@@ -3,10 +3,12 @@ import {
   FaBriefcase,
   FaGraduationCap,
   FaUniversity,
+  FaUserGraduate,
 } from 'react-icons/fa';
 
 interface StatsObject {
   totalAlumni: number | string;
+  totalStudents?: number | string;
   workingAlumni: number | string;
   studyingAlumni: number | string;
   universityTypes: {
@@ -18,7 +20,7 @@ interface StatsObject {
 
 interface StatCardProps {
   title: string;
-  value: number | string;
+  value: number | string | undefined;
   colorClass: string;
   bgClass: string;
 }
@@ -42,6 +44,8 @@ const StatCard = ({ title, value, colorClass, bgClass }: StatCardProps) => (
 );
 
 const Statistic = ({ stats }: { stats: StatsObject }) => {
+  const isAdmin = stats?.totalStudents !== undefined;
+
   const statItems = [
     {
       title: 'Total Alumni',
@@ -50,6 +54,13 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       colorClass: 'text-blue-600 dark:text-blue-400',
       bgClass: 'bg-blue-100 dark:bg-blue-900/50'
     },
+    ...(isAdmin ? [{
+      title: 'Total Siswa',
+      value: stats?.totalStudents,
+      icon: FaUserGraduate,
+      colorClass: 'text-cyan-600 dark:text-cyan-400',
+      bgClass: 'bg-cyan-100 dark:bg-cyan-900/50'
+    }] : []),
     {
       title: 'Alumni Bekerja',
       value: stats?.workingAlumni,
@@ -88,7 +99,10 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
   ];
 
   return (
-    <div className='grid grid-cols-3 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 mb-8'>
+    <div className={`grid gap-4 mb-8 ${isAdmin
+      ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4'
+      : 'grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'
+      }`}>
       {statItems.map((item, index) => (
         <StatCard
           key={index}

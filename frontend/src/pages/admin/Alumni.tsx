@@ -27,6 +27,7 @@ const AdminAlumni = () => {
     university: '',
     graduationYear: '',
     major: '',
+    questionnaireStatus: 'completed',
   });
   const [filterOptions, setFilterOptions] = useState({
     universities: [] as string[],
@@ -49,6 +50,8 @@ const AdminAlumni = () => {
       if (filters.graduationYear)
         params.append('graduationYear', filters.graduationYear);
       if (filters.major) params.append('major', filters.major);
+      if (filters.questionnaireStatus)
+        params.append('questionnaireStatus', filters.questionnaireStatus);
 
       const response = await axios.get(
         `/api/admin/alumni?${params.toString()}`
@@ -71,7 +74,12 @@ const AdminAlumni = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({ university: '', graduationYear: '', major: '' });
+    setFilters({
+      university: '',
+      graduationYear: '',
+      major: '',
+      questionnaireStatus: '',
+    });
     setPagination({ ...pagination, page: 1 });
   };
 
@@ -119,7 +127,7 @@ const AdminAlumni = () => {
           showFilters ? 'block' : 'hidden md:block'
         }`}
       >
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           <div className='relative'>
             <select
               value={filters.university}
@@ -212,11 +220,40 @@ const AdminAlumni = () => {
             </div>
           </div>
 
+          <div className='relative'>
+            <select
+              value={filters.questionnaireStatus}
+              onChange={(e) =>
+                handleFilterChange('questionnaireStatus', e.target.value)
+              }
+              className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            >
+              <option value=''>Status Survei</option>
+              <option value='completed'>Lengkap</option>
+              <option value='incomplete'>Belum Lengkap</option>
+            </select>
+            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            </div>
+          </div>
+
           <button
             onClick={handleClearFilters}
-            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
+            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
           >
-            <FaTimes /> Reset Filter
+            <FaTimes className='text-xs' /> Reset
           </button>
         </div>
       </div>
