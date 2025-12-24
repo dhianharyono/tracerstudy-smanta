@@ -59,6 +59,8 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
                 <YAxis
                   stroke='var(--text-tertiary)'
                   tick={{ fill: 'var(--text-secondary)' }}
+                  allowDecimals={false}
+                  tickFormatter={(value) => Math.round(value).toString()}
                 />
                 <Tooltip
                   contentStyle={{
