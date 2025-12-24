@@ -334,128 +334,143 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
                   icon={getMarkerIcon(university.count, university.type)}
                 >
                   <Popup>
-                    <div style={{ minWidth: '200px', maxWidth: '300px' }}>
-                      <div
-                        style={{
+                    <div style={{
+                      minWidth: '240px',
+                      maxWidth: '320px',
+                      overflow: 'hidden'
+                    }}>
+                      {/* Header Section */}
+                      <div style={{
+                        padding: '16px',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        borderBottom: '1px solid var(--border-color)',
+                      }}>
+                        <div style={{
                           display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          marginBottom: '12px',
-                        }}
-                      >
-                        <FaUniversity style={{ color: 'var(--primary)' }} />
-                        <h3
-                          style={{
+                          alignItems: 'flex-start',
+                          gap: '10px',
+                        }}>
+                          <div style={{
+                            padding: '8px',
+                            background: 'var(--primary)',
+                            borderRadius: '8px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: 'white',
+                            fontSize: '14px',
+                            marginTop: '2px'
+                          }}>
+                            <FaUniversity />
+                          </div>
+                          <h3 style={{
                             margin: 0,
-                            fontSize: '16px',
-                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            fontWeight: '700',
                             color: 'var(--text-primary)',
-                          }}
-                        >
-                          {university.university}
-                        </h3>
-                      </div>
-                      <div
-                        style={{
-                          marginBottom: '8px',
-                          padding: '8px',
-                          background: 'var(--bg-tertiary)',
-                          borderRadius: '6px',
-                        }}
-                      >
-                        <div
-                          style={{
-                            fontSize: '14px',
-                            color: 'var(--text-secondary)',
-                          }}
-                        >
-                          <strong>Jenis:</strong>{' '}
-                          {getUniversityTypeLabel(university.type)}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: '14px',
-                            color: 'var(--text-secondary)',
-                          }}
-                        >
-                          <strong>Jumlah Alumni:</strong> {university.count}
+                            lineHeight: '1.4',
+                          }}>
+                            {university.university}
+                          </h3>
                         </div>
                       </div>
-                      {university.alumni && university.alumni.length > 0 && (
-                        <div style={{ marginTop: '12px' }}>
-                          <div
-                            style={{
+
+                      <div style={{ padding: '16px' }}>
+                        {/* Summary Info */}
+                        <div style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '10px',
+                          marginBottom: '16px'
+                        }}>
+                          <div style={{
+                            background: 'var(--bg-secondary)',
+                            padding: '10px',
+                            borderRadius: '10px',
+                            border: '1px solid var(--border-color)',
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: '600' }}>Jenis</div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: '600' }}>{getUniversityTypeLabel(university.type)}</div>
+                          </div>
+                          <div style={{
+                            background: 'var(--bg-secondary)',
+                            padding: '10px',
+                            borderRadius: '10px',
+                            border: '1px solid var(--border-color)',
+                            textAlign: 'center'
+                          }}>
+                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: '600' }}>Alumni</div>
+                            <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: '600' }}>{university.count}</div>
+                          </div>
+                        </div>
+
+                        {/* Alumni List */}
+                        {university.alumni && university.alumni.length > 0 && (
+                          <div>
+                            <div style={{
                               fontSize: '12px',
-                              fontWeight: 'bold',
-                              color: 'var(--text-primary)',
+                              fontWeight: '600',
+                              color: 'var(--text-secondary)',
                               marginBottom: '8px',
-                            }}
-                          >
-                            Daftar Alumni:
-                          </div>
-                          <div
-                            style={{
-                              maxHeight: '200px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between'
+                            }}>
+                              <span>Daftar Alumni</span>
+                              <span style={{ fontSize: '10px', opacity: 0.6 }}>{university.alumni.length} Total</span>
+                            </div>
+                            <div style={{
+                              maxHeight: '180px',
                               overflowY: 'auto',
-                              fontSize: '12px',
-                            }}
-                          >
-                            {university.alumni.slice(0, 10).map((alumni, idx) => (
-                              <div
-                                key={idx}
-                                style={{
-                                  padding: '6px',
-                                  marginBottom: '4px',
-                                  background: 'var(--bg-card)',
-                                  borderRadius: '4px',
+                              paddingRight: '4px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '6px'
+                            }} className="custom-scrollbar">
+                              {university.alumni.slice(0, 10).map((alumni, idx) => (
+                                <div key={idx} style={{
+                                  padding: '8px 10px',
+                                  background: 'var(--bg-secondary)',
+                                  borderRadius: '8px',
                                   border: '1px solid var(--border-color)',
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    fontWeight: '600',
-                                    color: 'var(--text-primary)',
-                                  }}
-                                >
-                                  {alumni.name || 'N/A'}
+                                  fontSize: '12px'
+                                }}>
+                                  <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '2px' }}>
+                                    {alumni.name || 'N/A'}
+                                  </div>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <span style={{ color: 'var(--text-tertiary)', fontSize: '11px' }}>{alumni.major || 'Program Studi N/A'}</span>
+                                    {alumni.graduationYear && (
+                                      <span style={{
+                                        color: 'var(--primary-light)',
+                                        fontSize: '10px',
+                                        background: 'rgba(37, 99, 235, 0.1)',
+                                        padding: '2px 6px',
+                                        borderRadius: '4px',
+                                        fontWeight: '500'
+                                      }}>
+                                        '{String(alumni.graduationYear).slice(-2)}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
-                                {alumni.major && (
-                                  <div
-                                    style={{
-                                      color: 'var(--text-secondary)',
-                                      fontSize: '11px',
-                                    }}
-                                  >
-                                    {alumni.major}
-                                  </div>
-                                )}
-                                {alumni.graduationYear && (
-                                  <div
-                                    style={{
-                                      color: 'var(--text-tertiary)',
-                                      fontSize: '11px',
-                                    }}
-                                  >
-                                    Lulus: {alumni.graduationYear}
-                                  </div>
-                                )}
-                              </div>
-                            ))}
-                            {university.alumni.length > 10 && (
-                              <div
-                                style={{
+                              ))}
+                              {university.alumni.length > 10 && (
+                                <div style={{
                                   textAlign: 'center',
-                                  color: 'var(--text-tertiary)',
+                                  color: 'var(--text-muted)',
                                   fontSize: '11px',
-                                  marginTop: '8px',
-                                }}
-                              >
-                                +{university.alumni.length - 10} alumni lainnya
-                              </div>
-                            )}
+                                  padding: '8px 0',
+                                  fontStyle: 'italic'
+                                }}>
+                                  +{university.alumni.length - 10} alumni lainnya
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </Popup>
                 </Marker>
