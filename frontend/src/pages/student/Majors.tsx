@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaBook, FaSearch, FaUsers, FaGraduationCap } from 'react-icons/fa';
+import { FaBook, FaSearch, FaUsers } from 'react-icons/fa';
 
 interface MajorData {
   _id: string;
@@ -45,22 +45,6 @@ const StudentMajors = () => {
     );
     setFilteredMajors(filtered);
   }, [searchTerm, majors]);
-
-  const getBadgeColor = (name: string) => {
-    const colors = [
-      'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
-      'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
-      'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
-      'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
-      'bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300',
-      'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300',
-    ];
-    let hash = 0;
-    for (let i = 0; i < name.length; i++) {
-      hash = name.charCodeAt(i) + ((hash << 5) - hash);
-    }
-    return colors[Math.abs(hash) % colors.length];
-  };
 
   if (loading) {
     return <LoadingSpinner />;
@@ -119,16 +103,6 @@ const StudentMajors = () => {
               }}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
             >
-              <div className='flex items-start justify-between mb-4'>
-                <div
-                  className={`rounded-lg p-3 ${getBadgeColor(
-                    major._id
-                  )} transition-colors duration-300`}
-                >
-                  <FaGraduationCap className='text-xl' />
-                </div>
-              </div>
-
               <div className='mb-4 min-h-[6rem]'>
                 <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
                   {major._id}

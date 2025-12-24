@@ -209,8 +209,13 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const university = req.query.university as string;
     const graduationYear = req.query.graduationYear as string;
     const major = req.query.major as string;
+    const name = req.query.name as string;
 
-    const filter: any = { role: 'alumni' };
+    const filter: any = {
+      role: 'alumni',
+      'profile.fullName': { $exists: true, $nin: [null, ''] },
+      'university.name': { $exists: true, $nin: [null, ''] },
+    };
 
     if (university) {
       filter['university.name'] = university;
@@ -224,10 +229,14 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['university.major'] = major;
     }
 
+    if (name) {
+      filter['profile.fullName'] = { $regex: name, $options: 'i' };
+    }
+
     const alumni = await User.find(filter)
       .select('-password')
       .select(
-        'profile.fullName profile.graduationYear university.name university.major job.position'
+        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram'
       )
       .skip(skip)
       .limit(limit)
