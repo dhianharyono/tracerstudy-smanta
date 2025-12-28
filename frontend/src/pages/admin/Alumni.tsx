@@ -11,6 +11,7 @@ import {
   FaInstagram,
   FaCheckCircle,
   FaTimesCircle,
+  FaCrown,
 } from 'react-icons/fa';
 
 const AdminAlumni = () => {
@@ -123,9 +124,8 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           <div className='relative'>
@@ -266,7 +266,7 @@ const AdminAlumni = () => {
               <tr>
                 <th className='px-6 py-4'>Nama & Email</th>
                 <th className='px-6 py-4'>Pendidikan</th>
-                <th className='px-6 py-4'>Status</th>
+                <th className='px-6 py-4'>Pekerjaan</th>
                 <th className='px-6 py-4'>Sosial</th>
                 <th className='px-6 py-4'>Survei</th>
                 <th className='px-6 py-4'>Aksi</th>
@@ -290,8 +290,11 @@ const AdminAlumni = () => {
                   >
                     <td className='px-6 py-4'>
                       <div>
-                        <div className='font-semibold text-[color:var(--text-primary)]'>
+                        <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
                           {alum.profile?.fullName || '-'}
+                          {alum.isMentor && (
+                            <FaCrown className='text-amber-500 text-[10px]' title='Mentor Aktif' />
+                          )}
                         </div>
                         <div className='text-xs text-[color:var(--text-secondary)]'>
                           {alum.email}
@@ -317,19 +320,14 @@ const AdminAlumni = () => {
                       </div>
                     </td>
                     <td className='px-6 py-4'>
-                      {alum.profile?.isWorking ? (
-                        <span className='inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800 dark:bg-green-900/30 dark:text-green-300'>
-                          Bekerja
-                        </span>
-                      ) : alum.profile?.isStudying ? (
-                        <span className='inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
-                          Kuliah
-                        </span>
-                      ) : (
-                        <span className='inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800 dark:bg-gray-700 dark:text-gray-300'>
-                          -
-                        </span>
-                      )}
+                      <div className='max-w-[150px]'>
+                        <div className='font-medium text-[color:var(--text-primary)] truncate'>
+                          {alum.job?.position || '-'}
+                        </div>
+                        <div className='text-xs text-[color:var(--text-secondary)] truncate'>
+                          {alum.job?.institution || '-'}
+                        </div>
+                      </div>
                     </td>
                     <td className='px-6 py-4'>
                       <div className='flex gap-2'>

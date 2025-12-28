@@ -91,6 +91,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       negeriCount,
       swastaCount,
       kedinasanCount,
+      totalMentors,
       majorStats,
       yearStats,
     ] = await Promise.all([
@@ -102,6 +103,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
       User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
       User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
+      User.countDocuments({ role: 'alumni', isMentor: true }),
       User.aggregate([
         {
           $match: {
@@ -140,6 +142,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       completedQuestionnaire,
       workingAlumni,
       studyingAlumni,
+      totalMentors,
       universityTypes: {
         negeri: negeriCount,
         swasta: swastaCount,
@@ -153,6 +156,84 @@ router.get('/dashboard', async (req: Request, res: Response) => {
   }
 });
 
+
+// Get all mentors (alumni who are isMentor: true)
+router.get('/mentors', async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    const university = req.query.university as string;
+    const graduationYear = req.query.graduationYear as string;
+    const major = req.query.major as string;
+
+    const filter: any = { role: 'alumni', isMentor: true };
+
+    if (university) {
+      filter['university.name'] = university;
+    }
+
+    if (graduationYear) {
+      filter['profile.graduationYear'] = parseInt(graduationYear);
+    }
+
+    if (major) {
+      filter['university.major'] = major;
+    }
+
+    const mentors = await User.find(filter)
+      .select('-password')
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await User.countDocuments(filter);
+
+    // Get filter options specifically for mentors
+    const universitiesQuery = User.distinct('university.name', {
+      role: 'alumni',
+      isMentor: true,
+      'university.name': { $exists: true, $nin: [null, ''] },
+    });
+
+    const graduationYearsQuery = User.distinct('profile.graduationYear', {
+      role: 'alumni',
+      isMentor: true,
+      'profile.graduationYear': { $exists: true, $ne: null },
+    }).sort();
+
+    const majorsQuery = User.distinct('university.major', {
+      role: 'alumni',
+      isMentor: true,
+      'university.major': { $exists: true, $nin: [null, ''] },
+    });
+
+    const [universities, graduationYearsData, majors] = await Promise.all([
+      universitiesQuery,
+      graduationYearsQuery,
+      majorsQuery,
+    ]);
+
+    const graduationYears = graduationYearsData.reverse();
+
+    res.json({
+      mentors,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+      filters: {
+        universities,
+        graduationYears,
+        majors,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Get all alumni
 router.get('/alumni', async (req: Request, res: Response) => {

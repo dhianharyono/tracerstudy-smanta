@@ -6,7 +6,7 @@ import {
   formatAlumniStatus,
 } from '../../utils/helpers';
 import LoadingSpinner from '@/components/LoadingSpinner';
-import { FaUser, FaPhone } from 'react-icons/fa';
+import { FaUser, FaPhone, FaCrown } from 'react-icons/fa';
 import { GiGraduateCap } from 'react-icons/gi';
 import { PiBagSimpleFill } from 'react-icons/pi';
 
@@ -128,6 +128,12 @@ const AlumniProfile = () => {
           icon={FaPhone}
           colorClass="bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400"
         >
+          <div className='col-span-full mb-2'>
+            <div className='flex items-center gap-2 p-3 bg-blue-50 dark:bg-blue-500/5 border border-blue-100 dark:border-blue-500/20 rounded-xl text-[10px] md:text-xs text-blue-700 dark:text-blue-300'>
+              <FaCrown className='text-amber-500 shrink-0' />
+              <span>Informasi sosial media di bawah ini hanya akan ditampilkan kepada siswa jika Anda mengaktifkan status <strong>Mentor</strong>.</span>
+            </div>
+          </div>
           {profile.socialMedia.email && (
             <InfoItem label="Email" value={profile.socialMedia.email} />
           )}

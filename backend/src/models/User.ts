@@ -31,6 +31,7 @@ export interface IUser extends Document {
     instagram?: string;
   };
   questionnaireCompleted: boolean;
+  isMentor: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -91,6 +92,10 @@ const UserSchema = new Schema<IUser>(
       instagram: String,
     },
     questionnaireCompleted: {
+      type: Boolean,
+      default: false,
+    },
+    isMentor: {
       type: Boolean,
       default: false,
     },

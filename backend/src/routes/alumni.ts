@@ -87,7 +87,7 @@ router.put(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { profile, university, job, socialMedia, questionnaireCompleted } =
+      const { profile, university, job, socialMedia, questionnaireCompleted, isMentor } =
         req.body;
 
       const user = await User.findByIdAndUpdate(
@@ -102,6 +102,7 @@ router.put(
               questionnaireCompleted !== undefined
                 ? questionnaireCompleted
                 : req.user!.questionnaireCompleted,
+            isMentor: isMentor !== undefined ? isMentor : false,
           },
         },
         { new: true, runValidators: true }
@@ -178,12 +179,19 @@ router.get(
   authorize('alumni', 'student'),
   async (req: Request, res: Response) => {
     try {
+      const { major } = req.query;
+      const matchQuery: any = {
+        role: 'alumni',
+        'university.name': { $exists: true, $nin: [null, ''] },
+      };
+
+      if (major) {
+        matchQuery['university.major'] = major;
+      }
+
       const universities = await User.aggregate([
         {
-          $match: {
-            role: 'alumni',
-            'university.name': { $exists: true, $nin: [null, ''] },
-          },
+          $match: matchQuery,
         },
         {
           $group: {
@@ -216,12 +224,19 @@ router.get(
   authorize('alumni', 'student'),
   async (req: Request, res: Response) => {
     try {
+      const { university } = req.query;
+      const matchQuery: any = {
+        role: 'alumni',
+        'university.major': { $exists: true, $nin: [null, ''] },
+      };
+
+      if (university) {
+        matchQuery['university.name'] = university;
+      }
+
       const majors = await User.aggregate([
         {
-          $match: {
-            role: 'alumni',
-            'university.major': { $exists: true, $nin: [null, ''] },
-          },
+          $match: matchQuery,
         },
         {
           $group: {
@@ -302,6 +317,7 @@ router.get(
         completedQuestionnaire,
         workingAlumni,
         studyingAlumni,
+        activeMentors,
         negeriCount,
         swastaCount,
         kedinasanCount,
@@ -312,6 +328,7 @@ router.get(
         User.countDocuments({ role: 'alumni', questionnaireCompleted: true }),
         User.countDocuments({ role: 'alumni', 'profile.isWorking': true }),
         User.countDocuments({ role: 'alumni', 'profile.isStudying': true }),
+        User.countDocuments({ role: 'alumni', isMentor: true }),
         User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
         User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
         User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
@@ -352,6 +369,7 @@ router.get(
         completedQuestionnaire,
         workingAlumni,
         studyingAlumni,
+        activeMentors,
         universityTypes: {
           negeri: negeriCount,
           swasta: swastaCount,

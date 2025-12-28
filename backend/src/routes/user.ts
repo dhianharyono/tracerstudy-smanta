@@ -28,7 +28,7 @@ router.get('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
 // Update profile
 router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Response) => {
     try {
-        const { username, email, password, profile } = req.body;
+        const { username, email, password, profile, isMentor } = req.body;
         const userId = req.user!._id;
 
         const user = await User.findById(userId);
@@ -36,7 +36,7 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if username/email already exists (if changed)
+        // ... existing username/email checks ...
         if (username && username !== user.username) {
             const existingUsername = await User.findOne({ username });
             if (existingUsername) {
@@ -60,6 +60,10 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
 
         if (profile) {
             user.profile = { ...user.profile, ...profile };
+        }
+
+        if (isMentor !== undefined && user.role === 'alumni') {
+            user.isMentor = isMentor;
         }
 
         await user.save();

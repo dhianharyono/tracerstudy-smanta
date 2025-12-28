@@ -32,6 +32,7 @@ const Profile = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showGraduationModal, setShowGraduationModal] = useState(false);
   const [graduating, setGraduating] = useState(false);
+  const [isMentor, setIsMentor] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -45,6 +46,7 @@ const Profile = () => {
       setFullName(response.data.profile?.fullName || '');
       setEntryYear(response.data.profile?.entryYear || '');
       setGraduationYear(response.data.profile?.graduationYear || '');
+      setIsMentor(response.data.isMentor || false);
     } catch (error) {
       console.error('Error fetching profile:', error);
       Toast('Gagal mengambil data profil', 'error');
@@ -71,6 +73,7 @@ const Profile = () => {
           entryYear: entryYear || undefined,
           graduationYear: graduationYear || undefined,
         },
+        isMentor: user?.role === 'alumni' ? isMentor : undefined,
       };
 
       if (password) {
@@ -251,6 +254,50 @@ const Profile = () => {
                   className='flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
                 >
                   <FaGraduationCap /> Lulus Sekarang
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mentorship Status for Alumni */}
+        {user?.role === 'alumni' && (
+          <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
+            <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
+              <div className='flex items-center gap-3'>
+                <div className='p-2 bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-lg text-white'>
+                  <FaGraduationCap className='text-xl' />
+                </div>
+                <div>
+                  <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                    Status Mentorship
+                  </h2>
+                  <p className='text-xs text-[color:var(--text-secondary)]'>
+                    Bantu adik kelas dalam menentukan karir dan pendidikan
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className='p-6'>
+              <div className='flex items-center justify-between gap-4 p-4 bg-[color:var(--bg-secondary)] rounded-xl border border-[color:var(--border-color)]'>
+                <div>
+                  <p className='font-bold text-[color:var(--text-primary)]'>
+                    {isMentor ? 'Mentor Aktif' : 'Mentor Nonaktif'}
+                  </p>
+                  <p className='text-sm text-[color:var(--text-secondary)]'>
+                    {isMentor
+                      ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
+                      : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
+                  </p>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => setIsMentor(!isMentor)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isMentor ? 'bg-[var(--primary)]' : 'bg-gray-300 dark:bg-gray-700'}`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor ? 'translate-x-5' : 'translate-x-0'}`}
+                  />
                 </button>
               </div>
             </div>

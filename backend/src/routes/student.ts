@@ -64,6 +64,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       completedQuestionnaire,
       workingAlumni,
       studyingAlumni,
+      activeMentors,
       negeriCount,
       swastaCount,
       kedinasanCount,
@@ -74,6 +75,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       User.countDocuments({ role: 'alumni', questionnaireCompleted: true }),
       User.countDocuments({ role: 'alumni', 'profile.isWorking': true }),
       User.countDocuments({ role: 'alumni', 'profile.isStudying': true }),
+      User.countDocuments({ role: 'alumni', isMentor: true }),
       User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
       User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
       User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
@@ -114,6 +116,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       completedQuestionnaire,
       workingAlumni,
       studyingAlumni,
+      activeMentors,
       universityTypes: {
         negeri: negeriCount,
         swasta: swastaCount,

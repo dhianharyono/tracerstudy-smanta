@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { BsInstagram } from 'react-icons/bs';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaGraduationCap,
@@ -271,7 +270,6 @@ const StudentAlumni = () => {
                     <th className='px-6 py-4'>Tahun</th>
                     <th className='px-6 py-4'>Pendidikan Lanjutan</th>
                     <th className='px-6 py-4'>Pekerjaan Saat Ini</th>
-                    <th className='px-6 py-4 text-center'>Sosial Media</th>
                   </tr>
                 </thead>
                 <tbody className='divide-y divide-[color:var(--border-color)]'>
@@ -338,20 +336,6 @@ const StudentAlumni = () => {
                           </span>
                         )}
                       </td>
-                      <td className='px-6 py-4 text-center'>
-                        {alum.socialMedia?.instagram ? (
-                          <a
-                            href={alum.socialMedia.instagram}
-                            target='_blank'
-                            rel='noreferrer'
-                            className='inline-flex items-center justify-center h-8 w-8 rounded-full bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors dark:bg-pink-900/20 dark:hover:bg-pink-900/40'
-                          >
-                            <BsInstagram size={14} />
-                          </a>
-                        ) : (
-                          <span className='text-gray-300'>-</span>
-                        )}
-                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -401,9 +385,9 @@ const StudentAlumni = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div >
       )}
-    </div>
+    </div >
   );
 };
 

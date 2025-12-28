@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { FaCrown } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
@@ -91,10 +92,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -110,8 +111,13 @@ const AlumniDashboard = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='flex flex-col md:flex-row justify-between items-center mb-6 gap-4'>
         <div className='text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0 flex items-center justify-center md:justify-start gap-3'>
             Dashboard Alumni
+            {profile?.isMentor && (
+              <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
+                <FaCrown className='text-[10px]' /> Mentor Aktif
+              </span>
+            )}
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
             Selamat datang kembali di Tracer Study

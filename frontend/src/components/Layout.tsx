@@ -19,6 +19,7 @@ import {
   FaBars,
   FaTimes,
   FaChevronRight,
+  FaCrown,
 } from 'react-icons/fa';
 import './Layout.css';
 import { ToastContainer } from 'react-toastify';
@@ -135,6 +136,7 @@ const Layout = () => {
         <div className='space-y-1'>
           <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/admin/alumni' icon={FaUsers} label='Data Alumni' />
+          <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
             to='/admin/students'
             icon={FaGraduationCap}
@@ -163,8 +165,8 @@ const Layout = () => {
             label='Perguruan Tinggi'
           />
           <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
-          <NavLink to='/student/college-plan' icon={FaGraduationCap} label='Rencana Kuliah' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
+          <NavLink to='/student/college-plan' icon={FaGraduationCap} label='Rencana Kuliah' />
           <NavLink
             to='/student/news'
             icon={FaNewspaper}

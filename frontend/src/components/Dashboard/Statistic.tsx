@@ -4,6 +4,7 @@ import {
   FaGraduationCap,
   FaUniversity,
   FaUserGraduate,
+  FaCrown,
 } from 'react-icons/fa';
 
 interface StatsObject {
@@ -11,6 +12,8 @@ interface StatsObject {
   totalStudents?: number | string;
   workingAlumni: number | string;
   studyingAlumni: number | string;
+  totalMentors?: number | string;
+  activeMentors?: number | string;
   universityTypes: {
     negeri: number | string;
     swasta: number | string;
@@ -62,6 +65,13 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       bgClass: 'bg-cyan-100 dark:bg-cyan-900/50'
     }] : []),
     {
+      title: isAdmin ? 'Total Mentor' : 'Mentor Aktif',
+      value: isAdmin ? stats?.totalMentors : stats?.activeMentors,
+      icon: FaCrown,
+      colorClass: 'text-yellow-600 dark:text-yellow-400',
+      bgClass: 'bg-yellow-100 dark:bg-yellow-900/50'
+    },
+    {
       title: 'Alumni Bekerja',
       value: stats?.workingAlumni,
       icon: FaBriefcase,
@@ -99,10 +109,7 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
   ];
 
   return (
-    <div className={`grid gap-4 mb-8 ${isAdmin
-      ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4'
-      : 'grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6'
-      }`}>
+    <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8'>
       {statItems.map((item, index) => (
         <StatCard
           key={index}

@@ -29,6 +29,7 @@ const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
 const AdminAlumni = lazy(() => import('./pages/admin/Alumni'));
 const AdminReports = lazy(() => import('./pages/admin/Reports'));
 const AdminStudents = lazy(() => import('./pages/admin/Students'));
+const AdminMentors = lazy(() => import('./pages/admin/Mentors'));
 const AdminAdmins = lazy(() => import('./pages/admin/Admins'));
 const AdminNews = lazy(() => import('./pages/admin/News'));
 const AdminNewsDetail = lazy(() => import('./pages/admin/NewsDetail'));
@@ -126,6 +127,7 @@ function App() {
             >
               <Route index element={<AdminDashboard />} />
               <Route path='alumni' element={<AdminAlumni />} />
+              <Route path='mentors' element={<AdminMentors />} />
               <Route path='reports' element={<AdminReports />} />
               <Route path='students' element={<AdminStudents />} />
               <Route path='admins' element={<AdminAdmins />} />
