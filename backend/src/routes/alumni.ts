@@ -22,7 +22,7 @@ router.get(
   authorize('alumni', 'student', 'admin'),
   async (req: Request, res: Response) => {
     try {
-      const { university, major } = req.query;
+      const { university, major, isMentor } = req.query;
       const query: any = { role: 'alumni' };
 
       if (university) {
@@ -30,6 +30,9 @@ router.get(
       }
       if (major) {
         query['university.major'] = major;
+      }
+      if (isMentor === 'true') {
+        query['isMentor'] = true;
       }
 
       const alumni = await User.find(query)

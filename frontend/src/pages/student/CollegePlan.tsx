@@ -57,6 +57,7 @@ const CollegePlan = () => {
     const [majors, setMajors] = useState<MajorOption[]>([]);
     const [selectedUniversity, setSelectedUniversity] = useState('');
     const [selectedMajor, setSelectedMajor] = useState('');
+    const [isMentorFilter, setIsMentorFilter] = useState(false);
     const [filteredAlumni, setFilteredAlumni] = useState<AlumniData[]>([]);
     const [loadingAlumni, setLoadingAlumni] = useState(false);
 
@@ -69,12 +70,12 @@ const CollegePlan = () => {
     }, [selectedUniversity]);
 
     useEffect(() => {
-        if (selectedUniversity || selectedMajor) {
+        if (selectedUniversity || selectedMajor || isMentorFilter) {
             fetchAlumni();
         } else {
             setFilteredAlumni([]);
         }
-    }, [selectedUniversity, selectedMajor]);
+    }, [selectedUniversity, selectedMajor, isMentorFilter]);
 
     const fetchUniversities = async () => {
         try {
@@ -106,6 +107,7 @@ const CollegePlan = () => {
             const params: any = {};
             if (selectedUniversity) params.university = selectedUniversity;
             if (selectedMajor) params.major = selectedMajor;
+            if (isMentorFilter) params.isMentor = 'true';
 
             const response = await axios.get('/api/alumni', { params });
             setFilteredAlumni(response.data);
@@ -132,11 +134,11 @@ const CollegePlan = () => {
 
     return (
         <div className='p-4 md:p-8 animate-fade-in'>
-            <div className='mb-10'>
-                <h1 className='text-2xl md:text-3xl font-extrabold text-[color:var(--text-primary)] !mb-2 tracking-tight'>
+            <div className='text-center md:text-left mb-8'>
+                <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
                     Rencana Kuliah
                 </h1>
-                <p className='text-[color:var(--text-secondary)] text-lg'>
+                <p className='text-[color:var(--text-secondary)]'>
                     Jelajahi jejak alumni untuk menentukan masa depan Anda
                 </p>
             </div>
@@ -203,11 +205,29 @@ const CollegePlan = () => {
                                 </div>
                             </div>
 
-                            {(selectedUniversity || selectedMajor) && (
+                            {/* Mentor Filter Toggle */}
+                            <div className='flex items-center justify-between p-4 bg-amber-50/50 dark:bg-amber-500/5 rounded-2xl border border-amber-100 dark:border-amber-500/10'>
+                                <div className='flex items-center gap-3'>
+                                    <FaCrown className='text-amber-500 text-sm' />
+                                    <span className='text-xs font-bold text-[color:var(--text-primary)]'>Hanya Mentor</span>
+                                </div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only peer"
+                                        checked={isMentorFilter}
+                                        onChange={(e) => setIsMentorFilter(e.target.checked)}
+                                    />
+                                    <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-amber-500"></div>
+                                </label>
+                            </div>
+
+                            {(selectedUniversity || selectedMajor || isMentorFilter) && (
                                 <button
                                     onClick={() => {
                                         setSelectedUniversity('');
                                         setSelectedMajor('');
+                                        setIsMentorFilter(false);
                                     }}
                                     className='w-full py-3 text-xs font-bold text-red-500 bg-red-50 transition-all rounded-2xl border border-red-100 dark:bg-red-500/5 dark:border-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/10'
                                 >
@@ -231,7 +251,7 @@ const CollegePlan = () => {
 
                 {/* Right Side: Modern Minimalist Content */}
                 <div className='flex-1'>
-                    {!selectedUniversity && !selectedMajor ? (
+                    {!selectedUniversity && !selectedMajor && !isMentorFilter ? (
                         <div className='h-[500px] flex flex-col items-center justify-center text-center p-8 bg-[color:var(--bg-card)] rounded-3xl border border-[color:var(--border-color)] shadow-sm'>
                             <div className='w-16 h-16 bg-[color:var(--bg-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[color:var(--border-color)]'>
                                 <FaSearch className='text-2xl text-[color:var(--text-tertiary)]' />
