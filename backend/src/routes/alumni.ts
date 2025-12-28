@@ -15,6 +15,34 @@ interface AuthenticatedRequest extends Request {
 
 const router = express.Router();
 
+// Get filtered alumni list
+router.get(
+  '/',
+  authenticate,
+  authorize('alumni', 'student', 'admin'),
+  async (req: Request, res: Response) => {
+    try {
+      const { university, major } = req.query;
+      const query: any = { role: 'alumni' };
+
+      if (university) {
+        query['university.name'] = university;
+      }
+      if (major) {
+        query['university.major'] = major;
+      }
+
+      const alumni = await User.find(query)
+        .select('-password')
+        .sort({ 'profile.fullName': 1 });
+
+      res.json(alumni);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
 
 
 router.get(
@@ -147,7 +175,7 @@ router.put(
 router.get(
   '/universities',
   authenticate,
-  authorize('alumni'),
+  authorize('alumni', 'student'),
   async (req: Request, res: Response) => {
     try {
       const universities = await User.aggregate([
@@ -160,18 +188,22 @@ router.get(
         {
           $group: {
             _id: '$university.name',
+            count: { $sum: 1 },
+            type: { $first: '$university.type' },
           },
         },
         {
           $project: {
             _id: 0,
             name: '$_id',
+            count: 1,
+            type: 1,
           },
         },
-        { $sort: { name: 1 } },
+        { $sort: { count: -1, name: 1 } },
       ]);
 
-      res.json(universities.map((u: any) => u.name));
+      res.json(universities);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
@@ -181,7 +213,7 @@ router.get(
 router.get(
   '/majors',
   authenticate,
-  authorize('alumni'),
+  authorize('alumni', 'student'),
   async (req: Request, res: Response) => {
     try {
       const majors = await User.aggregate([
@@ -194,18 +226,20 @@ router.get(
         {
           $group: {
             _id: '$university.major',
+            count: { $sum: 1 },
           },
         },
         {
           $project: {
             _id: 0,
             name: '$_id',
+            count: 1,
           },
         },
-        { $sort: { name: 1 } },
+        { $sort: { count: -1, name: 1 } },
       ]);
 
-      res.json(majors.map((m: any) => m.name));
+      res.json(majors);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

@@ -5,6 +5,32 @@ import axios from 'axios';
 import { FaMapMarkerAlt, FaSpinner, FaUniversity } from 'react-icons/fa';
 import 'leaflet/dist/leaflet.css';
 
+// Custom styles for Leaflet popup close button
+const popupStyles = `
+  .leaflet-popup-close-button {
+    right: 8px !important;
+    top: 8px !important;
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 20px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: var(--text-secondary) !important;
+    background: var(--bg-secondary) !important;
+    border-radius: 6px !important;
+    border: 1px solid var(--border-color) !important;
+    transition: all 0.2s ease !important;
+  }
+  
+  .leaflet-popup-close-button:hover {
+    background: var(--bg-tertiary) !important;
+    color: var(--text-primary) !important;
+    transform: scale(1.05) !important;
+  }
+`;
+
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -100,39 +126,49 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
     if (!universityName) return null;
 
     const generateQueries = (name: string) => {
-      const variations = [
-        `${name}, Indonesia`,
-        name,
-      ];
+      const variations = [`${name}, Indonesia`, name];
 
       // Handle Surakarta/Solo interchangeable names
       if (name.toLowerCase().includes('surakarta')) {
         variations.push(name.replace(/surakarta/gi, 'Solo') + ', Indonesia');
       } else if (name.toLowerCase().includes('solo')) {
-        variations.push(name.replace(/\bsolo\b/gi, 'Surakarta') + ', Indonesia');
+        variations.push(
+          name.replace(/\bsolo\b/gi, 'Surakarta') + ', Indonesia'
+        );
       }
 
       // Case: Swap Universitas <-> University
       if (name.toLowerCase().includes('universitas')) {
-        variations.push(name.replace(/universitas/gi, 'University') + ', Indonesia');
+        variations.push(
+          name.replace(/universitas/gi, 'University') + ', Indonesia'
+        );
       } else if (name.toLowerCase().includes('university')) {
-        variations.push(name.replace(/university/gi, 'Universitas') + ', Indonesia');
+        variations.push(
+          name.replace(/university/gi, 'Universitas') + ', Indonesia'
+        );
       }
 
       // Case: Swap Institut <-> Institute
       if (name.toLowerCase().includes('institut')) {
-        variations.push(name.replace(/institut/gi, 'Institute') + ', Indonesia');
+        variations.push(
+          name.replace(/institut/gi, 'Institute') + ', Indonesia'
+        );
       }
 
       // Special case: Poltekkes Kemenkes (often indexed without 'Kemenkes')
-      if (name.toLowerCase().includes('poltekkes') || name.toLowerCase().includes('kemenkes')) {
+      if (
+        name.toLowerCase().includes('poltekkes') ||
+        name.toLowerCase().includes('kemenkes')
+      ) {
         const simple = name
           .replace(/kemenkes/gi, '')
           .replace(/kementerian kesehatan/gi, '')
           .replace(/\s+/g, ' ')
           .trim();
         variations.push(simple + ', Indonesia');
-        variations.push(simple.replace(/poltekkes/gi, 'Politeknik Kesehatan') + ', Indonesia');
+        variations.push(
+          simple.replace(/poltekkes/gi, 'Politeknik Kesehatan') + ', Indonesia'
+        );
       }
 
       // Case: Handle Common Abbreviations
@@ -179,7 +215,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 
         // Respect rate limits if we have more queries to try
         if (uniqueQueries.indexOf(query) < uniqueQueries.length - 1) {
-          await new Promise(resolve => setTimeout(resolve, 300));
+          await new Promise((resolve) => setTimeout(resolve, 300));
         }
       } catch (error) {
         console.error(`Geocoding failed for attempt: ${query}`, error);
@@ -200,8 +236,12 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
           return;
         }
 
-        const cachedCoordsJson = localStorage.getItem('university_coords_cache');
-        const coordsCache = cachedCoordsJson ? JSON.parse(cachedCoordsJson) : {};
+        const cachedCoordsJson = localStorage.getItem(
+          'university_coords_cache'
+        );
+        const coordsCache = cachedCoordsJson
+          ? JSON.parse(cachedCoordsJson)
+          : {};
         const newCache = { ...coordsCache };
         let cacheUpdated = false;
 
@@ -240,7 +280,10 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         }
 
         if (cacheUpdated) {
-          localStorage.setItem('university_coords_cache', JSON.stringify(newCache));
+          localStorage.setItem(
+            'university_coords_cache',
+            JSON.stringify(newCache)
+          );
         }
       } catch (error) {
         console.error('Error fetching alumni map data:', error);
@@ -274,7 +317,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 
   if (loading) {
     return (
-      <div className='card h-[400px] md:h-[500px]'>
+      <div className='card h-[400px] md:h-[700px]'>
         <div
           style={{
             display: 'flex',
@@ -299,7 +342,9 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   // Removed the empty state return to always show the map container
 
   return (
-    <div className='card h-auto md:h-[500px]'>
+    <div className='card h-auto md:h-[700px]'>
+      {/* Inject custom styles for popup close button */}
+      <style>{popupStyles}</style>
       <h2
         className='text-lg md:text-xl'
         style={{
@@ -313,7 +358,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         <FaMapMarkerAlt />
         <span>Persebaran Alumni</span>
       </h2>
-      <div className='relative w-full h-[300px] md:h-[290px] rounded-lg overflow-hidden border border-[var(--border-color)]'>
+      <div className='relative w-full h-[500px] md:h-[490px] rounded-lg overflow-hidden border border-[var(--border-color)]'>
         <MapContainer
           center={[-2.5489, 118.0149]}
           zoom={5}
@@ -334,42 +379,52 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
                   icon={getMarkerIcon(university.count, university.type)}
                 >
                   <Popup>
-                    <div style={{
-                      minWidth: '240px',
-                      maxWidth: '320px',
-                      overflow: 'hidden'
-                    }}>
+                    <div
+                      style={{
+                        minWidth: '240px',
+                        maxWidth: '320px',
+                        overflow: 'hidden',
+                      }}
+                    >
                       {/* Header Section */}
-                      <div style={{
-                        padding: '16px',
-                        background: 'rgba(255, 255, 255, 0.05)',
-                        borderBottom: '1px solid var(--border-color)',
-                      }}>
-                        <div style={{
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: '10px',
-                        }}>
-                          <div style={{
-                            padding: '8px',
-                            background: 'var(--primary)',
-                            borderRadius: '8px',
+                      <div
+                        style={{
+                          padding: '16px',
+                          background: 'rgba(255, 255, 255, 0.05)',
+                          borderBottom: '1px solid var(--border-color)',
+                        }}
+                      >
+                        <div
+                          style={{
                             display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            fontSize: '14px',
-                            marginTop: '2px'
-                          }}>
+                            alignItems: 'flex-start',
+                            gap: '10px',
+                          }}
+                        >
+                          <div
+                            style={{
+                              padding: '8px',
+                              background: 'var(--primary)',
+                              borderRadius: '8px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: 'white',
+                              fontSize: '14px',
+                              marginTop: '2px',
+                            }}
+                          >
                             <FaUniversity />
                           </div>
-                          <h3 style={{
-                            margin: 0,
-                            fontSize: '15px',
-                            fontWeight: '700',
-                            color: 'var(--text-primary)',
-                            lineHeight: '1.4',
-                          }}>
+                          <h3
+                            style={{
+                              margin: 0,
+                              fontSize: '15px',
+                              fontWeight: '700',
+                              color: 'var(--text-primary)',
+                              lineHeight: '1.4',
+                            }}
+                          >
                             {university.university}
                           </h3>
                         </div>
@@ -377,94 +432,176 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
 
                       <div style={{ padding: '16px' }}>
                         {/* Summary Info */}
-                        <div style={{
-                          display: 'grid',
-                          gridTemplateColumns: '1fr 1fr',
-                          gap: '10px',
-                          marginBottom: '16px'
-                        }}>
-                          <div style={{
-                            background: 'var(--bg-secondary)',
-                            padding: '10px',
-                            borderRadius: '10px',
-                            border: '1px solid var(--border-color)',
-                            textAlign: 'center'
-                          }}>
-                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: '600' }}>Jenis</div>
-                            <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: '600' }}>{getUniversityTypeLabel(university.type)}</div>
+                        <div
+                          style={{
+                            display: 'grid',
+                            gridTemplateColumns: '1fr 1fr',
+                            gap: '10px',
+                            marginBottom: '16px',
+                          }}
+                        >
+                          <div
+                            style={{
+                              background: 'var(--bg-secondary)',
+                              padding: '10px',
+                              borderRadius: '10px',
+                              border: '1px solid var(--border-color)',
+                              textAlign: 'center',
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: '10px',
+                                color: 'var(--text-tertiary)',
+                                textTransform: 'uppercase',
+                                marginBottom: '4px',
+                                fontWeight: '600',
+                              }}
+                            >
+                              Jenis
+                            </div>
+                            <div
+                              style={{
+                                fontSize: '13px',
+                                color: 'var(--text-primary)',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {getUniversityTypeLabel(university.type)}
+                            </div>
                           </div>
-                          <div style={{
-                            background: 'var(--bg-secondary)',
-                            padding: '10px',
-                            borderRadius: '10px',
-                            border: '1px solid var(--border-color)',
-                            textAlign: 'center'
-                          }}>
-                            <div style={{ fontSize: '10px', color: 'var(--text-tertiary)', textTransform: 'uppercase', marginBottom: '4px', fontWeight: '600' }}>Alumni</div>
-                            <div style={{ fontSize: '13px', color: 'var(--text-primary)', fontWeight: '600' }}>{university.count}</div>
+                          <div
+                            style={{
+                              background: 'var(--bg-secondary)',
+                              padding: '10px',
+                              borderRadius: '10px',
+                              border: '1px solid var(--border-color)',
+                              textAlign: 'center',
+                            }}
+                          >
+                            <div
+                              style={{
+                                fontSize: '10px',
+                                color: 'var(--text-tertiary)',
+                                textTransform: 'uppercase',
+                                marginBottom: '4px',
+                                fontWeight: '600',
+                              }}
+                            >
+                              Alumni
+                            </div>
+                            <div
+                              style={{
+                                fontSize: '13px',
+                                color: 'var(--text-primary)',
+                                fontWeight: '600',
+                              }}
+                            >
+                              {university.count}
+                            </div>
                           </div>
                         </div>
 
                         {/* Alumni List */}
                         {university.alumni && university.alumni.length > 0 && (
                           <div>
-                            <div style={{
-                              fontSize: '12px',
-                              fontWeight: '600',
-                              color: 'var(--text-secondary)',
-                              marginBottom: '8px',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between'
-                            }}>
+                            <div
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: '600',
+                                color: 'var(--text-secondary)',
+                                marginBottom: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                              }}
+                            >
                               <span>Daftar Alumni</span>
-                              <span style={{ fontSize: '10px', opacity: 0.6 }}>{university.alumni.length} Total</span>
+                              <span style={{ fontSize: '10px', opacity: 0.6 }}>
+                                {university.alumni.length} Total
+                              </span>
                             </div>
-                            <div style={{
-                              maxHeight: '180px',
-                              overflowY: 'auto',
-                              paddingRight: '4px',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '6px'
-                            }} className="custom-scrollbar">
-                              {university.alumni.slice(0, 10).map((alumni, idx) => (
-                                <div key={idx} style={{
-                                  padding: '8px 10px',
-                                  background: 'var(--bg-secondary)',
-                                  borderRadius: '8px',
-                                  border: '1px solid var(--border-color)',
-                                  fontSize: '12px'
-                                }}>
-                                  <div style={{ fontWeight: '600', color: 'var(--text-primary)', marginBottom: '2px' }}>
-                                    {alumni.name || 'N/A'}
-                                  </div>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <span style={{ color: 'var(--text-tertiary)', fontSize: '11px' }}>{alumni.major || 'Program Studi N/A'}</span>
-                                    {alumni.graduationYear && (
-                                      <span style={{
-                                        color: 'var(--primary-light)',
-                                        fontSize: '10px',
-                                        background: 'rgba(37, 99, 235, 0.1)',
-                                        padding: '2px 6px',
-                                        borderRadius: '4px',
-                                        fontWeight: '500'
-                                      }}>
-                                        '{String(alumni.graduationYear).slice(-2)}
+                            <div
+                              style={{
+                                maxHeight: '180px',
+                                overflowY: 'auto',
+                                paddingRight: '4px',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '6px',
+                              }}
+                              className='custom-scrollbar'
+                            >
+                              {university.alumni
+                                .slice(0, 10)
+                                .map((alumni, idx) => (
+                                  <div
+                                    key={idx}
+                                    style={{
+                                      padding: '8px 10px',
+                                      background: 'var(--bg-secondary)',
+                                      borderRadius: '8px',
+                                      border: '1px solid var(--border-color)',
+                                      fontSize: '12px',
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        fontWeight: '600',
+                                        color: 'var(--text-primary)',
+                                        marginBottom: '2px',
+                                      }}
+                                    >
+                                      {alumni.name || 'N/A'}
+                                    </div>
+                                    <div
+                                      style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                      }}
+                                    >
+                                      <span
+                                        style={{
+                                          color: 'var(--text-tertiary)',
+                                          fontSize: '11px',
+                                        }}
+                                      >
+                                        {alumni.major || 'Program Studi N/A'}
                                       </span>
-                                    )}
+                                      {alumni.graduationYear && (
+                                        <span
+                                          style={{
+                                            color: 'var(--primary-light)',
+                                            fontSize: '10px',
+                                            background:
+                                              'rgba(37, 99, 235, 0.1)',
+                                            padding: '2px 6px',
+                                            borderRadius: '4px',
+                                            fontWeight: '500',
+                                          }}
+                                        >
+                                          '
+                                          {String(alumni.graduationYear).slice(
+                                            -2
+                                          )}
+                                        </span>
+                                      )}
+                                    </div>
                                   </div>
-                                </div>
-                              ))}
+                                ))}
                               {university.alumni.length > 10 && (
-                                <div style={{
-                                  textAlign: 'center',
-                                  color: 'var(--text-muted)',
-                                  fontSize: '11px',
-                                  padding: '8px 0',
-                                  fontStyle: 'italic'
-                                }}>
-                                  +{university.alumni.length - 10} alumni lainnya
+                                <div
+                                  style={{
+                                    textAlign: 'center',
+                                    color: 'var(--text-muted)',
+                                    fontSize: '11px',
+                                    padding: '8px 0',
+                                    fontStyle: 'italic',
+                                  }}
+                                >
+                                  +{university.alumni.length - 10} alumni
+                                  lainnya
                                 </div>
                               )}
                             </div>
@@ -501,7 +638,9 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
               gap: '8px',
             }}
           >
-            <FaMapMarkerAlt style={{ fontSize: '24px', color: 'var(--text-tertiary)' }} />
+            <FaMapMarkerAlt
+              style={{ fontSize: '24px', color: 'var(--text-tertiary)' }}
+            />
             <span>Belum ada data universitas untuk ditampilkan</span>
           </div>
         )}

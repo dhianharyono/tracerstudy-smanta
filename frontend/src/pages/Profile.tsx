@@ -9,12 +9,13 @@ import {
   FaSave,
   FaEyeSlash,
   FaEye,
+  FaGraduationCap,
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Profile = () => {
-  const { updateUser } = useAuth();
+  const { updateUser, user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -22,11 +23,15 @@ const Profile = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
+  const [entryYear, setEntryYear] = useState<number | ''>('');
+  const [graduationYear, setGraduationYear] = useState<number | ''>('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showGraduationModal, setShowGraduationModal] = useState(false);
+  const [graduating, setGraduating] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -38,6 +43,8 @@ const Profile = () => {
       setUsername(response.data.username || '');
       setEmail(response.data.email || '');
       setFullName(response.data.profile?.fullName || '');
+      setEntryYear(response.data.profile?.entryYear || '');
+      setGraduationYear(response.data.profile?.graduationYear || '');
     } catch (error) {
       console.error('Error fetching profile:', error);
       Toast('Gagal mengambil data profil', 'error');
@@ -61,6 +68,8 @@ const Profile = () => {
         email,
         profile: {
           fullName,
+          entryYear: entryYear || undefined,
+          graduationYear: graduationYear || undefined,
         },
       };
 
@@ -83,6 +92,32 @@ const Profile = () => {
       );
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleGraduation = async () => {
+    if (!graduationYear) {
+      Toast('Harap isi tahun lulus terlebih dahulu', 'error');
+      return;
+    }
+
+    setGraduating(true);
+    try {
+      await axios.post('/api/users/graduate');
+      Toast('Selamat! Akun Anda telah dikonversi menjadi akun alumni', 'success');
+      // Reload page to update user context
+      setTimeout(() => {
+        window.location.href = '/alumni/dashboard';
+      }, 1500);
+    } catch (error: any) {
+      console.error('Error graduating:', error);
+      Toast(
+        error.response?.data?.message || 'Gagal mengkonversi akun',
+        'error'
+      );
+    } finally {
+      setGraduating(false);
+      setShowGraduationModal(false);
     }
   };
 
@@ -156,8 +191,71 @@ const Profile = () => {
                 required
               />
             </div>
+
+            <div className='space-y-2'>
+              <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+                <FaIdBadge className='text-xs' /> Tahun Masuk
+              </label>
+              <input
+                type='number'
+                value={entryYear}
+                onChange={(e) => setEntryYear(e.target.value ? parseInt(e.target.value) : '')}
+                className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                placeholder='Contoh: 2020'
+                min='1900'
+                max='2100'
+              />
+            </div>
+
+            <div className='space-y-2'>
+              <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+                <FaGraduationCap className='text-xs' /> Tahun Lulus
+              </label>
+              <input
+                type='number'
+                value={graduationYear}
+                onChange={(e) => setGraduationYear(e.target.value ? parseInt(e.target.value) : '')}
+                className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                placeholder='Contoh: 2023'
+                min='1900'
+                max='2100'
+              />
+            </div>
           </div>
         </div>
+
+        {/* Graduation Alert for Students */}
+        {user?.role === 'student' && graduationYear && graduationYear <= new Date().getFullYear() && (
+          <div className='bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-2xl border border-green-500/30 overflow-hidden shadow-sm'>
+            <div className='p-6'>
+              <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>
+                <div className='flex items-start gap-4'>
+                  <div className='p-3 bg-green-500/20 rounded-xl text-green-500'>
+                    <FaGraduationCap className='text-2xl' />
+                  </div>
+                  <div>
+                    <h3 className='text-lg font-bold text-[color:var(--text-primary)] mb-1'>
+                      Selamat! Anda Sudah Lulus
+                    </h3>
+                    <p className='text-sm text-[color:var(--text-secondary)] mb-2'>
+                      Tahun lulus Anda adalah {graduationYear}. Anda dapat mengkonversi akun Anda menjadi akun alumni.
+                    </p>
+                    <p className='text-xs text-[color:var(--text-tertiary)]'>
+                      Dengan menjadi alumni, Anda dapat mengisi kuesioner dan berbagi pengalaman dengan siswa lainnya.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type='button'
+                  onClick={() => setShowGraduationModal(true)}
+                  className='flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
+                >
+                  <FaGraduationCap /> Lulus Sekarang
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Password Section */}
         <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
@@ -181,8 +279,8 @@ const Profile = () => {
                   }
                 }}
                 className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
-                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                  ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
+                  : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
                   }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
@@ -262,6 +360,64 @@ const Profile = () => {
           </button>
         </div>
       </form>
+
+      {/* Graduation Confirmation Modal */}
+      {showGraduationModal && (
+        <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
+          <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] max-w-md w-full shadow-2xl animate-fade-in'>
+            <div className='p-6 border-b border-[color:var(--border-color)]'>
+              <h3 className='text-xl font-bold text-[color:var(--text-primary)] flex items-center gap-3'>
+                <div className='p-2 bg-green-500/10 rounded-lg text-green-500'>
+                  <FaUser className='text-xl' />
+                </div>
+                Konfirmasi Kelulusan
+              </h3>
+            </div>
+            <div className='p-6'>
+              <p className='text-[color:var(--text-secondary)] mb-4'>
+                Apakah Anda yakin ingin mengkonversi akun Anda menjadi akun alumni?
+              </p>
+              <div className='bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4 mb-4'>
+                <p className='text-sm text-yellow-600 dark:text-yellow-400'>
+                  <strong>Perhatian:</strong> Setelah dikonversi, Anda tidak dapat kembali menjadi akun student.
+                </p>
+              </div>
+              <div className='space-y-2 text-sm text-[color:var(--text-tertiary)]'>
+                <p>✓ Anda akan mendapatkan akses ke kuesioner alumni</p>
+                <p>✓ Data Anda akan ditampilkan di halaman alumni</p>
+                <p>✓ Anda dapat berbagi pengalaman dengan siswa</p>
+              </div>
+            </div>
+            <div className='p-6 border-t border-[color:var(--border-color)] flex gap-3'>
+              <button
+                type='button'
+                onClick={() => setShowGraduationModal(false)}
+                disabled={graduating}
+                className='flex-1 px-4 py-3 bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] rounded-xl font-bold border border-[color:var(--border-color)] hover:bg-[color:var(--bg-tertiary)] transition-all disabled:opacity-50'
+              >
+                Batal
+              </button>
+              <button
+                type='button'
+                onClick={handleGraduation}
+                disabled={graduating}
+                className='flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2'
+              >
+                {graduating ? (
+                  <>
+                    <div className='h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin' />
+                    Memproses...
+                  </>
+                ) : (
+                  <>
+                    <FaUser /> Ya, Lulus
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -163,6 +163,7 @@ const Layout = () => {
             label='Perguruan Tinggi'
           />
           <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/student/college-plan' icon={FaGraduationCap} label='Rencana Kuliah' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
           <NavLink
             to='/student/news'

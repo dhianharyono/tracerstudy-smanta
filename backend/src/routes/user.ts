@@ -71,4 +71,29 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
     }
 });
 
+// Graduate student to alumni
+router.post('/graduate', authenticate, async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        const user = await User.findById(req.user!._id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        if (user.role !== 'student') {
+            return res.status(400).json({ message: 'Hanya akun student yang dapat dikonversi menjadi alumni' });
+        }
+
+        if (!user.profile?.graduationYear) {
+            return res.status(400).json({ message: 'Harap isi tahun lulus terlebih dahulu di profil Anda' });
+        }
+
+        user.role = 'alumni';
+        await user.save();
+
+        res.json({ message: 'Selamat! Akun Anda telah menjadi alumni', role: 'alumni' });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;
