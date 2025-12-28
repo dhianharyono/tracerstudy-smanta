@@ -164,7 +164,9 @@ const Register = () => {
                     className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base appearance-none'
                   >
                     <option value='alumni'>Alumni</option>
-                    <option value='student'>Student</option>
+                    <option disabled value='student'>
+                      Student (Coming Soon)
+                    </option>
                   </select>
                   <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
                     <svg
