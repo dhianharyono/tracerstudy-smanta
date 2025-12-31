@@ -31,3 +31,14 @@ export const stripHtml = (html: string): string => {
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || '';
 };
+
+export const isStudentProfileComplete = (user: any): boolean => {
+  if (!user) return false;
+  // If user is not student, technically this check doesn't apply, but for safety let's return true or handle logic elsewhere.
+  // Assuming this is called only when we know user is student or we want to check student reqs.
+  return !!(
+    user.profile?.fullName &&
+    user.profile?.entryYear &&
+    user.profile?.graduationYear
+  );
+};

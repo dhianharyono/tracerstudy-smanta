@@ -5,6 +5,10 @@ import { formatUniversityType } from '../../utils/helpers';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaUniversity, FaSearch, FaFilter, FaUsers } from 'react-icons/fa';
 
+import { useAuth } from '../../contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isStudentProfileComplete } from '@/utils/helpers';
+
 interface UniversityAggregate {
   _id: {
     name: string;
@@ -14,6 +18,7 @@ interface UniversityAggregate {
 }
 
 const StudentUniversities = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [universities, setUniversities] = useState<UniversityAggregate[]>([]);
   const [filteredUniversities, setFilteredUniversities] = useState<
@@ -66,6 +71,10 @@ const StudentUniversities = () => {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!isStudentProfileComplete(user)) {
+    return <RestrictedAccess type="profile_incomplete" role="student" />;
   }
 
   return (

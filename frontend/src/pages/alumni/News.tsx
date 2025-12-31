@@ -4,7 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsList, { NewsItem } from '../../components/News/NewsList';
 
+import { useAuth } from '@/contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+
 const AlumniNews = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +35,10 @@ const AlumniNews = () => {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!user?.questionnaireCompleted) {
+    return <RestrictedAccess type="questionnaire_incomplete" role="alumni" />;
   }
 
   return (

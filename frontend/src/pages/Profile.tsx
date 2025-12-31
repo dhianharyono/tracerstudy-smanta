@@ -159,7 +159,7 @@ const Profile = () => {
           <div className='p-6 grid gap-6 md:grid-cols-2'>
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaIdBadge className='text-xs' /> Nama Lengkap
+                <FaIdBadge className='text-xs' /> Nama Lengkap <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='text'
@@ -172,7 +172,7 @@ const Profile = () => {
 
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaUser className='text-xs' /> Username
+                <FaUser className='text-xs' /> Username <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='text'
@@ -186,7 +186,7 @@ const Profile = () => {
 
             <div className='space-y-2 md:col-span-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaEnvelope className='text-xs' /> Email
+                <FaEnvelope className='text-xs' /> Email <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='email'
@@ -201,7 +201,7 @@ const Profile = () => {
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaIdBadge className='text-xs' /> Tahun Masuk
+                  <FaIdBadge className='text-xs' /> Tahun Masuk <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
                 </label>
                 <input
                   type='number'
@@ -220,7 +220,7 @@ const Profile = () => {
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaGraduationCap className='text-xs' /> Tahun Lulus
+                  <FaGraduationCap className='text-xs' /> Tahun Lulus <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
                 </label>
                 <input
                   type='number'
@@ -310,16 +310,14 @@ const Profile = () => {
                 <button
                   type='button'
                   onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                    isMentor
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isMentor
                       ? 'bg-[var(--primary)]'
                       : 'bg-gray-300 dark:bg-gray-700'
-                  }`}
+                    }`}
                 >
                   <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      isMentor ? 'translate-x-5' : 'translate-x-0'
-                    }`}
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor ? 'translate-x-5' : 'translate-x-0'
+                      }`}
                   />
                 </button>
               </div>
@@ -348,11 +346,10 @@ const Profile = () => {
                     setConfirmPassword('');
                   }
                 }}
-                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${
-                  showPasswordFields
+                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
                     ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
                     : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                }`}
+                  }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
               </button>

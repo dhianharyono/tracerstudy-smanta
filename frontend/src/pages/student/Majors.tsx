@@ -4,6 +4,10 @@ import axios from 'axios';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaBook, FaSearch, FaUsers } from 'react-icons/fa';
 
+import { useAuth } from '../../contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isStudentProfileComplete } from '@/utils/helpers';
+
 interface MajorData {
   _id: string;
   count: number;
@@ -16,6 +20,7 @@ interface MajorData {
 }
 
 const StudentMajors = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [majors, setMajors] = useState<MajorData[]>([]);
   const [filteredMajors, setFilteredMajors] = useState<MajorData[]>([]);
@@ -48,6 +53,10 @@ const StudentMajors = () => {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!isStudentProfileComplete(user)) {
+    return <RestrictedAccess type="profile_incomplete" role="student" />;
   }
 
   return (

@@ -11,6 +11,7 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
 import MutualSection from '@/components/Dashboard/MutualSection';
+import RestrictedAccess from '@/components/RestrictedAccess';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
@@ -46,6 +47,8 @@ const AlumniDashboard = () => {
 
     fetchData();
   }, []);
+
+  // ... (Keeping useEffects) ...
 
   useEffect(() => {
     const updateChartWidth = () => {
@@ -105,6 +108,10 @@ const AlumniDashboard = () => {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!user?.questionnaireCompleted) {
+    return <RestrictedAccess type="questionnaire_incomplete" role="alumni" />;
   }
 
   return (

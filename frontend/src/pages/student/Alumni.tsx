@@ -9,7 +9,12 @@ import {
   FaTimes,
 } from 'react-icons/fa';
 
+import { useAuth } from '../../contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isStudentProfileComplete } from '@/utils/helpers';
+
 const StudentAlumni = () => {
+  const { user } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [alumni, setAlumni] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
@@ -18,6 +23,7 @@ const StudentAlumni = () => {
     total: 0,
     pages: 0,
   });
+  // ... (rest of state items are same, but I need to include them in replacemenet if I replace the whole block)
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -101,6 +107,10 @@ const StudentAlumni = () => {
 
   if (loading && alumni.length === 0) {
     return <LoadingSpinner />;
+  }
+
+  if (!isStudentProfileComplete(user)) {
+    return <RestrictedAccess type="profile_incomplete" role="student" />;
   }
 
   return (

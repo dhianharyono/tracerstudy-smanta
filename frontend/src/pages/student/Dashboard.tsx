@@ -9,6 +9,8 @@ import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isStudentProfileComplete } from '@/utils/helpers';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -20,6 +22,8 @@ const StudentDashboard = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // If profile is incomplete, we don't necessarily need to fetch stats, but let's keep it simple
+    // or return early to avoid API calls? Let's just fetch for now or adding check inside useEffect.
     const fetchData = async () => {
       try {
         const [statsRes, newsRes] = await Promise.all([
@@ -41,6 +45,7 @@ const StudentDashboard = () => {
     fetchData();
   }, []);
 
+  // ... (keeping other useEffects) ...
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -87,6 +92,10 @@ const StudentDashboard = () => {
 
   if (loading) {
     return <LoadingSpinner />;
+  }
+
+  if (!isStudentProfileComplete(user)) {
+    return <RestrictedAccess type="profile_incomplete" role="student" />;
   }
 
   return (

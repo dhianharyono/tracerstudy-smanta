@@ -51,7 +51,14 @@ interface MajorOption {
     count: number;
 }
 
+import { useAuth } from '@/contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isStudentProfileComplete } from '@/utils/helpers';
+
+// ... (interfaces are kept, or not touched if outside the range) but wait, Range is start 54. 
+
 const CollegePlan = () => {
+    const { user } = useAuth();
     const [loading, setLoading] = useState(true);
     const [universities, setUniversities] = useState<UniversityOption[]>([]);
     const [majors, setMajors] = useState<MajorOption[]>([]);
@@ -130,6 +137,10 @@ const CollegePlan = () => {
 
     if (loading) {
         return <LoadingSpinner />;
+    }
+
+    if (!isStudentProfileComplete(user)) {
+        return <RestrictedAccess type="profile_incomplete" role="student" />;
     }
 
     return (

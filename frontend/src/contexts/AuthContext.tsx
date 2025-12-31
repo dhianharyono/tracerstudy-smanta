@@ -9,6 +9,8 @@ interface User {
   questionnaireCompleted?: boolean;
   profile?: {
     fullName?: string;
+    entryYear?: number;
+    graduationYear?: number;
   };
 }
 
