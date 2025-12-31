@@ -12,6 +12,7 @@ import TahunLulus from '@/components/Dashboard/TahunLulus';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
 import MutualSection from '@/components/Dashboard/MutualSection';
 import RestrictedAccess from '@/components/RestrictedAccess';
+import MentorshipPromoCard from '@/components/Dashboard/MentorshipPromoCard';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
@@ -24,6 +25,7 @@ const AlumniDashboard = () => {
   const notificationRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(900);
   const [hideQuestionnaireCard, setHideQuestionnaireCard] = useState(false);
+  const [hideMentorPromo, setHideMentorPromo] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,6 +74,10 @@ const AlumniDashboard = () => {
     if (hidden === 'true') {
       setHideQuestionnaireCard(true);
     }
+    const hiddenPromo = localStorage.getItem('hideMentorPromo');
+    if (hiddenPromo === 'true') {
+      setHideMentorPromo(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -106,6 +112,11 @@ const AlumniDashboard = () => {
     localStorage.setItem('hideQuestionnaireCard', 'true');
   };
 
+  const handleCloseMentorPromo = () => {
+    setHideMentorPromo(true);
+    localStorage.setItem('hideMentorPromo', 'true');
+  };
+
   if (loading) {
     return <LoadingSpinner />;
   }
@@ -138,6 +149,10 @@ const AlumniDashboard = () => {
         hideQuestionnaireCard={hideQuestionnaireCard}
         handleCloseQuestionnaireCard={handleCloseQuestionnaireCard}
       />
+
+      {!hideMentorPromo && (
+        <MentorshipPromoCard profile={profile} onClose={handleCloseMentorPromo} />
+      )}
 
       <div className='mt-8'>
         <Statistic stats={stats} />
