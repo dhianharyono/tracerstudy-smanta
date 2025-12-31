@@ -145,7 +145,6 @@ const Profile = () => {
       </div>
 
       <form onSubmit={handleUpdateProfile} className='space-y-6'>
-
         {/* Mentorship Status for Alumni */}
         {user?.role === 'alumni' && hasUniversityData && (
           <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-900/20'>
@@ -165,14 +164,22 @@ const Profile = () => {
                     </h2>
                   </div>
                   <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
-                    Bagikan pengalaman berharga Anda kepada adik kelas. Cukup aktifkan tombol di samping untuk mulai menjadi mentor.
+                    <p className='text-sm text-[color:var(--text-secondary)]'>
+                      {isMentor
+                        ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
+                        : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
+                    </p>
                   </p>
                 </div>
               </div>
 
               <div className='flex items-center justify-between md:justify-end gap-4 bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/10 w-full md:w-auto'>
                 <div className='text-left md:text-right'>
-                  <span className={`block text-sm font-bold ${isMentor ? 'text-amber-300' : 'text-indigo-200'}`}>
+                  <span
+                    className={`block text-sm font-bold ${
+                      isMentor ? 'text-amber-300' : 'text-indigo-200'
+                    }`}
+                  >
                     {isMentor ? 'Aktif' : 'Nonaktif'}
                   </span>
                   <span className='text-[10px] sm:text-xs text-indigo-300 font-medium'>
@@ -183,14 +190,18 @@ const Profile = () => {
                 <button
                   type='button'
                   onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
-                    }`}
+                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${
+                    isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
+                  }`}
                 >
                   <span className='sr-only'>Toggle Mentorship</span>
                   <span
                     aria-hidden='true'
-                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor ? 'translate-x-5 sm:translate-x-6' : 'translate-x-0'
-                      }`}
+                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      isMentor
+                        ? 'translate-x-5 sm:translate-x-6'
+                        : 'translate-x-0'
+                    }`}
                   />
                 </button>
               </div>
@@ -213,7 +224,8 @@ const Profile = () => {
           <div className='p-6 grid gap-6 md:grid-cols-2'>
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaIdBadge className='text-xs' /> Nama Lengkap <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <FaIdBadge className='text-xs' /> Nama Lengkap{' '}
+                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='text'
@@ -226,7 +238,8 @@ const Profile = () => {
 
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaUser className='text-xs' /> Username <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <FaUser className='text-xs' /> Username{' '}
+                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='text'
@@ -240,7 +253,8 @@ const Profile = () => {
 
             <div className='space-y-2 md:col-span-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaEnvelope className='text-xs' /> Email <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <FaEnvelope className='text-xs' /> Email{' '}
+                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
               </label>
               <input
                 type='email'
@@ -255,7 +269,8 @@ const Profile = () => {
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaIdBadge className='text-xs' /> Tahun Masuk <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                  <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
+                  <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
                 </label>
                 <input
                   type='number'
@@ -274,7 +289,8 @@ const Profile = () => {
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaGraduationCap className='text-xs' /> Tahun Lulus <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                  <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}
+                  <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
                 </label>
                 <input
                   type='number'
@@ -352,10 +368,11 @@ const Profile = () => {
                     setConfirmPassword('');
                   }
                 }}
-                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
-                  ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                  : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                  }`}
+                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${
+                  showPasswordFields
+                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
+                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
               </button>
