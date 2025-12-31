@@ -37,14 +37,16 @@ const AlumniNews = () => {
     return <LoadingSpinner />;
   }
 
-  if (!user?.questionnaireCompleted) {
-    return <RestrictedAccess type="questionnaire_incomplete" role="alumni" />;
+  if (user?.questionnaireCompleted === false) {
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='text-center md:text-left mb-10'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>Berita & Artikel</h1>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          Berita & Artikel
+        </h1>
         <p className='text-[color:var(--text-secondary)]'>
           Informasi terbaru seputar Alumni dan SMANTA
         </p>

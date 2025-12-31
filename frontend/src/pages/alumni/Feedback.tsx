@@ -6,11 +6,11 @@ import RestrictedAccess from '@/components/RestrictedAccess';
 const AlumniFeedback = () => {
   const { user } = useAuth();
 
-  if (!user?.questionnaireCompleted) {
-    return <RestrictedAccess type="questionnaire_incomplete" role="alumni" />;
+  if (user?.questionnaireCompleted === false) {
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
-  return <FeedbackForm role="alumni" />;
+  return <FeedbackForm role='alumni' />;
 };
 
 export default AlumniFeedback;

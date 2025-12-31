@@ -121,9 +121,7 @@ const AlumniDashboard = () => {
     return <LoadingSpinner />;
   }
 
-  console.log(!user?.questionnaireCompleted);
-
-  if (!user?.questionnaireCompleted) {
+  if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
