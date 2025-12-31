@@ -145,6 +145,58 @@ const Profile = () => {
       </div>
 
       <form onSubmit={handleUpdateProfile} className='space-y-6'>
+
+        {/* Mentorship Status for Alumni */}
+        {user?.role === 'alumni' && hasUniversityData && (
+          <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-900/20'>
+            {/* Background Decorations */}
+            <div className='absolute top-0 right-0 -mr-20 -mt-20 h-40 w-40 sm:h-64 sm:w-64 rounded-full bg-white/10 blur-3xl opacity-50' />
+            <div className='absolute bottom-0 left-0 -ml-20 -mb-20 h-24 w-24 sm:h-40 sm:w-40 rounded-full bg-purple-500/20 blur-2xl' />
+
+            <div className='relative p-4 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6'>
+              <div className='flex items-start gap-4 sm:gap-5'>
+                <div className='flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 shadow-inner backdrop-blur-md border border-white/10'>
+                  <FaGraduationCap className='text-2xl sm:text-3xl text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' />
+                </div>
+                <div className='text-white space-y-1 sm:space-y-2'>
+                  <div className='flex items-center gap-3'>
+                    <h2 className='text-lg sm:text-2xl font-bold !mb-0 tracking-tight'>
+                      Status Mentorship
+                    </h2>
+                  </div>
+                  <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
+                    Bagikan pengalaman berharga Anda kepada adik kelas. Cukup aktifkan tombol di samping untuk mulai menjadi mentor.
+                  </p>
+                </div>
+              </div>
+
+              <div className='flex items-center justify-between md:justify-end gap-4 bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/10 w-full md:w-auto'>
+                <div className='text-left md:text-right'>
+                  <span className={`block text-sm font-bold ${isMentor ? 'text-amber-300' : 'text-indigo-200'}`}>
+                    {isMentor ? 'Aktif' : 'Nonaktif'}
+                  </span>
+                  <span className='text-[10px] sm:text-xs text-indigo-300 font-medium'>
+                    {isMentor ? 'Siap membimbing' : 'Geser untuk aktifkan'}
+                  </span>
+                </div>
+
+                <button
+                  type='button'
+                  onClick={() => setIsMentor(!isMentor)}
+                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
+                    }`}
+                >
+                  <span className='sr-only'>Toggle Mentorship</span>
+                  <span
+                    aria-hidden='true'
+                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor ? 'translate-x-5 sm:translate-x-6' : 'translate-x-0'
+                      }`}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
         {/* Personal Info Section */}
         <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
           <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
@@ -278,54 +330,6 @@ const Profile = () => {
               </div>
             </div>
           )}
-
-        {/* Mentorship Status for Alumni */}
-        {user?.role === 'alumni' && hasUniversityData && (
-          <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
-            <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
-              <div className='flex items-center gap-3'>
-                <div className='p-2 bg-gradient-to-tr from-yellow-500 to-amber-600 rounded-lg text-white'>
-                  <FaGraduationCap className='text-xl' />
-                </div>
-                <div>
-                  <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
-                    Status Mentorship
-                  </h2>
-                  <p className='text-xs text-[color:var(--text-secondary)]'>
-                    Bantu adik kelas dalam menentukan karir dan pendidikan
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className='p-6'>
-              <div className='flex items-center justify-between gap-4 p-4 bg-[color:var(--bg-secondary)] rounded-xl border border-[color:var(--border-color)]'>
-                <div>
-                  <p className='font-bold text-[color:var(--text-primary)]'>
-                    {isMentor ? 'Mentor Aktif' : 'Mentor Nonaktif'}
-                  </p>
-                  <p className='text-sm text-[color:var(--text-secondary)]'>
-                    {isMentor
-                      ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
-                      : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
-                  </p>
-                </div>
-                <button
-                  type='button'
-                  onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isMentor
-                    ? 'bg-[var(--primary)]'
-                    : 'bg-gray-300 dark:bg-gray-700'
-                    }`}
-                >
-                  <span
-                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor ? 'translate-x-5' : 'translate-x-0'
-                      }`}
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
 
         {/* Password Section */}
         <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
