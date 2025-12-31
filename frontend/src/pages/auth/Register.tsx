@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { useAuth } from '../../contexts/AuthContext';
-import Toast from '@/components/toast';
+
 import {
   FaGraduationCap,
   FaUser,
@@ -76,13 +76,12 @@ const Register = () => {
       );
 
       console.log('Registration successful, showing toast...');
-      Toast('Pendaftaran berhasil! Silakan login untuk masuk.');
-
-      console.log('Waiting before navigation...');
-      setTimeout(() => {
-        console.log('Navigating to login...');
-        navigate('/login');
-      }, 100);
+      console.log('Registration successful, navigating to login...');
+      navigate('/login', {
+        state: {
+          successMessage: 'Pendaftaran berhasil! Silakan login untuk masuk.'
+        }
+      });
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.message || 'Pendaftaran gagal');

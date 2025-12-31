@@ -11,7 +11,9 @@ import {
   FaSave,
   FaGraduationCap,
 } from 'react-icons/fa';
+
 import Toast from '@/components/toast';
+import { useAuth } from '@/contexts/AuthContext';
 import SearchableSelect from '@/components/SearchableSelect';
 import { COMMON_MAJORS, POLTEKKES_LIST } from '../constant';
 import { INDONESIA_UNIVERSITIES } from '../universityData';
@@ -223,6 +225,7 @@ const initialFormData: FormData = {
 
 const AlumniQuestionnaire = () => {
   const navigate = useNavigate();
+  const { updateUser } = useAuth();
   const [universities, setUniversities] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -424,6 +427,12 @@ const AlumniQuestionnaire = () => {
       } else {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
+
+
+      // Update local user context to reflect changes immediately
+      const userRes = await axios.get('/api/users/profile');
+      updateUser(userRes.data);
+
       Toast('Kuesioner berhasil diperbarui!', 'success');
       navigate('/alumni');
     } catch (err: any) {
