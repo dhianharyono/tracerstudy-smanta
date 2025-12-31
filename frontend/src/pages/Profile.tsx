@@ -33,6 +33,7 @@ const Profile = () => {
   const [showGraduationModal, setShowGraduationModal] = useState(false);
   const [graduating, setGraduating] = useState(false);
   const [isMentor, setIsMentor] = useState(false);
+  const [hasUniversityData, setHasUniversityData] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -47,6 +48,7 @@ const Profile = () => {
       setEntryYear(response.data.profile?.entryYear || '');
       setGraduationYear(response.data.profile?.graduationYear || '');
       setIsMentor(response.data.isMentor || false);
+      setHasUniversityData(!!response.data.university?.name);
     } catch (error) {
       console.error('Error fetching profile:', error);
       Toast('Gagal mengambil data profil', 'error');
@@ -278,7 +280,7 @@ const Profile = () => {
           )}
 
         {/* Mentorship Status for Alumni */}
-        {user?.role === 'alumni' && (
+        {user?.role === 'alumni' && hasUniversityData && (
           <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
             <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
               <div className='flex items-center gap-3'>
@@ -311,8 +313,8 @@ const Profile = () => {
                   type='button'
                   onClick={() => setIsMentor(!isMentor)}
                   className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isMentor
-                      ? 'bg-[var(--primary)]'
-                      : 'bg-gray-300 dark:bg-gray-700'
+                    ? 'bg-[var(--primary)]'
+                    : 'bg-gray-300 dark:bg-gray-700'
                     }`}
                 >
                   <span
@@ -347,8 +349,8 @@ const Profile = () => {
                   }
                 }}
                 className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
-                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                  ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
+                  : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
                   }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
