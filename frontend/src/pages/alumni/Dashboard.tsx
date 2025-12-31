@@ -101,10 +101,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -121,8 +121,10 @@ const AlumniDashboard = () => {
     return <LoadingSpinner />;
   }
 
+  console.log(!user?.questionnaireCompleted);
+
   if (!user?.questionnaireCompleted) {
-    return <RestrictedAccess type="questionnaire_incomplete" role="alumni" />;
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
   return (
@@ -151,7 +153,10 @@ const AlumniDashboard = () => {
       />
 
       {!hideMentorPromo && (
-        <MentorshipPromoCard profile={profile} onClose={handleCloseMentorPromo} />
+        <MentorshipPromoCard
+          profile={profile}
+          onClose={handleCloseMentorPromo}
+        />
       )}
 
       <div className='mt-8'>
