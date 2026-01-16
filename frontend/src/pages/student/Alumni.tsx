@@ -37,6 +37,8 @@ const StudentAlumni = () => {
     graduationYears: [] as number[],
     majors: [] as string[],
   });
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('name') || '');
+  const [debouncedName, setDebouncedName] = useState(searchTerm);
 
   useEffect(() => {
     const university = searchParams.get('university') || '';
@@ -50,7 +52,24 @@ const StudentAlumni = () => {
       major,
       name,
     });
+    setSearchTerm(name);
+    setDebouncedName(name);
   }, [searchParams]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedName(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedName !== filters.name) {
+      handleFilterChange('name', debouncedName);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedName]);
 
   useEffect(() => {
     fetchAlumni();
@@ -146,8 +165,8 @@ const StudentAlumni = () => {
             <input
               type='text'
               placeholder='Cari Nama Alumni...'
-              value={filters.name}
-              onChange={(e) => handleFilterChange('name', e.target.value)}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className='w-full rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-9 pr-4 text-sm outline-none border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
             />
           </div>
