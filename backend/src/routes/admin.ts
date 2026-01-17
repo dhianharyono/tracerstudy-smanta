@@ -381,6 +381,30 @@ router.delete('/alumni/:id', async (req: Request, res: Response) => {
   }
 });
 
+// Remove badge from alumni
+router.delete(
+  '/alumni/:userId/badges/:badgeId',
+  async (req: Request, res: Response) => {
+    try {
+      const { userId, badgeId } = req.params;
+
+      const user = await User.findOneAndUpdate(
+        { _id: userId, role: 'alumni' },
+        { $pull: { badges: badgeId } },
+        { new: true },
+      );
+
+      if (!user) {
+        return res.status(404).json({ message: 'Alumni not found' });
+      }
+
+      res.json({ message: 'Badge removed from alumni successfully', user });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
 // Generate reports
 router.get('/reports', async (req: Request, res: Response) => {
   try {

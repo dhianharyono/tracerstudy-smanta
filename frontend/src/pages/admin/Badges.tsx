@@ -96,6 +96,27 @@ const AdminBadges = () => {
     setFormData({ name: '', description: '', code: '', expiredDate: '' });
   };
 
+  const handleRemoveAlumni = async (alumniId: string, alumniName: string) => {
+    if (
+      !window.confirm(
+        `Yakin ingin menghapus badge dari alumni "${alumniName}"?`,
+      )
+    )
+      return;
+    try {
+      await axios.delete(
+        `/api/admin/alumni/${alumniId}/badges/${viewingBadge._id}`,
+      );
+      Toast('Badge berhasil dihapus dari alumni', 'success');
+      fetchBadgeAlumni(viewingBadge._id); // Refresh the list
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal menghapus badge dari alumni',
+        'error',
+      );
+    }
+  };
+
   if (loading) return <LoadingSpinner />;
 
   return (
@@ -276,7 +297,7 @@ const AdminBadges = () => {
           <div className='bg-[color:var(--bg-card)] w-full max-w-2xl rounded-2xl shadow-2xl border border-[color:var(--border-color)] max-h-[80vh] flex flex-col'>
             <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center'>
               <h3 className='text-xl font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
-                <FaMedal className='text-amber-500' /> penerima Badge:{' '}
+                <FaMedal className='text-amber-500' /> Penerima Badge:{' '}
                 {viewingBadge.name}
               </h3>
               <button
@@ -298,22 +319,36 @@ const AdminBadges = () => {
                   {badgeAlumni.map((alumni) => (
                     <div
                       key={alumni._id}
-                      className='flex items-center gap-4 p-4 rounded-xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'
+                      className='flex items-center justify-between gap-4 p-4 rounded-xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'
                     >
-                      <div className='w-10 h-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg'>
-                        {(alumni.profile?.fullName || alumni.username)
-                          .charAt(0)
-                          .toUpperCase()}
+                      <div className='flex items-center gap-4'>
+                        <div className='w-10 h-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg'>
+                          {(alumni.profile?.fullName || alumni.username)
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                        <div>
+                          <p className='font-bold text-[color:var(--text-primary)]'>
+                            {alumni.profile?.fullName || alumni.username}
+                          </p>
+                          <p className='text-xs text-[color:var(--text-secondary)]'>
+                            Lulus: {alumni.profile?.graduationYear || '-'} •{' '}
+                            {alumni.university?.name || '-'}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <p className='font-bold text-[color:var(--text-primary)]'>
-                          {alumni.profile?.fullName || alumni.username}
-                        </p>
-                        <p className='text-xs text-[color:var(--text-secondary)]'>
-                          Lulus: {alumni.profile?.graduationYear || '-'} •{' '}
-                          {alumni.university?.name || '-'}
-                        </p>
-                      </div>
+                      <button
+                        onClick={() =>
+                          handleRemoveAlumni(
+                            alumni._id,
+                            alumni.profile?.fullName || alumni.username,
+                          )
+                        }
+                        className='p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                        title='Hapus Badge dari Alumni'
+                      >
+                        <FaTrash />
+                      </button>
                     </div>
                   ))}
                 </div>
