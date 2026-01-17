@@ -42,7 +42,8 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
         />
         <div>
           <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
-            Selamat Datang, {profile?.profile?.fullName || user?.username || 'Alumni'}!
+            Selamat Datang,{' '}
+            {profile?.profile?.fullName || user?.username || 'Alumni'}!
           </h2>
           <p className='text-xs md:text-sm text-[color:var(--text-tertiary)]'>
             Jelajahi data alumni dan informasi terkini. Kelola data dan profil
@@ -52,7 +53,6 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
       </div>
 
       {!profile?.questionnaireCompleted ? (
-        // Kuesioner Belum Lengkap
         <div className='mt-5 rounded-xl border-2 border-dashed border-[color:var(--warning)] bg-[color:var(--bg-tertiary)] p-6'>
           <div className='mb-4 flex items-center gap-3'>
             <FaEdit className='text-3xl text-[color:var(--warning)]' />
@@ -72,7 +72,6 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
           </Link>
         </div>
       ) : (
-        // Kuesioner Lengkap
         !hideQuestionnaireCard && (
           <div className='card relative mt-5 rounded-xl border border-[color:var(--success)] p-6'>
             <button

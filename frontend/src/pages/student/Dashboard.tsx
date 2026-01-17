@@ -11,6 +11,8 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import EventWelcomeCard from '@/components/Dashboard/EventWelcomeCard';
+import EventRegisterModal from '@/components/EventRegisterModal';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -19,22 +21,25 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [chartWidth, setChartWidth] = useState(900);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [events, setEvents] = useState<any[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // If profile is incomplete, we don't necessarily need to fetch stats, but let's keep it simple
-    // or return early to avoid API calls? Let's just fetch for now or adding check inside useEffect.
     const fetchData = async () => {
       try {
-        const [statsRes, newsRes] = await Promise.all([
+        const [statsRes, newsRes, eventsRes] = await Promise.all([
           axios.get('/api/student/dashboard'),
           axios.get('/api/student/news'),
+          axios.get('/api/events'),
           axios
             .get('/api/student/news/unread-count')
             .catch(() => ({ data: { count: 0 } })),
         ]);
         setStats(statsRes.data);
         setNews(newsRes.data);
+        setEvents(eventsRes.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -45,7 +50,6 @@ const StudentDashboard = () => {
     fetchData();
   }, []);
 
-  // ... (keeping other useEffects) ...
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -84,10 +88,10 @@ const StudentDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   if (loading) {
@@ -95,7 +99,7 @@ const StudentDashboard = () => {
   }
 
   if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type="profile_incomplete" role="student" />;
+    return <RestrictedAccess type='profile_incomplete' role='student' />;
   }
 
   return (
@@ -116,6 +120,17 @@ const StudentDashboard = () => {
         fullName={user?.profile?.fullName}
       />
 
+      {events.length > 0 && (
+        <EventWelcomeCard
+          event={events[0]}
+          isRegistered={events[0].isRegistered}
+          onRegister={() => {
+            setSelectedEvent(events[0]);
+            setIsRegisterModalOpen(true);
+          }}
+        />
+      )}
+
       <div className='mt-8'>
         <Statistic stats={stats} />
       </div>
@@ -133,6 +148,15 @@ const StudentDashboard = () => {
         <Jurusan data={stats} chartWidth={chartWidth} />
         <TahunLulus data={stats} chartWidth={chartWidth} />
       </div>
+
+      <EventRegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={() => setIsRegisterModalOpen(false)}
+        event={selectedEvent}
+        onSuccess={() => {
+          window.location.reload();
+        }}
+      />
     </div>
   );
 };

@@ -23,7 +23,6 @@ const Login = () => {
   useEffect(() => {
     if (location.state?.successMessage) {
       Toast(location.state.successMessage, 'success');
-      // Clear state to prevent toast on refresh (optional, but React Router state persists)
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -35,8 +34,6 @@ const Login = () => {
 
     try {
       await login(username, password);
-      // Auth context usually handles the state, but we can verify role navigation here if needed
-      // Force a slight delay to ensure local storage is updated or context is refreshed if necessary in some implementations
       const userStr = localStorage.getItem('user');
       const user = userStr ? JSON.parse(userStr) : {};
 

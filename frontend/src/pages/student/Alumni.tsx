@@ -7,6 +7,8 @@ import {
   FaFilter,
   FaSearch,
   FaTimes,
+  FaCrown,
+  FaMedal,
 } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -23,7 +25,6 @@ const StudentAlumni = () => {
     total: 0,
     pages: 0,
   });
-  // ... (rest of state items are same, but I need to include them in replacemenet if I replace the whole block)
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -68,7 +69,6 @@ const StudentAlumni = () => {
     if (debouncedName !== filters.name) {
       handleFilterChange('name', debouncedName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const StudentAlumni = () => {
       if (filters.name) params.append('name', filters.name);
 
       const response = await axios.get(
-        `/api/student/alumni?${params.toString()}`
+        `/api/student/alumni?${params.toString()}`,
       );
       setAlumni(response.data.alumni);
       setPagination(response.data.pagination);
@@ -129,7 +129,7 @@ const StudentAlumni = () => {
   }
 
   if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type="profile_incomplete" role="student" />;
+    return <RestrictedAccess type='profile_incomplete' role='student' />;
   }
 
   return (
@@ -155,8 +155,9 @@ const StudentAlumni = () => {
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
       <div
-        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}
@@ -309,15 +310,45 @@ const StudentAlumni = () => {
                     >
                       <td className='px-6 py-4'>
                         <div className='flex items-center gap-3'>
-                          <div className='h-10 w-10 shrink-0 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center font-bold text-lg'>
+                          <div className='h-10 w-10 shrink-0 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center font-bold text-lg relative'>
                             {alum.profile?.fullName?.charAt(0) || 'A'}
+                            {alum.isMentor && (
+                              <div
+                                className='absolute -top-1 -right-1 bg-amber-500 rounded-full p-1 border-2 border-white dark:border-gray-800'
+                                title='Mentor'
+                              >
+                                <FaCrown className='text-[8px] text-white' />
+                              </div>
+                            )}
                           </div>
                           <div>
-                            <div className='font-semibold text-[color:var(--text-primary)]'>
-                              {alum.profile?.fullName || '-'}
+                            <div className='flex items-center gap-2'>
+                              <div className='font-semibold text-[color:var(--text-primary)]'>
+                                {alum.profile?.fullName || '-'}
+                              </div>
+                              {alum.badges && alum.badges.length > 0 && (
+                                <div className='flex gap-1'>
+                                  {alum.badges.map(
+                                    (badge: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        className='text-amber-500'
+                                        title={badge.name}
+                                      >
+                                        <FaMedal className='text-xs' />
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
+                              )}
                             </div>
                             <div className='text-xs text-[color:var(--text-secondary)]'>
-                              Alumni
+                              Alumni{' '}
+                              {alum.isMentor && (
+                                <span className='text-amber-600 font-bold ml-1'>
+                                  • Mentor
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -414,9 +445,9 @@ const StudentAlumni = () => {
               </button>
             </div>
           </div>
-        </div >
+        </div>
       )}
-    </div >
+    </div>
   );
 };
 

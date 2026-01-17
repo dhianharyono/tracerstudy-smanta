@@ -1,3 +1,4 @@
+import { useAuth } from '@/contexts/AuthContext';
 import {
   FaUsers,
   FaBriefcase,
@@ -15,7 +16,7 @@ interface StatsObject {
   studyingAlumni: number | string;
   totalMentors?: number | string;
   activeMentors?: number | string;
-  completedQuestionnaire?: number | string; // Added from backend
+  completedQuestionnaire?: number | string;
   universityTypes: {
     negeri: number | string;
     swasta: number | string;
@@ -31,7 +32,6 @@ interface StatCardProps {
   bgClass: string;
 }
 
-// StatCard component with Icon support
 const StatCard = ({
   title,
   value,
@@ -63,9 +63,11 @@ const StatCard = ({
 );
 
 const Statistic = ({ stats }: { stats: StatsObject }) => {
+  const { user } = useAuth();
+  const isAlumni = user?.role === 'alumni';
+  const isStudent = user?.role === 'student';
   const isAdmin = stats?.totalStudents !== undefined;
 
-  // Calculate incomplete alumni
   const totalAlumni = Number(stats?.totalAlumni || 0);
   const completed = Number(stats?.completedQuestionnaire || 0);
   const incompleteAlumni = Math.max(0, totalAlumni - completed);
@@ -89,13 +91,17 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
           },
         ]
       : []),
-    {
-      title: isAdmin ? 'Total Mentor' : 'Mentor Aktif',
-      value: isAdmin ? stats?.totalMentors : stats?.activeMentors,
-      icon: FaCrown,
-      colorClass: 'text-yellow-600 dark:text-yellow-400',
-      bgClass: 'bg-yellow-100 dark:bg-yellow-900/50',
-    },
+    ...(isAlumni
+      ? [
+          {
+            title: isAdmin ? 'Total Mentor' : 'Mentor Aktif',
+            value: isAdmin ? stats?.totalMentors : stats?.activeMentors,
+            icon: FaCrown,
+            colorClass: 'text-yellow-600 dark:text-yellow-400',
+            bgClass: 'bg-yellow-100 dark:bg-yellow-900/50',
+          },
+        ]
+      : []),
     ...(isAdmin
       ? [
           {
@@ -147,7 +153,7 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
   return (
     <div
       className={`grid grid-cols-2 ${
-        isAdmin ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+        isAdmin || isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
       } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (

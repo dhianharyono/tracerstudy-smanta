@@ -65,12 +65,12 @@ function MapBounds({ universities }: { universities: GeocodedUniversity[] }) {
 
   useEffect(() => {
     const validUniversities = universities.filter(
-      (u) => u.lat !== undefined && u.lng !== undefined
+      (u) => u.lat !== undefined && u.lng !== undefined,
     );
 
     if (validUniversities.length > 0) {
       const bounds = L.latLngBounds(
-        validUniversities.map((u) => [u.lat!, u.lng!])
+        validUniversities.map((u) => [u.lat!, u.lng!]),
       );
       map.fitBounds(bounds, { padding: [50, 50] });
     } else {
@@ -121,7 +121,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   };
 
   const geocodeUniversity = async (
-    universityName: string
+    universityName: string,
   ): Promise<{ lat: number; lng: number } | null> => {
     if (!universityName) return null;
 
@@ -133,25 +133,25 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         variations.push(name.replace(/surakarta/gi, 'Solo') + ', Indonesia');
       } else if (name.toLowerCase().includes('solo')) {
         variations.push(
-          name.replace(/\bsolo\b/gi, 'Surakarta') + ', Indonesia'
+          name.replace(/\bsolo\b/gi, 'Surakarta') + ', Indonesia',
         );
       }
 
       // Case: Swap Universitas <-> University
       if (name.toLowerCase().includes('universitas')) {
         variations.push(
-          name.replace(/universitas/gi, 'University') + ', Indonesia'
+          name.replace(/universitas/gi, 'University') + ', Indonesia',
         );
       } else if (name.toLowerCase().includes('university')) {
         variations.push(
-          name.replace(/university/gi, 'Universitas') + ', Indonesia'
+          name.replace(/university/gi, 'Universitas') + ', Indonesia',
         );
       }
 
       // Case: Swap Institut <-> Institute
       if (name.toLowerCase().includes('institut')) {
         variations.push(
-          name.replace(/institut/gi, 'Institute') + ', Indonesia'
+          name.replace(/institut/gi, 'Institute') + ', Indonesia',
         );
       }
 
@@ -167,7 +167,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
           .trim();
         variations.push(simple + ', Indonesia');
         variations.push(
-          simple.replace(/poltekkes/gi, 'Politeknik Kesehatan') + ', Indonesia'
+          simple.replace(/poltekkes/gi, 'Politeknik Kesehatan') + ', Indonesia',
         );
       }
 
@@ -202,7 +202,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
             headers: {
               'User-Agent': 'TracerStudyApp/1.0',
             },
-          }
+          },
         );
 
         const data = await response.json();
@@ -237,7 +237,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         }
 
         const cachedCoordsJson = localStorage.getItem(
-          'university_coords_cache'
+          'university_coords_cache',
         );
         const coordsCache = cachedCoordsJson
           ? JSON.parse(cachedCoordsJson)
@@ -282,7 +282,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
         if (cacheUpdated) {
           localStorage.setItem(
             'university_coords_cache',
-            JSON.stringify(newCache)
+            JSON.stringify(newCache),
           );
         }
       } catch (error) {
@@ -299,7 +299,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
   const validUniversities = useMemo(
     () =>
       universities.filter((u) => u.lat !== undefined && u.lng !== undefined),
-    [universities]
+    [universities],
   );
 
   const getUniversityTypeLabel = (type?: string) => {
@@ -338,8 +338,6 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
       </div>
     );
   }
-
-  // Removed the empty state return to always show the map container
 
   return (
     <div className='card h-auto md:h-[700px]'>
@@ -583,7 +581,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
                                         >
                                           '
                                           {String(alumni.graduationYear).slice(
-                                            -2
+                                            -2,
                                           )}
                                         </span>
                                       )}

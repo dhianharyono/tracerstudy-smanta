@@ -5,34 +5,36 @@ import User from '../models/User';
 import News from '../models/News';
 import Feedback from '../models/Feedback';
 import Settings from '../models/Settings';
+import Badge from '../models/Badge';
 
-// Definisi Custom Request untuk menangani req.user dari middleware authenticate
 interface AuthenticatedRequest extends Request {
   user?: {
     _id: string;
     role: string;
-    // Tambahkan properti lain yang mungkin ditambahkan oleh middleware auth
   };
 }
 
 const router = express.Router();
 
 // Public route for checking feedback visibility (must be before auth middleware)
-router.get('/settings/feedback-visible', async (req: Request, res: Response) => {
-  try {
-    let setting = await Settings.findOne({ key: 'feedbackVisible' });
+router.get(
+  '/settings/feedback-visible',
+  async (req: Request, res: Response) => {
+    try {
+      let setting = await Settings.findOne({ key: 'feedbackVisible' });
 
-    if (!setting) {
-      // Default to visible
-      setting = new Settings({ key: 'feedbackVisible', value: true });
-      await setting.save();
+      if (!setting) {
+        // Default to visible
+        setting = new Settings({ key: 'feedbackVisible', value: true });
+        await setting.save();
+      }
+
+      res.json({ visible: setting.value });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
-
-    res.json({ visible: setting.value });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
+  },
+);
 
 // All other admin routes require authentication and admin role
 router.use(authenticate);
@@ -156,7 +158,6 @@ router.get('/dashboard', async (req: Request, res: Response) => {
   }
 });
 
-
 // Get all mentors (alumni who are isMentor: true)
 router.get('/mentors', async (req: Request, res: Response) => {
   try {
@@ -245,6 +246,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const graduationYear = req.query.graduationYear as string;
     const major = req.query.major as string;
     const questionnaireStatus = req.query.questionnaireStatus as string;
+    const badgeId = req.query.badgeId as string;
 
     const filter: any = { role: 'alumni' };
 
@@ -268,7 +270,12 @@ router.get('/alumni', async (req: Request, res: Response) => {
       }
     }
 
+    if (badgeId) {
+      filter['badges'] = badgeId;
+    }
+
     const alumni = await User.find(filter)
+
       .select('-password')
       .skip(skip)
       .limit(limit)
@@ -343,7 +350,7 @@ router.put('/alumni/:id', async (req: Request, res: Response) => {
     const alumni = await User.findOneAndUpdate(
       { _id: req.params.id, role: 'alumni' },
       req.body,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).select('-password');
 
     if (!alumni) {
@@ -527,7 +534,7 @@ router.put('/students/:id', async (req: Request, res: Response) => {
     const student = await User.findOneAndUpdate(
       { _id: req.params.id, role: 'student' },
       update,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).select('-password');
 
     if (!student) {
@@ -646,7 +653,7 @@ router.put('/admins/:id', async (req: Request, res: Response) => {
     const admin = await User.findOneAndUpdate(
       { _id: req.params.id, role: 'admin' },
       update,
-      { new: true, runValidators: true }
+      { new: true, runValidators: true },
     ).select('-password');
 
     if (!admin) {
@@ -701,7 +708,10 @@ router.get('/news', async (req: Request, res: Response) => {
 // Get single news
 router.get('/news/:id', async (req: Request, res: Response) => {
   try {
-    const news = await News.findById(req.params.id).populate('author', 'username');
+    const news = await News.findById(req.params.id).populate(
+      'author',
+      'username',
+    );
 
     if (!news) {
       return res.status(404).json({ message: 'News not found' });
@@ -815,7 +825,10 @@ router.get('/feedback/stats', async (req: Request, res: Response) => {
 // Get single feedback (MUST be after /feedback/stats to avoid route conflict)
 router.get('/feedback/:id', async (req: Request, res: Response) => {
   try {
-    const feedback = await Feedback.findById(req.params.id).populate('user', 'username role');
+    const feedback = await Feedback.findById(req.params.id).populate(
+      'user',
+      'username role',
+    );
 
     if (!feedback) {
       return res.status(404).json({ message: 'Feedback not found' });
@@ -844,22 +857,97 @@ router.delete('/feedback/:id', async (req: Request, res: Response) => {
 
 // Settings routes
 // Update feedback visibility setting (admin only)
-router.put('/settings/feedback-visible', async (req: Request, res: Response) => {
+router.put(
+  '/settings/feedback-visible',
+  async (req: Request, res: Response) => {
+    try {
+      const { visible } = req.body;
+
+      let setting = await Settings.findOne({ key: 'feedbackVisible' });
+
+      if (setting) {
+        setting.value = visible;
+        await setting.save();
+      } else {
+        setting = new Settings({ key: 'feedbackVisible', value: visible });
+        await setting.save();
+      }
+
+      res.json({ visible: setting.value });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Badge Routes
+
+// Get all badges
+router.get('/badges', async (req: Request, res: Response) => {
   try {
-    const { visible } = req.body;
+    const badges = await Badge.find().sort({ createdAt: -1 });
+    res.json(badges);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-    let setting = await Settings.findOne({ key: 'feedbackVisible' });
+// Create badge
+router.post('/badges', async (req: Request, res: Response) => {
+  try {
+    const { name, description, code, expiredDate } = req.body;
 
-    if (setting) {
-      setting.value = visible;
-      await setting.save();
-    } else {
-      setting = new Settings({ key: 'feedbackVisible', value: visible });
-      await setting.save();
+    if (!name || !description || !code || !expiredDate) {
+      return res.status(400).json({ message: 'All fields are required' });
     }
 
-    res.json({ visible: setting.value });
+    const badge = new Badge({
+      name,
+      description,
+      code,
+      expiredDate,
+    });
+
+    await badge.save();
+    res.status(201).json(badge);
   } catch (error: any) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Badge code already exists' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete badge
+router.delete('/badges/:id', async (req: Request, res: Response) => {
+  try {
+    const badge = await Badge.findByIdAndDelete(req.params.id);
+    if (!badge) {
+      return res.status(404).json({ message: 'Badge not found' });
+    }
+    res.json({ message: 'Badge deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Update badge
+router.put('/badges/:id', async (req: Request, res: Response) => {
+  try {
+    const { name, description, code, expiredDate } = req.body;
+    const badge = await Badge.findByIdAndUpdate(
+      req.params.id,
+      { name, description, code, expiredDate },
+      { new: true, runValidators: true },
+    );
+    if (!badge) {
+      return res.status(404).json({ message: 'Badge not found' });
+    }
+    res.json(badge);
+  } catch (error: any) {
+    if (error.code === 11000) {
+      return res.status(400).json({ message: 'Badge code already exists' });
+    }
     res.status(500).json({ message: error.message });
   }
 });

@@ -119,6 +119,7 @@ router.post(
           email: user.email,
           role: user.role,
           profile: user.profile,
+          badges: user.badges,
         },
       });
     } catch (error: any) {
@@ -144,7 +145,7 @@ router.post(
 
       const { username, password } = req.body;
 
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username }).populate('badges');
       if (!user) {
         return res.status(400).json({ message: 'Invalid credentials' });
       }
@@ -170,6 +171,7 @@ router.post(
           role: user.role,
           questionnaireCompleted: user.questionnaireCompleted,
           profile: user.profile,
+          badges: user.badges,
         },
       });
     } catch (error: any) {
@@ -185,7 +187,7 @@ router.get(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       // req.user._id sekarang aman karena menggunakan AuthenticatedRequest
-      const user = await User.findById(req.user!._id).select('-password');
+      const user = await User.findById(req.user!._id).select('-password').populate('badges');
       res.json(user);
     } catch (error: any) {
       res.status(500).json({ message: error.message });

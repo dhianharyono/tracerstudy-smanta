@@ -5,6 +5,8 @@ import News from '../models/News';
 import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
 
+import Badge from '../models/Badge';
+
 interface AuthenticatedRequest extends Request {
   user?: {
     _id: string;
@@ -16,6 +18,16 @@ const router = express.Router();
 
 router.use(authenticate);
 router.use(authorize('student'));
+
+// Get all badges for filter
+router.get('/badges', async (req: Request, res: Response) => {
+  try {
+    const badges = await Badge.find().sort({ name: 1 });
+    res.json(badges);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 router.get('/alumni-map', async (req: Request, res: Response) => {
   try {
@@ -213,6 +225,8 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const graduationYear = req.query.graduationYear as string;
     const major = req.query.major as string;
     const name = req.query.name as string;
+    const badgeId = req.query.badgeId as string;
+
 
     const filter: any = {
       role: 'alumni',
@@ -236,11 +250,21 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['profile.fullName'] = { $regex: name, $options: 'i' };
     }
 
+    if (badgeId) {
+      filter['badges'] = { $in: [badgeId] };
+    }
+
+    if (req.query.isMentor === 'true') {
+      filter['isMentor'] = true;
+    }
+
+
     const alumni = await User.find(filter)
       .select('-password')
       .select(
-        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram'
+        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor'
       )
+      .populate('badges')
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -375,26 +399,7 @@ router.post(
   }
 );
 
-// Get unread news count
-router.get(
-  '/news/unread-count',
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const totalNews = await News.countDocuments({
-        isPublished: true,
-        $or: [{ type: 'student' }, { type: 'all' }],
-      });
-
-      const readCount = await NewsRead.countDocuments({ user: req.user!._id });
-
-      const unreadCount = totalNews - readCount;
-
-      res.json({ count: Math.max(0, unreadCount) });
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-);
+// Removed news unread-count route
 
 // Feedback routes
 // Check if user has submitted feedback

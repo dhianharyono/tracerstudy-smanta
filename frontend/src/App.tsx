@@ -23,6 +23,8 @@ const AlumniFeedback = lazy(() => import('./pages/alumni/Feedback'));
 const AlumniNews = lazy(() => import('./pages/alumni/News'));
 const AlumniNewsDetail = lazy(() => import('./pages/alumni/NewsDetail'));
 const MutualAlumni = lazy(() => import('./pages/alumni/MutualAlumni'));
+const AlumniClaimBadge = lazy(() => import('./pages/alumni/ClaimBadge'));
+const AlumniEventHub = lazy(() => import('./pages/alumni/EventHub'));
 
 // Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -35,6 +37,8 @@ const AdminNews = lazy(() => import('./pages/admin/News'));
 const AdminNewsDetail = lazy(() => import('./pages/admin/NewsDetail'));
 const AdminFeedback = lazy(() => import('./pages/admin/Feedback'));
 const AdminFeedbackDetail = lazy(() => import('./pages/admin/FeedbackDetail'));
+const AdminBadges = lazy(() => import('./pages/admin/Badges'));
+const AdminEventManagement = lazy(() => import('./pages/admin/EventManagement'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -45,6 +49,7 @@ const StudentFeedback = lazy(() => import('./pages/student/Feedback'));
 const StudentNews = lazy(() => import('./pages/student/News'));
 const StudentNewsDetail = lazy(() => import('./pages/student/NewsDetail'));
 const StudentCollegePlan = lazy(() => import('./pages/student/CollegePlan'));
+const StudentEvents = lazy(() => import('./pages/student/Events'));
 
 const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
   switch (role) {
@@ -114,6 +119,8 @@ function App() {
               <Route path='news' element={<AlumniNews />} />
               <Route path='news/:id' element={<AlumniNewsDetail />} />
               <Route path='mutual-alumni' element={<MutualAlumni />} />
+              <Route path='claim-badge' element={<AlumniClaimBadge />} />
+              <Route path='events' element={<AlumniEventHub />} />
             </Route>
 
             {/* Admin Routes */}
@@ -135,6 +142,8 @@ function App() {
               <Route path='news/:id' element={<AdminNewsDetail />} />
               <Route path='feedback' element={<AdminFeedback />} />
               <Route path='feedback/:id' element={<AdminFeedbackDetail />} />
+              <Route path='badges' element={<AdminBadges />} />
+              <Route path='events' element={<AdminEventManagement />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 
@@ -155,6 +164,7 @@ function App() {
               <Route path='feedback' element={<StudentFeedback />} />
               <Route path='news' element={<StudentNews />} />
               <Route path='news/:id' element={<StudentNewsDetail />} />
+              <Route path='events' element={<StudentEvents />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

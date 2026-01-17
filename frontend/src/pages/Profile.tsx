@@ -19,7 +19,6 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  // Form states
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
@@ -93,7 +92,7 @@ const Profile = () => {
       console.error('Error updating profile:', error);
       Toast(
         error.response?.data?.message || 'Gagal memperbarui profil',
-        'error'
+        'error',
       );
     } finally {
       setSaving(false);
@@ -111,9 +110,8 @@ const Profile = () => {
       await axios.post('/api/users/graduate');
       Toast(
         'Selamat! Akun Anda telah dikonversi menjadi akun alumni',
-        'success'
+        'success',
       );
-      // Reload page to update user context
       setTimeout(() => {
         window.location.href = '/alumni/dashboard';
       }, 1500);
@@ -121,7 +119,7 @@ const Profile = () => {
       console.error('Error graduating:', error);
       Toast(
         error.response?.data?.message || 'Gagal mengkonversi akun',
-        'error'
+        'error',
       );
     } finally {
       setGraduating(false);
@@ -225,7 +223,7 @@ const Profile = () => {
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaIdBadge className='text-xs' /> Nama Lengkap{' '}
-                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <span className='text-red-500 text-xs'>*</span>
               </label>
               <input
                 type='text'
@@ -239,7 +237,7 @@ const Profile = () => {
             <div className='space-y-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaUser className='text-xs' /> Username{' '}
-                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <span className='text-red-500 text-xs'>*</span>
               </label>
               <input
                 type='text'
@@ -254,7 +252,7 @@ const Profile = () => {
             <div className='space-y-2 md:col-span-2'>
               <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaEnvelope className='text-xs' /> Email{' '}
-                <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                <span className='text-red-500 text-xs'>*</span>
               </label>
               <input
                 type='email'
@@ -270,7 +268,7 @@ const Profile = () => {
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
-                  <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                  <span className='text-red-500 text-xs'>*</span>
                 </label>
                 <input
                   type='number'
@@ -290,14 +288,14 @@ const Profile = () => {
               <div className='space-y-2'>
                 <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}
-                  <span className='text-red-500 text-xs ml-1'>(Wajib)</span>
+                  <span className='text-red-500 text-xs'>*</span>
                 </label>
                 <input
                   type='number'
                   value={graduationYear}
                   onChange={(e) =>
                     setGraduationYear(
-                      e.target.value ? parseInt(e.target.value) : ''
+                      e.target.value ? parseInt(e.target.value) : '',
                     )
                   }
                   className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'

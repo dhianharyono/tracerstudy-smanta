@@ -9,6 +9,7 @@ import alumniRoutes from './routes/alumni';
 import adminRoutes from './routes/admin';
 import studentRoutes from './routes/student';
 import userRoutes from './routes/user';
+import eventRoutes from './routes/events';
 
 dotenv.config();
 
@@ -62,6 +63,7 @@ app.use('/api/alumni', alumniRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/events', eventRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

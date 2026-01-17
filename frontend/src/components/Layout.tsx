@@ -16,6 +16,7 @@ import {
   FaUniversity,
   FaBook,
   FaSignOutAlt,
+  FaMedal,
   FaBars,
   FaTimes,
   FaChevronRight,
@@ -34,7 +35,6 @@ const Layout = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
-  // Scroll to top when route changes
   useEffect(() => {
     if (mainRef.current) {
       mainRef.current.scrollTo(0, 0);
@@ -46,7 +46,6 @@ const Layout = () => {
     navigate('/login');
   };
 
-  // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
@@ -55,7 +54,7 @@ const Layout = () => {
     const checkFeedbackVisibility = async () => {
       try {
         const response = await axios.get(
-          '/api/admin/settings/feedback-visible'
+          '/api/admin/settings/feedback-visible',
         );
         setFeedbackMenuVisible(response.data.visible);
       } catch (error) {
@@ -83,16 +82,18 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-          }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-            }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            isActive
+              ? 'bg-white/20'
+              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -108,6 +109,12 @@ const Layout = () => {
         <div className='space-y-1'>
           <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
+          <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
+          <NavLink
+            to='/alumni/mutual-alumni'
+            icon={FaUsers}
+            label='Rekan Seangkatan'
+          />
           <NavLink
             to='/alumni/news'
             icon={FaNewspaper}
@@ -122,9 +129,9 @@ const Layout = () => {
             />
           )}
           <NavLink
-            to='/alumni/mutual-alumni'
-            icon={FaUsers}
-            label='Rekan Seangkatan'
+            to='/alumni/claim-badge'
+            icon={FaMedal}
+            label='Claim Badge'
           />
           <NavLink to='/alumni/profile' icon={FaUser} label='Profil' />
         </div>
@@ -143,7 +150,13 @@ const Layout = () => {
             label='Data Student'
           />
           <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
+          <NavLink
+            to='/admin/events'
+            icon={FaChartBar}
+            label='Manajemen Event'
+          />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
+          <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
           <NavLink
             to='/admin/feedback'
@@ -166,7 +179,12 @@ const Layout = () => {
           />
           <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
-          <NavLink to='/student/college-plan' icon={FaGraduationCap} label='Rencana Kuliah' />
+          <NavLink
+            to='/student/college-plan'
+            icon={FaGraduationCap}
+            label='Rencana Kuliah'
+          />
+          <NavLink to='/student/events' icon={FaChartBar} label='Event' />
           <NavLink
             to='/student/news'
             icon={FaNewspaper}
@@ -210,8 +228,9 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}

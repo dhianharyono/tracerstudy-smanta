@@ -8,6 +8,8 @@ import {
   FaUserCircle,
   FaLinkedin,
   FaInstagram,
+  FaCrown,
+  FaMedal,
 } from 'react-icons/fa';
 
 interface AlumniData {
@@ -29,6 +31,8 @@ interface AlumniData {
     linkedin?: string;
     instagram?: string;
   };
+  isMentor?: boolean;
+  badges?: any[];
 }
 
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,8 +44,6 @@ const MutualAlumni = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Only fetch if access is granted, or just let check block rendering but fetch might happen?
-    // Optimization: if restricted, maybe don't fetch. But let's keep simple first.
     const fetchMutualAlumni = async () => {
       try {
         const response = await axios.get('/api/alumni/mutual-alumni');
@@ -95,17 +97,54 @@ const MutualAlumni = () => {
               className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col'
             >
               <div className='mb-4 flex items-center gap-4'>
-                <div className='flex h-8 w-8 md:h-12 md:w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-md'>
+                <div className='flex h-8 w-8 md:h-12 md:w-12 items-center justify-center rounded-full bg-[var(--primary)] text-white shadow-md relative'>
                   <FaUserCircle className='text-lg md:text-3xl' />
+                  {person.isMentor && (
+                    <div
+                      className='absolute -top-1 -right-1 bg-amber-500 rounded-full p-1 border-2 border-white dark:border-gray-800'
+                      title='Mentor'
+                    >
+                      <FaCrown className='text-[8px] md:text-[10px] text-white' />
+                    </div>
+                  )}
                 </div>
                 <div>
-                  <h3 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-1 !mb-0'>
-                    {person.profile?.fullName || 'Anonymous'}
-                  </h3>
+                  <div className='flex items-center gap-2'>
+                    <h3 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors line-clamp-1 !mb-0'>
+                      {person.profile?.fullName || 'Anonymous'}
+                    </h3>
+                  </div>
                   <p className='text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
                     Lulus Tahun {person.profile?.graduationYear}
                   </p>
                 </div>
+              </div>
+
+              <div className='flex flex-wrap gap-1 mt-1 mb-3'>
+                {person.isMentor && (
+                  <span
+                    className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'
+                    title='Mentor'
+                  >
+                    <FaCrown className='text-[10px]' />
+                    Mentor
+                  </span>
+                )}
+
+                {person.badges && person.badges.length > 0 && (
+                  <>
+                    {person.badges.map((badge: any, idx: number) => (
+                      <span
+                        key={idx}
+                        className='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                        title={badge.name}
+                      >
+                        <FaMedal className='text-[10px]' />
+                        {badge.name}
+                      </span>
+                    ))}
+                  </>
+                )}
               </div>
 
               <div className='space-y-3 flex-1'>

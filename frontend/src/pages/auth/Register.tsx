@@ -32,7 +32,7 @@ const Register = () => {
   const captchaRef = useRef<ReCAPTCHA>(null);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     setFormData({
       ...formData,
@@ -72,20 +72,19 @@ const Register = () => {
         formData.email,
         formData.password,
         formData.role,
-        captchaToken
+        captchaToken,
       );
 
       console.log('Registration successful, showing toast...');
       console.log('Registration successful, navigating to login...');
       navigate('/login', {
         state: {
-          successMessage: 'Pendaftaran berhasil! Silakan login untuk masuk.'
-        }
+          successMessage: 'Pendaftaran berhasil! Silakan login untuk masuk.',
+        },
       });
     } catch (err: any) {
       console.error('Registration error:', err);
       setError(err.message || 'Pendaftaran gagal');
-      // Reset captcha on failure
       captchaRef.current?.reset();
       setCaptchaToken(null);
     } finally {
@@ -93,15 +92,13 @@ const Register = () => {
     }
   };
 
-  // NOTE: reCAPTCHA v2 Checkbox keys are required for this component.
-  // v3 keys will cause "Jenis kunci tidak valid" error.
   const siteKey =
     import.meta.env.VITE_RECAPTCHA_SITE_KEY ||
     '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
   if (!import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
     console.warn(
-      'Using reCAPTCHA test site key. Ensure backend also uses test secret key.'
+      'Using reCAPTCHA test site key. Ensure backend also uses test secret key.',
     );
   }
 

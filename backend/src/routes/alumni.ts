@@ -4,6 +4,7 @@ import User from '../models/User';
 import News from '../models/News';
 import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
+import Badge from '../models/Badge';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -37,16 +38,15 @@ router.get(
 
       const alumni = await User.find(query)
         .select('-password')
+        .populate('badges')
         .sort({ 'profile.fullName': 1 });
 
       res.json(alumni);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
-
-
 
 router.get(
   '/profile',
@@ -54,35 +54,43 @@ router.get(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const user = await User.findById(req.user!._id).select('-password');
+      const user = await User.findById(req.user!._id)
+        .select('-password')
+        .populate('badges');
       res.json(user);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 // Get mutual alumni (same graduation year)
-router.get('/mutual-alumni', authenticate, authorize('alumni'), async (req: AuthenticatedRequest, res: Response) => {
-  try {
-    const user = await User.findById(req.user!._id);
-    if (!user || !user.profile?.graduationYear) {
-      return res.json([]);
+router.get(
+  '/mutual-alumni',
+  authenticate,
+  authorize('alumni'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const user = await User.findById(req.user!._id);
+      if (!user || !user.profile?.graduationYear) {
+        return res.json([]);
+      }
+
+      const mutualAlumni = await User.find({
+        role: 'alumni',
+        'profile.graduationYear': user.profile.graduationYear,
+        _id: { $ne: user._id },
+      })
+        .select('-password -email -socialMedia.email')
+        .populate('badges')
+        .sort({ 'profile.fullName': 1 });
+
+      res.json(mutualAlumni);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
     }
-
-    const mutualAlumni = await User.find({
-      role: 'alumni',
-      'profile.graduationYear': user.profile.graduationYear,
-      _id: { $ne: user._id },
-    })
-      .select('-password -email -socialMedia.email')
-      .sort({ 'profile.fullName': 1 });
-
-    res.json(mutualAlumni);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
+  },
+);
 
 router.put(
   '/profile',
@@ -90,8 +98,14 @@ router.put(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { profile, university, job, socialMedia, questionnaireCompleted, isMentor } =
-        req.body;
+      const {
+        profile,
+        university,
+        job,
+        socialMedia,
+        questionnaireCompleted,
+        isMentor,
+      } = req.body;
 
       const user = await User.findByIdAndUpdate(
         req.user!._id,
@@ -108,14 +122,14 @@ router.put(
             isMentor: isMentor !== undefined ? isMentor : false,
           },
         },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       ).select('-password');
 
       res.json(user);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -137,14 +151,14 @@ router.post(
             questionnaireCompleted: true,
           },
         },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       ).select('-password');
 
       res.json({ message: 'Questionnaire submitted successfully', user });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.put(
@@ -166,14 +180,14 @@ router.put(
             questionnaireCompleted: true,
           },
         },
-        { new: true, runValidators: true }
+        { new: true, runValidators: true },
       ).select('-password');
 
       res.json({ message: 'Questionnaire updated successfully', user });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.get(
@@ -218,7 +232,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.get(
@@ -261,7 +275,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.get(
@@ -306,7 +320,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.get(
@@ -384,26 +398,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
-);
-
-
-router.get(
-  '/news/unread-count',
-  authenticate,
-  authorize('alumni'),
-  async (req: AuthenticatedRequest, res: Response) => {
-    try {
-      const totalNews = await News.countDocuments({
-        isPublished: true,
-        $or: [{ type: 'alumni' }, { type: 'all' }],
-      });
-      const readCount = await NewsRead.countDocuments({ user: req.user!._id });
-      res.json({ count: Math.max(0, totalNews - readCount) });
-    } catch (error: any) {
-      res.status(500).json({ message: error.message });
-    }
-  }
+  },
 );
 
 router.get(
@@ -419,7 +414,9 @@ router.get(
         .populate('author', 'username')
         .sort({ createdAt: -1 });
 
-      const readNews = await NewsRead.find({ user: req.user!._id }).select('news');
+      const readNews = await NewsRead.find({ user: req.user!._id }).select(
+        'news',
+      );
       const readNewsIds = readNews.map((nr) => nr.news.toString());
 
       const newsWithReadStatus = news.map((n) => ({
@@ -431,7 +428,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.get(
@@ -451,7 +448,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -460,7 +457,10 @@ router.post(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const news = await News.findOne({ _id: req.params.id, isPublished: true });
+      const news = await News.findOne({
+        _id: req.params.id,
+        isPublished: true,
+      });
       if (!news) return res.status(404).json({ message: 'News not found' });
 
       const existingRead = await NewsRead.findOne({
@@ -480,7 +480,7 @@ router.post(
         res.status(500).json({ message: error.message });
       }
     }
-  }
+  },
 );
 
 router.get(
@@ -494,7 +494,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.post(
@@ -508,7 +508,9 @@ router.post(
         return res.status(400).json({ message: 'Rating harus antara 1-5' });
       }
       if (!kritik && !saran) {
-        return res.status(400).json({ message: 'Kritik atau saran harus diisi' });
+        return res
+          .status(400)
+          .json({ message: 'Kritik atau saran harus diisi' });
       }
 
       const feedback = await Feedback.findOneAndUpdate(
@@ -521,14 +523,14 @@ router.post(
             role: 'alumni',
           },
         },
-        { upsert: true, new: true }
+        { upsert: true, new: true },
       );
 
       res.json({ message: 'Feedback berhasil diproses', feedback });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 router.put(
@@ -545,15 +547,58 @@ router.put(
       const feedback = await Feedback.findOneAndUpdate(
         { user: req.user!._id },
         { $set: { rating, kritik: kritik || '', saran: saran || '' } },
-        { new: true }
+        { new: true },
       );
 
-      if (!feedback) return res.status(404).json({ message: 'Feedback tidak ditemukan' });
+      if (!feedback)
+        return res.status(404).json({ message: 'Feedback tidak ditemukan' });
       res.json({ message: 'Feedback berhasil diperbarui', feedback });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
+);
+
+router.post(
+  '/badges/claim',
+  authenticate,
+  authorize('alumni'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { code } = req.body;
+      if (!code) return res.status(400).json({ message: 'Code is required' });
+
+      const badge = await Badge.findOne({ code });
+      if (!badge)
+        return res
+          .status(404)
+          .json({ message: 'Invalid or expired badge code' });
+
+      if (new Date() > badge.expiredDate) {
+        return res.status(400).json({ message: 'Badge code has expired' });
+      }
+
+      const user = await User.findById(req.user!._id);
+      if (!user) return res.status(404).json({ message: 'User not found' });
+
+      // Check if user already has badge
+      // Note: badges is array of ObjectId, need to check string equality or use mongoose methods
+      const alreadyClaimed = user.badges.some(
+        (b: any) => b.toString() === badge._id.toString(),
+      );
+
+      if (alreadyClaimed) {
+        return res.status(400).json({ message: 'Badge already claimed' });
+      }
+
+      user.badges.push(badge._id as any);
+      await user.save();
+
+      res.json({ message: 'Badge claimed successfully', badge });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 );
 
 export default router;

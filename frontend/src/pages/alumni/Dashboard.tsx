@@ -50,8 +50,6 @@ const AlumniDashboard = () => {
     fetchData();
   }, []);
 
-  // ... (Keeping useEffects) ...
-
   useEffect(() => {
     const updateChartWidth = () => {
       const width = window.innerWidth;
@@ -129,13 +127,25 @@ const AlumniDashboard = () => {
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='flex flex-col md:flex-row justify-between items-center mb-6 gap-4'>
         <div className='text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0 flex items-center justify-center md:justify-start gap-3'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0 flex flex-wrap items-center justify-center md:justify-start gap-0 md:gap-3'>
             Dashboard Alumni
-            {profile?.isMentor && (
-              <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
-                <FaCrown className='text-[10px]' /> Mentor Aktif
-              </span>
-            )}
+            <div className='flex flex-wrap items-center gap-2 justify-center md:justify-start mt-2 mb-1'>
+              {profile?.isMentor && (
+                <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
+                  <FaCrown className='text-[10px]' /> Mentor
+                </span>
+              )}
+              {profile?.badges &&
+                profile.badges.map((badge: any) => (
+                  <span
+                    key={badge._id}
+                    className='inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold border border-blue-200 dark:border-blue-500/20'
+                    title={badge.description}
+                  >
+                    <FaCrown className='text-[10px]' /> {badge.name}
+                  </span>
+                ))}
+            </div>
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
             Selamat datang kembali di Tracer Study

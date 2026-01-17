@@ -32,6 +32,7 @@ export interface IUser extends Document {
   };
   questionnaireCompleted: boolean;
   isMentor: boolean;
+  badges: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -99,6 +100,10 @@ const UserSchema = new Schema<IUser>(
       type: Boolean,
       default: false,
     },
+    badges: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Badge'
+    }],
   },
   {
     timestamps: true,

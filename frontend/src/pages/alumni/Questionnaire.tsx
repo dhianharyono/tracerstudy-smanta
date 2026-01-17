@@ -49,13 +49,15 @@ const InputField = ({
       max={max}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-xl border border-[color:var(--border-color)] ${disabled
-        ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-        : 'bg-[color:var(--bg-secondary)]'
-        } px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+      className={`w-full rounded-xl border border-[color:var(--border-color)] ${
+        disabled
+          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+          : 'bg-[color:var(--bg-secondary)]'
+      } px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+        validationErrors[name]
           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
           : ''
-        }`}
+      }`}
     />
     {validationErrors[name] && (
       <span className='mt-1 text-xs text-red-500'>
@@ -89,13 +91,15 @@ const SelectField = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled
-          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-          : 'bg-[color:var(--bg-secondary)]'
-          } px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${
+          disabled
+            ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+            : 'bg-[color:var(--bg-secondary)]'
+        } px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+          validationErrors[name]
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : ''
-          }`}
+        }`}
       >
         <option value=''>Pilih</option>
         {options.map((opt: any) => (
@@ -235,7 +239,7 @@ const AlumniQuestionnaire = () => {
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
-    {}
+    {},
   );
 
   useEffect(() => {
@@ -247,7 +251,9 @@ const AlumniQuestionnaire = () => {
             .catch(() => ({ data: null })),
         ]);
 
-        const univList = [...new Set([...INDONESIA_UNIVERSITIES, ...POLTEKKES_LIST])].sort() as string[];
+        const univList = [
+          ...new Set([...INDONESIA_UNIVERSITIES, ...POLTEKKES_LIST]),
+        ].sort() as string[];
         setUniversities(univList);
         setMajors(COMMON_MAJORS);
 
@@ -305,7 +311,9 @@ const AlumniQuestionnaire = () => {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      | { target: { name: string; value: string } },
   ) => {
     const { name, value } = e.target;
 
@@ -407,11 +415,11 @@ const AlumniQuestionnaire = () => {
         university:
           formData.profile.isStudying === 'ya'
             ? {
-              ...formData.university,
-              entryYear: formData.university.entryYear
-                ? parseInt(formData.university.entryYear)
-                : undefined,
-            }
+                ...formData.university,
+                entryYear: formData.university.entryYear
+                  ? parseInt(formData.university.entryYear)
+                  : undefined,
+              }
             : undefined,
         job: formData.profile.isWorking === 'ya' ? formData.job : undefined,
         socialMedia: {
@@ -428,8 +436,6 @@ const AlumniQuestionnaire = () => {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
 
-
-      // Update local user context to reflect changes immediately
       const userRes = await axios.get('/api/users/profile');
       updateUser(userRes.data);
 
@@ -438,7 +444,7 @@ const AlumniQuestionnaire = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-        `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`
+          `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`,
       );
     } finally {
       setSubmitLoading(false);
@@ -609,10 +615,11 @@ const AlumniQuestionnaire = () => {
                       handleChange(e);
                     }}
                     disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                      : ''
-                      }`}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${
+                      isReadOnly
+                        ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                        : ''
+                    }`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>
@@ -628,10 +635,11 @@ const AlumniQuestionnaire = () => {
                     value={formData.profile.isWorking}
                     onChange={handleChange}
                     disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                      : ''
-                      }`}
+                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${
+                      isReadOnly
+                        ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                        : ''
+                    }`}
                   >
                     <option value=''>Pilih</option>
                     <option value='ya'>Ya</option>

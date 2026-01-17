@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 import axios from 'axios';
 
 interface User {
@@ -12,13 +19,20 @@ interface User {
     entryYear?: number;
     graduationYear?: number;
   };
+  badges?: any[];
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, role: string, captchaToken: string) => Promise<void>;
+  register: (
+    username: string,
+    email: string,
+    password: string,
+    role: string,
+    captchaToken: string,
+  ) => Promise<void>;
   logout: () => void;
   updateUser: (newUser: any) => void;
   loading: boolean;
@@ -34,7 +48,9 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -53,7 +69,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const login = async (username: string, password: string) => {
     try {
-      const response = await axios.post('/api/auth/login', { username, password });
+      const response = await axios.post('/api/auth/login', {
+        username,
+        password,
+      });
       const { token: newToken, user: newUser } = response.data;
 
       setToken(newToken);
@@ -66,7 +85,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const register = async (username: string, email: string, password: string, role: string, captchaToken: string) => {
+  const register = async (
+    username: string,
+    email: string,
+    password: string,
+    role: string,
+    captchaToken: string,
+  ) => {
     try {
       await axios.post('/api/auth/register', {
         username,
@@ -75,7 +100,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         role,
         captchaToken,
       });
-      // Removed automatic login logic
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
@@ -97,7 +121,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           logout();
         }
         return Promise.reject(error);
-      }
+      },
     );
 
     return () => {
@@ -114,22 +138,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, register, logout, updateUser, loading }}>
+    <AuthContext.Provider
+      value={{ user, token, login, register, logout, updateUser, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
