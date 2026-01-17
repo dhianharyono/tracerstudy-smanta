@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LuX, LuCheck } from 'react-icons/lu';
+import { LuX } from 'react-icons/lu';
 import Toast from '@/components/toast';
 import SearchableSelect from '@/components/SearchableSelect';
 import { COMMON_MAJORS, POLTEKKES_LIST } from '../pages/constant';
