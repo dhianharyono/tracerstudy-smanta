@@ -160,4 +160,15 @@ router.get('/:id/registrations', async (req: AuthenticatedRequest, res: Response
     }
 });
 
+// DELETE /registrations/:id - Delete Registration (Admin Only)
+router.delete('/registrations/:id', authorize('admin'), async (req: Request, res: Response) => {
+    try {
+        const registration = await EventRegistration.findByIdAndDelete(req.params.id);
+        if (!registration) return res.status(404).json({ message: 'Registration not found' });
+        res.json({ message: 'Registration deleted successfully' });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 export default router;

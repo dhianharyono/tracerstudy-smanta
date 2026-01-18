@@ -29,6 +29,9 @@ const AdminEventManagement = () => {
   });
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteRegistrantId, setDeleteRegistrantId] = useState<string | null>(
+    null,
+  );
 
   const [viewingEvent, setViewingEvent] = useState<any>(null);
   const [registrants, setRegistrants] = useState<any[]>([]);
@@ -141,6 +144,25 @@ const AdminEventManagement = () => {
     }
   };
 
+  const handleDeleteRegistrant = async () => {
+    if (!deleteRegistrantId) return;
+    try {
+      await axios.delete(`/api/events/registrations/${deleteRegistrantId}`);
+      Toast('Peserta berhasil dihapus', 'success');
+      // Refresh list
+      const response = await axios.get(
+        `/api/events/${viewingEvent._id}/registrations`,
+      );
+      setRegistrants(response.data);
+      setDeleteRegistrantId(null);
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal menghapus peserta',
+        'error',
+      );
+    }
+  };
+
   const filteredRegistrants = useMemo(() => {
     return registrants.filter((reg) =>
       reg.userId?.profile?.fullName
@@ -160,21 +182,21 @@ const AdminEventManagement = () => {
             setRegistrants([]);
             setSearchQuery('');
           }}
-          className='mb-6 text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] flex items-center gap-2'
+          className='mb-6 text-xs md:text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] flex items-center gap-2'
         >
           <LuArrowLeft /> Kembali ke Daftar Event
         </button>
 
         <div className='mb-8'>
-          <h1 className='text-2xl font-bold mb-2'>
+          <h1 className='text-sm md:text-2xl font-bold mb-2'>
             Peserta Event: {viewingEvent.name}
           </h1>
-          <p className='text-[color:var(--text-secondary)]'>
+          <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
             {viewingEvent.description}
           </p>
         </div>
 
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl shadow-sm border border-[color:var(--border-color)] mb-6'>
+        <div className='bg-[color:var(--bg-card)] text-sm md:text-lg p-4 rounded-xl shadow-sm border border-[color:var(--border-color)] mb-6'>
           <div className='relative'>
             <LuSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]' />
             <input
@@ -190,45 +212,52 @@ const AdminEventManagement = () => {
         {loadingRegistrants ? (
           <SmartLoader />
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-6'>
             {filteredRegistrants.map((reg) => (
               <div
                 key={reg._id}
-                className='bg-[color:var(--bg-card)] rounded-xl p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow'
+                className='bg-[color:var(--bg-card)] rounded-xl p-3 md:p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow flex flex-col h-full'
               >
-                <div className='flex items-center gap-3 mb-4'>
-                  <div className='w-10 h-10 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold'>
+                <div className='flex flex-col sm:flex-row items-center sm:items-start gap-2 md:gap-3 mb-3 relative'>
+                  <div className='invisible md:visible w-0 h-0 md:w-10 md:h-10 shrink-0 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold text-xs md:text-base'>
                     {reg.userId?.profile?.fullName?.[0] || '?'}
                   </div>
-                  <div>
-                    <h3 className='font-semibold text-[color:var(--text-primary)] line-clamp-1'>
+                  <div className='text-center sm:text-left min-w-0 w-full pr-6'>
+                    <div className='font-semibold text-[color:var(--text-primary)] text-xs md:text-sm line-clamp-1'>
                       {reg.userId?.profile?.fullName || 'Anonymous'}
-                    </h3>
-                    <p className='text-xs text-[color:var(--text-secondary)]'>
+                    </div>
+                    <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
                       {new Date(reg.createdAt).toLocaleDateString()}
                     </p>
                   </div>
+                  <button
+                    onClick={() => setDeleteRegistrantId(reg._id)}
+                    className='p-1.5 md:p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors absolute top-0 right-0'
+                    title='Hapus Peserta'
+                  >
+                    <LuTrash2 className='text-xs md:text-base' />
+                  </button>
                 </div>
 
-                <div className='space-y-3'>
-                  <div className='bg-[color:var(--bg-secondary)] p-3 rounded-lg'>
-                    <p className='text-xs font-medium text-[color:var(--text-secondary)] uppercase mb-1'>
-                      Harapan
-                    </p>
-                    <p className='text-sm text-[color:var(--text-primary)] italic'>
+                <div className='space-y-2 md:space-y-3 flex-1'>
+                  <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
+                    Harapan :
+                  </p>
+                  <div className='bg-[color:var(--bg-secondary)] rounded-lg p-2 md:p-3'>
+                    <p className='text-xs md:text-sm text-[color:var(--text-primary)] italic line-clamp-2 md:line-clamp-3'>
                       "{reg.expectation}"
                     </p>
                   </div>
 
                   <div>
-                    <p className='text-xs font-medium text-[color:var(--text-secondary)] uppercase mb-1'>
-                      Rencana Studi
+                    <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
+                      Rencana Studi :
                     </p>
-                    <div className='text-sm'>
-                      <p className='font-medium text-[var(--primary)]'>
+                    <div className='text-[10px] md:text-sm'>
+                      <p className='font-medium text-[var(--primary)] line-clamp-1 md:line-clamp-2'>
                         {reg.studyPlan?.university}
                       </p>
-                      <p className='text-[color:var(--text-primary)]'>
+                      <p className='text-[color:var(--text-primary)] text-[10px] md:text-xs line-clamp-1'>
                         {reg.studyPlan?.major}
                       </p>
                     </div>
@@ -237,12 +266,22 @@ const AdminEventManagement = () => {
               </div>
             ))}
             {filteredRegistrants.length === 0 && (
-              <div className='col-span-full py-12 text-center text-[color:var(--text-tertiary)]'>
+              <div className='col-span-full py-12 text-xs md:text-sm text-center text-[color:var(--text-tertiary)]'>
                 Tidak ada data peserta yang sesuai filter.
               </div>
             )}
           </div>
         )}
+
+        <ConfirmationModal
+          isOpen={!!deleteRegistrantId}
+          onClose={() => setDeleteRegistrantId(null)}
+          onConfirm={handleDeleteRegistrant}
+          title='Hapus Peserta'
+          message='Apakah Anda yakin ingin menghapus peserta ini dari event?'
+          confirmText='Hapus'
+          cancelText='Batal'
+        />
       </div>
     );
   }
@@ -250,7 +289,7 @@ const AdminEventManagement = () => {
   return (
     <div className='p-6'>
       <div className='flex justify-between items-center mb-6'>
-        <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+        <h1 className='text-sm md:text-2xl font-bold text-[color:var(--text-primary)]'>
           Manajemen Event
         </h1>
         <button
@@ -258,7 +297,7 @@ const AdminEventManagement = () => {
             resetForm();
             setIsModalOpen(true);
           }}
-          className='flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-opacity'
+          className='text-sm flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-opacity'
         >
           <LuPlus size={20} />
           <span>Tambah Event</span>

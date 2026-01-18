@@ -105,22 +105,22 @@ const AlumniEventHub = () => {
       <div className='p-6 page-fade-in'>
         <button
           onClick={() => setSelectedEvent(null)}
-          className='mb-6 text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] flex items-center gap-2'
+          className='mb-6 text-xs md:text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] flex items-center gap-2'
         >
           &larr; Kembali ke Daftar Event
         </button>
 
         <div className='mb-8'>
-          <h1 className='text-2xl font-bold text-[color:var(--text-primary)] mb-2'>
+          <h1 className='text-sm md:text-2xl font-bold text-[color:var(--text-primary)] mb-2'>
             Peserta Event: {selectedEvent.name}
           </h1>
-          <p className='text-[color:var(--text-secondary)]'>
+          <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
             {selectedEvent.description}
           </p>
         </div>
 
         {/* Filters */}
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl shadow-sm border border-[color:var(--border-color)] mb-6 flex flex-col md:flex-row gap-4'>
+        <div className='bg-[color:var(--bg-card)] text-xs md:text-sm p-4 rounded-xl shadow-sm border border-[color:var(--border-color)] mb-6 flex flex-col md:flex-row gap-4'>
           <div className='flex-1 relative'>
             <LuSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]' />
             <input
@@ -163,45 +163,45 @@ const AlumniEventHub = () => {
             fullScreen={false}
           />
         ) : (
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-6'>
             {filteredRegistrants.map((reg) => (
               <div
                 key={reg._id}
-                className='bg-[color:var(--bg-card)] rounded-xl p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow'
+                className='bg-[color:var(--bg-card)] rounded-xl p-3 md:p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow flex flex-col h-full'
               >
-                <div className='flex items-center gap-3 mb-4'>
-                  <div className='w-10 h-10 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold'>
+                <div className='flex flex-col sm:flex-row items-center sm:items-start gap-2 md:gap-3 mb-3'>
+                  <div className='invisible md:visible w-0 h-0 md:w-10 md:h-10 shrink-0 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold text-xs md:text-base'>
                     {reg.userId?.profile?.fullName?.[0] || '?'}
                   </div>
-                  <div>
-                    <h3 className='font-semibold text-[color:var(--text-primary)] line-clamp-1'>
+                  <div className='text-center sm:text-left min-w-0 w-full'>
+                    <div className='font-semibold text-[color:var(--text-primary)] text-xs md:text-sm line-clamp-1'>
                       {reg.userId?.profile?.fullName || 'Anonymous'}
-                    </h3>
-                    <p className='text-xs text-[color:var(--text-secondary)]'>
+                    </div>
+                    <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
                       {new Date(reg.createdAt).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
 
-                <div className='space-y-3'>
-                  <div className='bg-[color:var(--bg-secondary)] rounded-lg'>
-                    <p className='text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
-                      Harapan :
-                    </p>
-                    <p className='text-sm p-3 text-[color:var(--text-primary)] italic'>
+                <div className='space-y-2 md:space-y-3 flex-1'>
+                  <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
+                    Harapan :
+                  </p>
+                  <div className='bg-[color:var(--bg-secondary)] rounded-lg p-2 md:p-3'>
+                    <p className='text-xs md:text-sm text-[color:var(--text-primary)] italic line-clamp-2 md:line-clamp-3'>
                       "{reg.expectation}"
                     </p>
                   </div>
 
                   <div>
-                    <p className='text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                    <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
                       Rencana Studi :
                     </p>
-                    <div className='text-sm'>
-                      <p className='font-medium text-[var(--primary)]'>
+                    <div className='text-[10px] md:text-sm'>
+                      <p className='font-medium text-[var(--primary-dark)] line-clamp-2 md:line-clamp-2'>
                         {reg.studyPlan?.university}
                       </p>
-                      <p className='text-[color:var(--text-primary)] text-xs'>
+                      <p className='text-[color:var(--text-primary)] text-[10px] md:text-xs line-clamp-1'>
                         {reg.studyPlan?.major}
                       </p>
                     </div>
@@ -210,7 +210,7 @@ const AlumniEventHub = () => {
               </div>
             ))}
             {filteredRegistrants.length === 0 && (
-              <div className='col-span-full py-12 text-center text-[color:var(--text-tertiary)]'>
+              <div className='col-span-full text-xs md:text-sm py-12 text-center text-[color:var(--text-tertiary)]'>
                 Tidak ada data peserta yang sesuai filter.
               </div>
             )}
@@ -224,41 +224,42 @@ const AlumniEventHub = () => {
     <div className='p-6 page-fade-in'>
       <div className='mb-8 text-center md:text-left'>
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Event Alumni
+          Event SMANTA
         </h1>
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Daftar event terkini di SMANTA
+          Daftar event terkini di SMANTA, ikuti dan jangan sampai terlewat!
         </p>
       </div>
 
-      <div className='grid gap-6'>
+      <div className='grid grid-cols-2 gap-3 md:grid-cols-1 md:gap-6'>
         {events.map((event) => (
           <div
             key={event._id}
-            className='bg-[color:var(--bg-card)] rounded-xl p-6 shadow-sm border border-[color:var(--border-color)] flex flex-col md:flex-row gap-6 items-start md:items-center justify-between'
+            className='bg-[color:var(--bg-card)] rounded-xl p-4 md:p-6 shadow-sm border border-[color:var(--border-color)] flex flex-col md:flex-row gap-4 md:gap-6 items-start md:items-center justify-between h-full md:h-auto'
           >
-            <div className='flex-1'>
-              <h3 className='text-lg md:text-xl font-bold text-[color:var(--text-primary)] mb-2'>
+            <div className='flex-1 w-full'>
+              <h3 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] mb-1 md:mb-2 line-clamp-2 md:line-clamp-1'>
                 {event.name}
               </h3>
-              <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-4'>
+              <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-3 md:mb-4 line-clamp-2 md:line-clamp-none'>
                 {event.description}
               </p>
-              <div className='flex items-center gap-2 text-xs text-[color:var(--text-tertiary)]'>
-                <LuCalendar size={13} />
-                <span>
-                  {new Date(event.date).toLocaleDateString('id-ID', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}
-                </span>
+              <div className='flex flex-wrap items-center gap-2 text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
+                <div className='flex items-center gap-1.5'>
+                  <LuCalendar size={12} className='md:w-[13px] md:h-[13px]' />
+                  <span className='line-clamp-1'>
+                    {new Date(event.date).toLocaleDateString('id-ID', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                </div>
               </div>
               <div className='mt-2'>
                 {!hasAccess(event) && (
-                  <span className='px-2 py-0.5 rounded-full bg-amber-400 text-gray-700 text-xs'>
-                    Badge Required to Access
+                  <span className='inline-block px-2 py-0.5 rounded-full bg-amber-400 text-gray-700 text-[10px] md:text-xs font-medium'>
+                    Requires Badge
                   </span>
                 )}
               </div>
@@ -267,10 +268,10 @@ const AlumniEventHub = () => {
             {hasAccess(event) && (
               <button
                 onClick={() => handlePreview(event)}
-                className='flex items-center gap-2 px-6 py-3 bg-[var(--primary)] text-white text-sm rounded-xl hover:opacity-90 transition-all shadow-lg hover:shadow-primary/30'
+                className='w-full md:w-auto flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-3 bg-[var(--primary)] text-white text-xs md:text-sm rounded-lg md:rounded-xl hover:opacity-90 transition-all shadow-sm md:shadow-lg hover:shadow-primary/30 mt-auto md:mt-0'
               >
-                <LuEye size={20} />
-                <span>Preview Peserta</span>
+                <LuEye className='text-sm md:text-xl' />
+                <span>Preview</span>
               </button>
             )}
           </div>

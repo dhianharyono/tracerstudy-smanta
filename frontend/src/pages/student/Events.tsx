@@ -11,18 +11,18 @@ const StudentEvents = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await axios.get('/api/events');
-        setEvents(response.data);
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get('/api/events');
+      setEvents(response.data);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchEvents();
   }, []);
 
@@ -70,7 +70,7 @@ const StudentEvents = () => {
         onClose={() => setIsRegisterModalOpen(false)}
         event={selectedEvent}
         onSuccess={() => {
-          window.location.reload();
+          fetchEvents();
         }}
       />
     </div>

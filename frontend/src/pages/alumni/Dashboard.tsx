@@ -99,10 +99,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -155,7 +155,7 @@ const AlumniDashboard = () => {
                 ))}
             </div>
           </h1>
-          <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1 md:mt-0'>
             Selamat datang kembali di Tracer Study
           </p>
         </div>
