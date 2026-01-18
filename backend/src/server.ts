@@ -19,30 +19,47 @@ const PORT = process.env.PORT || 5000;
 // Security Middleware
 app.use(helmet());
 
-// CORS configuration - restricted to allowed origins in production
-const rawOrigins = process.env.ALLOWED_ORIGINS || process.env.allowed_origins || '';
-const customOrigins = rawOrigins.split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean);
-const defaultOrigins = ['http://localhost:3000', 'http://localhost:5173', 'http://127.0.0.1:3000', 'http://127.0.0.1:5173'];
-const allowedOrigins = customOrigins.length > 0 ? customOrigins : defaultOrigins;
+// CORS configuration
+const rawOrigins =
+  process.env.ALLOWED_ORIGINS || process.env.allowed_origins || '';
+const customOrigins = rawOrigins
+  .split(',')
+  .map((o) => o.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+const defaultOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5173',
+];
+const allowedOrigins =
+  customOrigins.length > 0 ? customOrigins : defaultOrigins;
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
 
-    const normalizedOrigin = origin.replace(/\/$/, '');
-    const isDevelopment = process.env.NODE_ENV !== 'production';
-    const isLocalhost = normalizedOrigin.startsWith('http://localhost') || normalizedOrigin.startsWith('http://127.0.0.1');
+      const normalizedOrigin = origin.replace(/\/$/, '');
+      const isDevelopment = process.env.NODE_ENV !== 'production';
+      const isLocalhost =
+        normalizedOrigin.startsWith('http://localhost') ||
+        normalizedOrigin.startsWith('http://127.0.0.1');
 
-    if (allowedOrigins.some(o => o === normalizedOrigin) || (isDevelopment && isLocalhost)) {
-      return callback(null, true);
-    } else {
-      const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
-      return callback(new Error(msg), false);
-    }
-  },
-  credentials: true
-}));
+      if (
+        allowedOrigins.some((o) => o === normalizedOrigin) ||
+        (isDevelopment && isLocalhost)
+      ) {
+        return callback(null, true);
+      } else {
+        const msg = `The CORS policy for this site does not allow access from the specified Origin: ${origin}`;
+        return callback(new Error(msg), false);
+      }
+    },
+    credentials: true,
+  }),
+);
 
 // Global Rate Limiting
 const globalLimiter = rateLimit({
@@ -56,6 +73,37 @@ app.use('/api/', globalLimiter);
 
 app.use(express.json({ limit: '10mb' })); // Reduced limit for better security
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Cached MongoDB Connection for Serverless
+let isConnected = false;
+
+const connectToDatabase = async () => {
+  if (isConnected) {
+    console.log('Using existing database connection');
+    return;
+  }
+
+  try {
+    const db = await mongoose.connect(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/tracer-study',
+    );
+    isConnected = db.connections[0].readyState === 1;
+    console.log('New database connection successful');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    throw error;
+  }
+};
+
+// Middleware to ensure DB connection
+app.use(async (req, res, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Database connection failed' });
+  }
+});
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -74,28 +122,23 @@ app.get('/api/health', (req, res) => {
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
   const status = err.status || 500;
-  const message = process.env.NODE_ENV === 'production'
-    ? 'Internal Server Error'
-    : err.message;
+  const message =
+    process.env.NODE_ENV === 'production'
+      ? 'Internal Server Error'
+      : err.message;
 
   res.status(status).json({
     message,
-    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack }),
   });
 });
 
-// Connect to MongoDB
-mongoose
-  .connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/tracer-study')
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
-  })
-  .catch((error) => {
-    console.error('MongoDB connection error:', error);
+// For Local Development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is running locally on port ${PORT}`);
   });
+}
 
 export default app;
 
