@@ -10,7 +10,6 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
-  FaUserGraduate,
   FaUserTag,
 } from 'react-icons/fa';
 

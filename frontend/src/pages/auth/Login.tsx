@@ -2,13 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Toast from '@/components/toast';
-import {
-  FaGraduationCap,
-  FaUser,
-  FaLock,
-  FaEye,
-  FaEyeSlash,
-} from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
   const [username, setUsername] = useState('');
