@@ -79,10 +79,10 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
       <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up flex flex-col max-h-[90vh]'>
         <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50 shrink-0'>
           <div>
-            <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>
+            <div className='text-sm md:text-xl font-bold text-[color:var(--text-primary)]'>
               Registrasi Event
-            </h3>
-            <p className='text-sm text-[color:var(--text-secondary)]'>
+            </div>
+            <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mt-1'>
               {event?.name}
             </p>
           </div>
