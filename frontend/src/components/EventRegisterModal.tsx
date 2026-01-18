@@ -38,6 +38,20 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.expectation.trim()) {
+      Toast('Harapan mengikuti event wajib diisi', 'error');
+      return;
+    }
+    if (!formData.university) {
+      Toast('Perguruan Tinggi wajib dipilih', 'error');
+      return;
+    }
+    if (!formData.major) {
+      Toast('Jurusan wajib dipilih', 'error');
+      return;
+    }
+
     setLoading(true);
     try {
       await axios.post(`/api/events/${event._id}/register`, {
@@ -83,6 +97,7 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
           <div>
             <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-2'>
               Harapan Mengikuti Event
+              <span className='text-red-500 ml-1'>*</span>
             </label>
             <textarea
               required
@@ -139,7 +154,7 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
                 <div className='w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin' />
               ) : (
                 <>
-                  <span>Kirim Pendaftaran</span>
+                  <span>Daftar</span>
                 </>
               )}
             </button>

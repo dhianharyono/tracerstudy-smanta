@@ -75,6 +75,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                             : 'bg-[color:var(--bg-secondary)]'
                             }`}
                         placeholder={value || placeholder}
+                        required={required}
                         value={isOpen ? searchTerm : value}
                         onChange={(e) => {
                             setSearchTerm(e.target.value);

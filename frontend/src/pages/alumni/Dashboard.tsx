@@ -131,7 +131,7 @@ const AlumniDashboard = () => {
             Dashboard Alumni
             <div className='flex flex-wrap items-center gap-2 justify-center md:justify-start mt-2 mb-1'>
               {profile?.isMentor && (
-                <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
+                <span className='ml-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
                   <FaCrown className='text-[10px]' /> Mentor
                 </span>
               )}

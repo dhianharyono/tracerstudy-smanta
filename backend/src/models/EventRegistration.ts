@@ -27,10 +27,22 @@ const EventRegistrationSchema = new Schema<IEventRegistration>(
     expectation: {
       type: String,
       required: true,
+      minlength: [1, 'Harapan wajib diisi'],
+      trim: true,
     },
     studyPlan: {
-      university: { type: String, required: true },
-      major: { type: String, required: true },
+      university: {
+        type: String,
+        required: true,
+        minlength: [1, 'Universitas wajib dipilih'],
+        trim: true,
+      },
+      major: {
+        type: String,
+        required: true,
+        minlength: [1, 'Jurusan wajib dipilih'],
+        trim: true,
+      },
     },
   },
   {

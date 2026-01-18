@@ -478,7 +478,7 @@ const AlumniQuestionnaire = () => {
                 <h3 className='text-base md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
                   Kuesioner Selesai
                 </h3>
-                <p className='text-sm text-[color:var(--text-secondary)] leading-relaxed'>
+                <p className='text-xs md:text-sm text-[color:var(--text-secondary)] leading-relaxed'>
                   Anda telah mengisi kuesioner. Klik tombol edit untuk
                   memperbarui data Anda.
                 </p>

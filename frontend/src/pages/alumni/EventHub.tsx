@@ -210,11 +210,11 @@ const AlumniEventHub = () => {
 
   return (
     <div className='p-6 page-fade-in'>
-      <div className='mb-6'>
-        <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+      <div className='mb-8 text-center md:text-left'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Event Alumni
         </h1>
-        <p className='text-[color:var(--text-secondary)]'>
+        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
           Daftar event terkini di SMANTA
         </p>
       </div>
@@ -226,14 +226,14 @@ const AlumniEventHub = () => {
             className='bg-[color:var(--bg-card)] rounded-xl p-6 shadow-sm border border-[color:var(--border-color)] flex flex-col md:flex-row gap-6 items-start md:items-center justify-between'
           >
             <div className='flex-1'>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)] mb-2'>
+              <h3 className='text-lg md:text-xl font-bold text-[color:var(--text-primary)] mb-2'>
                 {event.name}
               </h3>
-              <p className='text-sm text-[color:var(--text-secondary)] mb-4'>
+              <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-4'>
                 {event.description}
               </p>
-              <div className='flex items-center gap-2 text-sm text-[color:var(--text-tertiary)]'>
-                <LuCalendar size={16} />
+              <div className='flex items-center gap-2 text-xs text-[color:var(--text-tertiary)]'>
+                <LuCalendar size={13} />
                 <span>
                   {new Date(event.date).toLocaleDateString('id-ID', {
                     weekday: 'long',
@@ -246,7 +246,7 @@ const AlumniEventHub = () => {
               <div className='mt-2'>
                 {!hasAccess(event) && (
                   <span className='px-2 py-0.5 rounded-full bg-amber-400 text-gray-700 text-xs'>
-                    Badge Required
+                    Badge Required to Access
                   </span>
                 )}
               </div>

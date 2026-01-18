@@ -30,14 +30,16 @@ const ClaimBadge = () => {
   };
 
   return (
-    <div className='min-h-[80vh] flex items-center justify-center p-4 page-fade-in'>
+    <div className='min-h-[80vh] flex items-center justify-center p-5 page-fade-in'>
       <div className='max-w-md w-full bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] shadow-xl overflow-hidden'>
         <div className='bg-[var(--primary)] p-8 text-center text-white'>
           <div className='w-20 h-20 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4'>
             <FaMedal className='text-4xl' />
           </div>
-          <h1 className='text-2xl font-bold mb-2'>Klaim Badge Prestasi</h1>
-          <p className='text-white/80 text-sm'>
+          <h1 className='text-lg md:text-xl font-bold mb-2'>
+            Klaim Badge Prestasi
+          </h1>
+          <p className='text-white/80 text-xs md:text-sm'>
             Masukkan kode unik yang Anda terima untuk mendapatkan badge khusus
             di profil Anda.
           </p>
@@ -46,7 +48,7 @@ const ClaimBadge = () => {
         <div className='p-8'>
           <form onSubmit={handleClaim} className='space-y-6'>
             <div>
-              <label className='block text-sm font-bold text-[color:var(--text-secondary)] mb-2 uppercase tracking-wide'>
+              <label className='block text-xs md:text-sm font-bold text-[color:var(--text-secondary)] mb-2 uppercase tracking-wide'>
                 Kode Badge
               </label>
               <div className='relative'>
@@ -65,7 +67,7 @@ const ClaimBadge = () => {
             <button
               type='submit'
               disabled={loading || !code}
-              className='w-full py-3 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[var(--primary)]/30'
+              className='w-full py-3 bg-[var(--primary)] text-white text-xs md:text-sm font-bold rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[var(--primary)]/30'
             >
               {loading ? 'Memproses...' : 'Klaim Badge Sekarang'}
             </button>

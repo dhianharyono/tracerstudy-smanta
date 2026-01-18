@@ -25,8 +25,8 @@ const EventWelcomeCard: React.FC<EventWelcomeCardProps> = ({
             <span className='px-3 py-1 rounded-full bg-white/20 text-xs font-medium backdrop-blur-sm'>
               Event Terbaru
             </span>
-            <div className='flex items-center gap-1 text-sm text-indigo-100'>
-              <LuCalendar size={16} />
+            <div className='flex items-center gap-1 text-xs text-indigo-100'>
+              <LuCalendar size={13} />
               <span>
                 {new Date(event.date).toLocaleDateString('id-ID', {
                   year: 'numeric',
@@ -37,10 +37,10 @@ const EventWelcomeCard: React.FC<EventWelcomeCardProps> = ({
             </div>
           </div>
 
-          <h2 className='text-xl md:text-2xl font-bold mb-3 leading-tight'>
+          <h2 className='text-lg md:text-2xl font-bold mb-3 leading-tight'>
             {event.name}
           </h2>
-          <p className='text-indigo-100/90 text-sm leading-relaxed mb-6'>
+          <p className='text-indigo-100/90 text-xs md:text-sm leading-relaxed mb-6'>
             {event.description}
           </p>
 

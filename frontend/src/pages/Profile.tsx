@@ -157,12 +157,12 @@ const Profile = () => {
                 </div>
                 <div className='text-white space-y-1 sm:space-y-2'>
                   <div className='flex items-center gap-3'>
-                    <h2 className='text-lg sm:text-2xl font-bold !mb-0 tracking-tight'>
+                    <h2 className='text-lg sm:text-xl font-bold !mb-0 tracking-tight'>
                       Status Mentorship
                     </h2>
                   </div>
                   <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
-                    <p className='text-sm text-[color:var(--text-secondary)]'>
+                    <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
                       {isMentor
                         ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
                         : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
@@ -442,9 +442,9 @@ const Profile = () => {
                 Menyimpan...
               </>
             ) : (
-              <>
+              <div className='flex gap-2 items-center text-sm'>
                 <FaSave /> Simpan Perubahan
-              </>
+              </div>
             )}
           </button>
         </div>
