@@ -130,7 +130,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Kritik & Saran
         </h1>
-        <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
+        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
           Masukan Anda sangat berarti bagi kami
         </p>
       </div>

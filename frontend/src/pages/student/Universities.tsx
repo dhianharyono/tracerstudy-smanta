@@ -85,7 +85,7 @@ const StudentUniversities = () => {
           <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Perguruan Tinggi
           </h1>
-          <p className='text-[color:var(--text-secondary)]'>
+          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
             Persebaran Alumni berdasarkan Universitas
           </p>
         </div>
@@ -168,7 +168,7 @@ const StudentUniversities = () => {
           </p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {filteredUniversities.map((uni, index) => (
             <div
               key={index}
@@ -183,7 +183,7 @@ const StudentUniversities = () => {
             >
               <div className='flex items-start justify-between'>
                 <div className='rounded-lg bg-[var(--primary)] p-3 text-[var(--primary)]/10 group-hover:bg-[var(--primary)] group-hover:text-white transition-colors duration-300'>
-                  <FaUniversity className='text-xl' />
+                  <FaUniversity className='text-sm md:text-xl' />
                 </div>
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-medium ${getBadgeColor(
@@ -195,21 +195,18 @@ const StudentUniversities = () => {
                 </span>
               </div>
 
-              <div className='mt-4'>
-                <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
+              <div className='mt-4 mb-4 min-h-[4rem]'>
+                <h3 className='line-clamp-3 text-xs md:text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
                   {uni._id.name}
                 </h3>
-                <p className='mt-1 text-sm text-[color:var(--text-secondary)] line-clamp-1'>
-                  {formatUniversityType(uni._id.type)}
-                </p>
               </div>
 
-              <div className='mt-5 flex items-center justify-between border-t border-[color:var(--border-color)] pt-3'>
-                <div className='flex items-center gap-2 text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex items-center justify-between border-t border-[color:var(--border-color)] pt-4'>
+                <div className='flex items-center gap-2 text-xs md:text-sm font-medium text-[color:var(--text-secondary)]'>
                   <FaUsers className='text-gray-400 group-hover:text-[var(--primary-light)] transition-colors' />
                   <span>Total Alumni</span>
                 </div>
-                <span className='text-lg font-bold text-[var(--primary)]'>
+                <span className='text-sm md:text-lg font-bold text-[var(--primary)]'>
                   {uni.count}
                 </span>
               </div>

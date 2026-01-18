@@ -72,7 +72,7 @@ const MutualAlumni = () => {
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Rekan Seangkatan
         </h1>
-        <p className='text-[color:var(--text-secondary)]'>
+        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
           Alumni yang lulus pada tahun yang sama dengan Anda
         </p>
       </div>

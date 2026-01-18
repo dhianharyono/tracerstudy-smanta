@@ -67,7 +67,7 @@ const StudentMajors = () => {
           <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Jurusan & Program Studi
           </h1>
-          <p className='text-[color:var(--text-secondary)]'>
+          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
             Persebaran Alumni berdasarkan jurusan
           </p>
         </div>
@@ -91,7 +91,7 @@ const StudentMajors = () => {
       {filteredMajors.length === 0 ? (
         <div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[color:var(--bg-card)] p-12 text-center dark:border-gray-700'>
           <div className='mb-4 rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
-            <FaBook className='text-4xl text-gray-400' />
+            <FaBook className='text-lg md:text-4xl text-gray-400' />
           </div>
           <h3 className='text-lg font-medium text-[color:var(--text-primary)]'>
             Tidak ditemukan
@@ -101,7 +101,7 @@ const StudentMajors = () => {
           </p>
         </div>
       ) : (
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+        <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
           {filteredMajors.map((major, index) => (
             <div
               key={index}
@@ -112,8 +112,8 @@ const StudentMajors = () => {
               }}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
             >
-              <div className='mb-4 min-h-[6rem]'>
-                <h3 className='line-clamp-2 text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
+              <div className='mb-4 min-h-[8rem]'>
+                <h3 className='line-clamp-4 text-xs md:text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
                   {major._id}
                 </h3>
 
@@ -128,13 +128,13 @@ const StudentMajors = () => {
                         {uniqueUnivs.slice(0, 3).map((univ, i) => (
                           <span
                             key={i}
-                            className='text-[10px] px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400'
+                            className='text-[7px] md:text-xs px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400'
                           >
                             {univ}
                           </span>
                         ))}
                         {uniqueUnivs.length > 3 && (
-                          <span className='text-[10px] text-[color:var(--text-tertiary)] flex items-center ml-0.5'>
+                          <span className='text-[6px] md:text-[10px] text-[color:var(--text-tertiary)] flex items-center ml-0.5'>
                             +{uniqueUnivs.length - 3} lainnya
                           </span>
                         )}
@@ -145,11 +145,11 @@ const StudentMajors = () => {
               </div>
 
               <div className='flex items-center justify-between border-t border-[color:var(--border-color)] pt-4'>
-                <div className='flex items-center gap-2 text-sm font-medium text-[color:var(--text-secondary)]'>
+                <div className='flex items-center gap-2 text-xs md:text-sm font-medium text-[color:var(--text-secondary)]'>
                   <FaUsers className='text-gray-400 group-hover:text-[var(--primary-light)] transition-colors' />
                   <span>Total Alumni</span>
                 </div>
-                <span className='text-lg font-bold text-[var(--primary)]'>
+                <span className='text-sm md:text-lg font-bold text-[var(--primary)]'>
                   {major.count}
                 </span>
               </div>

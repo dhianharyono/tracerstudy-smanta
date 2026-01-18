@@ -39,7 +39,7 @@ const StudentEvents = () => {
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Daftar Event
         </h1>
-        <p className='text-[color:var(--text-secondary)]'>
+        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
           Ikuti event terbaru untuk menambah wawasan dan jaringan.
         </p>
       </div>
