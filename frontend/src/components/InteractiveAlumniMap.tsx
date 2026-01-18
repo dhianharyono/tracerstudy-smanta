@@ -329,7 +329,10 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
           }}
         >
           <FaSpinner className='spinner' style={{ fontSize: '32px' }} />
-          <p style={{ color: 'var(--text-secondary)' }}>
+          <p
+            style={{ color: 'var(--text-secondary)' }}
+            className=' text-xs md:text-sm'
+          >
             {geocodingProgress > 0
               ? `Memuat lokasi universitas... ${Math.round(geocodingProgress)}%`
               : 'Memuat data alumni...'}
