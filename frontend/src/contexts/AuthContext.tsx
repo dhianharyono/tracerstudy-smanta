@@ -81,7 +81,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       localStorage.setItem('user', JSON.stringify(newUser));
       axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+      throw new Error(
+        error.response?.data?.message ||
+          'Cek Kembali Username dan Password Anda',
+      );
     }
   };
 

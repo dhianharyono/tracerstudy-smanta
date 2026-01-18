@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { LuX } from 'react-icons/lu';
 import Toast from '@/components/toast';
@@ -73,10 +74,10 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in'>
-      <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up'>
-        <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50'>
+  return createPortal(
+    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in'>
+      <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up flex flex-col max-h-[90vh]'>
+        <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50 shrink-0'>
           <div>
             <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>
               Registrasi Event
@@ -93,7 +94,7 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className='p-6 space-y-5'>
+        <form onSubmit={handleSubmit} className='p-6 space-y-5 overflow-y-auto'>
           <div>
             <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-2'>
               Harapan Mengikuti Event
@@ -161,7 +162,8 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

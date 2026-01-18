@@ -147,12 +147,12 @@ router.post(
 
       const user = await User.findOne({ username }).populate('badges');
       if (!user) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+        return res.status(400).json({ message: 'Username tidak ditemukan' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+        return res.status(400).json({ message: 'Password salah' });
       }
 
       const jwtSecret = process.env.JWT_SECRET;
