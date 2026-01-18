@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaUser,
   FaLock,
@@ -13,6 +12,7 @@ import {
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
+import SmartLoader from '@/components/SmartLoader';
 
 const Profile = () => {
   const { updateUser, user } = useAuth();
@@ -128,7 +128,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

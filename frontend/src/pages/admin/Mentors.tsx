@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaFilter,
   FaTimes,
@@ -13,6 +12,7 @@ import {
   FaChevronRight,
   FaCrown,
 } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminMentors = () => {
   const [mentors, setMentors] = useState<any[]>([]);
@@ -104,7 +104,7 @@ const AdminMentors = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import LoadingSpinner from './LoadingSpinner';
 import Toast from '@/components/toast';
 import {
   FaSave,
@@ -9,6 +8,7 @@ import {
   FaSpinner,
   FaCommentDots,
 } from 'react-icons/fa';
+import SmartLoader from './SmartLoader';
 
 interface FeedbackState {
   kritik: string;
@@ -40,7 +40,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
     const checkFeedback = async () => {
       try {
         const response = await axios.get<FeedbackResponse>(
-          `/api/${role}/feedback/check`
+          `/api/${role}/feedback/check`,
         );
         if (response.data.exists) {
           setSubmitted(true);
@@ -121,7 +121,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (
@@ -200,10 +200,11 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
           <div className='flex justify-end pt-4'>
             <button
               type='submit'
-              className={`flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${loadingSubmit || feedback.rating === 0
-                ? 'cursor-not-allowed opacity-70 grayscale'
-                : ''
-                }`}
+              className={`flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${
+                loadingSubmit || feedback.rating === 0
+                  ? 'cursor-not-allowed opacity-70 grayscale'
+                  : ''
+              }`}
               disabled={loadingSubmit || feedback.rating === 0}
             >
               {loadingSubmit ? (

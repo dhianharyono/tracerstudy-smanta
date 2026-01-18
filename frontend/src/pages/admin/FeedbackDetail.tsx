@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaArrowLeft, FaUserCircle, FaStar, FaQuoteLeft } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminFeedbackDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +24,7 @@ const AdminFeedbackDetail = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message || 'Gagal memuat detail feedback',
-        'error'
+        'error',
       );
       navigate('/admin/feedback');
     } finally {
@@ -38,8 +38,11 @@ const AdminFeedbackDetail = () => {
         {[1, 2, 3, 4, 5].map((index) => (
           <FaStar
             key={index}
-            className={`text-lg ${index <= rating ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'
-              }`}
+            className={`text-lg ${
+              index <= rating
+                ? 'text-yellow-400'
+                : 'text-gray-300 dark:text-gray-600'
+            }`}
           />
         ))}
         <span className='ml-2 text-sm font-semibold text-[color:var(--text-primary)]'>
@@ -50,14 +53,16 @@ const AdminFeedbackDetail = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!feedback) {
     return (
       <div className='p-4 sm:p-6 lg:p-8 '>
         <div className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-8 text-center'>
-          <p className='text-lg text-[color:var(--text-secondary)] mb-4'>Feedback tidak ditemukan</p>
+          <p className='text-lg text-[color:var(--text-secondary)] mb-4'>
+            Feedback tidak ditemukan
+          </p>
           <button
             onClick={() => navigate('/admin/feedback')}
             className='inline-flex items-center justify-center rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)]'
@@ -89,12 +94,16 @@ const AdminFeedbackDetail = () => {
                 <FaUserCircle size={40} />
               </div>
               <div>
-                <h1 className='text-xl font-bold text-[color:var(--text-primary)]'>{feedback.user?.username || 'Anonymous'}</h1>
+                <h1 className='text-xl font-bold text-[color:var(--text-primary)]'>
+                  {feedback.user?.username || 'Anonymous'}
+                </h1>
                 <div className='flex items-center gap-2 mt-1'>
                   <span className='inline-flex items-center rounded-md bg-[var(--primary)]/10 px-2 py-1 text-xs font-medium text-[var(--primary)] capitalize'>
                     {feedback.user?.role || 'User'}
                   </span>
-                  <span className='text-xs text-[color:var(--text-secondary)]'>•</span>
+                  <span className='text-xs text-[color:var(--text-secondary)]'>
+                    •
+                  </span>
                   <span className='text-xs text-[color:var(--text-secondary)]'>
                     {new Date(feedback.createdAt).toLocaleDateString('id-ID', {
                       weekday: 'long',
@@ -108,7 +117,9 @@ const AdminFeedbackDetail = () => {
             </div>
 
             <div className='flex flex-col items-start md:items-end bg-[color:var(--bg-card)] p-3 rounded-lg border border-[color:var(--border-color)]'>
-              <span className='text-xs text-[color:var(--text-secondary)] uppercase tracking-wider font-semibold mb-1'>Rating Diberikan</span>
+              <span className='text-xs text-[color:var(--text-secondary)] uppercase tracking-wider font-semibold mb-1'>
+                Rating Diberikan
+              </span>
               {renderStarRating(feedback.rating)}
             </div>
           </div>
@@ -119,17 +130,25 @@ const AdminFeedbackDetail = () => {
           {/* Kritik Section */}
           <div className='relative'>
             <FaQuoteLeft className='absolute -top-3 -left-2 text-4xl text-[color:var(--bg-tertiary)] opacity-50' />
-            <h3 className='relative z-10 text-lg font-semibold text-red-500 mb-3 ml-2'>Kritik & Masuhan</h3>
+            <h3 className='relative z-10 text-lg font-semibold text-red-500 mb-3 ml-2'>
+              Kritik & Masuhan
+            </h3>
             <div className='relative z-10 rounded-xl bg-red-50 dark:bg-red-900/10 p-5 text-[color:var(--text-primary)] border border-red-100 dark:border-red-900/30'>
-              <p className='whitespace-pre-wrap leading-relaxed'>{feedback.kritik || 'Tidak ada kritik yang disampaikan.'}</p>
+              <p className='whitespace-pre-wrap leading-relaxed'>
+                {feedback.kritik || 'Tidak ada kritik yang disampaikan.'}
+              </p>
             </div>
           </div>
 
           {/* Saran Section */}
           <div className='relative'>
-            <h3 className='relative z-10 text-lg font-semibold text-green-500 mb-3 ml-2'>Saran Perbaikan</h3>
+            <h3 className='relative z-10 text-lg font-semibold text-green-500 mb-3 ml-2'>
+              Saran Perbaikan
+            </h3>
             <div className='relative z-10 rounded-xl bg-green-50 dark:bg-green-900/10 p-5 text-[color:var(--text-primary)] border border-green-100 dark:border-green-900/30'>
-              <p className='whitespace-pre-wrap leading-relaxed'>{feedback.saran || 'Tidak ada saran yang disampaikan.'}</p>
+              <p className='whitespace-pre-wrap leading-relaxed'>
+                {feedback.saran || 'Tidak ada saran yang disampaikan.'}
+              </p>
             </div>
           </div>
         </div>

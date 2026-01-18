@@ -1,8 +1,8 @@
+import SmartLoader from '@/components/SmartLoader';
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { FaCrown } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
 import Statistic from '@/components/Dashboard/Statistic';
 import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
@@ -116,7 +116,15 @@ const AlumniDashboard = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <SmartLoader
+        messages={[
+          'Menyiapkan dashboard alumni...',
+          'Mengambil data profil...',
+          'Menghubungkan dengan alumnus lain...',
+        ]}
+      />
+    );
   }
 
   if (user?.questionnaireCompleted === false) {

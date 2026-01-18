@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsDetail from '../../components/News/NewsDetail';
+import SmartLoader from '@/components/SmartLoader';
 
 const StudentNewsDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +24,10 @@ const StudentNewsDetail = () => {
 
       await axios.post(`/api/student/news/${id}/read`);
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal memuat detail news', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal memuat detail news',
+        'error',
+      );
       navigate('/student/news');
     } finally {
       setLoading(false);
@@ -36,7 +39,7 @@ const StudentNewsDetail = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!news) {
@@ -44,10 +47,7 @@ const StudentNewsDetail = () => {
       <div className='card'>
         <div className='text-center p-10 text-[var(--text-tertiary)]'>
           <p>News tidak ditemukan</p>
-          <button
-            onClick={handleBack}
-            className='btn btn-primary mt-4'
-          >
+          <button onClick={handleBack} className='btn btn-primary mt-4'>
             Kembali ke News
           </button>
         </div>

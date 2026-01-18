@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaUserGraduate,
   FaUniversity,
@@ -37,6 +36,7 @@ interface AlumniData {
 
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
+import SmartLoader from '@/components/SmartLoader';
 
 const MutualAlumni = () => {
   const { user } = useAuth();
@@ -59,7 +59,7 @@ const MutualAlumni = () => {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (user?.questionnaireCompleted === false) {
@@ -216,7 +216,7 @@ const MutualAlumni = () => {
                           ? person.socialMedia.instagram
                           : `https://instagram.com/${person.socialMedia.instagram.replace(
                               '@',
-                              ''
+                              '',
                             )}`
                       }
                       target='_blank'

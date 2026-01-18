@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 import { LuCalendar, LuEye, LuSearch } from 'react-icons/lu';
 
 const AlumniEventHub = () => {
@@ -89,7 +89,16 @@ const AlumniEventHub = () => {
     ...new Set(registrants.map((r) => r.studyPlan?.major).filter(Boolean)),
   ];
 
-  if (loading) return <LoadingSpinner />;
+  if (loading)
+    return (
+      <SmartLoader
+        messages={[
+          'Mengambil data event...',
+          'Menyiapkan jadwal...',
+          'Mencari event menarik...',
+        ]}
+      />
+    );
 
   if (selectedEvent) {
     return (
@@ -149,7 +158,10 @@ const AlumniEventHub = () => {
         </div>
 
         {loadingRegistrants ? (
-          <LoadingSpinner />
+          <SmartLoader
+            messages={['Memuat peserta...', 'Menganalisis data...']}
+            fullScreen={false}
+          />
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredRegistrants.map((reg) => (

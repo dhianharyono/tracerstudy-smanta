@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsDetail from '../../components/News/NewsDetail';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminNewsDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +22,10 @@ const AdminNewsDetail = () => {
       const response = await axios.get(`/api/admin/news/${id}`);
       setNews(response.data);
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal memuat detail news', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal memuat detail news',
+        'error',
+      );
       navigate('/admin/news');
     } finally {
       setLoading(false);
@@ -34,7 +37,7 @@ const AdminNewsDetail = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!news) {

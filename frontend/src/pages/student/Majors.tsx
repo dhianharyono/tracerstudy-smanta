@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaBook, FaSearch, FaUsers } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import SmartLoader from '@/components/SmartLoader';
 
 interface MajorData {
   _id: string;
@@ -46,17 +46,17 @@ const StudentMajors = () => {
   useEffect(() => {
     const lowerTerm = searchTerm.toLowerCase();
     const filtered = majors.filter((major) =>
-      major._id.toLowerCase().includes(lowerTerm)
+      major._id.toLowerCase().includes(lowerTerm),
     );
     setFilteredMajors(filtered);
   }, [searchTerm, majors]);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type="profile_incomplete" role="student" />;
+    return <RestrictedAccess type='profile_incomplete' role='student' />;
   }
 
   return (
@@ -107,7 +107,7 @@ const StudentMajors = () => {
               key={index}
               onClick={() => {
                 navigate(
-                  `/student/alumni?major=${encodeURIComponent(major._id)}`
+                  `/student/alumni?major=${encodeURIComponent(major._id)}`,
                 );
               }}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
@@ -121,7 +121,7 @@ const StudentMajors = () => {
                 <div className='flex flex-wrap gap-1.5 mt-2'>
                   {(() => {
                     const uniqueUnivs = Array.from(
-                      new Set(major.alumni?.map((a) => a.university))
+                      new Set(major.alumni?.map((a) => a.university)),
                     ).filter(Boolean);
                     return (
                       <>

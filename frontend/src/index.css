@@ -536,8 +536,22 @@ h3 {
   }
 }
 
+@keyframes spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-360deg);
+  }
+}
+
 .spinner {
   animation: spin 1s linear infinite;
+}
+
+.animate-spin-reverse {
+  animation: spin-reverse 1s linear infinite;
 }
 
 /* Notification Dropdown Responsive */

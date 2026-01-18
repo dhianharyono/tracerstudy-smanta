@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '../../contexts/AuthContext';
 import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
 import WelcomeCard from '@/components/Dashboard/WelcomeCard';
@@ -95,7 +95,15 @@ const StudentDashboard = () => {
     : [];
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <SmartLoader
+        messages={[
+          'Menyiapkan dashboard siswa...',
+          'Mengambil statistik...',
+          'Memuat berita terbaru...',
+        ]}
+      />
+    );
   }
 
   if (!isStudentProfileComplete(user)) {

@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import Toast from '@/components/toast';
 import {
   LuPlus,
@@ -12,6 +11,7 @@ import {
   LuArrowLeft,
 } from 'react-icons/lu';
 import ConfirmationModal from '@/components/ConfirmationModal';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminEventManagement = () => {
   const [events, setEvents] = useState<any[]>([]);
@@ -149,7 +149,7 @@ const AdminEventManagement = () => {
     );
   }, [registrants, searchQuery]);
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <SmartLoader />;
 
   if (viewingEvent) {
     return (
@@ -188,7 +188,7 @@ const AdminEventManagement = () => {
         </div>
 
         {loadingRegistrants ? (
-          <LoadingSpinner />
+          <SmartLoader />
         ) : (
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
             {filteredRegistrants.map((reg) => (

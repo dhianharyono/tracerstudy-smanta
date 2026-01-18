@@ -8,7 +8,7 @@ import {
   FaUniversity,
   FaGraduationCap,
 } from 'react-icons/fa';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminReports = () => {
   const [reportType, setReportType] = useState('');
@@ -60,7 +60,7 @@ const AdminReports = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

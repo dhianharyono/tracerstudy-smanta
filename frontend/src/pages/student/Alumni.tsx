@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaGraduationCap,
   FaFilter,
@@ -14,6 +13,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import SmartLoader from '@/components/SmartLoader';
 
 const StudentAlumni = () => {
   const { user } = useAuth();
@@ -124,8 +124,8 @@ const StudentAlumni = () => {
     setSearchParams({});
   };
 
-  if (loading && alumni.length === 0) {
-    return <LoadingSpinner />;
+  if (loading || alumni.length === 0) {
+    return <SmartLoader />;
   }
 
   if (!isStudentProfileComplete(user)) {

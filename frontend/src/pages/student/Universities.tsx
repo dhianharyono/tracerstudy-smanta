@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { formatUniversityType } from '../../utils/helpers';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import { FaUniversity, FaSearch, FaFilter, FaUsers } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import SmartLoader from '@/components/SmartLoader';
 
 interface UniversityAggregate {
   _id: {
@@ -35,7 +35,7 @@ const StudentUniversities = () => {
   useEffect(() => {
     const lowerTerm = searchTerm.toLowerCase();
     const filtered = universities.filter((uni) =>
-      uni._id.name.toLowerCase().includes(lowerTerm)
+      uni._id.name.toLowerCase().includes(lowerTerm),
     );
     setFilteredUniversities(filtered);
   }, [searchTerm, universities]);
@@ -70,11 +70,11 @@ const StudentUniversities = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type="profile_incomplete" role="student" />;
+    return <RestrictedAccess type='profile_incomplete' role='student' />;
   }
 
   return (
@@ -175,8 +175,8 @@ const StudentUniversities = () => {
               onClick={() => {
                 navigate(
                   `/student/alumni?university=${encodeURIComponent(
-                    uni._id.name
-                  )}`
+                    uni._id.name,
+                  )}`,
                 );
               }}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
@@ -187,7 +187,7 @@ const StudentUniversities = () => {
                 </div>
                 <span
                   className={`rounded-full px-2.5 py-1 text-xs font-medium ${getBadgeColor(
-                    uni._id.type
+                    uni._id.type,
                   )}`}
                 >
                   {uni._id.type.charAt(0).toUpperCase() +

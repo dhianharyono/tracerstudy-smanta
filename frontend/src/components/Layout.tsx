@@ -143,20 +143,20 @@ const Layout = () => {
         <div className='space-y-1'>
           <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/admin/alumni' icon={FaUsers} label='Data Alumni' />
-          <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
             to='/admin/students'
             icon={FaGraduationCap}
             label='Data Student'
           />
           <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
+          <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
             to='/admin/events'
             icon={FaChartBar}
             label='Manajemen Event'
           />
-          <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
+          <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
           <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
           <NavLink
             to='/admin/feedback'

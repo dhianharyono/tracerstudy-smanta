@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaTrash, FaPlus, FaMedal } from 'react-icons/fa';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminBadges = () => {
   const [badges, setBadges] = useState<any[]>([]);
@@ -117,7 +117,7 @@ const AdminBadges = () => {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) return <SmartLoader />;
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
@@ -309,7 +309,7 @@ const AdminBadges = () => {
             </div>
             <div className='p-6 overflow-y-auto'>
               {loadingAlumni ? (
-                <LoadingSpinner />
+                <SmartLoader />
               ) : badgeAlumni.length === 0 ? (
                 <div className='text-center py-8 text-[color:var(--text-secondary)]'>
                   Belum ada alumni yang mengklaim badge ini.

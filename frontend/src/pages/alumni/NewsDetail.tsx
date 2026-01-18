@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsDetail from '../../components/News/NewsDetail';
+import SmartLoader from '@/components/SmartLoader';
 
 interface NewsDetail {
   _id: string;
@@ -52,7 +52,7 @@ const AlumniNewsDetail = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (!news) {
@@ -60,10 +60,7 @@ const AlumniNewsDetail = () => {
       <div className='card'>
         <div className='p-10 text-center text-[color:var(--text-tertiary)]'>
           <p>News tidak ditemukan</p>
-          <button
-            onClick={handleBack}
-            className='btn btn-primary mt-4'
-          >
+          <button onClick={handleBack} className='btn btn-primary mt-4'>
             Kembali ke News
           </button>
         </div>

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import NewsList, { NewsItem } from '../../components/News/NewsList';
 
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
+import SmartLoader from '@/components/SmartLoader';
 
 const AlumniNews = () => {
   const { user } = useAuth();
@@ -34,7 +34,7 @@ const AlumniNews = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   if (user?.questionnaireCompleted === false) {

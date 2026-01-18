@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaUserPlus,
   FaEdit,
@@ -10,6 +9,7 @@ import {
   FaSave,
   FaUser,
 } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminStudents = () => {
   const [students, setStudents] = useState<any[]>([]);
@@ -36,7 +36,7 @@ const AdminStudents = () => {
   const fetchStudents = async () => {
     try {
       const response = await axios.get(
-        `/api/admin/students?page=${pagination.page}&limit=${pagination.limit}`
+        `/api/admin/students?page=${pagination.page}&limit=${pagination.limit}`,
       );
       setStudents(response.data.students);
       setPagination(response.data.pagination);
@@ -64,7 +64,7 @@ const AdminStudents = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message || 'Gagal menyimpan student',
-        'error'
+        'error',
       );
     }
   };
@@ -92,7 +92,7 @@ const AdminStudents = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message || 'Gagal menghapus student',
-        'error'
+        'error',
       );
     }
   };
@@ -104,7 +104,7 @@ const AdminStudents = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

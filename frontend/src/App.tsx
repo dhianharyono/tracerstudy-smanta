@@ -6,7 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
-import LoadingSpinner from './components/LoadingSpinner';
+import SmartLoader from './components/SmartLoader';
 import PrivateRoute from './components/PrivateRoute';
 import Layout from './components/Layout';
 import { useAuth } from './contexts/AuthContext';
@@ -70,7 +70,15 @@ const PublicRoute: React.FC<{ children: React.ReactElement }> = ({
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <SmartLoader
+        messages={[
+          'Memvalidasi sesi...',
+          'Memeriksa hak akses...',
+          'Menyiapkan dashboard...',
+        ]}
+      />
+    );
   }
 
   if (user) {
@@ -84,7 +92,17 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Suspense fallback={<LoadingSpinner />}>
+        <Suspense
+          fallback={
+            <SmartLoader
+              messages={[
+                'Menyiapkan aplikasi...',
+                'Memuat modul...',
+                'Hampir siap...',
+              ]}
+            />
+          }
+        >
           <Routes>
             <Route
               path='/login'

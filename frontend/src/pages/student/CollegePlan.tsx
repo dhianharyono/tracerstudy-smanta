@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 import {
   FaUniversity,
   FaGraduationCap,
@@ -174,7 +174,15 @@ const CollegePlan = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <SmartLoader
+        messages={[
+          'Mengumpulkan data universitas...',
+          'Mencari jejak alumni...',
+          'Menyiapkan statistik...',
+        ]}
+      />
+    );
   }
 
   if (!isStudentProfileComplete(user)) {

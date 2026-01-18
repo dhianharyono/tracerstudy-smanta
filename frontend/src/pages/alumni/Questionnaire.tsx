@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaEdit,
   FaSpinner,
@@ -17,6 +16,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import SearchableSelect from '@/components/SearchableSelect';
 import { COMMON_MAJORS, POLTEKKES_LIST } from '../constant';
 import { INDONESIA_UNIVERSITIES } from '../universityData';
+import SmartLoader from '@/components/SmartLoader';
 
 const InputField = ({
   label,
@@ -452,7 +452,7 @@ const AlumniQuestionnaire = () => {
   };
 
   if (loading || submitLoading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

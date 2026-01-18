@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaEye,
   FaEyeSlash,
@@ -12,6 +11,7 @@ import {
   FaUserCircle,
   FaTrash,
 } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminFeedback = () => {
   const navigate = useNavigate();
@@ -65,12 +65,12 @@ const AdminFeedback = () => {
         `Menu kritik dan saran ${
           !feedbackVisible ? 'ditampilkan' : 'disembunyikan'
         }`,
-        'success'
+        'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message || 'Gagal mengubah visibilitas',
-        'error'
+        'error',
       );
     }
   };
@@ -88,7 +88,7 @@ const AdminFeedback = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message || 'Gagal menghapus feedback',
-        'error'
+        'error',
       );
     }
   };
@@ -111,7 +111,7 @@ const AdminFeedback = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (
@@ -211,8 +211,8 @@ const AdminFeedback = () => {
                           rating >= 4
                             ? 'bg-green-500'
                             : rating >= 3
-                            ? 'bg-yellow-500'
-                            : 'bg-red-500'
+                              ? 'bg-yellow-500'
+                              : 'bg-red-500'
                         }`}
                         style={{ width: `${percentage}%` }}
                       />
@@ -342,7 +342,7 @@ const AdminFeedback = () => {
                     <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
                       {new Date(feedback.createdAt).toLocaleDateString(
                         'id-ID',
-                        { day: 'numeric', month: 'short', year: 'numeric' }
+                        { day: 'numeric', month: 'short', year: 'numeric' },
                       )}
                     </td>
                     <td className='px-6 py-4'>

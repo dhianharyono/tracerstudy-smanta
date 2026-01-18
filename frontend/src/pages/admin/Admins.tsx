@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaUserPlus,
   FaEdit,
@@ -10,6 +9,7 @@ import {
   FaSave,
   FaUserShield,
 } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminAdmins = () => {
   const [admins, setAdmins] = useState<any[]>([]);
@@ -36,7 +36,7 @@ const AdminAdmins = () => {
   const fetchAdmins = async () => {
     try {
       const response = await axios.get(
-        `/api/admin/admins?page=${pagination.page}&limit=${pagination.limit}`
+        `/api/admin/admins?page=${pagination.page}&limit=${pagination.limit}`,
       );
       setAdmins(response.data.admins);
       setPagination(response.data.pagination);
@@ -98,7 +98,7 @@ const AdminAdmins = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (

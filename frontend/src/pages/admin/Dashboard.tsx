@@ -6,7 +6,7 @@ import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<any>(null);
@@ -51,7 +51,15 @@ const AdminDashboard = () => {
   }, []);
 
   if (loading) {
-    return <LoadingSpinner />;
+    return (
+      <SmartLoader
+        messages={[
+          'Menyiapkan dashboard admin...',
+          'Mengambil statistik...',
+          'Menganalisis data...',
+        ]}
+      />
+    );
   }
 
   const universityTypeData = stats?.universityTypes

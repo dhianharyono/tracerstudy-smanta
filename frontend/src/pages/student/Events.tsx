@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import SmartLoader from '@/components/SmartLoader';
 import EventWelcomeCard from '@/components/Dashboard/EventWelcomeCard';
 import EventRegisterModal from '@/components/EventRegisterModal';
 import { LuCalendarOff } from 'react-icons/lu';
@@ -26,7 +26,12 @@ const StudentEvents = () => {
     fetchEvents();
   }, []);
 
-  if (loading) return <LoadingSpinner />;
+  if (loading)
+    return (
+      <SmartLoader
+        messages={['Mencari event seru...', 'Mengambil informasi event...']}
+      />
+    );
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>

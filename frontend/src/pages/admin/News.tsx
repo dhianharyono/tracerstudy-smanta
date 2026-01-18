@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaPlus,
   FaEdit,
@@ -14,6 +13,7 @@ import {
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { stripHtml } from '../../utils/helpers';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminNews = () => {
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ const AdminNews = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (
@@ -316,15 +316,15 @@ const AdminNews = () => {
                             newsItem.type === 'all'
                               ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
                               : newsItem.type === 'student'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
                           }`}
                       >
                         {newsItem.type === 'all'
                           ? 'Semua'
                           : newsItem.type === 'student'
-                          ? 'Mahasiswa'
-                          : 'Alumni'}
+                            ? 'Mahasiswa'
+                            : 'Alumni'}
                       </span>
                     </td>
                     <td className='px-6 py-4'>
@@ -349,7 +349,7 @@ const AdminNews = () => {
                           day: 'numeric',
                           month: 'short',
                           year: 'numeric',
-                        }
+                        },
                       )}
                     </td>
                     <td className='px-6 py-4'>

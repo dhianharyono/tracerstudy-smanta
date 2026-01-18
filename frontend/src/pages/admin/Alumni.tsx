@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import LoadingSpinner from '@/components/LoadingSpinner';
 import {
   FaFilter,
   FaTimes,
@@ -13,6 +12,7 @@ import {
   FaTimesCircle,
   FaCrown,
 } from 'react-icons/fa';
+import SmartLoader from '@/components/SmartLoader';
 
 const AdminAlumni = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
@@ -55,7 +55,7 @@ const AdminAlumni = () => {
         params.append('questionnaireStatus', filters.questionnaireStatus);
 
       const response = await axios.get(
-        `/api/admin/alumni?${params.toString()}`
+        `/api/admin/alumni?${params.toString()}`,
       );
       setAlumni(response.data.alumni);
       setPagination(response.data.pagination);
@@ -100,7 +100,7 @@ const AdminAlumni = () => {
   };
 
   if (loading) {
-    return <LoadingSpinner />;
+    return <SmartLoader />;
   }
 
   return (
@@ -124,8 +124,9 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4'>
           <div className='relative'>
@@ -293,7 +294,10 @@ const AdminAlumni = () => {
                         <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
                           {alum.profile?.fullName || '-'}
                           {alum.isMentor && (
-                            <FaCrown className='text-amber-500 text-[10px]' title='Mentor Aktif' />
+                            <FaCrown
+                              className='text-amber-500 text-[10px]'
+                              title='Mentor Aktif'
+                            />
                           )}
                         </div>
                         <div className='text-xs text-[color:var(--text-secondary)]'>
