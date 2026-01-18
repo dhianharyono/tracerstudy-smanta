@@ -21,13 +21,14 @@ const verifyCaptcha = async (token: string) => {
   const secretKey = process.env.RECAPTCHA_SECRET_KEY;
 
   // Jika secret key tidak ada atau masih default, gunakan test key yang cocok dengan frontend
-  const finalSecretKey = (!secretKey || secretKey === 'your_recaptcha_secret_key_here')
-    ? '6LeIxAcTAAAAAGG-vFI1TnRWxMZ_S8yxS90vCPm5' // Global Google test secret key
-    : secretKey;
+  const finalSecretKey =
+    !secretKey || secretKey === 'your_recaptcha_secret_key_here'
+      ? '6LeIxAcTAAAAAGG-vFI1TnRWxMZ_S8yxS90vCPm5' // Global Google test secret key
+      : secretKey;
 
   try {
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify?secret=${finalSecretKey}&response=${token}`
+      `https://www.google.com/recaptcha/api/siteverify?secret=${finalSecretKey}&response=${token}`,
     );
     return response.data.success;
   } catch (error) {
@@ -77,7 +78,9 @@ router.post(
       // Verifikasi CAPTCHA
       const isCaptchaValid = await verifyCaptcha(captchaToken);
       if (!isCaptchaValid) {
-        return res.status(400).json({ message: 'Invalid CAPTCHA. Please try again.' });
+        return res
+          .status(400)
+          .json({ message: 'Invalid CAPTCHA. Please try again.' });
       }
 
       const existingUser = await User.findOne({
@@ -102,14 +105,14 @@ router.post(
 
       const jwtSecret = process.env.JWT_SECRET;
       if (!jwtSecret || jwtSecret === 'secret') {
-        console.warn('WARNING: Using default or missing JWT_SECRET. This is insecure for production.');
+        console.warn(
+          'WARNING: Using default or missing JWT_SECRET. This is insecure for production.',
+        );
       }
 
-      const token = jwt.sign(
-        { userId: user._id },
-        jwtSecret || 'secret',
-        { expiresIn: '7d' }
-      );
+      const token = jwt.sign({ userId: user._id }, jwtSecret || 'secret', {
+        expiresIn: '7d',
+      });
 
       res.status(201).json({
         token,
@@ -125,7 +128,7 @@ router.post(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 // Login
@@ -147,20 +150,22 @@ router.post(
 
       const user = await User.findOne({ username }).populate('badges');
       if (!user) {
-        return res.status(400).json({ message: 'Username tidak ditemukan' });
+        return res.status(400).json({
+          message: 'Username yang Anda masukkan tidak ditemukan',
+        });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res.status(400).json({ message: 'Password salah' });
+        return res
+          .status(400)
+          .json({ message: 'Password yang Anda masukkan salah' });
       }
 
       const jwtSecret = process.env.JWT_SECRET;
-      const token = jwt.sign(
-        { userId: user._id },
-        jwtSecret || 'secret',
-        { expiresIn: '7d' }
-      );
+      const token = jwt.sign({ userId: user._id }, jwtSecret || 'secret', {
+        expiresIn: '7d',
+      });
 
       res.json({
         token,
@@ -177,7 +182,7 @@ router.post(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 // Get current user
@@ -187,12 +192,14 @@ router.get(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       // req.user._id sekarang aman karena menggunakan AuthenticatedRequest
-      const user = await User.findById(req.user!._id).select('-password').populate('badges');
+      const user = await User.findById(req.user!._id)
+        .select('-password')
+        .populate('badges');
       res.json(user);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 export default router;

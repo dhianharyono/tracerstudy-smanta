@@ -71,7 +71,7 @@ const Login = () => {
 
           <div className='p-8'>
             {error && (
-              <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+              <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-xs text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
                 <svg
                   className='h-5 w-5 shrink-0'
                   fill='currentColor'
