@@ -321,8 +321,7 @@ const Layout = () => {
             <Outlet />
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
-            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari |
-            SMANTAUPDATE
+            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
           </div>
         </main>
       </div>

@@ -197,7 +197,8 @@ const CollegePlan = () => {
           Rencana Kuliah
         </h1>
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Jelajahi jejak alumni dan temukan alumni yang sesuai dengan rencana kuliah Anda
+          Jelajahi jejak alumni dan temukan alumni yang sesuai dengan rencana
+          kuliah Anda
         </p>
       </div>
 
@@ -211,8 +212,9 @@ const CollegePlan = () => {
       <div className='flex flex-col lg:flex-row gap-10'>
         {/* Left Side: Clean Filter Card */}
         <div
-          className={`w-full lg:w-80 shrink-0 ${showFilters ? 'block' : 'hidden lg:block'
-            }`}
+          className={`w-full lg:w-80 shrink-0 ${
+            showFilters ? 'block' : 'hidden lg:block'
+          }`}
         >
           <div className='bg-[color:var(--bg-card)] rounded-3xl border border-[color:var(--border-color)] overflow-hidden shadow-sm lg:sticky lg:top-8'>
             <div className='p-6 border-b border-[color:var(--border-color)]'>
@@ -320,18 +322,18 @@ const CollegePlan = () => {
                 selectedMajor ||
                 isMentorFilter ||
                 selectedBadge) && (
-                  <button
-                    onClick={() => {
-                      setSelectedUniversity('');
-                      setSelectedMajor('');
-                      setIsMentorFilter(false);
-                      setSelectedBadge('');
-                    }}
-                    className='w-full py-3 text-xs font-bold text-red-500 bg-red-50 transition-all rounded-2xl border border-red-100 dark:bg-red-500/5 dark:border-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/10'
-                  >
-                    Hapus Semua Filter
-                  </button>
-                )}
+                <button
+                  onClick={() => {
+                    setSelectedUniversity('');
+                    setSelectedMajor('');
+                    setIsMentorFilter(false);
+                    setSelectedBadge('');
+                  }}
+                  className='w-full py-3 text-xs font-bold text-red-500 bg-red-50 transition-all rounded-2xl border border-red-100 dark:bg-red-500/5 dark:border-red-500/10 hover:bg-red-100 dark:hover:bg-red-500/10'
+                >
+                  Hapus Semua Filter
+                </button>
+              )}
 
               <div className='pt-6 border-t border-[color:var(--border-color)]'>
                 <h4 className='text-xs font-bold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
@@ -365,9 +367,9 @@ const CollegePlan = () => {
         {/* Right Side: Modern Minimalist Content */}
         <div className='flex-1'>
           {!selectedUniversity &&
-            !selectedMajor &&
-            !isMentorFilter &&
-            !selectedBadge ? (
+          !selectedMajor &&
+          !isMentorFilter &&
+          !selectedBadge ? (
             <div className='h-[500px] flex flex-col items-center justify-center text-center p-8 bg-[color:var(--bg-card)] rounded-3xl border border-[color:var(--border-color)] shadow-sm'>
               <div className='w-16 h-16 bg-[color:var(--bg-secondary)] rounded-2xl flex items-center justify-center mb-6 border border-[color:var(--border-color)]'>
                 <FaSearch className='text-2xl text-[color:var(--text-tertiary)]' />
@@ -376,8 +378,8 @@ const CollegePlan = () => {
                 Pilih Universitas atau Jurusan
               </h3>
               <p className='text-[color:var(--text-secondary)] max-w-sm'>
-                Gunakan filter di sebelah kiri untuk melihat daftar alumni yang
-                pernah menempuh jalur tersebut.
+                Gunakan filter untuk melihat daftar alumni yang pernah menempuh
+                jalur tersebut.
               </p>
             </div>
           ) : (
@@ -423,10 +425,11 @@ const CollegePlan = () => {
                   {filteredAlumni.map((alumni) => (
                     <div
                       key={alumni._id}
-                      className={`p-6 rounded-3xl border transition-all group relative ${alumni.isMentor
-                        ? 'bg-amber-50/50 dark:bg-amber-500/5 border-amber-200 dark:border-amber-500/20 hover:border-amber-400'
-                        : 'bg-[color:var(--bg-card)] border-[color:var(--border-color)] hover:border-[var(--primary)]'
-                        }`}
+                      className={`p-6 rounded-3xl border transition-all group relative ${
+                        alumni.isMentor
+                          ? 'bg-amber-50/50 dark:bg-amber-500/5 border-amber-200 dark:border-amber-500/20 hover:border-amber-400'
+                          : 'bg-[color:var(--bg-card)] border-[color:var(--border-color)] hover:border-[var(--primary)]'
+                      }`}
                     >
                       {/* Avatar & Name */}
                       <div className='flex items-center gap-4 mb-6'>

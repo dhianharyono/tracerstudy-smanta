@@ -49,7 +49,7 @@ const InputField = ({
       max={max}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-xl border border-[color:var(--border-color)] ${
+      className={`w-full rounded-xl text-xs md:text-sm border border-[color:var(--border-color)] ${
         disabled
           ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
           : 'bg-[color:var(--bg-secondary)]'
@@ -79,7 +79,7 @@ const SelectField = ({
 }: any) => (
   <div className='form-group'>
     {label && (
-      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+      <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
         {label}{' '}
         {required && !disabled && <span className='text-red-500'>*</span>}
       </label>
@@ -518,9 +518,9 @@ const AlumniQuestionnaire = () => {
         <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
-              <FaUser className='text-xl' />
+              <FaUser className='text-sm md:text-xl' />
             </div>
-            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Informasi Personal
             </h2>
           </div>
@@ -656,9 +656,9 @@ const AlumniQuestionnaire = () => {
           <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
               <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
-                <FaGraduationCap className='text-xl' />
+                <FaGraduationCap className='text-sm md:text-xl' />
               </div>
-              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
                 Data Perguruan Tinggi
               </h2>
             </div>
@@ -723,9 +723,9 @@ const AlumniQuestionnaire = () => {
           <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
               <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
-                <FaBriefcase className='text-xl' />
+                <FaBriefcase className='text-sm md:text-xl' />
               </div>
-              <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
                 Data Pekerjaan
               </h2>
             </div>
@@ -766,9 +766,9 @@ const AlumniQuestionnaire = () => {
         <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
-              <FaShareAlt className='text-xl' />
+              <FaShareAlt className='text-sm md:text-xl' />
             </div>
-            <h2 className='text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Media Sosial
             </h2>
           </div>

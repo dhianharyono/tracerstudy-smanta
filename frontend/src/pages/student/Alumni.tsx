@@ -293,7 +293,7 @@ const StudentAlumni = () => {
         <div className='max-w-sm md:max-w-full'>
           <div className='overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
             <div className='overflow-x-auto'>
-              <table className='w-full text-left text-sm'>
+              <table className='w-full text-left text-xs md:text-sm'>
                 <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
                   <tr>
                     <th className='px-6 py-4'>Nama Alumni</th>

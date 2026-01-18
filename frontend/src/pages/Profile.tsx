@@ -213,7 +213,7 @@ const Profile = () => {
               <div className='p-2 bg-blue-500/10 rounded-lg text-blue-500'>
                 <FaUser className='text-xl' />
               </div>
-              <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+              <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
                 Data Diri
               </h2>
             </div>
@@ -221,7 +221,7 @@ const Profile = () => {
 
           <div className='p-6 grid gap-6 md:grid-cols-2'>
             <div className='space-y-2'>
-              <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaIdBadge className='text-xs' /> Nama Lengkap{' '}
                 <span className='text-red-500 text-xs'>*</span>
               </label>
@@ -229,13 +229,13 @@ const Profile = () => {
                 type='text'
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                 placeholder='Masukkan nama lengkap'
               />
             </div>
 
             <div className='space-y-2'>
-              <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaUser className='text-xs' /> Username{' '}
                 <span className='text-red-500 text-xs'>*</span>
               </label>
@@ -243,14 +243,14 @@ const Profile = () => {
                 type='text'
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                 placeholder='Username'
                 required
               />
             </div>
 
             <div className='space-y-2 md:col-span-2'>
-              <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                 <FaEnvelope className='text-xs' /> Email{' '}
                 <span className='text-red-500 text-xs'>*</span>
               </label>
@@ -258,7 +258,7 @@ const Profile = () => {
                 type='email'
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                 placeholder='Email'
                 required
               />
@@ -266,7 +266,7 @@ const Profile = () => {
 
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
-                <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
                   <span className='text-red-500 text-xs'>*</span>
                 </label>
@@ -276,7 +276,7 @@ const Profile = () => {
                   onChange={(e) =>
                     setEntryYear(e.target.value ? parseInt(e.target.value) : '')
                   }
-                  className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                  className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                   placeholder='Contoh: 2020'
                   min='1900'
                   max='2100'
@@ -286,7 +286,7 @@ const Profile = () => {
 
             {user?.role !== 'admin' && (
               <div className='space-y-2'>
-                <label className='text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
+                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}
                   <span className='text-red-500 text-xs'>*</span>
                 </label>
@@ -298,7 +298,7 @@ const Profile = () => {
                       e.target.value ? parseInt(e.target.value) : '',
                     )
                   }
-                  className='w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
+                  className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                   placeholder='Contoh: 2023'
                   min='1900'
                   max='2100'
@@ -353,7 +353,7 @@ const Profile = () => {
                 <div className='p-2 bg-red-500/10 rounded-lg text-red-500'>
                   <FaLock className='text-xl' />
                 </div>
-                <h2 className='text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
                   Ubah Password
                 </h2>
               </div>
@@ -380,7 +380,7 @@ const Profile = () => {
           {showPasswordFields && (
             <div className='p-6 grid gap-6 md:grid-cols-2 animate-slide-down'>
               <div className='space-y-2 relative'>
-                <label className='text-sm font-semibold text-[color:var(--text-secondary)]'>
+                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
                   Password Baru
                 </label>
                 <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
@@ -390,7 +390,7 @@ const Profile = () => {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
                   placeholder='Masukkan password baru'
                   required={showPasswordFields}
                 />
@@ -404,7 +404,7 @@ const Profile = () => {
               </div>
 
               <div className='space-y-2 relative'>
-                <label className='text-sm font-semibold text-[color:var(--text-secondary)]'>
+                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
                   Konfirmasi Password
                 </label>
                 <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
@@ -414,7 +414,7 @@ const Profile = () => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                  className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
                   placeholder='Ulangi password baru'
                   required={showPasswordFields}
                 />
