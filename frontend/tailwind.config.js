@@ -19,7 +19,7 @@ export default {
       },
       animation: {
         fadeIn: 'fadeIn 0.5s ease-out forwards',
-        'fade-in': 'fadeIn 0.5s ease-out forwards', // Alias for existing code
+        'fade-in': 'fadeIn 0.5s ease-out forwards',
         fadeOut: 'fadeOut 0.5s ease-out forwards',
         'spin-reverse': 'spinReverse 1s linear infinite',
       },

@@ -114,13 +114,13 @@ const Register = () => {
         <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
           {/* Header */}
           <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)]'>
-            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white shadow-lg shadow-blue-500/30'>
-              <FaUserGraduate className='text-3xl' />
+            <div className='flex items-center justify-center'>
+              <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
             </div>
-            <h1 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+            <div className='text-xl font-bold text-[color:var(--text-primary)]'>
               Buat Akun Baru
-            </h1>
-            <p className='mt-2 text-sm text-[color:var(--text-secondary)]'>
+            </div>
+            <p className='mt-2 text-xs text-[color:var(--text-secondary)]'>
               Bergabung dan mulai berkontribusi untuk Tracer Study SMANTA
             </p>
           </div>

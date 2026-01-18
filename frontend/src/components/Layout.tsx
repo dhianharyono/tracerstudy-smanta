@@ -235,11 +235,11 @@ const Layout = () => {
         <div className='flex h-full flex-col'>
           {/* Header */}
           <div className='p-6'>
-            <div className='flex items-center gap-3 px-2'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white shadow-lg shadow-blue-500/30'>
-                <FaChartLine className='text-lg' />
+            <div className='flex items-center gap-1'>
+              <div className='flex items-center justify-center'>
+                <img src='/logo.png' alt='Logo' className='h-10 w-1h-10' />
               </div>
-              <div>
+              <div className='mt-1'>
                 <h1 className='!mb-0 text-lg font-bold leading-tight tracking-tight text-[color:var(--text-primary)]'>
                   TRACER STUDY
                 </h1>
@@ -290,13 +290,18 @@ const Layout = () => {
       <div className='flex w-0 flex-1 flex-col'>
         {/* Mobile Header */}
         <div className='flex items-center justify-between border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-4 lg:hidden sticky top-0 z-30'>
-          <div className='flex items-center gap-3'>
-            <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--primary)] text-white'>
-              <FaChartLine className='text-sm' />
+          <div className='flex items-center gap-1'>
+            <div className='flex items-center justify-center'>
+              <img src='/logo.png' alt='Logo' className='h-10 w-1h-10' />
             </div>
-            <span className='font-bold text-[color:var(--text-primary)]'>
-              Tracer Study
-            </span>
+            <div className='mt-1'>
+              <div className='!mb-0 text-sm font-bold leading-tight tracking-tight text-[color:var(--text-primary)]'>
+                TRACER STUDY
+              </div>
+              <p className='text-[8px] font-medium text-[color:var(--text-secondary)] uppercase tracking-wider'>
+                SMA N 1 TAWANGSARI
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
