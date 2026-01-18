@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { formatUniversityType } from '../../utils/helpers';
 import { FaUniversity, FaSearch, FaFilter, FaUsers } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
