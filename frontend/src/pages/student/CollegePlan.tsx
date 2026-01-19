@@ -161,19 +161,6 @@ const CollegePlan = () => {
     }
   };
 
-  const getUniversityTypeLabel = (type?: string) => {
-    switch (type) {
-      case 'negeri':
-        return 'PTN';
-      case 'swasta':
-        return 'PTS';
-      case 'kedinasan':
-        return 'Kedinasan';
-      default:
-        return '';
-    }
-  };
-
   if (loading) {
     return (
       <SmartLoader
