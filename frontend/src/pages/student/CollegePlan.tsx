@@ -391,14 +391,14 @@ const CollegePlan = () => {
               {/* Simple Results Summary */}
               <div className='flex items-center justify-between gap-4'>
                 <div>
-                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)]'>
+                  <h2 className='text-xs md:text-lg font-bold text-[color:var(--text-primary)] w-full'>
                     Ditemukan {filteredAlumni.length} Alumni
                   </h2>
                   <p className='text-sm text-[color:var(--text-secondary)] hidden sm:block'>
                     Daftar alumni yang sesuai dengan kriteria filter Anda.
                   </p>
                 </div>
-                <div className='flex gap-2 flex-wrap justify-end'>
+                <div className='flex gap-2 flex-wrap justify-end mb-5'>
                   {selectedUniversity && (
                     <span className='px-3 py-1.5 bg-[var(--primary)] text-white text-[10px] font-bold rounded-lg uppercase'>
                       {selectedUniversity}
@@ -455,7 +455,7 @@ const CollegePlan = () => {
                             .toUpperCase()}
                         </div>
                         <div className='min-w-0 w-full mt-4 md:mt-0'>
-                          <div className='font-bold text-[color:var(--text-primary)] text-xs md:text-base line-clamp-3 md:line-clamp-1 truncate w-full md:w-[250px]'>
+                          <div className='font-bold text-[color:var(--text-primary)] text-xs md:text-base line-clamp-3 md:line-clamp-1 truncate md:w-[250px]'>
                             {alumni.profile?.fullName || alumni.username}
                           </div>
                           <p className='text-[10px] md:text-xs font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-0.5'>
