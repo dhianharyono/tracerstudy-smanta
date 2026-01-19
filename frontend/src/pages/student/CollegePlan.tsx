@@ -204,7 +204,7 @@ const CollegePlan = () => {
 
       <button
         onClick={() => setShowFilters(!showFilters)}
-        className='mb-6 lg:hidden flex items-center justify-center gap-2 w-full py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-sm active:scale-95 transition-all'
+        className='text-xs md:text-sm mb-6 lg:hidden flex items-center justify-center gap-2 w-full py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-sm active:scale-95 transition-all'
       >
         <FaFilter /> {showFilters ? 'Tutup Pencarian' : 'Cari Jejak Alumni'}
       </button>
@@ -383,11 +383,11 @@ const CollegePlan = () => {
               </p>
             </div>
           ) : (
-            <div className='space-y-8 animate-fade-in'>
+            <div className='space-y-0 md:space-y-8 animate-fade-in'>
               {/* Simple Results Summary */}
               <div className='flex items-center justify-between gap-4'>
                 <div>
-                  <h2 className='text-lg font-bold text-[color:var(--text-primary)]'>
+                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)]'>
                     Ditemukan {filteredAlumni.length} Alumni
                   </h2>
                   <p className='text-sm text-[color:var(--text-secondary)] mt-1 hidden sm:block'>
@@ -421,54 +421,56 @@ const CollegePlan = () => {
                   </p>
                 </div>
               ) : filteredAlumni.length > 0 ? (
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-5'>
+                <div className='grid grid-cols-2 gap-3 md:gap-5'>
                   {filteredAlumni.map((alumni) => (
                     <div
                       key={alumni._id}
-                      className={`p-6 rounded-3xl border transition-all group relative ${
+                      className={`p-3 md:p-6 rounded-2xl md:rounded-3xl border transition-all group relative flex flex-col ${
                         alumni.isMentor
                           ? 'bg-amber-50/50 dark:bg-amber-500/5 border-amber-200 dark:border-amber-500/20 hover:border-amber-400'
                           : 'bg-[color:var(--bg-card)] border-[color:var(--border-color)] hover:border-[var(--primary)]'
                       }`}
                     >
+                      {/* Mentor Badge - Absolute on Mobile, Relative/Flex on Desktop if needed or always absolute for consistency */}
+                      {alumni.isMentor && (
+                        <div
+                          className='absolute top-3 right-3 md:top-6 md:right-6'
+                          title='Tersedia sebagai Mentor'
+                        >
+                          <div className='w-6 h-6 md:w-8 md:h-8 rounded-lg bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center border border-amber-100 dark:border-amber-500/20'>
+                            <FaCrown className='text-amber-500 text-[10px] md:text-sm' />
+                          </div>
+                        </div>
+                      )}
+
                       {/* Avatar & Name */}
-                      <div className='flex items-center gap-4 mb-6'>
-                        <div className='w-12 h-12 rounded-full bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] flex items-center justify-center text-[color:var(--text-primary)] font-bold group-hover:bg-[var(--primary)] group-hover:text-white transition-colors'>
+                      <div className='flex flex-col items-center text-center md:flex-row md:items-center md:text-left gap-3 md:gap-4 mb-4 md:mb-6'>
+                        <div className='invisible md:visible w-0 h-0 md:w-12 md:h-12 shrink-0 rounded-full bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] flex items-center justify-center text-[color:var(--text-primary)] font-bold group-hover:bg-[var(--primary)] group-hover:text-white transition-colors text-sm md:text-base'>
                           {(alumni.profile?.fullName || alumni.username)
                             .charAt(0)
                             .toUpperCase()}
                         </div>
-                        <div className='min-w-0'>
-                          <h3 className='font-bold text-[color:var(--text-primary)] text-base line-clamp-1'>
+                        <div className='min-w-0 w-full mt-4 md:mt-0'>
+                          <div className='font-bold text-[color:var(--text-primary)] text-xs md:text-base line-clamp-3 md:line-clamp-1'>
                             {alumni.profile?.fullName || alumni.username}
-                          </h3>
-                          <p className='text-xs font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider'>
+                          </div>
+                          <p className='text-[10px] md:text-xs font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-0.5'>
                             Lulus {alumni.profile?.graduationYear || '-'}
                           </p>
                         </div>
-                        {alumni.isMentor && (
-                          <div
-                            className='ml-auto'
-                            title='Tersedia sebagai Mentor'
-                          >
-                            <div className='w-8 h-8 rounded-lg bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center border border-amber-100 dark:border-amber-500/20'>
-                              <FaCrown className='text-amber-500 text-sm' />
-                            </div>
-                          </div>
-                        )}
                       </div>
 
                       {/* Badge Display */}
                       {alumni.badges && alumni.badges.length > 0 && (
-                        <div className='flex flex-wrap gap-2 mb-4'>
+                        <div className='flex flex-wrap justify-center md:justify-start gap-1.5 md:gap-2 mb-4'>
                           {alumni.badges.map((badge) => (
                             <div
                               key={badge._id}
-                              className='inline-flex items-center gap-1 px-2 py-1 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/30 border border-blue-200 dark:border-blue-500/20 rounded-lg'
+                              className='inline-flex items-center gap-1 px-1.5 py-0.5 md:px-2 md:py-1 bg-gradient-to-r from-blue-100 to-blue-50 dark:from-blue-900/30 dark:to-blue-800/30 border border-blue-200 dark:border-blue-500/20 rounded md:rounded-lg'
                               title={badge.description}
                             >
-                              <FaMedal className='text-blue-600 dark:text-blue-400 text-xs' />
-                              <span className='text-[10px] font-bold text-blue-800 dark:text-blue-200'>
+                              <FaMedal className='text-blue-600 dark:text-blue-400 text-[8px] md:text-xs' />
+                              <span className='text-[8px] md:text-[10px] font-bold text-blue-800 dark:text-blue-200'>
                                 {badge.name}
                               </span>
                             </div>
@@ -477,30 +479,29 @@ const CollegePlan = () => {
                       )}
 
                       {/* Minimal Data List */}
-                      <div className='space-y-4 mb-8'>
-                        <div className='flex items-start gap-4'>
-                          <FaUniversity className='text-gray-400 mt-1 shrink-0' />
+                      <div className='space-y-3 md:space-y-4 mb-4 md:mb-8 flex-1'>
+                        <div className='flex flex-col items-center md:items-start md:flex-row gap-1 md:gap-4 text-center md:text-left'>
+                          <FaUniversity className='text-gray-400 text-xs md:text-base md:mt-1 shrink-0 hidden md:block' />
                           <div>
-                            <p className='text-sm font-bold text-[color:var(--text-primary)]'>
+                            <p className='text-[10px] md:text-sm font-bold text-[color:var(--text-primary)] line-clamp-2'>
                               {alumni.university?.name || '-'}
                             </p>
                             {alumni.university?.type && (
-                              <p className='text-[10px] font-bold text-[color:var(--text-tertiary)] uppercase mt-0.5 tracking-tight'>
-                                {getUniversityTypeLabel(alumni.university.type)}{' '}
-                                • {alumni.university.major || '-'}
+                              <p className='text-[8px] md:text-[10px] font-bold text-[color:var(--text-tertiary)] uppercase mt-0.5 tracking-tight'>
+                                {alumni.university.major || '-'}
                               </p>
                             )}
                           </div>
                         </div>
 
                         {alumni.job?.position && (
-                          <div className='flex items-start gap-4'>
-                            <FaBriefcase className='text-gray-400 mt-1 shrink-0' />
+                          <div className='flex flex-col items-center md:items-start md:flex-row gap-1 md:gap-4 text-center md:text-left'>
+                            <FaBriefcase className='text-gray-400 text-xs md:text-base md:mt-1 shrink-0 hidden md:block' />
                             <div>
-                              <p className='text-sm font-bold text-[color:var(--text-primary)]'>
+                              <p className='text-[10px] md:text-sm font-bold text-[color:var(--text-primary)] line-clamp-2'>
                                 {alumni.job.position}
                               </p>
-                              <p className='text-[10px] font-bold text-[color:var(--text-tertiary)] uppercase mt-0.5 tracking-tight'>
+                              <p className='text-[8px] md:text-[10px] font-bold text-[color:var(--text-tertiary)] uppercase mt-0.5 tracking-tight'>
                                 {alumni.job.institution || 'Instansi Terdaftar'}
                               </p>
                             </div>
@@ -509,16 +510,16 @@ const CollegePlan = () => {
                       </div>
 
                       {/* Actions */}
-                      <div className='flex items-center gap-3 border-t border-[color:var(--border-color)] pt-5'>
-                        <div className='flex gap-2'>
+                      <div className='flex flex-col md:flex-row items-center gap-2 md:gap-3 border-t border-[color:var(--border-color)] pt-3 md:pt-5 w-full'>
+                        <div className='flex gap-2 w-full md:w-auto justify-center'>
                           {alumni.isMentor && alumni.socialMedia?.linkedin && (
                             <a
                               href={alumni.socialMedia.linkedin}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all border border-[color:var(--border-color)]'
+                              className='w-7 h-7 md:w-9 md:h-9 flex items-center justify-center rounded-lg md:rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all border border-[color:var(--border-color)]'
                             >
-                              <FaLinkedin className='text-base' />
+                              <FaLinkedin className='text-xs md:text-base' />
                             </a>
                           )}
                           {alumni.isMentor && alumni.socialMedia?.instagram && (
@@ -526,9 +527,9 @@ const CollegePlan = () => {
                               href={alumni.socialMedia.instagram}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='w-9 h-9 flex items-center justify-center rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all border border-[color:var(--border-color)]'
+                              className='w-7 h-7 md:w-9 md:h-9 flex items-center justify-center rounded-lg md:rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all border border-[color:var(--border-color)]'
                             >
-                              <FaInstagram className='text-base' />
+                              <FaInstagram className='text-xs md:text-base' />
                             </a>
                           )}
                         </div>
@@ -542,13 +543,20 @@ const CollegePlan = () => {
                             }
                             target='_blank'
                             rel='noopener noreferrer'
-                            className='flex-1 flex items-center justify-center gap-2 py-2.5 bg-amber-600 text-white text-xs font-bold rounded-2xl hover:bg-amber-700 shadow-sm transition-all'
+                            className='w-full md:flex-1 flex items-center justify-center gap-1.5 md:gap-2 py-2 md:py-2.5 bg-amber-600 text-white text-[10px] md:text-xs font-bold rounded-xl md:rounded-2xl hover:bg-amber-700 shadow-sm transition-all'
                           >
-                            <FaComments /> Tanya Mentor
+                            <FaComments className='text-[10px] md:text-xs' />{' '}
+                            <span className='hidden sm:inline'>
+                              Tanya Mentor
+                            </span>
+                            <span className='sm:hidden'>Tanya</span>
                           </a>
                         ) : (
-                          <div className='flex-1 flex items-center justify-center gap-2 py-2.5 bg-gray-50/50 dark:bg-gray-800/50 text-[color:var(--text-tertiary)] text-[10px] font-bold rounded-2xl border border-dashed border-[color:var(--border-color)]'>
-                            Kontak Terkunci
+                          <div className='w-full md:flex-1 flex items-center justify-center gap-2 py-2 md:py-2.5 bg-gray-50/50 dark:bg-gray-800/50 text-[color:var(--text-tertiary)] text-[10px] font-bold rounded-xl md:rounded-2xl border border-dashed border-[color:var(--border-color)]'>
+                            <span className='hidden sm:inline'>
+                              Kontak Terkunci
+                            </span>
+                            <span className='sm:hidden'>Terkunci</span>
                           </div>
                         )}
                       </div>
