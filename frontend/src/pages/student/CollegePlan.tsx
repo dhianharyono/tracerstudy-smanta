@@ -103,6 +103,23 @@ const CollegePlan = () => {
     }
   }, [selectedUniversity, selectedMajor, isMentorFilter, selectedBadge]);
 
+  const getSocialUrl = (type: 'linkedin' | 'instagram', value: string) => {
+    if (!value) return '#';
+    let cleanValue = value.trim();
+    if (cleanValue.startsWith('http://') || cleanValue.startsWith('https://')) {
+      return cleanValue;
+    }
+    if (type === 'linkedin') {
+      if (cleanValue.includes('linkedin.com')) return `https://${cleanValue}`;
+      return `https://www.linkedin.com/in/${cleanValue}`;
+    }
+    if (type === 'instagram') {
+      if (cleanValue.includes('instagram.com')) return `https://${cleanValue}`;
+      return `https://instagram.com/${cleanValue.replace('@', '')}`;
+    }
+    return value;
+  };
+
   const fetchBadges = async () => {
     try {
       const res = await axios.get('/api/student/badges');
@@ -377,7 +394,7 @@ const CollegePlan = () => {
                   <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)]'>
                     Ditemukan {filteredAlumni.length} Alumni
                   </h2>
-                  <p className='text-sm text-[color:var(--text-secondary)] mt-1 hidden sm:block'>
+                  <p className='text-sm text-[color:var(--text-secondary)] hidden sm:block'>
                     Daftar alumni yang sesuai dengan kriteria filter Anda.
                   </p>
                 </div>
@@ -438,7 +455,7 @@ const CollegePlan = () => {
                             .toUpperCase()}
                         </div>
                         <div className='min-w-0 w-full mt-4 md:mt-0'>
-                          <div className='font-bold text-[color:var(--text-primary)] text-xs md:text-base line-clamp-3 md:line-clamp-1'>
+                          <div className='font-bold text-[color:var(--text-primary)] text-xs md:text-base line-clamp-3 md:line-clamp-1 truncate w-full md:w-[250px]'>
                             {alumni.profile?.fullName || alumni.username}
                           </div>
                           <p className='text-[10px] md:text-xs font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-0.5'>
@@ -501,7 +518,10 @@ const CollegePlan = () => {
                         <div className='flex gap-2 w-full md:w-auto justify-center'>
                           {alumni.isMentor && alumni.socialMedia?.linkedin && (
                             <a
-                              href={alumni.socialMedia.linkedin}
+                              href={getSocialUrl(
+                                'linkedin',
+                                alumni.socialMedia.linkedin,
+                              )}
                               target='_blank'
                               rel='noopener noreferrer'
                               className='w-7 h-7 md:w-9 md:h-9 flex items-center justify-center rounded-lg md:rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-all border border-[color:var(--border-color)]'
@@ -511,7 +531,10 @@ const CollegePlan = () => {
                           )}
                           {alumni.isMentor && alumni.socialMedia?.instagram && (
                             <a
-                              href={alumni.socialMedia.instagram}
+                              href={getSocialUrl(
+                                'instagram',
+                                alumni.socialMedia.instagram,
+                              )}
                               target='_blank'
                               rel='noopener noreferrer'
                               className='w-7 h-7 md:w-9 md:h-9 flex items-center justify-center rounded-lg md:rounded-xl bg-white dark:bg-gray-800 text-gray-500 hover:bg-pink-50 hover:text-pink-600 transition-all border border-[color:var(--border-color)]'
@@ -524,9 +547,17 @@ const CollegePlan = () => {
                         {alumni.isMentor ? (
                           <a
                             href={
-                              alumni.socialMedia?.instagram ||
-                              alumni.socialMedia?.linkedin ||
-                              `mailto:${alumni.socialMedia?.email}`
+                              alumni.socialMedia?.instagram
+                                ? getSocialUrl(
+                                    'instagram',
+                                    alumni.socialMedia.instagram,
+                                  )
+                                : alumni.socialMedia?.linkedin
+                                  ? getSocialUrl(
+                                      'linkedin',
+                                      alumni.socialMedia.linkedin,
+                                    )
+                                  : `mailto:${alumni.socialMedia?.email}`
                             }
                             target='_blank'
                             rel='noopener noreferrer'
