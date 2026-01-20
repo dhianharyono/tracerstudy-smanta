@@ -10,7 +10,6 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
-  FaUserTag,
 } from 'react-icons/fa';
 
 const Register = () => {
@@ -143,39 +142,56 @@ const Register = () => {
             )}
 
             <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='space-y-1.5'>
+              <div className='space-y-3'>
                 <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
-                  Role
+                  Pilih Role
                 </label>
-                <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
-                    <FaUserTag />
-                  </div>
-                  <select
-                    name='role'
-                    value={formData.role}
-                    onChange={handleChange}
-                    required
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base appearance-none'
+                <div className='grid grid-cols-2 gap-4'>
+                  {/* Alumni Option */}
+                  <button
+                    type='button'
+                    onClick={() => setFormData({ ...formData, role: 'alumni' })}
+                    className={`relative overflow-hidden rounded-xl border-2 p-2 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${
+                      formData.role === 'alumni'
+                        ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
+                        : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
+                    }`}
                   >
-                    <option value='alumni'>Alumni</option>
-                    <option value='student'>Student</option>
-                  </select>
-                  <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
-                    <svg
-                      className='h-4 w-4'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth='2'
-                        d='M19 9l-7 7-7-7'
-                      />
-                    </svg>
-                  </div>
+                    <div>
+                      <div
+                        className={`font-bold ${formData.role === 'alumni' ? 'text-[var(--primary)]' : 'text-[color:var(--text-primary)]'}`}
+                      >
+                        Alumni
+                      </div>
+                      <div className='text-[10px] sm:text-xs text-[color:var(--text-tertiary)] leading-tight'>
+                        Sudah lulus sekolah
+                      </div>
+                    </div>
+                  </button>
+
+                  {/* Student Option */}
+                  <button
+                    type='button'
+                    onClick={() =>
+                      setFormData({ ...formData, role: 'student' })
+                    }
+                    className={`relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${
+                      formData.role === 'student'
+                        ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
+                        : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
+                    }`}
+                  >
+                    <div>
+                      <div
+                        className={`font-bold ${formData.role === 'student' ? 'text-[var(--primary)]' : 'text-[color:var(--text-primary)]'}`}
+                      >
+                        Student
+                      </div>
+                      <div className='text-[10px] sm:text-xs text-[color:var(--text-tertiary)] leading-tight'>
+                        Masih aktif belajar
+                      </div>
+                    </div>
+                  </button>
                 </div>
               </div>
 

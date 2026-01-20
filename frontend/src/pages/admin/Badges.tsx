@@ -243,10 +243,10 @@ const AdminBadges = () => {
                         <FaMedal className='text-xl' />
                       </div>
                       <div>
-                        <h3 className='font-bold text-[color:var(--text-primary)] text-lg'>
+                        <div className='font-bold text-[color:var(--text-primary)] text-sm md:text-lg'>
                           {badge.name}
-                        </h3>
-                        <p className='text-sm text-[color:var(--text-secondary)] mb-1'>
+                        </div>
+                        <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)] mb-1'>
                           {badge.description}
                         </p>
                         <div className='flex flex-wrap gap-2 text-xs font-mono'>
@@ -307,7 +307,15 @@ const AdminBadges = () => {
                 ✕
               </button>
             </div>
-            <div className='p-6 overflow-y-auto'>
+            <div className='px-6 py-3 overflow-y-auto'>
+              <div className='mb-2'>
+                <p className='text-sm text-[color:var(--text-secondary)]'>
+                  Total Alumni yang Mengklaim Badge:{' '}
+                  <span className='font-bold text-[color:var(--text-primary)]'>
+                    {badgeAlumni.length}
+                  </span>
+                </p>
+              </div>
               {loadingAlumni ? (
                 <SmartLoader />
               ) : badgeAlumni.length === 0 ? (
@@ -322,10 +330,10 @@ const AdminBadges = () => {
                       className='flex items-center justify-between gap-4 p-4 rounded-xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'
                     >
                       <div className='flex items-center gap-4'>
-                        <div className='w-10 h-10 rounded-full bg-[var(--primary)] flex items-center justify-center text-white font-bold text-lg'>
-                          {(alumni.profile?.fullName || alumni.username)
-                            .charAt(0)
-                            .toUpperCase()}
+                        <div>
+                          <p className='font-bold text-[color:var(--text-primary)]'>
+                            {badgeAlumni.indexOf(alumni) + 1}.
+                          </p>
                         </div>
                         <div>
                           <p className='font-bold text-[color:var(--text-primary)]'>

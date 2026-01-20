@@ -64,7 +64,7 @@ const Login = () => {
             <div className='text-xl font-bold text-[color:var(--text-primary)]'>
               Selamat Datang
             </div>
-            <p className='mt-2 text-xs text-[color:var(--text-secondary)]'>
+            <p className='mt-1 text-xs text-[color:var(--text-secondary)]'>
               Masuk ke akun Tracer Study SMANTA
             </p>
           </div>
