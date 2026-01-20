@@ -201,7 +201,7 @@ const AdminMentors = () => {
                 <th className='px-6 py-4'>Mentor</th>
                 <th className='px-6 py-4'>Pendidikan</th>
                 <th className='px-6 py-4'>Pekerjaan</th>
-                <th className='px-6 py-4'>Kontak Sosial</th>
+                <th className='px-6 py-4'>Media Sosial</th>
                 <th className='px-6 py-4'>Aksi</th>
               </tr>
             </thead>
@@ -270,9 +270,9 @@ const AdminMentors = () => {
                             }
                             target='_blank'
                             rel='noreferrer'
-                            className='inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors'
+                            className='text-blue-600 hover:text-blue-800'
                           >
-                            <FaLinkedin size={14} />
+                            <FaLinkedin size={16} />
                           </a>
                         )}
                         {mentor.socialMedia?.instagram && (
@@ -284,17 +284,17 @@ const AdminMentors = () => {
                             }
                             target='_blank'
                             rel='noreferrer'
-                            className='inline-flex h-8 w-8 items-center justify-center rounded-lg bg-pink-50 text-pink-600 hover:bg-pink-100 transition-colors'
+                            className='text-pink-600 hover:text-pink-800'
                           >
-                            <FaInstagram size={14} />
+                            <FaInstagram size={16} />
                           </a>
                         )}
                         {mentor.socialMedia?.email && (
                           <a
                             href={`mailto:${mentor.socialMedia.email}`}
-                            className='inline-flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors'
+                            className='text-gray-600 hover:text-gray-800 dark:text-gray-400'
                           >
-                            <FaEnvelope size={14} />
+                            <FaEnvelope size={16} />
                           </a>
                         )}
                       </div>

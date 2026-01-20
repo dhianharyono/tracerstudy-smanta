@@ -11,8 +11,15 @@ import {
   FaCheckCircle,
   FaTimesCircle,
   FaCrown,
+  FaEdit,
+  FaSearch,
+  FaSave,
 } from 'react-icons/fa';
+import { createPortal } from 'react-dom';
 import SmartLoader from '@/components/SmartLoader';
+import SearchableSelect from '@/components/SearchableSelect';
+import { INDONESIA_UNIVERSITIES } from '../universityData';
+import { COMMON_MAJORS } from '../constant';
 
 const AdminAlumni = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
@@ -24,17 +31,54 @@ const AdminAlumni = () => {
   });
   const [loading, setLoading] = useState(true);
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedName, setDebouncedName] = useState('');
+
   const [filters, setFilters] = useState({
     university: '',
     graduationYear: '',
     major: '',
     questionnaireStatus: 'completed',
+    name: '',
   });
   const [filterOptions, setFilterOptions] = useState({
     universities: [] as string[],
     graduationYears: [] as number[],
     majors: [] as string[],
   });
+
+  // Edit State
+  const [editingAlumni, setEditingAlumni] = useState<any | null>(null);
+  const [editForm, setEditForm] = useState({
+    fullName: '',
+    university: '',
+    major: '',
+    graduationYear: '',
+    jobPosition: '',
+    jobInstitution: '',
+  });
+  const [univList, setUnivList] = useState<string[]>([]);
+  const [majorList, setMajorList] = useState<string[]>([]);
+
+  useEffect(() => {
+    setUnivList(INDONESIA_UNIVERSITIES);
+    setMajorList(COMMON_MAJORS);
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedName(searchTerm);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  useEffect(() => {
+    if (debouncedName !== filters.name) {
+      setFilters((prev) => ({ ...prev, name: debouncedName }));
+      setPagination((prev) => ({ ...prev, page: 1 }));
+    }
+  }, [debouncedName]);
 
   useEffect(() => {
     fetchAlumni();
@@ -53,6 +97,7 @@ const AdminAlumni = () => {
       if (filters.major) params.append('major', filters.major);
       if (filters.questionnaireStatus)
         params.append('questionnaireStatus', filters.questionnaireStatus);
+      if (filters.name) params.append('name', filters.name);
 
       const response = await axios.get(
         `/api/admin/alumni?${params.toString()}`,
@@ -80,7 +125,9 @@ const AdminAlumni = () => {
       graduationYear: '',
       major: '',
       questionnaireStatus: '',
+      name: '',
     });
+    setSearchTerm('');
     setPagination({ ...pagination, page: 1 });
   };
 
@@ -96,6 +143,46 @@ const AdminAlumni = () => {
     } catch (error: any) {
       console.error('Error deleting alumni:', error);
       Toast(error.response?.data?.message || 'Gagal menghapus alumni', 'error');
+    }
+  };
+
+  const handleEdit = (alum: any) => {
+    setEditingAlumni(alum);
+    setEditForm({
+      fullName: alum.profile?.fullName || '',
+      university: alum.university?.name || '',
+      major: alum.university?.major || '',
+      graduationYear: alum.profile?.graduationYear?.toString() || '',
+      jobPosition: alum.job?.position || '',
+      jobInstitution: alum.job?.institution || '',
+    });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingAlumni) return;
+
+    try {
+      await axios.put(`/api/admin/alumni/${editingAlumni._id}`, {
+        profile: {
+          fullName: editForm.fullName,
+          graduationYear: parseInt(editForm.graduationYear),
+        },
+        university: {
+          name: editForm.university,
+          major: editForm.major,
+        },
+        job: {
+          position: editForm.jobPosition,
+          institution: editForm.jobInstitution,
+        },
+      });
+      Toast('Data alumni berhasil diperbarui', 'success');
+      setEditingAlumni(null);
+      fetchAlumni();
+    } catch (error: any) {
+      console.error('Error updating alumni:', error);
+      Toast(error.response?.data?.message || 'Gagal memperbarui data', 'error');
     }
   };
 
@@ -128,7 +215,17 @@ const AdminAlumni = () => {
           showFilters ? 'block' : 'hidden md:block'
         }`}
       >
-        <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
+          <div className='relative'>
+            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
+            <input
+              type='text'
+              placeholder='Cari Nama...'
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-9 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            />
+          </div>
           <div className='relative'>
             <select
               value={filters.university}
@@ -268,7 +365,7 @@ const AdminAlumni = () => {
                 <th className='px-6 py-4'>Nama & Email</th>
                 <th className='px-6 py-4'>Pendidikan</th>
                 <th className='px-6 py-4'>Pekerjaan</th>
-                <th className='px-6 py-4'>Sosial</th>
+                <th className='px-6 py-4'>Media Sosial</th>
                 <th className='px-6 py-4'>Survei</th>
                 <th className='px-6 py-4'>Aksi</th>
               </tr>
@@ -386,13 +483,22 @@ const AdminAlumni = () => {
                       )}
                     </td>
                     <td className='px-6 py-4'>
-                      <button
-                        onClick={() => handleDelete(alum._id)}
-                        className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
-                        title='Hapus Alumni'
-                      >
-                        <FaTrash size={14} />
-                      </button>
+                      <div className='flex gap-2'>
+                        <button
+                          onClick={() => handleEdit(alum)}
+                          className='rounded p-2 text-amber-500 hover:bg-amber-50 hover:text-amber-700 transition-colors dark:hover:bg-amber-900/20'
+                          title='Edit Alumni'
+                        >
+                          <FaEdit size={14} />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(alum._id)}
+                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
+                          title='Hapus Alumni'
+                        >
+                          <FaTrash size={14} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -445,6 +551,148 @@ const AdminAlumni = () => {
           </button>
         </div>
       </div>
+
+      {editingAlumni &&
+        createPortal(
+          <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in'>
+            <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up flex flex-col max-h-[90vh]'>
+              <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50 shrink-0'>
+                <h3 className='text-xl font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
+                  <FaEdit className='text-[var(--primary)]' /> Edit Data Alumni
+                </h3>
+                <button
+                  onClick={() => setEditingAlumni(null)}
+                  className='p-2 hover:bg-[color:var(--bg-tertiary)] rounded-full transition-colors'
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              <form
+                onSubmit={handleEditSubmit}
+                className='p-6 overflow-y-auto space-y-4'
+              >
+                <div>
+                  <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                    Nama Lengkap
+                  </label>
+                  <input
+                    type='text'
+                    value={editForm.fullName}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, fullName: e.target.value })
+                    }
+                    className='w-full px-4 py-2 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent focus:border-[var(--primary)] outline-none transition-all'
+                    required
+                  />
+                </div>
+
+                <div className='grid grid-cols-2 gap-4'>
+                  <div>
+                    <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                      Tahun Lulus
+                    </label>
+                    <input
+                      type='number'
+                      value={editForm.graduationYear}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          graduationYear: e.target.value,
+                        })
+                      }
+                      className='w-full px-4 py-2 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent focus:border-[var(--primary)] outline-none transition-all'
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className='space-y-4 pt-2 border-t border-[color:var(--border-color)]'>
+                  <h4 className='text-sm font-bold text-[color:var(--text-primary)]'>
+                    Pendidikan Lanjutan
+                  </h4>
+                  <SearchableSelect
+                    label='Perguruan Tinggi'
+                    name='university'
+                    value={editForm.university}
+                    options={univList}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, university: e.target.value })
+                    }
+                    placeholder='Pilih Universitas...'
+                  />
+                  <SearchableSelect
+                    label='Jurusan'
+                    name='major'
+                    value={editForm.major}
+                    options={majorList}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, major: e.target.value })
+                    }
+                    placeholder='Pilih Jurusan...'
+                  />
+                </div>
+
+                <div className='space-y-4 pt-2 border-t border-[color:var(--border-color)]'>
+                  <h4 className='text-sm font-bold text-[color:var(--text-primary)]'>
+                    Pekerjaan Saat Ini
+                  </h4>
+                  <div>
+                    <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                      Posisi / Jabatan
+                    </label>
+                    <input
+                      type='text'
+                      value={editForm.jobPosition}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          jobPosition: e.target.value,
+                        })
+                      }
+                      className='w-full px-4 py-2 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent focus:border-[var(--primary)] outline-none transition-all'
+                      placeholder='Contoh: Software Engineer'
+                    />
+                  </div>
+                  <div>
+                    <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                      Instansi / Perusahaan
+                    </label>
+                    <input
+                      type='text'
+                      value={editForm.jobInstitution}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          jobInstitution: e.target.value,
+                        })
+                      }
+                      className='w-full px-4 py-2 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent focus:border-[var(--primary)] outline-none transition-all'
+                      placeholder='Contoh: PT. Teknologi Indonesia'
+                    />
+                  </div>
+                </div>
+
+                <div className='flex gap-3 pt-4'>
+                  <button
+                    type='button'
+                    onClick={() => setEditingAlumni(null)}
+                    className='flex-1 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:opacity-90 transition-opacity'
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type='submit'
+                    className='flex-1 py-2.5 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2'
+                  >
+                    <FaSave /> Simpan Perubahan
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

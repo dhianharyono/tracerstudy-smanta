@@ -228,6 +228,8 @@ const AdminStudents = () => {
               <tr>
                 <th className='px-6 py-4'>Username</th>
                 <th className='px-6 py-4'>Nama Lengkap</th>
+                <th className='px-6 py-4'>Tahun Masuk</th>
+                <th className='px-6 py-4'>Tahun Lulus</th>
                 <th className='px-6 py-4'>Email</th>
                 <th className='px-6 py-4'>Tanggal Dibuat</th>
                 <th className='px-6 py-4 text-center'>Aksi</th>
@@ -263,6 +265,12 @@ const AdminStudents = () => {
                       <span className='font-medium text-[color:var(--text-primary)]'>
                         {student.profile?.fullName || '-'}
                       </span>
+                    </td>
+                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                      {student.profile?.entryYear || '-'}
+                    </td>
+                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
+                      {student.profile?.graduationYear || '-'}
                     </td>
                     <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
                       {student.email}

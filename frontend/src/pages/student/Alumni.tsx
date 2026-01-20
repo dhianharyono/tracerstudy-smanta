@@ -155,9 +155,8 @@ const StudentAlumni = () => {
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
       <div
-        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}

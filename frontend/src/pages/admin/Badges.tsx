@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { FaTrash, FaPlus, FaMedal } from 'react-icons/fa';
 import Toast from '@/components/toast';
@@ -292,79 +293,81 @@ const AdminBadges = () => {
       </div>
 
       {/* View Modal */}
-      {viewingBadge && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-fade-in'>
-          <div className='bg-[color:var(--bg-card)] w-full max-w-2xl rounded-2xl shadow-2xl border border-[color:var(--border-color)] max-h-[80vh] flex flex-col'>
-            <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center'>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
-                <FaMedal className='text-amber-500' /> Penerima Badge:{' '}
-                {viewingBadge.name}
-              </h3>
-              <button
-                onClick={() => setViewingBadge(null)}
-                className='p-2 hover:bg-[color:var(--bg-tertiary)] rounded-full transition-colors'
-              >
-                ✕
-              </button>
-            </div>
-            <div className='px-6 py-3 overflow-y-auto'>
-              <div className='mb-2'>
-                <p className='text-sm text-[color:var(--text-secondary)]'>
-                  Total Alumni yang Mengklaim Badge:{' '}
-                  <span className='font-bold text-[color:var(--text-primary)]'>
-                    {badgeAlumni.length}
-                  </span>
-                </p>
+      {viewingBadge &&
+        createPortal(
+          <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in'>
+            <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-scale-up flex flex-col max-h-[90vh]'>
+              <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50 shrink-0'>
+                <h3 className='text-xl font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
+                  <FaMedal className='text-amber-500' /> Penerima Badge:{' '}
+                  {viewingBadge.name}
+                </h3>
+                <button
+                  onClick={() => setViewingBadge(null)}
+                  className='p-2 hover:bg-[color:var(--bg-tertiary)] rounded-full transition-colors'
+                >
+                  ✕
+                </button>
               </div>
-              {loadingAlumni ? (
-                <SmartLoader />
-              ) : badgeAlumni.length === 0 ? (
-                <div className='text-center py-8 text-[color:var(--text-secondary)]'>
-                  Belum ada alumni yang mengklaim badge ini.
+              <div className='px-6 py-3 overflow-y-auto'>
+                <div className='mb-2'>
+                  <p className='text-sm text-[color:var(--text-secondary)]'>
+                    Total Alumni yang Mengklaim Badge:{' '}
+                    <span className='font-bold text-[color:var(--text-primary)]'>
+                      {badgeAlumni.length}
+                    </span>
+                  </p>
                 </div>
-              ) : (
-                <div className='space-y-4'>
-                  {badgeAlumni.map((alumni) => (
-                    <div
-                      key={alumni._id}
-                      className='flex items-center justify-between gap-4 p-4 rounded-xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'
-                    >
-                      <div className='flex items-center gap-4'>
-                        <div>
-                          <p className='font-bold text-[color:var(--text-primary)]'>
-                            {badgeAlumni.indexOf(alumni) + 1}.
-                          </p>
-                        </div>
-                        <div>
-                          <p className='font-bold text-[color:var(--text-primary)]'>
-                            {alumni.profile?.fullName || alumni.username}
-                          </p>
-                          <p className='text-xs text-[color:var(--text-secondary)]'>
-                            Lulus: {alumni.profile?.graduationYear || '-'} •{' '}
-                            {alumni.university?.name || '-'}
-                          </p>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() =>
-                          handleRemoveAlumni(
-                            alumni._id,
-                            alumni.profile?.fullName || alumni.username,
-                          )
-                        }
-                        className='p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
-                        title='Hapus Badge dari Alumni'
+                {loadingAlumni ? (
+                  <SmartLoader />
+                ) : badgeAlumni.length === 0 ? (
+                  <div className='text-center py-8 text-[color:var(--text-secondary)]'>
+                    Belum ada alumni yang mengklaim badge ini.
+                  </div>
+                ) : (
+                  <div className='space-y-4'>
+                    {badgeAlumni.map((alumni) => (
+                      <div
+                        key={alumni._id}
+                        className='flex items-center justify-between gap-4 p-4 rounded-xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'
                       >
-                        <FaTrash />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
+                        <div className='flex items-center gap-4'>
+                          <div>
+                            <p className='font-bold text-[color:var(--text-primary)]'>
+                              {badgeAlumni.indexOf(alumni) + 1}.
+                            </p>
+                          </div>
+                          <div>
+                            <p className='font-bold text-[color:var(--text-primary)]'>
+                              {alumni.profile?.fullName || alumni.username}
+                            </p>
+                            <p className='text-xs text-[color:var(--text-secondary)]'>
+                              Lulus: {alumni.profile?.graduationYear || '-'} •{' '}
+                              {alumni.university?.name || '-'}
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() =>
+                            handleRemoveAlumni(
+                              alumni._id,
+                              alumni.profile?.fullName || alumni.username,
+                            )
+                          }
+                          className='p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                          title='Hapus Badge dari Alumni'
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

@@ -34,7 +34,7 @@ const StudentUniversities = () => {
   useEffect(() => {
     const lowerTerm = searchTerm.toLowerCase();
     const filtered = universities.filter((uni) =>
-      uni._id.name.toLowerCase().includes(lowerTerm),
+      uni._id?.name?.toLowerCase().includes(lowerTerm),
     );
     setFilteredUniversities(filtered);
   }, [searchTerm, universities]);
@@ -189,8 +189,10 @@ const StudentUniversities = () => {
                     uni._id.type,
                   )}`}
                 >
-                  {uni._id.type.charAt(0).toUpperCase() +
-                    uni._id.type.slice(1) || 'Umum'}
+                  {uni._id.type
+                    ? uni._id.type.charAt(0).toUpperCase() +
+                    uni._id.type.slice(1)
+                    : 'Umum'}
                 </span>
               </div>
 
