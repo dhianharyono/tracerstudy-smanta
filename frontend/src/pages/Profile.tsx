@@ -155,14 +155,14 @@ const Profile = () => {
                 <div className='flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 shadow-inner backdrop-blur-md border border-white/10'>
                   <FaGraduationCap className='text-2xl sm:text-3xl text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' />
                 </div>
-                <div className='text-white space-y-1 sm:space-y-2'>
-                  <div className='flex items-center gap-3'>
-                    <h2 className='text-lg sm:text-xl font-bold !mb-0 tracking-tight'>
+                <div className='text-white space-y-0 sm:space-y-2'>
+                  <div className='flex items-center'>
+                    <div className='text:sm md:text-xl font-bold !mb-0 tracking-tight'>
                       Status Mentorship
-                    </h2>
+                    </div>
                   </div>
                   <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
-                    <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
+                    <p className='text-[10px] md:text-sm text-[color:var(--text-secondary)]'>
                       {isMentor
                         ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
                         : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
@@ -315,19 +315,19 @@ const Profile = () => {
             <div className='bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-2xl border border-green-500/30 overflow-hidden shadow-sm'>
               <div className='p-6'>
                 <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>
-                  <div className='flex items-start gap-4'>
-                    <div className='p-3 bg-green-500/20 rounded-xl text-green-500'>
+                  <div className='flex items-start gap-0 md:gap-4'>
+                    <div className='invisible w-0 h-0 p-0 md:p-3 bg-green-500/20 rounded-xl text-green-500'>
                       <FaGraduationCap className='text-2xl' />
                     </div>
                     <div>
                       <h3 className='text-lg font-bold text-[color:var(--text-primary)] mb-1'>
                         Selamat! Anda Sudah Lulus
                       </h3>
-                      <p className='text-sm text-[color:var(--text-secondary)] mb-2'>
+                      <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-2'>
                         Tahun lulus Anda adalah {graduationYear}. Anda dapat
                         mengkonversi akun Anda menjadi akun alumni.
                       </p>
-                      <p className='text-xs text-[color:var(--text-tertiary)]'>
+                      <p className='text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
                         Dengan menjadi alumni, Anda dapat mengisi kuesioner dan
                         berbagi pengalaman dengan siswa lainnya.
                       </p>
@@ -336,7 +336,7 @@ const Profile = () => {
                   <button
                     type='button'
                     onClick={() => setShowGraduationModal(true)}
-                    className='flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
+                    className='flex w-full text-sm md:w-fit justify-center items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
                   >
                     <FaGraduationCap /> Lulus Sekarang
                   </button>
@@ -434,7 +434,7 @@ const Profile = () => {
           <button
             type='submit'
             disabled={saving}
-            className='flex items-center gap-2 px-8 py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-lg shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100'
+            className='w-full md:w-fit justify-center flex items-center gap-2 px-8 py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-lg shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100'
           >
             {saving ? (
               <>

@@ -200,7 +200,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
           <div className='flex justify-end pt-4'>
             <button
               type='submit'
-              className={`flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${
+              className={`flex w-full md:w-fit items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${
                 loadingSubmit || feedback.rating === 0
                   ? 'cursor-not-allowed opacity-70 grayscale'
                   : ''

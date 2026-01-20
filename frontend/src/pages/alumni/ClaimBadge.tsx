@@ -4,9 +4,10 @@ import { FaMedal, FaTicketAlt } from 'react-icons/fa';
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import RestrictedAccess from '@/components/RestrictedAccess';
 
 const ClaimBadge = () => {
-  const { updateUser } = useAuth();
+  const { updateUser, user } = useAuth();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -28,6 +29,10 @@ const ClaimBadge = () => {
       setLoading(false);
     }
   };
+
+  if (user?.questionnaireCompleted === false) {
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
 
   return (
     <div className='min-h-[80vh] flex items-center justify-center p-5 page-fade-in'>

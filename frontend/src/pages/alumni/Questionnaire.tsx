@@ -475,10 +475,10 @@ const AlumniQuestionnaire = () => {
                 <FaGraduationCap className='text-2xl' />
               </div>
               <div className='space-y-1'>
-                <h3 className='text-base md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                <h3 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
                   Kuesioner Selesai
                 </h3>
-                <p className='text-xs md:text-sm text-[color:var(--text-secondary)] leading-relaxed'>
+                <p className='text-[10px] md:text-sm text-[color:var(--text-secondary)] leading-relaxed'>
                   Anda telah mengisi kuesioner. Klik tombol edit untuk
                   memperbarui data Anda.
                 </p>
@@ -486,7 +486,7 @@ const AlumniQuestionnaire = () => {
             </div>
             <button
               onClick={() => setIsReadOnly(false)}
-              className='flex w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
+              className='flex w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
             >
               <FaEdit className='text-base' />
               <span>Edit Data</span>
@@ -497,14 +497,14 @@ const AlumniQuestionnaire = () => {
         isEditMode && (
           <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
             <div className='flex items-center gap-3'>
-              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
+              <div className='flex h-7 w-7 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
                 <FaEdit />
               </div>
               <div>
                 <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>
                   Mode Edit
                 </h3>
-                <p className='text-xs md:text-sm text-blue-700 dark:text-blue-300'>
+                <p className='text-[10px] md:text-sm text-blue-700 dark:text-blue-300'>
                   Anda sedang memperbarui data kuesioner yang sudah ada.
                 </p>
               </div>
@@ -813,7 +813,7 @@ const AlumniQuestionnaire = () => {
 
         {/* Action Buttons */}
         {!isReadOnly && (
-          <div className='flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4'>
+          <div className='flex sm:flex-row justify-center md:justify-end gap-3 sm:gap-4'>
             <button
               type='button'
               onClick={() => {
@@ -823,7 +823,7 @@ const AlumniQuestionnaire = () => {
                   navigate('/alumni');
                 }
               }}
-              className='rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3.5 font-bold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)] hover:border-[color:var(--text-tertiary)] active:scale-[0.98]'
+              className='text-sm rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-6 py-3.5 font-bold text-[color:var(--text-secondary)] transition-all hover:bg-[color:var(--bg-tertiary)] hover:border-[color:var(--text-tertiary)] active:scale-[0.98]'
               disabled={submitLoading}
             >
               Batal
@@ -832,7 +832,7 @@ const AlumniQuestionnaire = () => {
             <button
               type='submit'
               disabled={submitLoading}
-              className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-10 py-3.5 font-extrabold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
+              className='flex text-xs md:text-sm items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-10 py-3.5 font-extrabold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
             >
               {submitLoading ? (
                 <>

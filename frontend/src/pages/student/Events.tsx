@@ -4,8 +4,12 @@ import SmartLoader from '@/components/SmartLoader';
 import EventWelcomeCard from '@/components/Dashboard/EventWelcomeCard';
 import EventRegisterModal from '@/components/EventRegisterModal';
 import { LuCalendarOff } from 'react-icons/lu';
+import { isStudentProfileComplete } from '@/utils/helpers';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { useAuth } from '@/contexts/AuthContext';
 
 const StudentEvents = () => {
+  const { user } = useAuth();
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -32,6 +36,10 @@ const StudentEvents = () => {
         messages={['Mencari event seru...', 'Mengambil informasi event...']}
       />
     );
+
+  if (!isStudentProfileComplete(user)) {
+    return <RestrictedAccess type='profile_incomplete' role='student' />;
+  }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>

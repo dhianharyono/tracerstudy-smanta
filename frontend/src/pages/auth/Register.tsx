@@ -116,10 +116,10 @@ const Register = () => {
             <div className='flex items-center justify-center'>
               <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
             </div>
-            <div className='text-xl font-bold text-[color:var(--text-primary)]'>
+            <div className='text-lg md:text-xl font-bold text-[color:var(--text-primary)]'>
               Buat Akun Baru
             </div>
-            <p className='mt-2 text-xs text-[color:var(--text-secondary)]'>
+            <p className='mt-1 text-xs text-[color:var(--text-secondary)]'>
               Bergabung dan mulai berkontribusi untuk Tracer Study SMANTA
             </p>
           </div>
@@ -159,9 +159,7 @@ const Register = () => {
                     className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base appearance-none'
                   >
                     <option value='alumni'>Alumni</option>
-                    <option disabled value='student'>
-                      Student (Coming Soon)
-                    </option>
+                    <option value='student'>Student</option>
                   </select>
                   <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
                     <svg

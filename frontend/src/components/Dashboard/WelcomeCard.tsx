@@ -1,6 +1,12 @@
 import { FaGraduationCap } from 'react-icons/fa';
 
-const WelcomeCard = ({ username, fullName }: { username: string; fullName?: string }) => {
+const WelcomeCard = ({
+  username,
+  fullName,
+}: {
+  username: string;
+  fullName?: string;
+}) => {
   return (
     <div
       className='card max-w-sm md:max-w-md lg:max-w-full'
@@ -28,7 +34,7 @@ const WelcomeCard = ({ username, fullName }: { username: string; fullName?: stri
           </h2>
           <p
             className='text-xs md:text-sm'
-            style={{ color: 'var(--text-tertiary)', fontSize: '14px' }}
+            style={{ color: 'var(--text-tertiary)' }}
           >
             Jelajahi data alumni dan informasi terkini
           </p>

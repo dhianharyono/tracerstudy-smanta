@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 import SmartLoader from '@/components/SmartLoader';
 import { LuCalendar, LuEye, LuSearch } from 'react-icons/lu';
+import RestrictedAccess from '@/components/RestrictedAccess';
 
 const AlumniEventHub = () => {
   const { user } = useAuth();
@@ -218,6 +219,10 @@ const AlumniEventHub = () => {
         )}
       </div>
     );
+  }
+
+  if (user?.questionnaireCompleted === false) {
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
   return (
