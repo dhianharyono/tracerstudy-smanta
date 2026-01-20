@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
   FaUser,
@@ -16,6 +17,7 @@ import SmartLoader from '@/components/SmartLoader';
 
 const Profile = () => {
   const { updateUser, user } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -24,6 +26,9 @@ const Profile = () => {
   const [fullName, setFullName] = useState('');
   const [entryYear, setEntryYear] = useState<number | ''>('');
   const [graduationYear, setGraduationYear] = useState<number | ''>('');
+  const [savedGraduationYear, setSavedGraduationYear] = useState<number | null>(
+    null,
+  );
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswordFields, setShowPasswordFields] = useState(false);
@@ -46,6 +51,7 @@ const Profile = () => {
       setFullName(response.data.profile?.fullName || '');
       setEntryYear(response.data.profile?.entryYear || '');
       setGraduationYear(response.data.profile?.graduationYear || '');
+      setSavedGraduationYear(response.data.profile?.graduationYear || null);
       setIsMentor(response.data.isMentor || false);
       setHasUniversityData(!!response.data.university?.name);
     } catch (error) {
@@ -87,7 +93,18 @@ const Profile = () => {
       setPassword('');
       setConfirmPassword('');
       setShowPasswordFields(false);
-      fetchProfile();
+
+      setSavedGraduationYear(
+        typeof graduationYear === 'number' ? graduationYear : null,
+      );
+
+      if (user?.role === 'student') {
+        setTimeout(() => {
+          navigate('/student');
+        }, 1500);
+      } else {
+        fetchProfile();
+      }
     } catch (error: any) {
       console.error('Error updating profile:', error);
       Toast(
@@ -174,9 +191,8 @@ const Profile = () => {
               <div className='flex items-center justify-between md:justify-end gap-4 bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/10 w-full md:w-auto'>
                 <div className='text-left md:text-right'>
                   <span
-                    className={`block text-sm font-bold ${
-                      isMentor ? 'text-amber-300' : 'text-indigo-200'
-                    }`}
+                    className={`block text-sm font-bold ${isMentor ? 'text-amber-300' : 'text-indigo-200'
+                      }`}
                   >
                     {isMentor ? 'Aktif' : 'Nonaktif'}
                   </span>
@@ -188,18 +204,16 @@ const Profile = () => {
                 <button
                   type='button'
                   onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${
-                    isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
-                  }`}
+                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
+                    }`}
                 >
                   <span className='sr-only'>Toggle Mentorship</span>
                   <span
                     aria-hidden='true'
-                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      isMentor
-                        ? 'translate-x-5 sm:translate-x-6'
-                        : 'translate-x-0'
-                    }`}
+                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor
+                      ? 'translate-x-5 sm:translate-x-6'
+                      : 'translate-x-0'
+                      }`}
                   />
                 </button>
               </div>
@@ -310,8 +324,8 @@ const Profile = () => {
 
         {/* Graduation Alert for Students */}
         {user?.role === 'student' &&
-          graduationYear &&
-          graduationYear <= new Date().getFullYear() && (
+          savedGraduationYear &&
+          savedGraduationYear <= new Date().getFullYear() && (
             <div className='bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-2xl border border-green-500/30 overflow-hidden shadow-sm'>
               <div className='p-6'>
                 <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>
@@ -366,11 +380,10 @@ const Profile = () => {
                     setConfirmPassword('');
                   }
                 }}
-                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${
-                  showPasswordFields
-                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                }`}
+                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
+                  ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
+                  : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                  }`}
               >
                 {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
               </button>
