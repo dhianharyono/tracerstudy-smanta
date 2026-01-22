@@ -2,7 +2,13 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../contexts/AuthContext';
 import SmartLoader from '@/components/SmartLoader';
-import { LuCalendar, LuEye, LuSearch } from 'react-icons/lu';
+import {
+  LuCalendar,
+  LuEye,
+  LuSearch,
+  LuChevronDown,
+  LuChevronUp,
+} from 'react-icons/lu';
 import RestrictedAccess from '@/components/RestrictedAccess';
 
 const AlumniEventHub = () => {
@@ -17,6 +23,9 @@ const AlumniEventHub = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [universityFilter, setUniversityFilter] = useState('');
   const [majorFilter, setMajorFilter] = useState('');
+  const [expandedExpectations, setExpandedExpectations] = useState<{
+    [key: string]: boolean;
+  }>({});
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -48,17 +57,20 @@ const AlumniEventHub = () => {
     }
   };
 
+  const toggleExpectation = (id: string) => {
+    setExpandedExpectations((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
+
   const hasAccess = (event: any) => {
     if (!event.badgeId) return false;
-
     const currentUser = user as any;
-
     if (!currentUser?.badges) return false;
-
     return currentUser.badges.some((b: any) => {
       const bId = b._id || b;
       const targetId = event.badgeId._id || event.badgeId;
-
       return String(bId) === String(targetId);
     });
   };
@@ -120,7 +132,6 @@ const AlumniEventHub = () => {
           </p>
         </div>
 
-        {/* Filters */}
         <div className='bg-[color:var(--bg-card)] text-xs md:text-sm p-4 rounded-xl shadow-sm border border-[color:var(--border-color)] mb-6 flex flex-col md:flex-row gap-4'>
           <div className='flex-1 relative'>
             <LuSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]' />
@@ -165,51 +176,74 @@ const AlumniEventHub = () => {
           />
         ) : (
           <div className='grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-3 md:gap-6'>
-            {filteredRegistrants.map((reg) => (
-              <div
-                key={reg._id}
-                className='bg-[color:var(--bg-card)] rounded-xl p-3 md:p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow flex flex-col h-full'
-              >
-                <div className='flex flex-col sm:flex-row items-center sm:items-start gap-2 md:gap-3 mb-3'>
-                  <div className='invisible md:visible w-0 h-0 md:w-10 md:h-10 shrink-0 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold text-xs md:text-base'>
-                    {reg.userId?.profile?.fullName?.[0] || '?'}
-                  </div>
-                  <div className='text-center sm:text-left min-w-0 w-full'>
-                    <div className='font-semibold text-[color:var(--text-primary)] text-xs md:text-sm line-clamp-1'>
-                      {reg.userId?.profile?.fullName || 'Anonymous'}
+            {filteredRegistrants.map((reg) => {
+              const isExpanded = expandedExpectations[reg._id];
+              return (
+                <div
+                  key={reg._id}
+                  className='bg-[color:var(--bg-card)] rounded-xl p-3 md:p-6 shadow-sm border border-[color:var(--border-color)] hover:shadow-md transition-shadow flex flex-col h-full'
+                >
+                  <div className='flex flex-col sm:flex-row items-center sm:items-start gap-2 md:gap-3 mb-3'>
+                    <div className='invisible md:visible w-0 h-0 md:w-10 md:h-10 shrink-0 rounded-full bg-[var(--primary)]/10 flex items-center justify-center text-[var(--primary)] font-bold text-xs md:text-base'>
+                      {reg.userId?.profile?.fullName?.[0] || '?'}
                     </div>
-                    <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
-                      {new Date(reg.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-
-                <div className='space-y-2 md:space-y-3 flex-1'>
-                  <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
-                    Harapan :
-                  </p>
-                  <div className='bg-[color:var(--bg-secondary)] rounded-lg p-2 md:p-3'>
-                    <p className='text-xs md:text-sm text-[color:var(--text-primary)] italic line-clamp-2 md:line-clamp-3'>
-                      "{reg.expectation}"
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
-                      Rencana Studi :
-                    </p>
-                    <div className='text-[10px] md:text-sm'>
-                      <p className='font-medium text-[var(--primary-dark)] line-clamp-2 md:line-clamp-2'>
-                        {reg.studyPlan?.university}
-                      </p>
-                      <p className='text-[color:var(--text-primary)] text-[10px] md:text-xs line-clamp-1'>
-                        {reg.studyPlan?.major}
+                    <div className='text-center sm:text-left min-w-0 w-full'>
+                      <div className='font-semibold text-[color:var(--text-primary)] text-xs md:text-sm line-clamp-1'>
+                        {reg.userId?.profile?.fullName || 'Anonymous'}
+                      </div>
+                      <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)]'>
+                        {new Date(reg.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                   </div>
+
+                  <div className='space-y-2 md:space-y-3 flex-1'>
+                    <div>
+                      <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
+                        Harapan :
+                      </p>
+                      <div className='bg-[color:var(--bg-secondary)] rounded-lg p-2 md:p-3'>
+                        <p
+                          className={`text-xs md:text-sm text-[color:var(--text-primary)] italic ${!isExpanded ? 'line-clamp-2 md:line-clamp-3' : ''}`}
+                        >
+                          "{reg.expectation}"
+                        </p>
+                        {reg.expectation?.length > 60 && (
+                          <button
+                            onClick={() => toggleExpectation(reg._id)}
+                            className='mt-1 text-[10px] md:text-xs text-[var(--primary)] font-medium flex items-center gap-1 hover:underline'
+                          >
+                            {isExpanded ? (
+                              <>
+                                Tutup <LuChevronUp />
+                              </>
+                            ) : (
+                              <>
+                                Lihat Selengkapnya <LuChevronDown />
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className='text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] mb-0.5 md:mb-1'>
+                        Rencana Studi :
+                      </p>
+                      <div className='text-[10px] md:text-sm'>
+                        <p className='font-medium text-[var(--primary-dark)] line-clamp-2 md:line-clamp-2'>
+                          {reg.studyPlan?.university}
+                        </p>
+                        <p className='text-[color:var(--text-primary)] text-[10px] md:text-xs line-clamp-1'>
+                          {reg.studyPlan?.major}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
             {filteredRegistrants.length === 0 && (
               <div className='col-span-full text-xs md:text-sm py-12 text-center text-[color:var(--text-tertiary)]'>
                 Tidak ada data peserta yang sesuai filter.
