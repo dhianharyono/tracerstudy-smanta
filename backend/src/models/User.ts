@@ -35,6 +35,7 @@ export interface IUser extends Document {
   badges: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
+  lastActiveAt?: Date;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -104,6 +105,10 @@ const UserSchema = new Schema<IUser>(
       type: Schema.Types.ObjectId,
       ref: 'Badge'
     }],
+    lastActiveAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,

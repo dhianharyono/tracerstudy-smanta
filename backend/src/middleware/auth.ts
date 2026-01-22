@@ -22,7 +22,12 @@ export const authenticate = async (
       userId: string;
     };
 
-    const user = await User.findById(decoded.userId).select('-password');
+    const user = await User.findByIdAndUpdate(
+      decoded.userId,
+      { lastActiveAt: new Date() },
+      { new: true }
+    ).select('-password');
+
     if (!user) {
       return res.status(401).json({ message: 'User not found' });
     }

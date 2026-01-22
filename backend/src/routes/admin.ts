@@ -150,8 +150,10 @@ router.get('/dashboard', async (req: Request, res: Response) => {
         swasta: swastaCount,
         kedinasan: kedinasanCount,
       },
-      majorStats,
       yearStats,
+      onlineUsers: await User.countDocuments({
+        lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+      }),
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -551,13 +553,20 @@ router.put('/students/:id', async (req: Request, res: Response) => {
       update.password = await bcrypt.hash(password, salt);
     }
 
+    const profileUpdates: any = {};
     if (updateData.fullName !== undefined) {
-      update.profile = { ...update.profile, fullName: updateData.fullName };
+      profileUpdates['profile.fullName'] = updateData.fullName;
+    }
+    if (updateData.entryYear !== undefined) {
+      profileUpdates['profile.entryYear'] = updateData.entryYear;
+    }
+    if (updateData.graduationYear !== undefined) {
+      profileUpdates['profile.graduationYear'] = updateData.graduationYear;
     }
 
     const student = await User.findOneAndUpdate(
       { _id: req.params.id, role: 'student' },
-      update,
+      { $set: { ...update, ...profileUpdates } },
       { new: true, runValidators: true },
     ).select('-password');
 

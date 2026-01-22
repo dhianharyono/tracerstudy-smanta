@@ -29,19 +29,27 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
 
         const events = await Event.find(query).populate('badgeId').sort({ date: 1 });
 
+        const eventsWithCounts = await Promise.all(events.map(async (event) => {
+            const count = await EventRegistration.countDocuments({ eventId: event._id });
+            return {
+                ...event.toObject(),
+                registrantCount: count
+            };
+        }));
+
         // Enhance events with registration status for the current user if student
         if (user.role === 'student') {
             const registrations = await EventRegistration.find({ userId: user._id });
             const registeredEventIds = registrations.map(r => r.eventId.toString());
 
-            const eventsWithStatus = events.map(event => ({
-                ...event.toObject(),
+            const eventsWithStatus = eventsWithCounts.map((event: any) => ({
+                ...event,
                 isRegistered: registeredEventIds.includes(event._id.toString())
             }));
             return res.json(eventsWithStatus);
         }
 
-        res.json(events);
+        res.json(eventsWithCounts);
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }

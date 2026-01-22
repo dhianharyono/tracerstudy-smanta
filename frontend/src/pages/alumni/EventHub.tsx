@@ -8,6 +8,7 @@ import {
   LuSearch,
   LuChevronDown,
   LuChevronUp,
+  LuUsers,
 } from 'react-icons/lu';
 import RestrictedAccess from '@/components/RestrictedAccess';
 
@@ -82,13 +83,13 @@ const AlumniEventHub = () => {
         .includes(searchQuery.toLowerCase());
       const uniMatch = universityFilter
         ? reg.studyPlan?.university
-            ?.toLowerCase()
-            .includes(universityFilter.toLowerCase())
+          ?.toLowerCase()
+          .includes(universityFilter.toLowerCase())
         : true;
       const majorMatch = majorFilter
         ? reg.studyPlan?.major
-            ?.toLowerCase()
-            .includes(majorFilter.toLowerCase())
+          ?.toLowerCase()
+          .includes(majorFilter.toLowerCase())
         : true;
 
       return nameMatch && uniMatch && majorMatch;
@@ -292,6 +293,12 @@ const AlumniEventHub = () => {
                       month: 'short',
                       day: 'numeric',
                     })}
+                  </span>
+                </div>
+                <div className='flex items-center gap-1.5'>
+                  <LuUsers size={12} className='md:w-[13px] md:h-[13px]' />
+                  <span>
+                    {(event as any).registrantCount || 0} Pendaftar
                   </span>
                 </div>
               </div>

@@ -27,6 +27,8 @@ const AdminStudents = () => {
     email: '',
     password: '',
     fullName: '',
+    entryYear: '',
+    graduationYear: '',
   });
 
   useEffect(() => {
@@ -59,7 +61,14 @@ const AdminStudents = () => {
       }
       setShowForm(false);
       setEditingStudent(null);
-      setFormData({ username: '', email: '', password: '', fullName: '' });
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        fullName: '',
+        entryYear: '',
+        graduationYear: ''
+      });
       fetchStudents();
     } catch (error: any) {
       Toast(
@@ -76,6 +85,8 @@ const AdminStudents = () => {
       email: student.email,
       password: '',
       fullName: student.profile?.fullName || '',
+      entryYear: student.profile?.entryYear || '',
+      graduationYear: student.profile?.graduationYear || '',
     });
     setShowForm(true);
   };
@@ -100,7 +111,14 @@ const AdminStudents = () => {
   const handleCancel = () => {
     setShowForm(false);
     setEditingStudent(null);
-    setFormData({ username: '', email: '', password: '', fullName: '' });
+    setFormData({
+      username: '',
+      email: '',
+      password: '',
+      fullName: '',
+      entryYear: '',
+      graduationYear: ''
+    });
   };
 
   if (loading) {
@@ -155,6 +173,34 @@ const AdminStudents = () => {
                   }
                   className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
                   placeholder='Masukkan nama lengkap'
+                />
+              </div>
+              <div className='form-group'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Tahun Masuk
+                </label>
+                <input
+                  type='number'
+                  value={formData.entryYear}
+                  onChange={(e) =>
+                    setFormData({ ...formData, entryYear: e.target.value })
+                  }
+                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                  placeholder='Contoh: 2020'
+                />
+              </div>
+              <div className='form-group'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Tahun Lulus
+                </label>
+                <input
+                  type='number'
+                  value={formData.graduationYear}
+                  onChange={(e) =>
+                    setFormData({ ...formData, graduationYear: e.target.value })
+                  }
+                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                  placeholder='Contoh: 2023'
                 />
               </div>
               <div className='form-group'>

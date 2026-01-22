@@ -37,6 +37,16 @@ const AdminEventManagement = () => {
   const [registrants, setRegistrants] = useState<any[]>([]);
   const [loadingRegistrants, setLoadingRegistrants] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [expandedExpectations, setExpandedExpectations] = useState<{
+    [key: string]: boolean;
+  }>({});
+
+  const toggleExpectation = (id: string) => {
+    setExpandedExpectations((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   useEffect(() => {
     fetchData();
@@ -244,9 +254,17 @@ const AdminEventManagement = () => {
                     Harapan :
                   </p>
                   <div className='bg-[color:var(--bg-secondary)] rounded-lg p-2 md:p-3'>
-                    <p className='text-xs md:text-sm text-[color:var(--text-primary)] italic line-clamp-2 md:line-clamp-3'>
+                    <p className={`text-xs md:text-sm text-[color:var(--text-primary)] italic ${!expandedExpectations[reg._id] ? 'line-clamp-2 md:line-clamp-3' : ''}`}>
                       "{reg.expectation}"
                     </p>
+                    {reg.expectation?.length > 60 && (
+                      <button
+                        onClick={() => toggleExpectation(reg._id)}
+                        className='mt-1 text-[10px] md:text-xs text-[var(--primary)] font-medium flex items-center gap-1 hover:underline'
+                      >
+                        {expandedExpectations[reg._id] ? 'Tutup' : 'Lihat Selengkapnya'}
+                      </button>
+                    )}
                   </div>
 
                   <div>
@@ -319,6 +337,9 @@ const AdminEventManagement = () => {
                   Badge
                 </th>
                 <th className='px-6 py-4 font-semibold text-[color:var(--text-primary)]'>
+                  Peserta
+                </th>
+                <th className='px-6 py-4 font-semibold text-[color:var(--text-primary)]'>
                   Status
                 </th>
                 <th className='px-6 py-4 font-semibold text-[color:var(--text-primary)] text-right'>
@@ -358,13 +379,17 @@ const AdminEventManagement = () => {
                     )}
                   </td>
                   <td className='px-6 py-4'>
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'>
+                      {(event as any).registrantCount || 0} Orang
+                    </span>
+                  </td>
+                  <td className='px-6 py-4'>
                     <button
                       onClick={() => toggleStatus(event)}
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer transition-colors ${
-                        event.isActive
-                          ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300'
-                          : 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
-                      }`}
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer transition-colors ${event.isActive
+                        ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300'
+                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                        }`}
                     >
                       {event.isActive ? 'Aktif' : 'Nonaktif'}
                     </button>
