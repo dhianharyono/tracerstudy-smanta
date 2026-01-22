@@ -33,7 +33,7 @@ const Jurusan = ({ data }: JurusanProps) => {
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
       <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 text-text-primary'>
         <FaChartBar />
-        <span>Statistik Jurusan</span>
+        <span>Statistik Jurusan Alumni</span>
       </h2>
       {!hasData ? (
         <div className='h-[350px] content-center'>
@@ -68,6 +68,11 @@ const Jurusan = ({ data }: JurusanProps) => {
                     stroke='var(--text-tertiary)'
                     tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
                     width={100}
+                    tickFormatter={(value) => {
+                      return value.length > 20
+                        ? `${value.substring(0, 20)}...`
+                        : value;
+                    }}
                   />
                   <Tooltip
                     contentStyle={{

@@ -151,6 +151,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
         kedinasan: kedinasanCount,
       },
       yearStats,
+      majorStats,
       onlineUsers: await User.countDocuments({
         lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
       }),

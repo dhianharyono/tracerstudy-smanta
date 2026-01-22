@@ -33,7 +33,7 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
     <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
       <h2 className='mb-6 text-lg md:text-xl flex items-center gap-3 text-text-primary'>
         <FaChartLine />
-        <span>Statistik Tahun Lulus</span>
+        <span>Statistik Tahun Lulus Alumni</span>
       </h2>
       {!hasData ? (
         <div className='h-[350px] content-center'>
