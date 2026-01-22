@@ -10,8 +10,8 @@ import { authenticate } from '../middleware/auth';
 // Rate limiting untuk login dan register
 const authLimiter = rateLimit({
   windowMs: 1 * 60 * 1000, // 1 menit
-  max: 10, // maksimal 10 request per menit
-  message: 'Too many requests from this IP, please try again later.',
+  max: 1000, // maksimal 1000 request per menit
+  message: 'Too many login/register attempts from this IP, please try again later.',
   standardHeaders: true,
   legacyHeaders: false,
 });
