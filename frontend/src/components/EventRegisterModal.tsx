@@ -80,7 +80,10 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
         <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-tertiary)]/50 shrink-0'>
           <div>
             <div className='text-sm md:text-xl font-bold text-[color:var(--text-primary)]'>
-              Registrasi Event
+              {new Date().setHours(0, 0, 0, 0) >=
+              new Date(event.date).setHours(0, 0, 0, 0)
+                ? 'Berikan Ulasan'
+                : 'Registrasi Event'}
             </div>
             <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mt-1'>
               {event?.name}
@@ -97,7 +100,10 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
         <form onSubmit={handleSubmit} className='p-6 space-y-5 overflow-y-auto'>
           <div>
             <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-2'>
-              Harapan Mengikuti Event
+              {new Date().setHours(0, 0, 0, 0) >=
+              new Date(event.date).setHours(0, 0, 0, 0)
+                ? 'Harapan Setelah Mengikuti Event'
+                : 'Harapan Mengikuti Event'}
               <span className='text-red-500 ml-1'>*</span>
             </label>
             <textarea

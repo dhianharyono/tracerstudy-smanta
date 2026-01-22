@@ -41,7 +41,10 @@ const EventWelcomeCard: React.FC<EventWelcomeCardProps> = ({
             {event.name}
           </h2>
           <p className='text-indigo-100/90 text-xs md:text-sm leading-relaxed mb-6'>
-            {event.description}
+            {new Date().setHours(0, 0, 0, 0) >=
+            new Date(event.date).setHours(0, 0, 0, 0)
+              ? 'Berikan ulasan dan feedback Anda mengenai event ini untuk membantu kami meningkatkan kualitas acara di masa depan. Terima kasih atas partisipasi Anda!'
+              : event.description}
           </p>
 
           <div className='flex flex-wrap gap-4'>
@@ -50,7 +53,10 @@ const EventWelcomeCard: React.FC<EventWelcomeCardProps> = ({
                 onClick={onRegister}
                 className='text-xs group relative inline-flex items-center gap-2 px-6 py-3 bg-white text-indigo-600 rounded-xl font-bold hover:bg-indigo-50 transition-all shadow-lg hover:shadow-xl active:scale-95'
               >
-                Daftar Sekarang
+                {new Date().setHours(0, 0, 0, 0) >=
+                new Date(event.date).setHours(0, 0, 0, 0)
+                  ? 'Berikan Ulasan'
+                  : 'Daftar Sekarang'}
                 <LuArrowRight
                   size={18}
                   className='transition-transform group-hover:translate-x-1'

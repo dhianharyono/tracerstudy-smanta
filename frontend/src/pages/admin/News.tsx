@@ -27,6 +27,7 @@ const AdminNews = () => {
     type: 'all',
     isPublished: false,
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const quillModules = {
     toolbar: [
@@ -67,6 +68,9 @@ const AdminNews = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     try {
       if (editingNews) {
         await axios.put(`/api/admin/news/${editingNews._id}`, formData);
@@ -81,6 +85,8 @@ const AdminNews = () => {
       fetchNews();
     } catch (error: any) {
       Toast(error.response?.data?.message || 'Gagal menyimpan news', 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -257,9 +263,16 @@ const AdminNews = () => {
               </button>
               <button
                 type='submit'
-                className='flex items-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--primary-dark)]'
+                disabled={isSubmitting}
+                className='flex items-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--primary-dark)] disabled:opacity-50 disabled:cursor-not-allowed'
               >
-                <FaSave /> {editingNews ? 'Update' : 'Simpan'}
+                {isSubmitting ? (
+                  <>Processing...</>
+                ) : (
+                  <>
+                    <FaSave /> {editingNews ? 'Update' : 'Simpan'}
+                  </>
+                )}
               </button>
             </div>
           </form>
@@ -312,12 +325,11 @@ const AdminNews = () => {
                     <td className='px-6 py-4'>
                       <span
                         className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${
-                            newsItem.type === 'all'
-                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                              : newsItem.type === 'student'
-                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                          ${newsItem.type === 'all'
+                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                            : newsItem.type === 'student'
+                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
                           }`}
                       >
                         {newsItem.type === 'all'
@@ -330,10 +342,9 @@ const AdminNews = () => {
                     <td className='px-6 py-4'>
                       <span
                         className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${
-                            newsItem.isPublished
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                              : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                          ${newsItem.isPublished
+                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                           }`}
                       >
                         {newsItem.isPublished ? 'Published' : 'Draft'}
