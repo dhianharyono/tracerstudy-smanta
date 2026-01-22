@@ -21,6 +21,7 @@ import {
   FaTimes,
   FaChevronRight,
   FaCrown,
+  FaChartPie,
 } from 'react-icons/fa';
 import './Layout.css';
 import { ToastContainer } from 'react-toastify';
@@ -64,6 +65,14 @@ const Layout = () => {
     checkFeedbackVisibility();
   }, []);
 
+  // Log page visit
+  useEffect(() => {
+    if (user && user.role !== 'admin' && location.pathname !== '/login' && location.pathname !== '/register') {
+      axios.post('/api/analytics/log', { path: location.pathname })
+        .catch(err => console.error('Failed to log visit', err));
+    }
+  }, [location.pathname, user]);
+
   const NavLink = ({
     to,
     icon: Icon,
@@ -82,18 +91,16 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-          isActive
-            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-        }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+          }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-            isActive
-              ? 'bg-white/20'
-              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-          }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
+            ? 'bg-white/20'
+            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+            }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -157,6 +164,7 @@ const Layout = () => {
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
+          <NavLink to='/admin/stats' icon={FaChartPie} label='Statistik Website' />
           <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
           <NavLink
             to='/admin/feedback'
@@ -228,9 +236,8 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}

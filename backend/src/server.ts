@@ -10,6 +10,7 @@ import adminRoutes from './routes/admin';
 import studentRoutes from './routes/student';
 import userRoutes from './routes/user';
 import eventRoutes from './routes/events';
+import analyticsRoutes from './routes/analytics';
 
 dotenv.config();
 
@@ -115,6 +116,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

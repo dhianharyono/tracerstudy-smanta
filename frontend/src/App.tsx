@@ -39,6 +39,7 @@ const AdminFeedback = lazy(() => import('./pages/admin/Feedback'));
 const AdminFeedbackDetail = lazy(() => import('./pages/admin/FeedbackDetail'));
 const AdminBadges = lazy(() => import('./pages/admin/Badges'));
 const AdminEventManagement = lazy(() => import('./pages/admin/EventManagement'));
+const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -162,6 +163,7 @@ function App() {
               <Route path='feedback/:id' element={<AdminFeedbackDetail />} />
               <Route path='badges' element={<AdminBadges />} />
               <Route path='events' element={<AdminEventManagement />} />
+              <Route path='stats' element={<AdminStatistics />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 
