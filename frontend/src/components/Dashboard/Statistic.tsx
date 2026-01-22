@@ -67,7 +67,7 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
   const { user } = useAuth();
   const isAlumni = user?.role === 'alumni';
   const isStudent = user?.role === 'student';
-  const isAdmin = stats?.totalStudents !== undefined;
+  const isAdmin = user?.role === 'admin';
 
   const totalAlumni = Number(stats?.totalAlumni || 0);
   const completed = Number(stats?.completedQuestionnaire || 0);
@@ -81,7 +81,7 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       colorClass: 'text-blue-600 dark:text-blue-400',
       bgClass: 'bg-blue-100 dark:bg-blue-900/50',
     },
-    ...(isAdmin
+    ...(isAdmin || isAlumni
       ? [
         {
           title: 'Total Siswa',
@@ -90,10 +90,14 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
           colorClass: 'text-cyan-600 dark:text-cyan-400',
           bgClass: 'bg-cyan-100 dark:bg-cyan-900/50',
         },
+      ]
+      : []),
+    ...(isAdmin
+      ? [
         {
           title: 'Online Users',
           value: stats?.onlineUsers || 0,
-          icon: FaUserTimes, // Using same icon for now, or change to FaUsers or something else
+          icon: FaUserTimes,
           colorClass: 'text-green-600 dark:text-green-400',
           bgClass: 'bg-green-100 dark:bg-green-900/50',
         },

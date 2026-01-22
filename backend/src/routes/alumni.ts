@@ -338,6 +338,7 @@ router.get(
         negeriCount,
         swastaCount,
         kedinasanCount,
+        totalStudents,
         majorStats,
         yearStats,
       ] = await Promise.all([
@@ -349,6 +350,7 @@ router.get(
         User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
         User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
         User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
+        User.countDocuments({ role: 'student' }), // Add totalStudents fetch
         User.aggregate([
           {
             $match: {
@@ -392,6 +394,7 @@ router.get(
           swasta: swastaCount,
           kedinasan: kedinasanCount,
         },
+        totalStudents,
         majorStats,
         yearStats,
       });
