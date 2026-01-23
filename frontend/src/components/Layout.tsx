@@ -98,30 +98,41 @@ const Layout = () => {
       '/student/universities': 'Perguruan Tinggi',
       '/student/majors': 'Jurusan',
       '/student/alumni': 'Alumni',
-      '/student/college-plan': 'Rencana Kuliah',
+      '/student/college-plan': 'Cari Jejak Alumni',
       '/student/events': 'Event Siswa',
       '/student/news': 'Berita Siswa',
       '/student/feedback': 'Kritik & Saran Siswa',
       '/student/profile': 'Profil Siswa',
     };
 
-    if (user && user.role !== 'admin' && location.pathname !== '/login' && location.pathname !== '/register') {
+    if (
+      user &&
+      user.role !== 'admin' &&
+      location.pathname !== '/login' &&
+      location.pathname !== '/register'
+    ) {
       // Find exact match first, or partial match for dynamic routes if needed
       let menuName = menuMap[location.pathname];
 
       // Fallback for dynamic routes or unknown paths
       if (!menuName) {
-        if (location.pathname.startsWith('/student/events/')) menuName = 'Detail Event Siswa';
-        else if (location.pathname.startsWith('/alumni/events/')) menuName = 'Detail Event Alumni';
-        else if (location.pathname.startsWith('/alumni/news/')) menuName = 'Detail Berita Alumni';
-        else if (location.pathname.startsWith('/student/news/')) menuName = 'Detail Berita Siswa';
+        if (location.pathname.startsWith('/student/events/'))
+          menuName = 'Detail Event Siswa';
+        else if (location.pathname.startsWith('/alumni/events/'))
+          menuName = 'Detail Event Alumni';
+        else if (location.pathname.startsWith('/alumni/news/'))
+          menuName = 'Detail Berita Alumni';
+        else if (location.pathname.startsWith('/student/news/'))
+          menuName = 'Detail Berita Siswa';
         else menuName = 'Halaman Lain';
       }
 
-      axios.post('/api/analytics/log', {
-        path: location.pathname,
-        menuName: menuName
-      }).catch(err => console.error('Failed to log visit', err));
+      axios
+        .post('/api/analytics/log', {
+          path: location.pathname,
+          menuName: menuName,
+        })
+        .catch((err) => console.error('Failed to log visit', err));
     }
   }, [location.pathname, user]);
 
@@ -143,16 +154,18 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-          }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-            }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            isActive
+              ? 'bg-white/20'
+              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -216,7 +229,11 @@ const Layout = () => {
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
-          <NavLink to='/admin/stats' icon={FaChartPie} label='Statistik Website' />
+          <NavLink
+            to='/admin/stats'
+            icon={FaChartPie}
+            label='Statistik Website'
+          />
           <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
           <NavLink
             to='/admin/feedback'
@@ -242,7 +259,7 @@ const Layout = () => {
           <NavLink
             to='/student/college-plan'
             icon={FaGraduationCap}
-            label='Rencana Kuliah'
+            label='Cari Jejak Alumni'
           />
           <NavLink to='/student/events' icon={FaChartBar} label='Event' />
           <NavLink
@@ -288,8 +305,9 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}

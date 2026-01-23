@@ -198,11 +198,11 @@ const CollegePlan = () => {
     <div className='p-4 md:p-8 animate-fade-in'>
       <div className='text-center md:text-left mb-8'>
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Rencana Kuliah
+          Cari Jejak Alumni
         </h1>
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Jelajahi jejak alumni dan temukan alumni yang sesuai dengan rencana
-          kuliah Anda
+          Jelajahi jejak alumni dan hubungi mentor untuk bimbingan karier
+          langsung.
         </p>
       </div>
 
