@@ -102,7 +102,7 @@ const PlanForm = ({ onUpdate }: PlanFormProps) => {
   };
 
   if (initialLoading)
-    return <div className='animate-pulse h-64 bg-gray-100 rounded-xl'></div>;
+    return <div className='animate-pulse h-96 bg-gray-700 rounded-xl'></div>;
 
   const isLocked = lockCount >= 3;
 

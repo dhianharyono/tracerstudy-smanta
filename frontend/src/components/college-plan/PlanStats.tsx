@@ -28,10 +28,16 @@ const COLORS = [
   '#d0ed57',
 ];
 
-const EmptyState = ({ message, icon: Icon }: { message: string, icon: any }) => (
-  <div className="h-full w-full flex flex-col items-center justify-center text-[var(--text-tertiary)] bg-[var(--bg-secondary)]/30 rounded-2xl border border-dashed border-[var(--border-color)]">
-    <Icon className="text-3xl mb-2 opacity-50" />
-    <p className="text-xs font-medium">{message}</p>
+const EmptyState = ({
+  message,
+  icon: Icon,
+}: {
+  message: string;
+  icon: any;
+}) => (
+  <div className='h-full w-full flex flex-col items-center justify-center text-[var(--text-tertiary)] bg-[var(--bg-secondary)]/30 rounded-2xl border border-dashed border-[var(--border-color)]'>
+    <Icon className='text-3xl mb-2 opacity-50' />
+    <p className='text-xs font-medium'>{message}</p>
   </div>
 );
 
@@ -55,11 +61,8 @@ const PlanStats = () => {
   };
 
   if (loading)
-    return <div className='animate-pulse h-96 bg-gray-100 rounded-xl'></div>;
+    return <div className='animate-pulse h-96 bg-gray-700 rounded-xl'></div>;
   if (!stats) return null;
-
-  // Check if there is any data at all to avoid showing empty cards if completely empty?
-  // User asked to handle when data is empty on the card containing the graph.
 
   return (
     <div className='space-y-6'>
@@ -122,7 +125,10 @@ const PlanStats = () => {
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <EmptyState message="Belum ada data universitas" icon={FaChartBar} />
+              <EmptyState
+                message='Belum ada data universitas'
+                icon={FaChartBar}
+              />
             )}
           </div>
         </div>
@@ -172,7 +178,7 @@ const PlanStats = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <EmptyState message="Belum ada data jurusan" icon={FaChartPie} />
+              <EmptyState message='Belum ada data jurusan' icon={FaChartPie} />
             )}
           </div>
         </div>
@@ -248,7 +254,7 @@ const PlanStats = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <EmptyState message="Belum ada data rumpun" icon={FaChartPie} />
+              <EmptyState message='Belum ada data rumpun' icon={FaChartPie} />
             )}
           </div>
         </div>
@@ -297,7 +303,10 @@ const PlanStats = () => {
                 </PieChart>
               </ResponsiveContainer>
             ) : (
-              <EmptyState message="Belum ada data jalur masuk" icon={FaRegChartBar} />
+              <EmptyState
+                message='Belum ada data jalur masuk'
+                icon={FaRegChartBar}
+              />
             )}
           </div>
         </div>
