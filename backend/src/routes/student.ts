@@ -160,10 +160,8 @@ router.get('/universities', async (req: Request, res: Response) => {
       { $match: matchQuery },
       {
         $group: {
-          _id: {
-            name: '$university.name',
-            type: '$university.type',
-          },
+          _id: '$university.name',
+          types: { $addToSet: '$university.type' },
           count: { $sum: 1 },
           alumni: {
             $push: {
@@ -173,6 +171,30 @@ router.get('/universities', async (req: Request, res: Response) => {
               major: '$university.major',
             },
           },
+        },
+      },
+      {
+        $addFields: {
+          // Find the first valid type (non-null, non-empty)
+          validType: {
+            $first: {
+              $filter: {
+                input: '$types',
+                as: 't',
+                cond: { $and: [{ $ne: ['$$t', null] }, { $ne: ['$$t', ''] }] },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: {
+            name: '$_id',
+            type: { $ifNull: ['$validType', 'Umum'] },
+          },
+          count: 1,
+          alumni: 1,
         },
       },
       { $sort: { count: -1 } },

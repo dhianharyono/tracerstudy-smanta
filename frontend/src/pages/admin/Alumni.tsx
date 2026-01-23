@@ -52,9 +52,11 @@ const AdminAlumni = () => {
   const [editForm, setEditForm] = useState({
     fullName: '',
     university: '',
+    universityType: '',
     major: '',
     graduationYear: '',
     jobPosition: '',
+
     jobInstitution: '',
   });
   const [univList, setUnivList] = useState<string[]>([]);
@@ -151,6 +153,7 @@ const AdminAlumni = () => {
     setEditForm({
       fullName: alum.profile?.fullName || '',
       university: alum.university?.name || '',
+      universityType: alum.university?.type || '',
       major: alum.university?.major || '',
       graduationYear: alum.profile?.graduationYear?.toString() || '',
       jobPosition: alum.job?.position || '',
@@ -170,6 +173,7 @@ const AdminAlumni = () => {
         },
         university: {
           name: editForm.university,
+          type: editForm.universityType,
           major: editForm.major,
         },
         job: {
@@ -211,9 +215,8 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
           <div className='relative'>
@@ -621,6 +624,26 @@ const AdminAlumni = () => {
                     }
                     placeholder='Pilih Universitas...'
                   />
+                  <div>
+                    <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                      Jenis Perguruan Tinggi
+                    </label>
+                    <select
+                      value={editForm.universityType}
+                      onChange={(e) =>
+                        setEditForm({
+                          ...editForm,
+                          universityType: e.target.value,
+                        })
+                      }
+                      className='w-full px-4 py-2 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent focus:border-[var(--primary)] outline-none transition-all'
+                    >
+                      <option value=''>Pilih Jenis</option>
+                      <option value='negeri'>Negeri</option>
+                      <option value='swasta'>Swasta</option>
+                      <option value='kedinasan'>Kedinasan</option>
+                    </select>
+                  </div>
                   <SearchableSelect
                     label='Jurusan'
                     name='major'
