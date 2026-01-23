@@ -45,7 +45,6 @@ const UniversityDetailModal = ({
   isOpen,
   onClose,
   onViewAll,
-  getBadgeColor,
 }: UniversityDetailModalProps) => {
   if (!isOpen || !university) return null;
 
@@ -105,7 +104,9 @@ const UniversityDetailModal = ({
               <div className='bg-[color:var(--bg-tertiary)]/50 rounded-xl p-4 border border-[color:var(--border-color)]'>
                 <div className='flex items-center gap-2 text-[color:var(--text-secondary)] mb-2'>
                   <FaUsers />
-                  <span className='font-medium text-sm md:text-xl'>Total Alumni</span>
+                  <span className='font-medium text-sm md:text-xl'>
+                    Total Alumni
+                  </span>
                 </div>
                 <div className='text-2xl md:text-3xl font-bold text-[var(--primary)]'>
                   {university.count}
@@ -378,7 +379,7 @@ const StudentUniversities = () => {
                 >
                   {uni._id.type
                     ? uni._id.type.charAt(0).toUpperCase() +
-                    uni._id.type.slice(1)
+                      uni._id.type.slice(1)
                     : 'Umum'}
                 </span>
               </div>
