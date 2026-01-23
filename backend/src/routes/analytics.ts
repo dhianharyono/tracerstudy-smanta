@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
 import PageVisit from '../models/PageVisit';
-import User from '../models/User';
 
 const router = express.Router();
 
@@ -10,7 +9,7 @@ router.use(authenticate);
 // Log a page visit
 router.post('/log', async (req: Request, res: Response) => {
     try {
-        const { path } = req.body;
+        const { path, menuName } = req.body;
         // @ts-ignore
         const user = req.user!;
 
@@ -22,6 +21,7 @@ router.post('/log', async (req: Request, res: Response) => {
             userId: user._id,
             role: user.role,
             path: path,
+            menuName: menuName || 'Unknown', // Default if missing
         });
 
         await visit.save();
@@ -71,17 +71,43 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
 
         // 2. Most visited pages/menus (filtered by period)
         const popularPages = await PageVisit.aggregate([
-            { $match: { timestamp: { $gte: startDate }, role: { $ne: 'admin' } } },
+            {
+                $match: {
+                    timestamp: { $gte: startDate },
+                    role: { $ne: 'admin' },
+                    path: { $nin: ['/student', '/alumni'] } // Exclude dashboard home pages
+                }
+            },
             {
                 $group: {
                     _id: '$path',
                     count: { $sum: 1 },
                     uniqueUsers: { $addToSet: '$userId' },
+                    menuNames: { $addToSet: '$menuName' } // Collect all menu names for this path
                 },
+            },
+            {
+                $addFields: {
+                    // Find a menu name that is NOT 'Unknown'
+                    resolvedMenuName: {
+                        $reduce: {
+                            input: '$menuNames',
+                            initialValue: '',
+                            in: {
+                                $cond: {
+                                    if: { $and: [{ $ne: ['$$this', 'Unknown'] }, { $ne: ['$$this', null] }] },
+                                    then: '$$this',
+                                    else: '$$value'
+                                }
+                            }
+                        }
+                    }
+                }
             },
             {
                 $project: {
                     path: '$_id',
+                    menuName: '$resolvedMenuName', // Use the resolved name (or empty string if all were Unknown)
                     count: 1,
                     uniqueUsers: { $size: '$uniqueUsers' },
                 },

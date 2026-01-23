@@ -4,6 +4,7 @@ export interface IPageVisit extends Document {
     userId: mongoose.Types.ObjectId;
     role: string;
     path: string;
+    menuName: string;
     timestamp: Date;
 }
 
@@ -19,6 +20,10 @@ const PageVisitSchema = new Schema<IPageVisit>(
             required: true,
         },
         path: {
+            type: String,
+            required: true,
+        },
+        menuName: {
             type: String,
             required: true,
         },

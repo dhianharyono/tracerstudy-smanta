@@ -67,9 +67,61 @@ const Layout = () => {
 
   // Log page visit
   useEffect(() => {
+    // Menu mapping for readable analytics
+    const menuMap: { [key: string]: string } = {
+      // Alumni
+      '/alumni': 'Dashboard Alumni',
+      '/alumni/questionnaire': 'Kuesioner',
+      '/alumni/events': 'Event Alumni',
+      '/alumni/mutual-alumni': 'Rekan Seangkatan',
+      '/alumni/news': 'Berita Alumni',
+      '/alumni/feedback': 'Kritik & Saran',
+      '/alumni/claim-badge': 'Claim Badge',
+      '/alumni/profile': 'Profil Alumni',
+
+      // Admin
+      '/admin': 'Dashboard Admin',
+      '/admin/alumni': 'Data Alumni',
+      '/admin/students': 'Data Student',
+      '/admin/admins': 'Data Admin',
+      '/admin/mentors': 'Kelola Mentor',
+      '/admin/events': 'Manajemen Event',
+      '/admin/badges': 'Kelola Badge',
+      '/admin/news': 'Kelola Berita',
+      '/admin/stats': 'Statistik Website',
+      '/admin/reports': 'Laporan',
+      '/admin/feedback': 'Kritik & Saran Admin',
+      '/admin/profile': 'Profil Admin',
+
+      // Student
+      '/student': 'Dashboard Siswa',
+      '/student/universities': 'Perguruan Tinggi',
+      '/student/majors': 'Jurusan',
+      '/student/alumni': 'Alumni',
+      '/student/college-plan': 'Rencana Kuliah',
+      '/student/events': 'Event Siswa',
+      '/student/news': 'Berita Siswa',
+      '/student/feedback': 'Kritik & Saran Siswa',
+      '/student/profile': 'Profil Siswa',
+    };
+
     if (user && user.role !== 'admin' && location.pathname !== '/login' && location.pathname !== '/register') {
-      axios.post('/api/analytics/log', { path: location.pathname })
-        .catch(err => console.error('Failed to log visit', err));
+      // Find exact match first, or partial match for dynamic routes if needed
+      let menuName = menuMap[location.pathname];
+
+      // Fallback for dynamic routes or unknown paths
+      if (!menuName) {
+        if (location.pathname.startsWith('/student/events/')) menuName = 'Detail Event Siswa';
+        else if (location.pathname.startsWith('/alumni/events/')) menuName = 'Detail Event Alumni';
+        else if (location.pathname.startsWith('/alumni/news/')) menuName = 'Detail Berita Alumni';
+        else if (location.pathname.startsWith('/student/news/')) menuName = 'Detail Berita Siswa';
+        else menuName = 'Halaman Lain';
+      }
+
+      axios.post('/api/analytics/log', {
+        path: location.pathname,
+        menuName: menuName
+      }).catch(err => console.error('Failed to log visit', err));
     }
   }, [location.pathname, user]);
 
