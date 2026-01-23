@@ -89,7 +89,7 @@ const PlanList = () => {
           <div className='h-8 w-8 border-4 border-[color:var(--border-color)] border-t-[var(--primary)] rounded-full animate-spin' />
         </div>
       ) : plans.length === 0 ? (
-        <div className='text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-200'>
+        <div className='text-center p-8 rounded-xl bg-[var(--bg-card)] border border-[var(--border-color)]'>
           <p className='text-gray-500 text-sm'>
             Belum ada data rencana kuliah.
           </p>

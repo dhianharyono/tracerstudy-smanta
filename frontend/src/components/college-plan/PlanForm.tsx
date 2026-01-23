@@ -159,12 +159,13 @@ const PlanForm = ({ onUpdate }: PlanFormProps) => {
               Status
             </p>
             <span
-              className={`inline-flex px-2 py-1 rounded text-xs font-bold ${formData.readinessStatus === 'Yakin'
-                ? 'bg-green-100 text-green-700'
-                : formData.readinessStatus === 'Masih Ragu'
-                  ? 'bg-yellow-100 text-yellow-700'
-                  : 'bg-gray-100 text-gray-700'
-                }`}
+              className={`inline-flex px-2 py-1 rounded text-xs font-bold ${
+                formData.readinessStatus === 'Yakin'
+                  ? 'bg-green-100 text-green-700'
+                  : formData.readinessStatus === 'Masih Ragu'
+                    ? 'bg-yellow-100 text-yellow-700'
+                    : 'bg-gray-100 text-gray-700'
+              }`}
             >
               {formData.readinessStatus}
             </span>
@@ -181,10 +182,11 @@ const PlanForm = ({ onUpdate }: PlanFormProps) => {
               }
             }}
             disabled={isLocked}
-            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${isLocked
-              ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-              : 'bg-[var(--primary)] text-white hover:bg-opacity-90 active:scale-95'
-              }`}
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-sm transition-all ${
+              isLocked
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-[var(--primary)] text-white hover:bg-opacity-90 active:scale-95'
+            }`}
           >
             <FaEdit /> Edit Rencana
           </button>
