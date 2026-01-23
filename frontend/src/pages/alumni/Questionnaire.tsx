@@ -50,8 +50,8 @@ const InputField = ({
       disabled={disabled}
       placeholder={placeholder}
       className={`w-full rounded-xl text-xs md:text-sm border border-[color:var(--border-color)] ${disabled
-          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-          : 'bg-[color:var(--bg-secondary)]'
+        ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+        : 'bg-[color:var(--bg-secondary)]'
         } px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
           : ''
@@ -90,8 +90,8 @@ const SelectField = ({
         required={required}
         disabled={disabled}
         className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled
-            ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-            : 'bg-[color:var(--bg-secondary)]'
+          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+          : 'bg-[color:var(--bg-secondary)]'
           } px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : ''
@@ -364,7 +364,13 @@ const AlumniQuestionnaire = () => {
 
     if (!formData.profile.fullName.trim()) {
       errors['profile.fullName'] = 'Nama lengkap wajib diisi';
+    } else if (formData.profile.fullName.trim().length < 3) {
+      errors['profile.fullName'] = 'Nama lengkap minimal 3 karakter';
+    } else if (!/^[a-zA-Z\s]*$/.test(formData.profile.fullName.trim())) {
+      errors['profile.fullName'] =
+        'Nama lengkap hanya boleh berisi huruf dan spasi';
     }
+
     if (!formData.profile.gender) {
       errors['profile.gender'] = 'Jenis kelamin wajib diisi';
     }
@@ -374,8 +380,19 @@ const AlumniQuestionnaire = () => {
     if (!formData.profile.graduationYear) {
       errors['profile.graduationYear'] = 'Tahun lulus SMA wajib diisi';
     }
-    if (!formData.profile.lastEducation) {
-      errors['profile.lastEducation'] = 'Pendidikan terakhir wajib diisi';
+    if (formData.profile.isStudying === 'ya') {
+      if (!formData.university.name) {
+        errors['university.name'] = 'Nama kampus wajib diisi';
+      }
+      if (!formData.university.type) {
+        errors['university.type'] = 'Jenis perguruan tinggi wajib diisi';
+      }
+      if (!formData.university.entryYear) {
+        errors['university.entryYear'] = 'Tahun masuk kuliah wajib diisi';
+      }
+      if (!formData.university.major) {
+        errors['university.major'] = 'Jurusan kuliah wajib diisi';
+      }
     }
 
     setValidationErrors(errors);
@@ -612,8 +629,8 @@ const AlumniQuestionnaire = () => {
                     }}
                     disabled={isReadOnly}
                     className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                        ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                        : ''
+                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                      : ''
                       }`}
                   >
                     <option value=''>Pilih</option>
@@ -631,8 +648,8 @@ const AlumniQuestionnaire = () => {
                     onChange={handleChange}
                     disabled={isReadOnly}
                     className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                        ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                        : ''
+                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
+                      : ''
                       }`}
                   >
                     <option value=''>Pilih</option>
@@ -675,6 +692,7 @@ const AlumniQuestionnaire = () => {
                 name='university.type'
                 value={formData.university.type}
                 onChange={handleChange}
+                required
                 options={[
                   { value: 'negeri', label: 'Negeri' },
                   { value: 'swasta', label: 'Swasta' },
