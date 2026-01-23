@@ -267,7 +267,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
       .populate('badges')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ 'profile.graduationYear': -1, createdAt: -1 });
 
     const total = await User.countDocuments(filter);
 

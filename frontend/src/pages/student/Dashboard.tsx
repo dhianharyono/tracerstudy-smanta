@@ -25,7 +25,7 @@ const StudentDashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
-
+  console.log(stats);
   useEffect(() => {
     const fetchData = async () => {
       try {

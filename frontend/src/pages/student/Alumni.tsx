@@ -6,14 +6,13 @@ import {
   FaFilter,
   FaSearch,
   FaTimes,
-  FaCrown,
   FaMedal,
+  FaCrown,
 } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
-import SmartLoader from '@/components/SmartLoader';
 
 const StudentAlumni = () => {
   const { user } = useAuth();
@@ -21,7 +20,7 @@ const StudentAlumni = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 12,
+    limit: 10,
     total: 0,
     pages: 0,
   });
@@ -124,10 +123,6 @@ const StudentAlumni = () => {
     setSearchParams({});
   };
 
-  if (loading || alumni.length === 0) {
-    return <SmartLoader />;
-  }
-
   if (!isStudentProfileComplete(user)) {
     return <RestrictedAccess type='profile_incomplete' role='student' />;
   }
@@ -155,8 +150,9 @@ const StudentAlumni = () => {
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
       <div
-        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}
@@ -278,7 +274,7 @@ const StudentAlumni = () => {
       </div>
 
       {/* Alumni Table */}
-      {alumni.length === 0 ? (
+      {!loading && alumni.length === 0 ? (
         <div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[color:var(--bg-card)] p-12 text-center dark:border-gray-700'>
           <div className='mb-4 rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
             <FaGraduationCap className='text-4xl text-gray-400' />
@@ -295,108 +291,152 @@ const StudentAlumni = () => {
               <table className='w-full text-left text-xs md:text-sm'>
                 <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
                   <tr>
+                    <th className='px-6 py-4 w-16'>No</th>
                     <th className='px-6 py-4'>Nama Alumni</th>
                     <th className='px-6 py-4'>Tahun</th>
-                    <th className='px-6 py-4'>Pendidikan Lanjutan</th>
-                    <th className='px-6 py-4'>Pekerjaan Saat Ini</th>
+                    <th className='px-6 py-4'>Pendidikan</th>
+                    <th className='px-6 py-4'>Pekerjaan</th>
                   </tr>
                 </thead>
                 <tbody className='divide-y divide-[color:var(--border-color)]'>
-                  {alumni.map((alum) => (
-                    <tr
-                      key={alum._id}
-                      className='group hover:bg-[color:var(--bg-tertiary)]/50 transition-colors duration-200'
-                    >
-                      <td className='px-6 py-4'>
-                        <div className='flex items-center gap-3'>
-                          <div className='h-10 w-10 shrink-0 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] flex items-center justify-center font-bold text-lg relative'>
-                            {alum.profile?.fullName?.charAt(0) || 'A'}
-                            {alum.isMentor && (
-                              <div
-                                className='absolute -top-1 -right-1 bg-amber-500 rounded-full p-1 border-2 border-white dark:border-gray-800'
-                                title='Mentor'
-                              >
-                                <FaCrown className='text-[8px] text-white' />
+                  {loading
+                    ? // Skeleton Loading Rows
+                      Array.from({ length: 10 }).map((_, index) => (
+                        <tr key={`skeleton-${index}`}>
+                          <td className='px-6 py-4'>
+                            <div className='h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='flex items-center gap-3'>
+                              <div className='flex flex-col gap-2'>
+                                <div className='h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                                <div className='h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
                               </div>
-                            )}
-                          </div>
-                          <div>
-                            <div className='flex items-center gap-2'>
-                              <div className='font-semibold text-[color:var(--text-primary)]'>
-                                {alum.profile?.fullName || '-'}
-                              </div>
-                              {alum.badges && alum.badges.length > 0 && (
-                                <div className='flex gap-1'>
-                                  {alum.badges.map(
-                                    (badge: any, idx: number) => (
-                                      <div
-                                        key={idx}
-                                        className='text-amber-500'
-                                        title={badge.name}
-                                      >
-                                        <FaMedal className='text-xs' />
-                                      </div>
-                                    ),
+                            </div>
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse'></div>
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='flex flex-col gap-2'>
+                              <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                              <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                            </div>
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='flex flex-col gap-2'>
+                              <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                              <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                            </div>
+                          </td>
+                        </tr>
+                      ))
+                    : alumni.map((alum, index) => (
+                        <tr
+                          key={alum._id}
+                          className='group hover:bg-[color:var(--bg-tertiary)]/50 transition-colors duration-200'
+                        >
+                          <td className='px-6 py-4 text-sm text-[color:var(--text-secondary)]'>
+                            {(pagination.page - 1) * pagination.limit +
+                              index +
+                              1}
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='flex items-center gap-3'>
+                              <div>
+                                <div className='flex items-center gap-2'>
+                                  <div className='font-semibold text-[color:var(--text-primary)]'>
+                                    {alum.profile?.fullName || '-'}
+                                  </div>
+                                </div>
+                                <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
+                                  {alum.isMentor && (
+                                    <span className='flex items-center gap-1 text-amber-600 font-bold'>
+                                      <FaCrown className='text-xs' />
+                                      Mentor
+                                    </span>
+                                  )}
+                                  {alum.isMentor &&
+                                    alum.badges &&
+                                    alum.badges.length > 0 && (
+                                      <span className='text-gray-600 font-bold'>
+                                        •
+                                      </span>
+                                    )}
+                                  {alum.badges && alum.badges.length > 0 && (
+                                    <div className='flex gap-1 items-center'>
+                                      {alum.badges.map(
+                                        (badge: any, idx: number) => (
+                                          <div
+                                            key={idx}
+                                            className='text-blue-500'
+                                            title={badge.name}
+                                          >
+                                            <FaMedal className='text-xs' />
+                                          </div>
+                                        ),
+                                      )}
+                                      {alum.badges.map(
+                                        (badge: any, idx: number) => (
+                                          <span
+                                            key={idx}
+                                            className='text-xs text-blue-500'
+                                          >
+                                            {badge.name}
+                                          </span>
+                                        ),
+                                      )}
+                                    </div>
                                   )}
                                 </div>
-                              )}
+                              </div>
                             </div>
-                            <div className='text-xs text-[color:var(--text-secondary)]'>
-                              Alumni{' '}
-                              {alum.isMentor && (
-                                <span className='text-amber-600 font-bold ml-1'>
-                                  • Mentor
+                          </td>
+                          <td className='px-6 py-4'>
+                            <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
+                              {alum.profile?.graduationYear || '-'}
+                            </span>
+                          </td>
+                          <td className='px-6 py-4'>
+                            <div className='flex flex-col min-w-[200px]'>
+                              <span
+                                className='font-medium text-[color:var(--text-primary)] '
+                                title={alum.university?.name}
+                              >
+                                {alum.university?.name || '-'}
+                              </span>
+                              <span
+                                className='text-xs text-[color:var(--text-secondary)]'
+                                title={alum.university?.major}
+                              >
+                                {alum.university?.major || '-'}
+                              </span>
+                            </div>
+                          </td>
+                          <td className='px-6 py-4'>
+                            {alum.job?.position || alum.job?.institution ? (
+                              <div className='flex flex-col max-w-[200px]'>
+                                <span
+                                  className='font-medium text-[color:var(--text-primary)] truncate'
+                                  title={alum.job?.position}
+                                >
+                                  {alum.job?.position || 'Bekerja'}
                                 </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className='px-6 py-4'>
-                        <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
-                          {alum.profile?.graduationYear || '-'}
-                        </span>
-                      </td>
-                      <td className='px-6 py-4'>
-                        <div className='flex flex-col max-w-[200px]'>
-                          <span
-                            className='font-medium text-[color:var(--text-primary)] truncate'
-                            title={alum.university?.name}
-                          >
-                            {alum.university?.name || '-'}
-                          </span>
-                          <span
-                            className='text-xs text-[color:var(--text-secondary)] truncate'
-                            title={alum.university?.major}
-                          >
-                            {alum.university?.major || '-'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className='px-6 py-4'>
-                        {alum.job?.position || alum.job?.institution ? (
-                          <div className='flex flex-col max-w-[200px]'>
-                            <span
-                              className='font-medium text-[color:var(--text-primary)] truncate'
-                              title={alum.job?.position}
-                            >
-                              {alum.job?.position || 'Bekerja'}
-                            </span>
-                            <span
-                              className='text-xs text-[color:var(--text-secondary)] truncate'
-                              title={alum.job?.institution}
-                            >
-                              {alum.job?.institution || '-'}
-                            </span>
-                          </div>
-                        ) : (
-                          <span className='text-[color:var(--text-secondary)] italic'>
-                            -
-                          </span>
-                        )}
-                      </td>
-                    </tr>
-                  ))}
+                                <span
+                                  className='text-xs text-[color:var(--text-secondary)] truncate'
+                                  title={alum.job?.institution}
+                                >
+                                  {alum.job?.institution || '-'}
+                                </span>
+                              </div>
+                            ) : (
+                              <span className='text-[color:var(--text-secondary)] italic'>
+                                -
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
                 </tbody>
               </table>
             </div>
