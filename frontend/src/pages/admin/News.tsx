@@ -246,8 +246,8 @@ const AdminNews = () => {
                     }
                     className='h-5 w-5 rounded border-gray-300 text-[var(--primary)] focus:ring-[var(--primary)]'
                   />
-                  <span className='text-sm font-medium text-[color:var(--text-primary)]'>
-                    Publish Sekarang
+                  <span className='text-sm font-medium text-[color:var(--text-primary)] w-fit'>
+                    Publish
                   </span>
                 </label>
               </div>
@@ -325,26 +325,28 @@ const AdminNews = () => {
                     <td className='px-6 py-4'>
                       <span
                         className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${newsItem.type === 'all'
-                            ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                            : newsItem.type === 'student'
-                              ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                              : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                          ${
+                            newsItem.type === 'all'
+                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                              : newsItem.type === 'student'
+                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
                           }`}
                       >
                         {newsItem.type === 'all'
                           ? 'Semua'
                           : newsItem.type === 'student'
-                            ? 'Mahasiswa'
+                            ? 'Siswa'
                             : 'Alumni'}
                       </span>
                     </td>
                     <td className='px-6 py-4'>
                       <span
                         className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${newsItem.isPublished
-                            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                            : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                          ${
+                            newsItem.isPublished
+                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                              : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
                           }`}
                       >
                         {newsItem.isPublished ? 'Published' : 'Draft'}

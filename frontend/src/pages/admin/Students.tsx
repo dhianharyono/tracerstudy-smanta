@@ -67,7 +67,7 @@ const AdminStudents = () => {
         password: '',
         fullName: '',
         entryYear: '',
-        graduationYear: ''
+        graduationYear: '',
       });
       fetchStudents();
     } catch (error: any) {
@@ -117,7 +117,7 @@ const AdminStudents = () => {
       password: '',
       fullName: '',
       entryYear: '',
-      graduationYear: ''
+      graduationYear: '',
     });
   };
 
@@ -133,7 +133,7 @@ const AdminStudents = () => {
             Kelola Data Student
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
-            Manajemen akun mahasiswa
+            Manajemen akun Siswa
           </p>
         </div>
         {!showForm && (
