@@ -1,7 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaBook, FaSearch, FaUsers } from 'react-icons/fa';
+import { createPortal } from 'react-dom';
+import {
+  FaBook,
+  FaSearch,
+  FaUsers,
+  FaGraduationCap,
+  FaTimes,
+  FaArrowRight,
+  FaChartPie,
+} from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
@@ -19,6 +28,175 @@ interface MajorData {
   }[];
 }
 
+interface MajorDetailModalProps {
+  major: MajorData | null;
+  isOpen: boolean;
+  onClose: () => void;
+  onViewAll: (majorName: string) => void;
+}
+
+const MajorDetailModal = ({
+  major,
+  isOpen,
+  onClose,
+  onViewAll,
+}: MajorDetailModalProps) => {
+  if (!isOpen || !major) return null;
+
+  // Calculate top universities
+  const universityStats = major.alumni.reduce((acc: any, curr) => {
+    if (curr.university) {
+      acc[curr.university] = (acc[curr.university] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  const sortedUniversities = Object.entries(universityStats).sort(
+    ([, a]: any, [, b]: any) => b - a,
+  );
+
+  const top3Universities = sortedUniversities.slice(0, 3);
+  const otherUniversities = sortedUniversities.slice(3);
+
+  return createPortal(
+    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200'>
+      <div
+        className='relative w-full max-w-3xl bg-[color:var(--bg-card)] rounded-2xl shadow-xl border border-[color:var(--border-color)] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]'
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header with background pattern/color */}
+        <div className='relative overflow-hidden bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white p-8 mb-0'>
+          <div className='absolute top-0 right-0 -mt-4 -mr-4 text-white/10'>
+            <FaBook size={150} />
+          </div>
+
+          <div className='relative z-10 flex justify-between items-start'>
+            <div>
+              <div className='flex items-center gap-2 mb-2'>
+                <span className='bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-medium border border-white/30'>
+                  Program Studi
+                </span>
+              </div>
+              <h2 className='text-sm md:text-2xl font-bold leading-tight mb-2'>
+                {major._id}
+              </h2>
+              <div className='flex items-center gap-2 text-white/80 mb-10 md:mb-0'>
+                <FaUsers />
+                <span className='font-medium text-xs md:text-base'>{major.count} Alumni Terdaftar</span>
+              </div>
+            </div>
+            <button
+              onClick={onClose}
+              className='p-2 bg-white/10 hover:bg-white/20 rounded-full transition-colors backdrop-blur-md'
+            >
+              <FaTimes />
+            </button>
+          </div>
+        </div>
+
+        {/* Body */}
+        <div className='p-6 overflow-y-auto bg-[color:var(--bg-secondary)]/30 flex-1'>
+          <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
+
+            {/* Main Content: University Distribution */}
+            <div className='lg:col-span-2 space-y-6'>
+              <div className='bg-[color:var(--bg-card)] p-5 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
+                <h3 className='font-bold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
+                  <FaChartPie className='text-[var(--primary)]' /> Sebaran Universitas
+                </h3>
+
+                {/* Top 3 Cards */}
+                <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6'>
+                  {top3Universities.map(([univ, count]: any, idx) => (
+                    <div key={idx} className='bg-[color:var(--bg-tertiary)]/50 p-4 rounded-xl border border-[color:var(--border-color)] relative overflow-hidden'>
+                      <div className='absolute right-0 top-0 p-2 text-[color:var(--text-tertiary)] opacity-10 font-bold text-5xl'>
+                        #{idx + 1}
+                      </div>
+                      <div className='relative z-10'>
+                        <div className='text-2xl font-bold text-[var(--primary)] mb-1'>{count}</div>
+                        <div className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-2 h-8 leading-tight' title={univ}>
+                          {univ}
+                        </div>
+                        <div className='mt-2 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
+                          <div
+                            className='h-full bg-[var(--primary)] rounded-full'
+                            style={{ width: `${(count / major.count) * 100}%` }}
+                          ></div>
+                        </div>
+                        <div className='mt-1 text-[10px] text-[color:var(--text-secondary)] text-right'>
+                          {Math.round((count / major.count) * 100)}%
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* List of others */}
+                {otherUniversities.length > 0 && (
+                  <div className='space-y-3'>
+                    <h4 className='text-sm font-medium text-[color:var(--text-secondary)]'>Universitas Lainnya</h4>
+                    <div className='max-h-[200px] overflow-y-auto pr-2 space-y-2'>
+                      {otherUniversities.map(([univ, count]: any, idx) => (
+                        <div key={idx} className='flex items-center justify-between p-3 bg-[color:var(--bg-tertiary)]/30 rounded-lg text-sm'>
+                          <span className='truncate flex-1 pr-4' title={univ}>{univ}</span>
+                          <span className='font-semibold text-[color:var(--text-primary)]'>{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Sidebar: Recent Alumni & Action */}
+            <div className='space-y-6'>
+              <div className='bg-[color:var(--bg-card)] p-5 rounded-xl border border-[color:var(--border-color)] shadow-sm h-full flex flex-col'>
+                <h3 className='font-bold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
+                  <FaGraduationCap className='text-[var(--primary)]' /> Alumni Terbaru
+                </h3>
+
+                <div className='space-y-4 flex-1'>
+                  {major.alumni.slice(0, 5).map((alum, idx) => (
+                    <div key={idx} className='flex gap-3 items-start'>
+                      <div className='w-2 h-2 mt-2 rounded-full bg-[var(--primary)] shrink-0'></div>
+                      <div className='min-w-0'>
+                        <div className='font-medium text-sm text-[color:var(--text-primary)] truncate'>
+                          {alum.name}
+                        </div>
+                        <div className='text-xs text-[color:var(--text-secondary)] line-clamp-1' title={alum.university}>
+                          {alum.university}
+                        </div>
+                        <div className='text-[10px] text-[color:var(--text-tertiary)]'>
+                          Lulus {alum.graduationYear}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {major.alumni.length > 5 && (
+                    <div className='pt-2 text-center text-xs text-[color:var(--text-secondary)] italic'>
+                      +{major.alumni.length - 5} alumni lainnya
+                    </div>
+                  )}
+                </div>
+
+                <button
+                  onClick={() => onViewAll(major._id)}
+                  className='mt-6 w-full flex items-center justify-center gap-2 px-4 py-3 bg-[var(--primary)] text-white rounded-xl hover:bg-[var(--primary-dark)] transition-all font-medium shadow-md shadow-[var(--primary)]/20 active:scale-95 text-sm'
+                >
+                  Lihat Semua Data <FaArrowRight />
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+};
+
 const StudentMajors = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -26,6 +204,10 @@ const StudentMajors = () => {
   const [filteredMajors, setFilteredMajors] = useState<MajorData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+
+  // Modal State
+  const [selectedMajor, setSelectedMajor] = useState<MajorData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchMajors = async () => {
@@ -51,6 +233,16 @@ const StudentMajors = () => {
     setFilteredMajors(filtered);
   }, [searchTerm, majors]);
 
+  const handleMajorClick = (major: MajorData) => {
+    setSelectedMajor(major);
+    setIsModalOpen(true);
+  };
+
+  const handleViewAllAlumni = (majorName: string) => {
+    navigate(`/student/alumni?major=${encodeURIComponent(majorName)}`);
+  };
+
+
   if (loading) {
     return <SmartLoader />;
   }
@@ -60,7 +252,7 @@ const StudentMajors = () => {
   }
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
+    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in relative'>
       {/* Header Section */}
       <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
         <div className='text-center md:text-left mb-2'>
@@ -105,11 +297,7 @@ const StudentMajors = () => {
           {filteredMajors.map((major, index) => (
             <div
               key={index}
-              onClick={() => {
-                navigate(
-                  `/student/alumni?major=${encodeURIComponent(major._id)}`,
-                );
-              }}
+              onClick={() => handleMajorClick(major)}
               className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
             >
               <div className='mb-4 min-h-[8rem]'>
@@ -157,8 +345,17 @@ const StudentMajors = () => {
           ))}
         </div>
       )}
+
+      {/* Major Detail Modal */}
+      <MajorDetailModal
+        major={selectedMajor}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onViewAll={handleViewAllAlumni}
+      />
     </div>
   );
 };
+
 
 export default StudentMajors;
