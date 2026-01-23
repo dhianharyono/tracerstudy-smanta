@@ -98,7 +98,7 @@ const Layout = () => {
       '/student/universities': 'Perguruan Tinggi',
       '/student/majors': 'Jurusan',
       '/student/alumni': 'Alumni',
-      '/student/college-plan': 'Cari Jejak Alumni',
+      '/student/college-plan': 'Rencana Angkatan',
       '/student/events': 'Event Siswa',
       '/student/news': 'Berita Siswa',
       '/student/feedback': 'Kritik & Saran Siswa',
@@ -154,18 +154,16 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-          isActive
-            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-        }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+          }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-            isActive
-              ? 'bg-white/20'
-              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-          }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
+            ? 'bg-white/20'
+            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+            }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -220,6 +218,11 @@ const Layout = () => {
             icon={FaGraduationCap}
             label='Data Student'
           />
+          <NavLink
+            to='/admin/college-plans'
+            icon={FaUniversity}
+            label='Rencana Kuliah'
+          />
           <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
           <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
@@ -259,7 +262,7 @@ const Layout = () => {
           <NavLink
             to='/student/college-plan'
             icon={FaGraduationCap}
-            label='Cari Jejak Alumni'
+            label='Rencana Angkatan'
           />
           <NavLink to='/student/events' icon={FaChartBar} label='Event' />
           <NavLink
@@ -305,9 +308,8 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}

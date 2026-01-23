@@ -40,6 +40,7 @@ const AdminFeedbackDetail = lazy(() => import('./pages/admin/FeedbackDetail'));
 const AdminBadges = lazy(() => import('./pages/admin/Badges'));
 const AdminEventManagement = lazy(() => import('./pages/admin/EventManagement'));
 const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
+const AdminCollegePlans = lazy(() => import('./pages/admin/CollegePlans'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -164,6 +165,7 @@ function App() {
               <Route path='badges' element={<AdminBadges />} />
               <Route path='events' element={<AdminEventManagement />} />
               <Route path='stats' element={<AdminStatistics />} />
+              <Route path='college-plans' element={<AdminCollegePlans />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

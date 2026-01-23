@@ -4,6 +4,7 @@ import User from '../models/User';
 import News from '../models/News';
 import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
+import CollegePlan from '../models/CollegePlan';
 
 import Badge from '../models/Badge';
 
@@ -142,7 +143,6 @@ router.get('/dashboard', async (req: Request, res: Response) => {
   }
 });
 
-
 router.get('/universities', async (req: Request, res: Response) => {
   try {
     const type = req.query.type as string;
@@ -249,7 +249,6 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const name = req.query.name as string;
     const badgeId = req.query.badgeId as string;
 
-
     const filter: any = {
       role: 'alumni',
       'profile.fullName': { $exists: true, $nin: [null, ''] },
@@ -280,11 +279,10 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['isMentor'] = true;
     }
 
-
     const alumni = await User.find(filter)
       .select('-password')
       .select(
-        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor'
+        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor',
       )
       .populate('badges')
       .skip(skip)
@@ -346,7 +344,7 @@ router.get('/news', async (req: AuthenticatedRequest, res: Response) => {
 
     // Get read news IDs for this user
     const readNews = await NewsRead.find({ user: req.user!._id }).select(
-      'news'
+      'news',
     );
     const readNewsIds = readNews.map((nr) => nr.news.toString());
 
@@ -418,7 +416,7 @@ router.post(
         res.status(500).json({ message: error.message });
       }
     }
-  }
+  },
 );
 
 // Removed news unread-count route
@@ -440,7 +438,7 @@ router.get(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
 );
 
 // Submit or update feedback
@@ -491,7 +489,7 @@ router.post(
         res.status(500).json({ message: error.message });
       }
     }
-  }
+  },
 );
 
 // Update feedback
@@ -522,7 +520,208 @@ router.put(
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
-  }
+  },
+);
+
+// --- College Plan Routes ---
+
+// Get current user's college plan
+router.get(
+  '/college-plan',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const plan = await CollegePlan.findOne({ user: req.user!._id });
+      res.json(plan);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Create or Update college plan
+router.post(
+  '/college-plan',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const {
+        targetUniversity,
+        targetMajor,
+        rumpun,
+        entryPath,
+        readinessStatus,
+        isAnonymous,
+      } = req.body;
+      let plan = await CollegePlan.findOne({ user: req.user!._id });
+
+      if (plan) {
+        if (plan.lockCount >= 3) {
+          return res
+            .status(400)
+            .json({
+              message: 'Mencapai batas maksimal perubahan data (3 kali).',
+            });
+        }
+        plan.targetUniversity = targetUniversity;
+        plan.targetMajor = targetMajor;
+        plan.rumpun = rumpun;
+        plan.entryPath = entryPath;
+        plan.readinessStatus = readinessStatus;
+        plan.isAnonymous = isAnonymous;
+        plan.lockCount += 1;
+        await plan.save();
+      } else {
+        plan = new CollegePlan({
+          user: req.user!._id,
+          targetUniversity,
+          targetMajor,
+          rumpun,
+          entryPath,
+          readinessStatus,
+          isAnonymous,
+          lockCount: 0,
+        });
+        await plan.save();
+      }
+      res.json(plan);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Get aggregated stats for college plans
+router.get(
+  '/college-plans/stats',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const currentUser = await User.findById(req.user!._id);
+      const gradYear = currentUser?.profile?.graduationYear;
+
+      // Pipeline stage to filter by same graduation year
+      const filterPipeline: any[] = gradYear
+        ? [
+          {
+            $lookup: {
+              from: 'users',
+              localField: 'user',
+              foreignField: '_id',
+              as: 'userDetails',
+            },
+          },
+          { $unwind: '$userDetails' },
+          {
+            $match: {
+              'userDetails.profile.graduationYear': gradYear,
+            },
+          },
+        ]
+        : [];
+
+      const [
+        topUniversitiesRaw,
+        majorDistribution,
+        entryPathStats,
+        rumpunStats,
+      ] = await Promise.all([
+        CollegePlan.aggregate([
+          ...filterPipeline,
+          { $group: { _id: '$targetUniversity', count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+          { $limit: 10 },
+        ]),
+        CollegePlan.aggregate([
+          ...filterPipeline,
+          { $group: { _id: '$targetMajor', count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+          { $limit: 10 },
+        ]),
+        CollegePlan.aggregate([
+          ...filterPipeline,
+          { $group: { _id: '$entryPath', count: { $sum: 1 } } },
+        ]),
+        CollegePlan.aggregate([
+          ...filterPipeline,
+          { $group: { _id: '$rumpun', count: { $sum: 1 } } },
+        ]),
+      ]);
+
+      const topUniversities = await Promise.all(
+        topUniversitiesRaw.map(async (item) => {
+          const alumniCount = await User.countDocuments({
+            role: 'alumni',
+            'university.name': { $regex: new RegExp(item._id, 'i') },
+          });
+          return {
+            name: item._id,
+            studentCount: item.count,
+            alumniCount,
+          };
+        }),
+      );
+
+      res.json({
+        topUniversities,
+        majorDistribution,
+        entryPathStats,
+        rumpunStats,
+        userGradYear: gradYear,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Explore Friends (List)
+router.get(
+  '/college-plans/list',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      const { university, major } = req.query;
+      const currentUser = await User.findById(req.user!._id);
+      const gradYear = currentUser?.profile?.graduationYear;
+
+      const filter: any = {};
+      if (university) filter.targetUniversity = university;
+      if (major) filter.targetMajor = major;
+
+      let plansQuery = CollegePlan.find(filter)
+        .populate('user', 'username profile.fullName profile.graduationYear')
+        .sort({ createdAt: -1 });
+
+      const plans = await plansQuery;
+
+      // Filter in memory for graduation year (simpler than complex aggregation for list with populate)
+      // or we could find user IDs first.
+      // Doing in-memory filtering for now as dataset per year isn't huge yet.
+      const filteredPlans = gradYear
+        ? plans.filter((p: any) => p.user?.profile?.graduationYear === gradYear)
+        : plans;
+
+      const result = filteredPlans.map((p: any) => {
+        const pObj = p.toObject() as any;
+        if (p.isAnonymous) {
+          return {
+            ...pObj,
+            user: { username: 'Anonymous', profile: { fullName: 'Anonymous' } },
+          };
+        }
+        return pObj;
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 );
 
 export default router;

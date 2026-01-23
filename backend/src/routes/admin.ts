@@ -6,6 +6,7 @@ import News from '../models/News';
 import Feedback from '../models/Feedback';
 import Settings from '../models/Settings';
 import Badge from '../models/Badge';
+import CollegePlan from '../models/CollegePlan';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -982,6 +983,128 @@ router.put('/badges/:id', async (req: Request, res: Response) => {
     if (error.code === 11000) {
       return res.status(400).json({ message: 'Badge code already exists' });
     }
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Manage College Plans
+router.get('/college-plans', async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+    const university = req.query.university as string;
+    const major = req.query.major as string;
+    const name = req.query.name as string;
+    const graduationYear = req.query.graduationYear as string;
+
+    const pipeline: any[] = [
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'user'
+        }
+      },
+      { $unwind: '$user' }
+    ];
+
+    const match: any = {};
+    if (university) match['targetUniversity'] = { $regex: university, $options: 'i' };
+    if (major) match['targetMajor'] = { $regex: major, $options: 'i' };
+    if (name) match['user.profile.fullName'] = { $regex: name, $options: 'i' };
+    if (graduationYear) match['user.profile.graduationYear'] = parseInt(graduationYear);
+
+    pipeline.push({ $match: match });
+
+    const [plans, totalCount] = await Promise.all([
+      CollegePlan.aggregate([
+        ...pipeline,
+        { $sort: { createdAt: -1 } },
+        { $skip: skip },
+        { $limit: limit },
+        {
+          $project: {
+            targetUniversity: 1,
+            targetMajor: 1,
+            entryPath: 1,
+            readinessStatus: 1,
+            rumpun: 1,
+            createdAt: 1,
+            lockCount: 1,
+            'user._id': 1,
+            'user.username': 1,
+            'user.profile.fullName': 1,
+            'user.profile.graduationYear': 1
+          }
+        }
+      ]),
+      CollegePlan.aggregate([
+        ...pipeline,
+        { $count: 'total' }
+      ])
+    ]);
+
+    // Get filter options based on existing data
+    const universitiesQuery = CollegePlan.distinct('targetUniversity');
+    const majorsQuery = CollegePlan.distinct('targetMajor');
+    // Get distinct graduation years from users who have plans
+    const graduationYearsQuery = CollegePlan.aggregate([
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as: 'u'
+        }
+      },
+      { $unwind: '$u' },
+      {
+        $group: {
+          _id: '$u.profile.graduationYear'
+        }
+      },
+      { $sort: { _id: -1 } }
+    ]);
+
+    const [universities, majors, gradYearsRaw] = await Promise.all([
+      universitiesQuery,
+      majorsQuery,
+      graduationYearsQuery
+    ]);
+
+    const graduationYears = gradYearsRaw.map(g => g._id).filter(y => y != null);
+
+    const total = totalCount[0]?.total || 0;
+
+    res.json({
+      plans,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+      filters: {
+        universities: universities.sort(),
+        majors: majors.sort(),
+        graduationYears
+      }
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/college-plans/:id', async (req: Request, res: Response) => {
+  try {
+    const plan = await CollegePlan.findByIdAndDelete(req.params.id);
+    if (!plan) {
+      return res.status(404).json({ message: 'Plan not found' });
+    }
+    res.json({ message: 'Plan deleted successfully' });
+  } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 });

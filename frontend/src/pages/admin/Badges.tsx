@@ -122,11 +122,11 @@ const AdminBadges = () => {
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='mb-8'>
+      <div className='mb-2 text-center md:text-left'>
         <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Kelola Badge
         </h1>
-        <p className='text-[color:var(--text-secondary)]'>
+        <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
           Tambah dan kelola badge penghargaan untuk alumni
         </p>
       </div>

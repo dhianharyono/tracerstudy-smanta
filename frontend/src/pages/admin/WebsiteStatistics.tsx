@@ -64,7 +64,7 @@ const WebsiteStatistics = () => {
         if (path.includes('/student/college-plan')) {
           return (
             <span className='text-[color:var(--text-primary)]'>
-              Cari Jejak Alumni
+              Rencana Angkatan
             </span>
           );
         }
