@@ -181,8 +181,8 @@ const Profile = () => {
                   <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
                     <p className='text-[10px] md:text-sm text-[color:var(--text-secondary)]'>
                       {isMentor
-                        ? 'Profil Anda akan tampil sebagai Mentor dan data sosial media Anda akan ditampilkan kepada siswa untuk konsultasi.'
-                        : 'Aktifkan untuk membantu siswa. Data sosial media Anda hanya akan terlihat oleh siswa jika status ini aktif.'}
+                        ? 'Profil Anda akan tampil sebagai Mentor dan akan ditampilkan kepada siswa bahwa Anda bersedia membantu mereka.'
+                        : 'Dengan menjadi mentor, Anda dapat membimbing siswa dalam memilih jurusan dan memberikan wawasan berharga tentang pengalaman kuliah Anda'}
                     </p>
                   </p>
                 </div>

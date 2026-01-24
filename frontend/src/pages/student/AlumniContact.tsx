@@ -331,10 +331,10 @@ const AlumniContact = () => {
       {/* Results Table */}
       <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] shadow-sm overflow-hidden min-h-[400px]'>
         <div className='p-4 border-b border-[color:var(--border-color)] flex justify-between items-center bg-[color:var(--bg-secondary)]'>
-          <h2 className='font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
-            <FaSearch className='text-[var(--primary)]' />
+          <div className='font-bold text-[color:var(--text-primary)] flex items-center gap-2'>
+            <FaSearch className='text-[var(--primary)] text-xs md:text-sm' />
             Hasil Pencarian
-          </h2>
+          </div>
           {(selectedUniversity ||
             selectedMajor ||
             isMentorFilter ||
