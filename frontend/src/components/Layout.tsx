@@ -260,6 +260,11 @@ const Layout = () => {
           <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
           <NavLink
+            to='/student/alumni-contact'
+            icon={FaUserTie}
+            label='Hubungi Alumni'
+          />
+          <NavLink
             to='/student/college-plan'
             icon={FaGraduationCap}
             label='Rencana Angkatan'
