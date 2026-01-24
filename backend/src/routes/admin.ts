@@ -155,6 +155,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       majorStats,
       onlineUsers: await User.countDocuments({
         lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+        role: { $in: ['student', 'alumni'] },
       }),
     });
   } catch (error: any) {
