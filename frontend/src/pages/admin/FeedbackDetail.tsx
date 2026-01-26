@@ -2,7 +2,15 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
-import { FaArrowLeft, FaUserCircle, FaStar, FaQuoteLeft } from 'react-icons/fa';
+import {
+  FaArrowLeft,
+  FaUserCircle,
+  FaStar,
+  FaQuoteLeft,
+  FaReply,
+  FaPaperPlane,
+  FaEdit,
+} from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
 const AdminFeedbackDetail = () => {
@@ -10,6 +18,9 @@ const AdminFeedbackDetail = () => {
   const navigate = useNavigate();
   const [feedback, setFeedback] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [replyContent, setReplyContent] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  const [isEditingReply, setIsEditingReply] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -32,17 +43,50 @@ const AdminFeedbackDetail = () => {
     }
   };
 
+  const handleReplySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyContent.trim()) return;
+
+    setSendingReply(true);
+    try {
+      const response = await axios.post(
+        `/api/admin/feedback/${id}/reply`,
+        { content: replyContent },
+      );
+      setFeedback(response.data);
+      setReplyContent('');
+      setIsEditingReply(false);
+      Toast('Balasan terkirim', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim balasan',
+        'error',
+      );
+    } finally {
+      setSendingReply(false);
+    }
+  };
+
+  const handleEditReply = () => {
+    setReplyContent(feedback.reply?.content || '');
+    setIsEditingReply(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingReply(false);
+    setReplyContent('');
+  };
+
   const renderStarRating = (rating: number) => {
     return (
       <div className='flex items-center gap-1'>
         {[1, 2, 3, 4, 5].map((index) => (
           <FaStar
             key={index}
-            className={`text-lg ${
-              index <= rating
-                ? 'text-yellow-400'
-                : 'text-gray-300 dark:text-gray-600'
-            }`}
+            className={`text-lg ${index <= rating
+              ? 'text-yellow-400'
+              : 'text-gray-300 dark:text-gray-600'
+              }`}
           />
         ))}
         <span className='ml-2 text-sm font-semibold text-[color:var(--text-primary)]'>
@@ -150,6 +194,81 @@ const AdminFeedbackDetail = () => {
                 {feedback.saran || 'Tidak ada saran yang disampaikan.'}
               </p>
             </div>
+          </div>
+
+          {/* Reply Section */}
+          <div className='mt-8 pt-8 border-t border-[color:var(--border-color)]'>
+            <h3 className='flex items-center gap-2 text-lg font-semibold text-[color:var(--text-primary)] mb-4'>
+              <FaReply /> Balasan Admin
+            </h3>
+
+            {feedback.reply && !isEditingReply ? (
+              <div className='rounded-xl bg-blue-50 dark:bg-blue-900/10 p-5 border border-blue-100 dark:border-blue-900/30 relative group'>
+                <div className='flex items-center gap-2 mb-2'>
+                  <span className='font-bold text-blue-600 dark:text-blue-400'>
+                    Admin
+                  </span>
+                  <span className='text-xs text-[color:var(--text-secondary)]'>
+                    {new Date(feedback.reply.createdAt).toLocaleDateString(
+                      'id-ID',
+                      {
+                        day: 'numeric',
+                        month: 'long',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      },
+                    )}
+                  </span>
+                </div>
+                <p className='text-[color:var(--text-primary)] whitespace-pre-wrap leading-relaxed min-h-[1.5rem]'>
+                  {feedback.reply.content}
+                </p>
+
+                <button
+                  onClick={handleEditReply}
+                  className='absolute top-4 right-4 p-2 text-[color:var(--text-secondary)] hover:text-[var(--primary)] opacity-0 group-hover:opacity-100 transition-opacity'
+                  title="Edit Balasan"
+                >
+                  <FaEdit />
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleReplySubmit}>
+                <div className='mb-4'>
+                  <textarea
+                    value={replyContent}
+                    onChange={(e) => setReplyContent(e.target.value)}
+                    placeholder='Tulis balasan untuk pengguna ini...'
+                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-4 outline-none focus:border-[var(--primary)] min-h-[120px] transition-colors resize-y text-[color:var(--text-primary)]'
+                  />
+                </div>
+                <div className='flex justify-end gap-3'>
+                  {isEditingReply && (
+                    <button
+                      type='button'
+                      onClick={handleCancelEdit}
+                      className='rounded-lg border border-[color:var(--border-color)] px-4 py-2.5 text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)]'
+                    >
+                      Batal
+                    </button>
+                  )}
+                  <button
+                    type='submit'
+                    disabled={sendingReply || !replyContent.trim()}
+                    className='flex items-center gap-2 rounded-lg bg-[var(--primary)] px-6 py-2.5 text-white font-medium hover:bg-[var(--primary-dark)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
+                  >
+                    {sendingReply ? (
+                      'Mengirim...'
+                    ) : (
+                      <>
+                        <FaPaperPlane /> Kirim Balasan
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       </div>

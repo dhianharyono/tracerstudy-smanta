@@ -10,6 +10,7 @@ import {
   FaChartLine,
   FaUserCircle,
   FaTrash,
+  FaReply,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
@@ -62,8 +63,7 @@ const AdminFeedback = () => {
       });
       setFeedbackVisible(!feedbackVisible);
       Toast(
-        `Menu kritik dan saran ${
-          !feedbackVisible ? 'ditampilkan' : 'disembunyikan'
+        `Menu kritik dan saran ${!feedbackVisible ? 'ditampilkan' : 'disembunyikan'
         }`,
         'success',
       );
@@ -99,11 +99,10 @@ const AdminFeedback = () => {
         {[1, 2, 3, 4, 5].map((index) => (
           <FaStar
             key={index}
-            className={`text-sm ${
-              index <= rating
-                ? 'text-yellow-400'
-                : 'text-gray-300 dark:text-gray-600'
-            }`}
+            className={`text-sm ${index <= rating
+              ? 'text-yellow-400'
+              : 'text-gray-300 dark:text-gray-600'
+              }`}
           />
         ))}
       </div>
@@ -164,11 +163,10 @@ const AdminFeedback = () => {
 
             <button
               onClick={handleToggleVisibility}
-              className={`flex justify-center items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all ${
-                feedbackVisible
-                  ? 'bg-red-500 hover:bg-red-600'
-                  : 'bg-blue-500 hover:bg-blue-600'
-              }`}
+              className={`flex justify-center items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-medium text-white transition-all ${feedbackVisible
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-blue-500 hover:bg-blue-600'
+                }`}
             >
               {feedbackVisible ? <FaEyeSlash /> : <FaEye />}
               {feedbackVisible ? 'Sembunyikan Menu' : 'Tampilkan Menu'}
@@ -207,13 +205,12 @@ const AdminFeedback = () => {
                     </div>
                     <div className='flex-1 h-3 rounded-full bg-[color:var(--bg-tertiary)] overflow-hidden'>
                       <div
-                        className={`h-full rounded-full transition-all duration-500 ${
-                          rating >= 4
-                            ? 'bg-green-500'
-                            : rating >= 3
-                              ? 'bg-yellow-500'
-                              : 'bg-red-500'
-                        }`}
+                        className={`h-full rounded-full transition-all duration-500 ${rating >= 4
+                          ? 'bg-green-500'
+                          : rating >= 3
+                            ? 'bg-yellow-500'
+                            : 'bg-red-500'
+                          }`}
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
@@ -352,9 +349,18 @@ const AdminFeedback = () => {
                             navigate(`/admin/feedback/${feedback._id}`)
                           }
                           className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20'
-                          title='Lihat Detail'
+                          title='Lihat & Balas'
                         >
                           <FaEye />
+                        </button>
+                        <button
+                          onClick={() =>
+                            navigate(`/admin/feedback/${feedback._id}`)
+                          }
+                          className='rounded p-2 text-green-600 hover:bg-green-50 hover:text-green-700 transition-colors dark:text-green-400 dark:hover:bg-green-900/20'
+                          title='Balas Feedback'
+                        >
+                          <FaReply />
                         </button>
                         <button
                           onClick={() => handleDelete(feedback._id)}

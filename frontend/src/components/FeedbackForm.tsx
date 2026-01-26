@@ -23,9 +23,11 @@ interface FeedbackResponse {
 
 interface FeedbackFormProps {
   role: 'alumni' | 'student';
+  showHeader?: boolean;
+  onSuccess?: () => void;
 }
 
-const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
+const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, onSuccess }) => {
   const [feedback, setFeedback] = useState<FeedbackState>({
     kritik: '',
     saran: '',
@@ -75,10 +77,12 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
       if (submitted) {
         await axios.put(`/api/${role}/feedback`, feedback);
         Toast('Kritik dan saran berhasil diperbarui!', 'success');
+        if (onSuccess) onSuccess();
       } else {
         await axios.post(`/api/${role}/feedback`, feedback);
         Toast('Terima kasih atas kritik dan saran Anda!', 'success');
         setSubmitted(true);
+        if (onSuccess) onSuccess();
       }
     } catch (error) {
       let errorMessage = 'Gagal mengirim kritik dan saran';
@@ -125,15 +129,17 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
   }
 
   return (
-    <div className='p-4 md:p-8 animate-fade-in'>
-      <div className='mb-8 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Kritik & Saran
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Masukan Anda sangat berarti bagi kami
-        </p>
-      </div>
+    <div className='animate-fade-in'>
+      {showHeader && (
+        <div className='mb-8 text-center md:text-left'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Kritik & Saran
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
+            Masukan Anda sangat berarti bagi kami
+          </p>
+        </div>
+      )}
 
       <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
         <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
@@ -146,10 +152,10 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
         </div>
 
         <div className='mb-8 text-center'>
-          <h3 className='mb-2 text-sm md:text-lg font-semibold text-[color:var(--text-primary)]'>
+          <h3 className='mb-2 text-xs md:text-sm font-semibold text-[color:var(--text-primary)]'>
             Seberapa puas Anda dengan aplikasi ini?
           </h3>
-          <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-6'>
+          <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)] mb-6'>
             Klik bintang untuk memberikan rating (1-5)
           </p>
 
@@ -200,11 +206,10 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role }) => {
           <div className='flex justify-end pt-4'>
             <button
               type='submit'
-              className={`flex w-full md:w-fit items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${
-                loadingSubmit || feedback.rating === 0
-                  ? 'cursor-not-allowed opacity-70 grayscale'
-                  : ''
-              }`}
+              className={`flex w-full md:w-fit items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${loadingSubmit || feedback.rating === 0
+                ? 'cursor-not-allowed opacity-70 grayscale'
+                : ''
+                }`}
               disabled={loadingSubmit || feedback.rating === 0}
             >
               {loadingSubmit ? (

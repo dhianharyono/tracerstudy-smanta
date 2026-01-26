@@ -6,6 +6,11 @@ export interface IFeedback extends Document {
   rating: number;
   kritik?: string;
   saran?: string;
+  reply?: {
+    content: string;
+    adminId: mongoose.Types.ObjectId;
+    createdAt: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -35,6 +40,11 @@ const FeedbackSchema = new Schema<IFeedback>(
     saran: {
       type: String,
       trim: true,
+    },
+    reply: {
+      content: { type: String, trim: true },
+      adminId: { type: Schema.Types.ObjectId, ref: 'User' },
+      createdAt: { type: Date, default: Date.now },
     },
   },
   {

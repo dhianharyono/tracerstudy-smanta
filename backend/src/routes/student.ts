@@ -523,6 +523,44 @@ router.put(
   },
 );
 
+
+// Get public feedback list (Anonymous)
+router.get('/feedback/list', authenticate, authorize('student'), async (req: Request, res: Response) => {
+  try {
+    const feedbacks = await Feedback.find()
+      .select('rating kritik saran reply createdAt role')
+      .sort({ createdAt: -1 });
+    res.json(feedbacks);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get feedback stats
+router.get('/feedback/stats', authenticate, authorize('student'), async (req: Request, res: Response) => {
+  try {
+    const feedbacks = await Feedback.find();
+    const total = feedbacks.length;
+    const ratings: { [key: number]: number } = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    let sum = 0;
+
+    feedbacks.forEach((feedback) => {
+      ratings[feedback.rating as keyof typeof ratings]++;
+      sum += feedback.rating;
+    });
+
+    const average = total > 0 ? sum / total : 0;
+
+    res.json({
+      total,
+      average,
+      ratings,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // --- College Plan Routes ---
 
 // Get current user's college plan

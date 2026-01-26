@@ -876,6 +876,39 @@ router.get('/feedback/:id', async (req: Request, res: Response) => {
   }
 });
 
+
+// Reply to feedback
+router.post('/feedback/:id/reply', async (req: AuthenticatedRequest, res: Response) => {
+  try {
+    const { content } = req.body;
+    if (!content) {
+      return res.status(400).json({ message: 'Reply content is required' });
+    }
+
+    const feedback = await Feedback.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          reply: {
+            content,
+            adminId: req.user!._id,
+            createdAt: new Date(),
+          },
+        },
+      },
+      { new: true },
+    ).populate('user', 'username role');
+
+    if (!feedback) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+
+    res.json(feedback);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Delete feedback
 router.delete('/feedback/:id', async (req: Request, res: Response) => {
   try {
