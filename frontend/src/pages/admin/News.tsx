@@ -14,6 +14,16 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { stripHtml } from '../../utils/helpers';
 import SmartLoader from '@/components/SmartLoader';
+import PageHeader from '@/components/common/PageHeader';
+import Card from '@/components/common/Card';
+import {
+  TableContainer,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeadCell,
+} from '@/components/common/Table';
 
 const AdminNews = () => {
   const navigate = useNavigate();
@@ -127,27 +137,22 @@ const AdminNews = () => {
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='mb-2 text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-            Kelola Berita & Pengumuman
-          </h1>
-          <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
-            Membuat dan mengelola berita untuk alumni dan mahasiswa
-          </p>
-        </div>
+      <PageHeader
+        title='Kelola Berita & Pengumuman'
+        description='Membuat dan mengelola berita untuk alumni dan mahasiswa'
+      >
         {!showForm && (
           <button
             onClick={() => setShowForm(true)}
-            className='max-w-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
+            className='flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
           >
             <FaPlus /> Tambah Berita
           </button>
         )}
-      </div>
+      </PageHeader>
 
       {showForm && (
-        <div className='mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 shadow-sm'>
+        <Card className='mb-6'>
           <div className='mb-4 flex items-center justify-between'>
             <h2 className='text-lg font-semibold text-[color:var(--text-primary)]'>
               {editingNews ? 'Edit Berita' : 'Tambah Berita Baru'}
@@ -276,129 +281,120 @@ const AdminNews = () => {
               </button>
             </div>
           </form>
-        </div>
+        </Card>
       )}
 
-      <div className='max-w-sm md:max-w-full overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left text-sm'>
-            <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
-              <tr>
-                <th className='px-6 py-4'>Judul & Konten</th>
-                <th className='px-6 py-4'>Target</th>
-                <th className='px-6 py-4'>Status</th>
-                <th className='px-6 py-4'>Author</th>
-                <th className='px-6 py-4'>Tanggal</th>
-                <th className='px-6 py-4 text-center'>Aksi</th>
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-[color:var(--border-color)]'>
-              {news.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className='p-8 text-center text-[color:var(--text-secondary)]'
+      <TableContainer>
+        <TableHeader>
+          <TableHeadCell>Judul & Konten</TableHeadCell>
+          <TableHeadCell>Target</TableHeadCell>
+          <TableHeadCell>Status</TableHeadCell>
+          <TableHeadCell>Author</TableHeadCell>
+          <TableHeadCell>Tanggal</TableHeadCell>
+          <TableHeadCell className='text-center'>Aksi</TableHeadCell>
+        </TableHeader>
+        <TableBody>
+          {news.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={6}
+                className='p-8 text-center text-[color:var(--text-secondary)]'
+              >
+                Belum ada berita yang dibuat.
+              </TableCell>
+            </TableRow>
+          ) : (
+            news.map((newsItem) => (
+              <TableRow
+                key={newsItem._id}
+              >
+                <TableCell className='max-w-xs'>
+                  <div
+                    className='font-semibold text-[color:var(--text-primary)] truncate'
+                    title={newsItem.title}
                   >
-                    Belum ada berita yang dibuat.
-                  </td>
-                </tr>
-              ) : (
-                news.map((newsItem) => (
-                  <tr
-                    key={newsItem._id}
-                    className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'
+                    {newsItem.title}
+                  </div>
+                  <div
+                    className='text-xs text-[color:var(--text-secondary)] truncate'
+                    title={stripHtml(newsItem.content)}
                   >
-                    <td className='px-6 py-4 max-w-xs'>
-                      <div
-                        className='font-semibold text-[color:var(--text-primary)] truncate'
-                        title={newsItem.title}
-                      >
-                        {newsItem.title}
-                      </div>
-                      <div
-                        className='text-xs text-[color:var(--text-secondary)] truncate'
-                        title={stripHtml(newsItem.content)}
-                      >
-                        {newsItem.content ? stripHtml(newsItem.content) : '-'}
-                      </div>
-                    </td>
-                    <td className='px-6 py-4'>
-                      <span
-                        className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${
-                            newsItem.type === 'all'
-                              ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                              : newsItem.type === 'student'
-                                ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                                : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                          }`}
-                      >
-                        {newsItem.type === 'all'
-                          ? 'Semua'
-                          : newsItem.type === 'student'
-                            ? 'Siswa'
-                            : 'Alumni'}
-                      </span>
-                    </td>
-                    <td className='px-6 py-4'>
-                      <span
-                        className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
-                          ${
-                            newsItem.isPublished
-                              ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                              : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-                          }`}
-                      >
-                        {newsItem.isPublished ? 'Published' : 'Draft'}
-                      </span>
-                    </td>
-                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
-                      {newsItem.author?.username || 'Admin'}
-                    </td>
-                    <td className='px-6 py-4 text-[color:var(--text-secondary)]'>
-                      {new Date(newsItem.createdAt).toLocaleDateString(
-                        'id-ID',
-                        {
-                          day: 'numeric',
-                          month: 'short',
-                          year: 'numeric',
-                        },
-                      )}
-                    </td>
-                    <td className='px-6 py-4'>
-                      <div className='flex items-center justify-center gap-2'>
-                        <button
-                          onClick={() =>
-                            navigate(`/admin/news/${newsItem._id}`)
-                          }
-                          className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20'
-                          title='Lihat Detail'
-                        >
-                          <FaEye />
-                        </button>
-                        <button
-                          onClick={() => handleEdit(newsItem)}
-                          className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
-                          title='Edit'
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(newsItem._id)}
-                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
-                          title='Hapus'
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                    {newsItem.content ? stripHtml(newsItem.content) : '-'}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
+                      ${newsItem.type === 'all'
+                        ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                        : newsItem.type === 'student'
+                          ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                          : 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                      }`}
+                  >
+                    {newsItem.type === 'all'
+                      ? 'Semua'
+                      : newsItem.type === 'student'
+                        ? 'Siswa'
+                        : 'Alumni'}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <span
+                    className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium 
+                      ${newsItem.isPublished
+                        ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
+                        : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
+                      }`}
+                  >
+                    {newsItem.isPublished ? 'Published' : 'Draft'}
+                  </span>
+                </TableCell>
+                <TableCell className='text-[color:var(--text-secondary)]'>
+                  {newsItem.author?.username || 'Admin'}
+                </TableCell>
+                <TableCell className='text-[color:var(--text-secondary)]'>
+                  {new Date(newsItem.createdAt).toLocaleDateString(
+                    'id-ID',
+                    {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    },
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className='flex items-center justify-center gap-2'>
+                    <button
+                      onClick={() =>
+                        navigate(`/admin/news/${newsItem._id}`)
+                      }
+                      className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20'
+                      title='Lihat Detail'
+                    >
+                      <FaEye />
+                    </button>
+                    <button
+                      onClick={() => handleEdit(newsItem)}
+                      className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
+                      title='Edit'
+                    >
+                      <FaEdit />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(newsItem._id)}
+                      className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
+                      title='Hapus'
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </TableContainer>
     </div>
   );
 };

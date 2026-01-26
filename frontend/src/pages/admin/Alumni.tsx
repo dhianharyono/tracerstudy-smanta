@@ -15,6 +15,17 @@ import {
   FaSearch,
   FaSave,
 } from 'react-icons/fa';
+import PageHeader from '@/components/common/PageHeader';
+import Card from '@/components/common/Card';
+import Pagination from '@/components/common/Pagination';
+import {
+  TableContainer,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeadCell,
+} from '@/components/common/Table';
 import { createPortal } from 'react-dom';
 import SmartLoader from '@/components/SmartLoader';
 import SearchableSelect from '@/components/SearchableSelect';
@@ -196,26 +207,21 @@ const AdminAlumni = () => {
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='mb-2 text-center md:text-left'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-            Kelola Data Alumni
-          </h1>
-          <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
-            Memantau dan mengelola data alumni terdaftar
-          </p>
-        </div>
+      <PageHeader
+        title='Kelola Data Alumni'
+        description='Memantau dan mengelola data alumni terdaftar'
+      >
         <button
           onClick={() => setShowFilters(!showFilters)}
           className='max-w-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
         >
           <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Data'}
         </button>
-      </div>
+      </PageHeader>
 
       {/* Filters */}
-      <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+      <Card
+        className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
           }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
@@ -357,203 +363,166 @@ const AdminAlumni = () => {
             <FaTimes className='text-xs' /> Reset
           </button>
         </div>
-      </div>
+      </Card>
 
       {/* Table Content */}
-      <div className='max-w-sm md:max-w-full overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left text-sm'>
-            <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
-              <tr>
-                <th className='px-6 py-4'>Nama & Email</th>
-                <th className='px-6 py-4'>Pendidikan</th>
-                <th className='px-6 py-4'>Pekerjaan</th>
-                <th className='px-6 py-4'>Media Sosial</th>
-                <th className='px-6 py-4'>Survei</th>
-                <th className='px-6 py-4'>Aksi</th>
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-[color:var(--border-color)]'>
-              {alumni.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={6}
-                    className='p-8 text-center text-[color:var(--text-secondary)]'
-                  >
-                    Tidak ada data alumni yang ditemukan.
-                  </td>
-                </tr>
-              ) : (
-                alumni.map((alum) => (
-                  <tr
-                    key={alum._id}
-                    className='hover:bg-[color:var(--bg-tertiary)]/50 transition-colors'
-                  >
-                    <td className='px-6 py-4'>
-                      <div>
-                        <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
-                          {alum.profile?.fullName || '-'}
-                          {alum.isMentor && (
-                            <FaCrown
-                              className='text-amber-500 text-[10px]'
-                              title='Mentor Aktif'
-                            />
-                          )}
-                        </div>
-                        <div className='text-xs text-[color:var(--text-secondary)]'>
-                          {alum.email}
-                        </div>
-                      </div>
-                    </td>
-                    <td className='px-6 py-4'>
-                      <div className='max-w-[200px]'>
-                        <div
-                          className='font-medium text-[color:var(--text-primary)] truncate'
-                          title={alum.university?.name}
-                        >
-                          {alum.university?.name || '-'}
-                        </div>
-                        <div
-                          className='text-xs text-[color:var(--text-secondary)] truncate'
-                          title={alum.university?.major}
-                        >
-                          {alum.university?.major || '-'}{' '}
-                          <span className='mx-1'>•</span>{' '}
-                          {alum.profile?.graduationYear}
-                        </div>
-                      </div>
-                    </td>
-                    <td className='px-6 py-4'>
-                      <div className='max-w-[150px]'>
-                        <div className='font-medium text-[color:var(--text-primary)] truncate'>
-                          {alum.job?.position || '-'}
-                        </div>
-                        <div className='text-xs text-[color:var(--text-secondary)] truncate'>
-                          {alum.job?.institution || '-'}
-                        </div>
-                      </div>
-                    </td>
-                    <td className='px-6 py-4'>
-                      <div className='flex gap-2'>
-                        {alum.socialMedia?.linkedin && (
-                          <a
-                            href={
-                              (alum.socialMedia.linkedin.startsWith('http')
-                                ? ''
-                                : 'https://') + alum.socialMedia.linkedin
-                            }
-                            target='_blank'
-                            rel='noreferrer'
-                            className='text-blue-600 hover:text-blue-800'
-                          >
-                            <FaLinkedin size={16} />
-                          </a>
-                        )}
-                        {alum.socialMedia?.instagram && (
-                          <a
-                            href={alum.socialMedia.instagram}
-                            target='_blank'
-                            rel='noreferrer'
-                            className='text-pink-600 hover:text-pink-800'
-                          >
-                            <FaInstagram size={16} />
-                          </a>
-                        )}
-                        {alum.socialMedia?.email && (
-                          <a
-                            href={`mailto:${alum.socialMedia.email}`}
-                            className='text-gray-600 hover:text-gray-800 dark:text-gray-400'
-                          >
-                            <FaEnvelope size={16} />
-                          </a>
-                        )}
-                        {!alum.socialMedia?.linkedin &&
-                          !alum.socialMedia?.instagram &&
-                          !alum.socialMedia?.email && (
-                            <span className='text-xs text-gray-400'>-</span>
-                          )}
-                      </div>
-                    </td>
-                    <td className='px-6 py-4'>
-                      {alum.questionnaireCompleted ? (
-                        <span className='flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400'>
-                          <FaCheckCircle /> Lengkap
-                        </span>
-                      ) : (
-                        <span className='flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400'>
-                          <FaTimesCircle /> Belum
-                        </span>
+      <TableContainer>
+        <TableHeader>
+          <TableHeadCell>Nama & Email</TableHeadCell>
+          <TableHeadCell>Pendidikan</TableHeadCell>
+          <TableHeadCell>Pekerjaan</TableHeadCell>
+          <TableHeadCell>Media Sosial</TableHeadCell>
+          <TableHeadCell>Survei</TableHeadCell>
+          <TableHeadCell>Aksi</TableHeadCell>
+        </TableHeader>
+        <TableBody>
+          {alumni.length === 0 ? (
+            <TableRow>
+              <TableCell
+                colSpan={6}
+                className='p-8 text-center text-[color:var(--text-secondary)]'
+              >
+                Tidak ada data alumni yang ditemukan.
+              </TableCell>
+            </TableRow>
+          ) : (
+            alumni.map((alum) => (
+              <TableRow
+                key={alum._id}
+              >
+                <TableCell>
+                  <div>
+                    <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
+                      {alum.profile?.fullName || '-'}
+                      {alum.isMentor && (
+                        <FaCrown
+                          className='text-amber-500 text-[10px]'
+                          title='Mentor Aktif'
+                        />
                       )}
-                    </td>
-                    <td className='px-6 py-4'>
-                      <div className='flex gap-2'>
-                        <button
-                          onClick={() => handleEdit(alum)}
-                          className='rounded p-2 text-amber-500 hover:bg-amber-50 hover:text-amber-700 transition-colors dark:hover:bg-amber-900/20'
-                          title='Edit Alumni'
-                        >
-                          <FaEdit size={14} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(alum._id)}
-                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
-                          title='Hapus Alumni'
-                        >
-                          <FaTrash size={14} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+                    </div>
+                    <div className='text-xs text-[color:var(--text-secondary)]'>
+                      {alum.email}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='max-w-[200px]'>
+                    <div
+                      className='font-medium text-[color:var(--text-primary)] truncate'
+                      title={alum.university?.name}
+                    >
+                      {alum.university?.name || '-'}
+                    </div>
+                    <div
+                      className='text-xs text-[color:var(--text-secondary)] truncate'
+                      title={alum.university?.major}
+                    >
+                      {alum.university?.major || '-'}{' '}
+                      <span className='mx-1'>•</span>{' '}
+                      {alum.profile?.graduationYear}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='max-w-[150px]'>
+                    <div className='font-medium text-[color:var(--text-primary)] truncate'>
+                      {alum.job?.position || '-'}
+                    </div>
+                    <div className='text-xs text-[color:var(--text-secondary)] truncate'>
+                      {alum.job?.institution || '-'}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className='flex gap-2'>
+                    {alum.socialMedia?.linkedin && (
+                      <a
+                        href={
+                          (alum.socialMedia.linkedin.startsWith('http')
+                            ? ''
+                            : 'https://') + alum.socialMedia.linkedin
+                        }
+                        target='_blank'
+                        rel='noreferrer'
+                        className='text-blue-600 hover:text-blue-800'
+                      >
+                        <FaLinkedin size={16} />
+                      </a>
+                    )}
+                    {alum.socialMedia?.instagram && (
+                      <a
+                        href={alum.socialMedia.instagram}
+                        target='_blank'
+                        rel='noreferrer'
+                        className='text-pink-600 hover:text-pink-800'
+                      >
+                        <FaInstagram size={16} />
+                      </a>
+                    )}
+                    {alum.socialMedia?.email && (
+                      <a
+                        href={`mailto:${alum.socialMedia.email}`}
+                        className='text-gray-600 hover:text-gray-800 dark:text-gray-400'
+                      >
+                        <FaEnvelope size={16} />
+                      </a>
+                    )}
+                    {!alum.socialMedia?.linkedin &&
+                      !alum.socialMedia?.instagram &&
+                      !alum.socialMedia?.email && (
+                        <span className='text-xs text-gray-400'>-</span>
+                      )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {alum.questionnaireCompleted ? (
+                    <span className='flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400'>
+                      <FaCheckCircle /> Lengkap
+                    </span>
+                  ) : (
+                    <span className='flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400'>
+                      <FaTimesCircle /> Belum
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className='flex gap-2'>
+                    <button
+                      onClick={() => handleEdit(alum)}
+                      className='rounded p-2 text-amber-500 hover:bg-amber-50 hover:text-amber-700 transition-colors dark:hover:bg-amber-900/20'
+                      title='Edit Alumni'
+                    >
+                      <FaEdit size={14} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(alum._id)}
+                      className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
+                      title='Hapus Alumni'
+                    >
+                      <FaTrash size={14} />
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </TableContainer>
 
       {/* Pagination */}
-      <div className='mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row'>
-        <div className='text-sm text-[color:var(--text-secondary)]'>
-          Menampilkan{' '}
-          <span className='font-medium'>
-            {(pagination.page - 1) * pagination.limit + 1}
-          </span>{' '}
-          -{' '}
-          <span className='font-medium'>
-            {Math.min(pagination.page * pagination.limit, pagination.total)}
-          </span>{' '}
-          dari <span className='font-medium'>{pagination.total}</span> data
-        </div>
-        <div className='flex items-center gap-2'>
-          <button
-            onClick={() =>
-              setPagination({
-                ...pagination,
-                page: Math.max(1, pagination.page - 1),
-              })
-            }
-            disabled={pagination.page === 1}
-            className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
-          >
-            Previous
-          </button>
-          <span className='rounded-lg bg-[var(--primary)]/10 px-4 py-2 text-sm font-medium text-[var(--primary)]'>
-            {pagination.page} / {pagination.pages}
-          </span>
-          <button
-            onClick={() =>
-              setPagination({
-                ...pagination,
-                page: Math.min(pagination.pages, pagination.page + 1),
-              })
-            }
-            disabled={pagination.page >= pagination.pages}
-            className='rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <Pagination
+        currentPage={pagination.page}
+        totalPages={pagination.pages}
+        totalItems={pagination.total}
+        itemsPerPage={pagination.limit}
+        onPageChange={(page) =>
+          setPagination({
+            ...pagination,
+            page,
+          })
+        }
+      />
 
       {editingAlumni &&
         createPortal(

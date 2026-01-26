@@ -9,6 +9,17 @@ import {
   FaMedal,
   FaCrown,
 } from 'react-icons/fa';
+import PageHeader from '@/components/common/PageHeader';
+import Card from '@/components/common/Card';
+import Pagination from '@/components/common/Pagination';
+import {
+  TableContainer,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableCell,
+  TableHeadCell,
+} from '@/components/common/Table';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
@@ -130,29 +141,22 @@ const StudentAlumni = () => {
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       {/* Header Section */}
-      <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='text-center md:text-left mb-2'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-            Data Alumni
-          </h1>
-          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-            Temukan informasi Alumni
-          </p>
-        </div>
-
+      <PageHeader
+        title='Data Alumni'
+        description='Temukan informasi Alumni'
+      >
         <button
           onClick={() => setShowFilters(!showFilters)}
           className='max-w-sm md:hidden flex items-center justify-center gap-2 w-full py-2 bg-[var(--primary)] text-white rounded-lg'
         >
           <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Alumni'}
         </button>
-      </div>
+      </PageHeader>
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
-      <div
-        className={`mb-8 p-4 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-xl shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+      <Card
+        className={`mb-8 p-4 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
           {/* Search Name */}
@@ -271,7 +275,7 @@ const StudentAlumni = () => {
             </button>
           </div>
         </div>
-      </div>
+      </Card>
 
       {/* Alumni Table */}
       {!loading && alumni.length === 0 ? (
@@ -286,204 +290,169 @@ const StudentAlumni = () => {
         </div>
       ) : (
         <div className='max-w-sm md:max-w-full'>
-          <div className='overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-sm'>
-            <div className='overflow-x-auto'>
-              <table className='w-full text-left text-xs md:text-sm'>
-                <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] uppercase tracking-wider font-medium border-b border-[color:var(--border-color)]'>
-                  <tr>
-                    <th className='px-6 py-4 w-16'>No</th>
-                    <th className='px-6 py-4'>Nama Alumni</th>
-                    <th className='px-6 py-4'>Tahun</th>
-                    <th className='px-6 py-4'>Pendidikan</th>
-                    <th className='px-6 py-4'>Pekerjaan</th>
-                  </tr>
-                </thead>
-                <tbody className='divide-y divide-[color:var(--border-color)]'>
-                  {loading
-                    ? // Skeleton Loading Rows
-                      Array.from({ length: 10 }).map((_, index) => (
-                        <tr key={`skeleton-${index}`}>
-                          <td className='px-6 py-4'>
-                            <div className='h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex items-center gap-3'>
-                              <div className='flex flex-col gap-2'>
-                                <div className='h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                                <div className='h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                              </div>
+          <TableContainer>
+            <TableHeader>
+              <TableHeadCell className='w-16'>No</TableHeadCell>
+              <TableHeadCell>Nama Alumni</TableHeadCell>
+              <TableHeadCell>Tahun</TableHeadCell>
+              <TableHeadCell>Pendidikan</TableHeadCell>
+              <TableHeadCell>Pekerjaan</TableHeadCell>
+            </TableHeader>
+            <TableBody>
+              {loading
+                ? // Skeleton Loading Rows
+                Array.from({ length: 10 }).map((_, index) => (
+                  <TableRow key={`skeleton-${index}`}>
+                    <TableCell>
+                      <div className='h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex items-center gap-3'>
+                        <div className='flex flex-col gap-2'>
+                          <div className='h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                          <div className='h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse'></div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex flex-col gap-2'>
+                        <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex flex-col gap-2'>
+                        <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+                : alumni.map((alum, index) => (
+                  <TableRow
+                    key={alum._id}
+                    className='group'
+                  >
+                    <TableCell className='text-sm text-[color:var(--text-secondary)]'>
+                      {(pagination.page - 1) * pagination.limit +
+                        index +
+                        1}
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex items-center gap-3'>
+                        <div>
+                          <div className='flex items-center gap-2'>
+                            <div className='font-semibold text-[color:var(--text-primary)]'>
+                              {alum.profile?.fullName || '-'}
                             </div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse'></div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex flex-col gap-2'>
-                              <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                              <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                            </div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex flex-col gap-2'>
-                              <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                              <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                            </div>
-                          </td>
-                        </tr>
-                      ))
-                    : alumni.map((alum, index) => (
-                        <tr
-                          key={alum._id}
-                          className='group hover:bg-[color:var(--bg-tertiary)]/50 transition-colors duration-200'
-                        >
-                          <td className='px-6 py-4 text-sm text-[color:var(--text-secondary)]'>
-                            {(pagination.page - 1) * pagination.limit +
-                              index +
-                              1}
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex items-center gap-3'>
-                              <div>
-                                <div className='flex items-center gap-2'>
-                                  <div className='font-semibold text-[color:var(--text-primary)]'>
-                                    {alum.profile?.fullName || '-'}
-                                  </div>
-                                </div>
-                                <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
-                                  {alum.isMentor && (
-                                    <span className='flex items-center gap-1 text-amber-600 font-bold'>
-                                      <FaCrown className='text-xs' />
-                                      Mentor
-                                    </span>
-                                  )}
-                                  {alum.isMentor &&
-                                    alum.badges &&
-                                    alum.badges.length > 0 && (
-                                      <span className='text-gray-600 font-bold'>
-                                        •
-                                      </span>
-                                    )}
-                                  {alum.badges && alum.badges.length > 0 && (
-                                    <div className='flex gap-1 items-center'>
-                                      {alum.badges.map(
-                                        (badge: any, idx: number) => (
-                                          <div
-                                            key={idx}
-                                            className='text-blue-500'
-                                            title={badge.name}
-                                          >
-                                            <FaMedal className='text-xs' />
-                                          </div>
-                                        ),
-                                      )}
-                                      {alum.badges.map(
-                                        (badge: any, idx: number) => (
-                                          <span
-                                            key={idx}
-                                            className='text-xs text-blue-500'
-                                          >
-                                            {badge.name}
-                                          </span>
-                                        ),
-                                      )}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
-                              {alum.profile?.graduationYear || '-'}
-                            </span>
-                          </td>
-                          <td className='px-6 py-4'>
-                            <div className='flex flex-col min-w-[200px]'>
-                              <span
-                                className='font-medium text-[color:var(--text-primary)] '
-                                title={alum.university?.name}
-                              >
-                                {alum.university?.name || '-'}
-                              </span>
-                              <span
-                                className='text-xs text-[color:var(--text-secondary)]'
-                                title={alum.university?.major}
-                              >
-                                {alum.university?.major || '-'}
-                              </span>
-                            </div>
-                          </td>
-                          <td className='px-6 py-4'>
-                            {alum.job?.position || alum.job?.institution ? (
-                              <div className='flex flex-col max-w-[200px]'>
-                                <span
-                                  className='font-medium text-[color:var(--text-primary)] truncate'
-                                  title={alum.job?.position}
-                                >
-                                  {alum.job?.position || 'Bekerja'}
-                                </span>
-                                <span
-                                  className='text-xs text-[color:var(--text-secondary)] truncate'
-                                  title={alum.job?.institution}
-                                >
-                                  {alum.job?.institution || '-'}
-                                </span>
-                              </div>
-                            ) : (
-                              <span className='text-[color:var(--text-secondary)] italic'>
-                                -
+                          </div>
+                          <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
+                            {alum.isMentor && (
+                              <span className='flex items-center gap-1 text-amber-600 font-bold'>
+                                <FaCrown className='text-xs' />
+                                Mentor
                               </span>
                             )}
-                          </td>
-                        </tr>
-                      ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+                            {alum.isMentor &&
+                              alum.badges &&
+                              alum.badges.length > 0 && (
+                                <span className='text-gray-600 font-bold'>
+                                  •
+                                </span>
+                              )}
+                            {alum.badges && alum.badges.length > 0 && (
+                              <div className='flex gap-1 items-center'>
+                                {alum.badges.map(
+                                  (badge: any, idx: number) => (
+                                    <div
+                                      key={idx}
+                                      className='text-blue-500'
+                                      title={badge.name}
+                                    >
+                                      <FaMedal className='text-xs' />
+                                    </div>
+                                  ),
+                                )}
+                                {alum.badges.map(
+                                  (badge: any, idx: number) => (
+                                    <span
+                                      key={idx}
+                                      className='text-xs text-blue-500'
+                                    >
+                                      {badge.name}
+                                    </span>
+                                  ),
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
+                        {alum.profile?.graduationYear || '-'}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex flex-col min-w-[200px]'>
+                        <span
+                          className='font-medium text-[color:var(--text-primary)] '
+                          title={alum.university?.name}
+                        >
+                          {alum.university?.name || '-'}
+                        </span>
+                        <span
+                          className='text-xs text-[color:var(--text-secondary)]'
+                          title={alum.university?.major}
+                        >
+                          {alum.university?.major || '-'}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {alum.job?.position || alum.job?.institution ? (
+                        <div className='flex flex-col max-w-[200px]'>
+                          <span
+                            className='font-medium text-[color:var(--text-primary)] truncate'
+                            title={alum.job?.position}
+                          >
+                            {alum.job?.position || 'Bekerja'}
+                          </span>
+                          <span
+                            className='text-xs text-[color:var(--text-secondary)] truncate'
+                            title={alum.job?.institution}
+                          >
+                            {alum.job?.institution || '-'}
+                          </span>
+                        </div>
+                      ) : (
+                        <span className='text-[color:var(--text-secondary)] italic'>
+                          -
+                        </span>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </TableContainer>
 
           {/* Pagination */}
-          <div className='mt-6 flex flex-col sm:flex-row items-center justify-between gap-4'>
-            <div className='text-sm text-[color:var(--text-secondary)]'>
-              Menampilkan {(pagination.page - 1) * pagination.limit + 1} -{' '}
-              {Math.min(pagination.page * pagination.limit, pagination.total)}{' '}
-              dari {pagination.total} data
-            </div>
-            <div className='flex items-center gap-2'>
-              <button
-                onClick={() =>
-                  setPagination({
-                    ...pagination,
-                    page: Math.max(1, pagination.page - 1),
-                  })
-                }
-                disabled={pagination.page === 1}
-                className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
-              >
-                Previous
-              </button>
-              <div className='flex items-center gap-1'>
-                {Array.from({ length: Math.min(5, pagination.pages) }, (_) => {
-                  return null;
-                })}
-                <span className='px-4 py-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] text-sm font-medium'>
-                  Page {pagination.page} of {pagination.pages}
-                </span>
-              </div>
-              <button
-                onClick={() =>
-                  setPagination({
-                    ...pagination,
-                    page: Math.min(pagination.pages, pagination.page + 1),
-                  })
-                }
-                disabled={pagination.page >= pagination.pages}
-                className='px-4 py-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed transition-colors'
-              >
-                Next
-              </button>
-            </div>
-          </div>
+          <Pagination
+            currentPage={pagination.page}
+            totalPages={pagination.pages}
+            totalItems={pagination.total}
+            itemsPerPage={pagination.limit}
+            onPageChange={(page) =>
+              setPagination({
+                ...pagination,
+                page,
+              })
+            }
+          />
         </div>
       )}
     </div>

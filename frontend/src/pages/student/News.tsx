@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
 import SmartLoader from '@/components/SmartLoader';
+import PageHeader from '@/components/common/PageHeader';
 
 const StudentNews = () => {
   const { user } = useAuth();
@@ -43,14 +44,10 @@ const StudentNews = () => {
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
-      <div className='text-center md:text-left mb-10'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Berita & Artikel
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Informasi terbaru seputar Alumni dan SMANTA
-        </p>
-      </div>
+      <PageHeader
+        title='Berita & Artikel'
+        description='Informasi terbaru seputar Alumni dan SMANTA'
+      />
 
       <NewsList news={news} onNewsClick={handleNewsClick} />
     </div>
