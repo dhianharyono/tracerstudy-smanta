@@ -144,9 +144,9 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
       <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
         <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
           <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'>
-            <FaCommentDots className='text-xl' />
+            <FaCommentDots className='text-lg md:text-xl' />
           </div>
-          <h2 className='text-lg md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
             Formulir Masukan
           </h2>
         </div>
