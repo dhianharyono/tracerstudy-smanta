@@ -33,7 +33,7 @@ const AlumniDashboard = () => {
         const [profileRes, statsRes, newsRes, mutualRes] = await Promise.all([
           axios.get('/api/alumni/profile'),
           axios.get('/api/alumni/dashboard'),
-          axios.get('/api/alumni/news'),
+          axios.get('/api/alumni/news?limit=3'),
           axios.get('/api/alumni/mutual-alumni').catch(() => ({ data: [] })),
         ]);
         setProfile(profileRes.data);

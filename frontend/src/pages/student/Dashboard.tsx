@@ -31,8 +31,8 @@ const StudentDashboard = () => {
       try {
         const [statsRes, newsRes, eventsRes] = await Promise.all([
           axios.get('/api/student/dashboard'),
-          axios.get('/api/student/news'),
-          axios.get('/api/events'),
+          axios.get('/api/student/news?limit=3'),
+          axios.get('/api/events?limit=1'),
           axios
             .get('/api/student/news/unread-count')
             .catch(() => ({ data: { count: 0 } })),
@@ -88,10 +88,10 @@ const StudentDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   if (loading) {

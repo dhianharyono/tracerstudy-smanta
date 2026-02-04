@@ -19,10 +19,10 @@ const AdminDashboard = () => {
       try {
         const [statsRes, newsRes] = await Promise.all([
           axios.get('/api/admin/dashboard'),
-          axios.get('/api/admin/news'),
+          axios.get('/api/admin/news?limit=3&isPublished=true'),
         ]);
         setStats(statsRes.data);
-        setNews(newsRes.data.filter((n: any) => n.isPublished).slice(0, 3));
+        setNews(newsRes.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -64,10 +64,10 @@ const AdminDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-        { name: 'PTN', value: stats.universityTypes.negeri },
-        { name: 'PTS', value: stats.universityTypes.swasta },
-        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-      ]
+      { name: 'PTN', value: stats.universityTypes.negeri },
+      { name: 'PTS', value: stats.universityTypes.swasta },
+      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+    ]
     : [];
 
   return (

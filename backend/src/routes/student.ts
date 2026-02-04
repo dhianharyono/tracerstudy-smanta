@@ -72,71 +72,91 @@ router.get('/alumni-map', async (req: Request, res: Response) => {
 
 router.get('/dashboard', async (req: Request, res: Response) => {
   try {
-    const [
-      totalAlumni,
-      completedQuestionnaire,
-      workingAlumni,
-      studyingAlumni,
-      activeMentors,
-      negeriCount,
-      swastaCount,
-      kedinasanCount,
-      majorStats,
-      yearStats,
-    ] = await Promise.all([
-      User.countDocuments({ role: 'alumni' }),
-      User.countDocuments({ role: 'alumni', questionnaireCompleted: true }),
-      User.countDocuments({ role: 'alumni', 'profile.isWorking': true }),
-      User.countDocuments({ role: 'alumni', 'profile.isStudying': true }),
-      User.countDocuments({ role: 'alumni', isMentor: true }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
-      User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'university.major': { $exists: true, $ne: null },
-          },
+    const [stats] = await User.aggregate([
+      {
+        $facet: {
+          totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
+          completedQuestionnaire: [
+            { $match: { role: 'alumni', questionnaireCompleted: true } },
+            { $count: 'count' },
+          ],
+          workingAlumni: [
+            { $match: { role: 'alumni', 'profile.isWorking': true } },
+            { $count: 'count' },
+          ],
+          studyingAlumni: [
+            { $match: { role: 'alumni', 'profile.isStudying': true } },
+            { $count: 'count' },
+          ],
+          activeMentors: [
+            { $match: { role: 'alumni', isMentor: true } },
+            { $count: 'count' },
+          ],
+          universityTypes: [
+            {
+              $match: {
+                role: 'alumni',
+                'university.type': { $in: ['negeri', 'swasta', 'kedinasan'] },
+              },
+            },
+            {
+              $group: {
+                _id: '$university.type',
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          majorStats: [
+            {
+              $match: {
+                role: 'alumni',
+                'university.major': { $exists: true, $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: '$university.major',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { count: -1 } },
+          ],
+          yearStats: [
+            {
+              $match: {
+                role: 'alumni',
+                'profile.graduationYear': { $exists: true, $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: '$profile.graduationYear',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: -1 } },
+          ],
         },
-        {
-          $group: {
-            _id: '$university.major',
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { count: -1 } },
-      ]),
-      User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'profile.graduationYear': { $exists: true, $ne: null },
-          },
-        },
-        {
-          $group: {
-            _id: '$profile.graduationYear',
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { _id: -1 } },
-      ]),
+      },
     ]);
 
+    const getCount = (arr: any[]) => (arr && arr.length > 0 ? arr[0].count : 0);
+    const getMap = (arr: any[]) =>
+      arr.reduce((acc, curr) => ({ ...acc, [curr._id]: curr.count }), {
+        negeri: 0,
+        swasta: 0,
+        kedinasan: 0,
+      });
+
     res.json({
-      totalAlumni,
-      completedQuestionnaire,
-      workingAlumni,
-      studyingAlumni,
-      activeMentors,
-      universityTypes: {
-        negeri: negeriCount,
-        swasta: swastaCount,
-        kedinasan: kedinasanCount,
-      },
-      majorStats,
-      yearStats,
+      totalAlumni: getCount(stats.totalAlumni),
+      completedQuestionnaire: getCount(stats.completedQuestionnaire),
+      workingAlumni: getCount(stats.workingAlumni),
+      studyingAlumni: getCount(stats.studyingAlumni),
+      activeMentors: getCount(stats.activeMentors),
+      universityTypes: getMap(stats.universityTypes),
+      majorStats: stats.majorStats,
+      yearStats: stats.yearStats,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -333,12 +353,19 @@ router.get('/alumni', async (req: Request, res: Response) => {
   }
 });
 
+// Get all news
 router.get('/news', async (req: AuthenticatedRequest, res: Response) => {
   try {
-    const news = await News.find({
+    const query = News.find({
       isPublished: true,
       $or: [{ type: 'student' }, { type: 'all' }],
-    })
+    });
+
+    if (req.query.limit) {
+      query.limit(parseInt(req.query.limit as string));
+    }
+
+    const news = await query
       .populate('author', 'username')
       .sort({ createdAt: -1 });
 

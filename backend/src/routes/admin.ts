@@ -85,78 +85,99 @@ router.get('/alumni-map', async (req: Request, res: Response) => {
 // Dashboard statistics
 router.get('/dashboard', async (req: Request, res: Response) => {
   try {
-    const [
-      totalAlumni,
-      totalStudents,
-      completedQuestionnaire,
-      workingAlumni,
-      studyingAlumni,
-      negeriCount,
-      swastaCount,
-      kedinasanCount,
-      totalMentors,
-      majorStats,
-      yearStats,
-    ] = await Promise.all([
-      User.countDocuments({ role: 'alumni' }),
-      User.countDocuments({ role: 'student' }),
-      User.countDocuments({ role: 'alumni', questionnaireCompleted: true }),
-      User.countDocuments({ role: 'alumni', 'profile.isWorking': true }),
-      User.countDocuments({ role: 'alumni', 'profile.isStudying': true }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'negeri' }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'swasta' }),
-      User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' }),
-      User.countDocuments({ role: 'alumni', isMentor: true }),
-      User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'university.major': { $exists: true, $ne: null },
-          },
+    const [stats] = await User.aggregate([
+      {
+        $facet: {
+          totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
+          totalStudents: [{ $match: { role: 'student' } }, { $count: 'count' }],
+          completedQuestionnaire: [
+            { $match: { role: 'alumni', questionnaireCompleted: true } },
+            { $count: 'count' },
+          ],
+          workingAlumni: [
+            { $match: { role: 'alumni', 'profile.isWorking': true } },
+            { $count: 'count' },
+          ],
+          studyingAlumni: [
+            { $match: { role: 'alumni', 'profile.isStudying': true } },
+            { $count: 'count' },
+          ],
+          universityTypes: [
+            {
+              $match: {
+                role: 'alumni',
+                'university.type': { $in: ['negeri', 'swasta', 'kedinasan'] },
+              },
+            },
+            {
+              $group: {
+                _id: '$university.type',
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          totalMentors: [
+            { $match: { role: 'alumni', isMentor: true } },
+            { $count: 'count' },
+          ],
+          majorStats: [
+            {
+              $match: {
+                role: 'alumni',
+                'university.major': { $exists: true, $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: '$university.major',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { count: -1 } },
+          ],
+          yearStats: [
+            {
+              $match: {
+                role: 'alumni',
+                'profile.graduationYear': { $exists: true, $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: '$profile.graduationYear',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: -1 } },
+          ],
         },
-        {
-          $group: {
-            _id: '$university.major',
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { count: -1 } },
-      ]),
-      User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'profile.graduationYear': { $exists: true, $ne: null },
-          },
-        },
-        {
-          $group: {
-            _id: '$profile.graduationYear',
-            count: { $sum: 1 },
-          },
-        },
-        { $sort: { _id: -1 } },
-      ]),
+      },
     ]);
 
+    const onlineUsers = await User.countDocuments({
+      lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+      role: { $in: ['student', 'alumni'] },
+    });
+
+    const getCount = (arr: any[]) => (arr && arr.length > 0 ? arr[0].count : 0);
+    const getMap = (arr: any[]) =>
+      arr.reduce((acc, curr) => ({ ...acc, [curr._id]: curr.count }), {
+        negeri: 0,
+        swasta: 0,
+        kedinasan: 0,
+      });
+
     res.json({
-      totalAlumni,
-      totalStudents,
-      completedQuestionnaire,
-      workingAlumni,
-      studyingAlumni,
-      totalMentors,
-      universityTypes: {
-        negeri: negeriCount,
-        swasta: swastaCount,
-        kedinasan: kedinasanCount,
-      },
-      yearStats,
-      majorStats,
-      onlineUsers: await User.countDocuments({
-        lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
-        role: { $in: ['student', 'alumni'] },
-      }),
+      totalAlumni: getCount(stats.totalAlumni),
+      totalStudents: getCount(stats.totalStudents),
+      completedQuestionnaire: getCount(stats.completedQuestionnaire),
+      workingAlumni: getCount(stats.workingAlumni),
+      studyingAlumni: getCount(stats.studyingAlumni),
+      totalMentors: getCount(stats.totalMentors),
+      universityTypes: getMap(stats.universityTypes),
+      yearStats: stats.yearStats,
+      majorStats: stats.majorStats,
+      onlineUsers,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -732,7 +753,17 @@ router.delete('/admins/:id', async (req: Request, res: Response) => {
 // Get all news
 router.get('/news', async (req: Request, res: Response) => {
   try {
-    const news = await News.find()
+    const query = News.find();
+
+    if (req.query.isPublished === 'true') {
+      query.where('isPublished').equals(true);
+    }
+
+    if (req.query.limit) {
+      query.limit(parseInt(req.query.limit as string));
+    }
+
+    const news = await query
       .populate('author', 'username')
       .sort({ createdAt: -1 });
     res.json(news);

@@ -27,7 +27,19 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
             query = { isActive: true };
         }
 
-        const events = await Event.find(query).populate('badgeId').sort({ date: 1 });
+        const limit = req.query.limit ? parseInt(req.query.limit as string) : 0;
+        const sort = { date: 1 }; // Upcoming events first? or recently created? Schema has date. Usually for events "Upcoming" means date >= now.
+
+        // If limit is set, we probably want the *next* upcoming events, or closest to now.
+        // Existing code sorts by date: 1 (ascending).
+
+        let dbQuery = Event.find(query).populate('badgeId').sort({ date: 1 });
+
+        if (limit > 0) {
+            dbQuery = dbQuery.limit(limit);
+        }
+
+        const events = await dbQuery;
 
         const eventsWithCounts = await Promise.all(events.map(async (event) => {
             const count = await EventRegistration.countDocuments({ eventId: event._id });
