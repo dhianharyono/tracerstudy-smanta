@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import { FaGraduationCap, FaUsers, FaBriefcase, FaUniversity, FaQuoteLeft } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
@@ -40,7 +41,12 @@ const LandingPage = () => {
     return (
         <div className="bg-[color:var(--bg-primary)] min-h-screen font-sans selection:bg-[var(--primary)] selection:text-white">
             {/* Navigation Overlay */}
-            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[color:var(--bg-card)]/80 backdrop-blur-md shadow-lg py-2' : 'bg-transparent py-4'}`}>
+            <motion.nav
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+                className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[color:var(--bg-card)]/80 backdrop-blur-md shadow-lg py-2' : 'bg-transparent py-4'}`}
+            >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center">
                     <div className="flex items-center gap-2 md:gap-3">
                         <img src="/logo.png" alt="Smanta Logo" className="h-8 w-8 md:h-12 md:w-12" />
@@ -58,7 +64,7 @@ const LandingPage = () => {
                         </Link>
                     </div>
                 </div>
-            </nav>
+            </motion.nav>
 
             {/* Hero Section */}
             <section className="relative pt-24 pb-16 md:pt-48 md:pb-32 overflow-hidden px-4 sm:px-6">
@@ -68,7 +74,13 @@ const LandingPage = () => {
                 </div>
 
                 <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-                    <div className="space-y-6 md:space-y-8 animate-fade-in text-center lg:text-left">
+                    <motion.div
+                        initial={{ opacity: 0, x: -50 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: 'easeOut' }}
+                        className="space-y-6 md:space-y-8 text-center lg:text-left"
+                    >
                         <div className="inline-flex items-center gap-2 bg-blue-500/10 text-blue-600 dark:text-blue-400 px-3 py-1 md:px-4 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider border border-blue-500/20 mx-auto lg:mx-0">
                             <span className="relative flex h-2 w-2">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
@@ -90,8 +102,14 @@ const LandingPage = () => {
                                 Lihat Statistik
                             </a>
                         </div>
-                    </div>
-                    <div className="relative animate-float mt-8 lg:mt-0 px-2 sm:px-0">
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, delay: 0.2 }}
+                        className="relative pt-10 lg:pt-0"
+                    >
                         <div className="relative z-10 w-full rounded-2xl md:rounded-3xl overflow-hidden shadow-2xl border-2 md:border-4 border-white/10 group bg-[color:var(--bg-tertiary)]">
                             <div className="absolute inset-0 bg-blue-900/10 group-hover:bg-transparent transition-all duration-300"></div>
                             <img src="/smanta.webp" alt="Alumni SMANTA" className="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-all duration-700 min-h-[250px] md:min-h-[400px]" />
@@ -112,12 +130,18 @@ const LandingPage = () => {
                         {/* Decorative elements */}
                         <div className="absolute -top-6 -left-6 md:-top-10 md:-left-10 w-24 h-24 md:w-32 md:h-32 bg-blue-500/20 rounded-full -z-10 blur-xl md:blur-2xl"></div>
                         <div className="absolute -bottom-6 -right-6 md:-bottom-10 md:-right-10 w-32 h-32 md:w-48 md:h-48 bg-indigo-500/20 rounded-full -z-10 blur-2xl md:blur-3xl"></div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Mission/Philosophy Section */}
-            <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
+            <motion.section
+                initial={{ opacity: 0, y: 100 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ duration: 0.8 }}
+                className="py-20 px-4 sm:px-6 relative overflow-hidden"
+            >
                 <div className="max-w-5xl mx-auto">
                     <div className="bg-gradient-to-br from-[color:var(--bg-card)] to-[color:var(--bg-secondary)] p-8 md:p-16 rounded-[40px] border border-[color:var(--border-color)] shadow-2xl relative">
                         <div className="absolute top-0 right-0 p-8 opacity-5">
@@ -126,10 +150,15 @@ const LandingPage = () => {
 
                         <div className="relative z-10 space-y-10">
                             <div className="space-y-4">
-                                <h3 className="text-xl md:text-3xl font-black text-[color:var(--text-primary)] leading-tight">
+                                <motion.h3
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true }}
+                                    className="text-xl md:text-3xl font-black text-[color:var(--text-primary)] leading-tight"
+                                >
                                     Menavigasi Persimpangan Jalan <br className="hidden md:block" />
                                     <span className="text-[var(--primary)]">Masa Depan Alumni SMANTA</span>
-                                </h3>
+                                </motion.h3>
                                 <div className="w-16 h-1 bg-[var(--primary)] rounded-full"></div>
                             </div>
 
@@ -158,20 +187,31 @@ const LandingPage = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Features Section */}
             <section className="py-20 px-4 sm:px-6 bg-[color:var(--bg-secondary)]/10">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16 space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16 space-y-4"
+                    >
                         <h3 className="text-2xl md:text-4xl font-black text-[color:var(--text-primary)]">Fitur Siswa dan Alumni</h3>
                         <div className="w-16 md:w-20 h-1.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 mx-auto rounded-full"></div>
                         <p className="text-sm md:text-base text-[color:var(--text-secondary)] max-w-2xl mx-auto">Dirancang untuk memudahkan interaksi dan memberikan manfaat nyata bagi seluruh warga SMANTA.</p>
-                    </div>
+                    </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
                         {/* Student Features */}
-                        <div className="bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group">
+                        <motion.div
+                            initial={{ opacity: 0, x: -50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group"
+                        >
                             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-full group-hover:scale-110 transition-transform"></div>
                             <div className="relative z-10">
                                 <div className="flex items-center gap-4 mb-8">
@@ -198,10 +238,16 @@ const LandingPage = () => {
                                     ))}
                                 </ul>
                             </div>
-                        </div>
+                        </motion.div>
 
                         {/* Alumni Features */}
-                        <div className="bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group">
+                        <motion.div
+                            initial={{ opacity: 0, x: 50 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.6 }}
+                            className="bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group"
+                        >
                             <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full group-hover:scale-110 transition-transform"></div>
                             <div className="relative z-10">
                                 <div className="flex items-center gap-4 mb-8">
@@ -228,7 +274,7 @@ const LandingPage = () => {
                                     ))}
                                 </ul>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
@@ -236,44 +282,48 @@ const LandingPage = () => {
             {/* Stats Dashboard Section */}
             <section id="stats" className="py-20 px-4 sm:px-6 relative bg-[color:var(--bg-secondary)]/20">
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16 space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16 space-y-4"
+                    >
                         <h3 className="text-2xl md:text-4xl font-black text-[color:var(--text-primary)]">Statistik Tracer Study</h3>
                         <div className="w-16 md:w-20 h-1.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 mx-auto rounded-full"></div>
                         <p className="text-sm md:text-base text-[color:var(--text-secondary)] max-w-2xl mx-auto">Pantau pencapaian alumni kita di berbagai sektor dan perguruan tinggi favorit.</p>
-                    </div>
+                    </motion.div>
 
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12">
-                        <div className="bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-blue-500/10 rounded-lg md:rounded-2xl flex items-center justify-center text-blue-500 mb-4 md:mb-6">
-                                <FaUsers size={20} className="md:w-[28px] md:h-[28px]" />
-                            </div>
-                            <h4 className="text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight">{stats?.totalAlumni || 0}</h4>
-                            <p className="font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest">Total Alumni</p>
-                        </div>
-                        <div className="bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-green-500/10 rounded-lg md:rounded-2xl flex items-center justify-center text-green-500 mb-4 md:mb-6">
-                                <FaBriefcase size={20} className="md:w-[28px] md:h-[28px]" />
-                            </div>
-                            <h4 className="text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight">{stats?.workingAlumni || 0}</h4>
-                            <p className="font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest">Dunia Kerja</p>
-                        </div>
-                        <div className="bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-purple-500/10 rounded-lg md:rounded-2xl flex items-center justify-center text-purple-500 mb-4 md:mb-6">
-                                <FaGraduationCap size={20} className="md:w-[28px] md:h-[28px]" />
-                            </div>
-                            <h4 className="text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight">{stats?.studyingAlumni || 0}</h4>
-                            <p className="font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest">Pendidikan Lanjut</p>
-                        </div>
-                        <div className="bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300">
-                            <div className="w-10 h-10 md:w-14 md:h-14 bg-amber-500/10 rounded-lg md:rounded-2xl flex items-center justify-center text-amber-500 mb-4 md:mb-6">
-                                <FaUniversity size={20} className="md:w-[28px] md:h-[28px]" />
-                            </div>
-                            <h4 className="text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight">{stats?.topUniversities?.length || 0}</h4>
-                            <p className="font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest">Kampus Terhubung</p>
-                        </div>
+                        {/* Stats Cards */}
+                        {[
+                            { icon: FaUsers, label: 'Total Alumni', val: stats?.totalAlumni, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+                            { icon: FaBriefcase, label: 'Dunia Kerja', val: stats?.workingAlumni, color: 'text-green-500', bg: 'bg-green-500/10' },
+                            { icon: FaGraduationCap, label: 'Pendidikan Lanjut', val: stats?.studyingAlumni, color: 'text-purple-500', bg: 'bg-purple-500/10' },
+                            { icon: FaUniversity, label: 'Kampus Terhubung', val: stats?.topUniversities?.length, color: 'text-amber-500', bg: 'bg-amber-500/10' }
+                        ].map((item, idx) => (
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300"
+                            >
+                                <div className={`w-10 h-10 md:w-14 md:h-14 ${item.bg} rounded-lg md:rounded-2xl flex items-center justify-center ${item.color} mb-4 md:mb-6`}>
+                                    <item.icon size={20} className="md:w-[28px] md:h-[28px]" />
+                                </div>
+                                <h4 className="text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight">{item.val || 0}</h4>
+                                <p className="font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest">{item.label}</p>
+                            </motion.div>
+                        ))}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8"
+                    >
                         {/* Top Universities Card */}
                         <div className="bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5">
                             <div className="flex items-center justify-between mb-6 md:mb-8">
@@ -322,23 +372,40 @@ const LandingPage = () => {
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 </div>
             </section>
 
             {/* Testimonials section */}
-            <section className="py-20 px-4 sm:px-6">
+            <motion.section
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="py-20 px-4 sm:px-6"
+            >
                 <div className="max-w-7xl mx-auto">
-                    <div className="text-center mb-16 space-y-4">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="text-center mb-16 space-y-4"
+                    >
                         <h3 className="text-2xl md:text-4xl font-black text-[color:var(--text-primary)]">Apa Kata Alumni & Siswa?</h3>
                         <div className="w-16 md:w-20 h-1.5 bg-gradient-to-r from-purple-500 to-indigo-500 mx-auto rounded-full"></div>
                         <p className="text-sm md:text-base text-[color:var(--text-secondary)]">Suara komunitas tentang peran Tracer Study bagi kemajuan SMANTA.</p>
-                    </div>
+                    </motion.div>
 
                     <div className="flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar">
                         {testimonials.length > 0 ? testimonials.map((item, idx) => (
-                            <div key={idx} className="min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-[color:var(--bg-card)] p-6 md:p-8 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden flex flex-col">
-                                <FaQuoteLeft className="text-3xl md:text-4xl text-blue-500/20 mb-4 md:mb-6" />
+                            <motion.div
+                                key={idx}
+                                initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                                whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-[color:var(--bg-card)] p-6 md:p-8 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden flex flex-col"
+                            >
+                                <FaQuoteLeft className="text-3xl md:text-4xl text-blue-50/20 mb-4 md:mb-6" />
                                 <p className="text-sm md:text-base text-[color:var(--text-primary)] italic leading-relaxed mb-6 md:mb-8 flex-grow">
                                     "{item.kritik || item.saran || 'Tracer Study ini sangat membantu kami untuk tetap terhubung dan berbagi informasi.'}"
                                 </p>
@@ -351,7 +418,7 @@ const LandingPage = () => {
                                         <p className="text-[10px] md:text-xs font-bold text-indigo-500 uppercase tracking-widest">{item.user?.role || 'Alumni'}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </motion.div>
                         )) : (
                             <div className="w-full text-center py-16 md:py-20 bg-[color:var(--bg-tertiary)] rounded-2xl border-2 border-dashed border-[color:var(--border-color)]">
                                 <p className="text-xs md:text-sm text-[color:var(--text-tertiary)] italic">Belum ada testimoni terbaru.</p>
@@ -359,28 +426,48 @@ const LandingPage = () => {
                         )}
                     </div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* CTA Section */}
-            <section className="py-20 px-4 sm:px-6 bg-[var(--primary)] relative overflow-hidden">
+            <motion.section
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="py-20 px-4 sm:px-6 bg-[var(--primary)] relative overflow-hidden"
+            >
                 <div className="absolute top-0 right-0 w-[400px] md:w-[600px] h-full bg-blue-400 skew-x-[-20deg] translate-x-1/2 opacity-20 hidden md:block"></div>
                 <div className="max-w-4xl mx-auto text-center relative z-10 space-y-8 md:space-y-10">
-                    <div className="text-2xl md:text-4xl font-black text-white leading-tight">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="text-2xl md:text-4xl font-black text-white leading-tight"
+                    >
                         Siap Menjadi Bagian Dari Perubahan Besar?
-                    </div>
-                    <p className="text-base md:text-xl text-blue-50/80 max-w-2xl mx-auto px-4 md:px-0">
+                    </motion.div>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="text-base md:text-xl text-blue-50/80 max-w-2xl mx-auto px-4 md:px-0"
+                    >
                         Mari berkontribusi untuk SMANTA, almamater kita tercinta. Daftar dan berikan kontribusi Anda sekarang juga, hanya butuh waktu 2 menit!
-                    </p>
-                    <div className="flex flex-col-2 sm:flex-row gap-4 md:gap-6 justify-center px-6 md:px-0">
-                        <Link to="/register" className="text-xs md:text-lg bg-white text-[var(--primary)] px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all">
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="flex flex-col-2 sm:flex-row gap-4 md:gap-6 justify-center px-6 md:px-0"
+                    >
+                        <Link to="/register" className="text-xs md:text-sm bg-white text-[var(--primary)] px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all">
                             Kontribusi Sekarang
                         </Link>
-                        <Link to="/login" className="text-xs md:text-lg bg-blue-700/30 backdrop-blur-md text-white border-2 border-white/30 px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-blue-700/50 transition-all">
+                        <Link to="/login" className="text-xs md:text-sm bg-blue-700/30 backdrop-blur-md text-white border-2 border-white/30 px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-blue-700/50 transition-all">
                             Masuk Kembali
                         </Link>
-                    </div>
+                    </motion.div>
                 </div>
-            </section>
+            </motion.section>
 
             {/* Simple Footer */}
             <footer className="py-10 md:py-12 border-t border-[color:var(--border-color)] px-4 sm:px-6">
@@ -388,9 +475,6 @@ const LandingPage = () => {
                     <div className="flex items-center gap-3">
                         <img src="/logo.png" alt="Logo" className="h-8 w-8" />
                         <span className="font-black text-sm md:text-base text-[color:var(--text-primary)]">TRACER STUDY SMANTA</span>
-                    </div>
-                    <div className="text-xs md:text-sm text-[color:var(--text-tertiary)] font-bold text-center md:text-left">
-                        &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. Built with excellence.
                     </div>
                 </div>
             </footer>
