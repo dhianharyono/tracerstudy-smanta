@@ -10,12 +10,32 @@ import {
   FaQuoteLeft,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
+import { useAuth } from '@/contexts/AuthContext';
+import ConfirmationModal from '@/components/ConfirmationModal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LandingPage = () => {
+  const { user, logout } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [testimonials, setTestimonials] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Berhasil logout. Sampai jumpa lagi!', {
+      position: 'top-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: 'colored',
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,18 +90,43 @@ const LandingPage = () => {
             </div>
           </div>
           <div className='flex items-center gap-2 md:gap-4 scale-90 md:scale-100 origin-right'>
-            <Link
-              to='/login'
-              className='flex items-center gap-1.5 text-xs md:text-sm font-medium text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors px-2 md:px-4 py-2'
-            >
-              <span className='sm:inline'>Login</span>
-            </Link>
-            <Link
-              to='/register'
-              className='flex items-center gap-1.5 text-xs md:text-sm font-bold bg-gradient-to-r from-[var(--primary)] to-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all'
-            >
-              <span className='whitespace-nowrap'>Kontribusi Sekarang</span>
-            </Link>
+            {user ? (
+              <>
+                <Link
+                  to={
+                    user.role === 'admin'
+                      ? '/admin'
+                      : user.role === 'student'
+                        ? '/student'
+                        : '/alumni'
+                  }
+                  className='flex items-center gap-1.5 text-xs md:text-sm font-bold bg-gradient-to-r from-[var(--primary)] to-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all'
+                >
+                  <span className='whitespace-nowrap'>Dashboard</span>
+                </Link>
+                <button
+                  onClick={() => setIsLogoutModalOpen(true)}
+                  className='text-xs md:text-sm font-medium text-red-500 hover:text-red-600 transition-colors px-2 md:px-4 py-2'
+                >
+                  Keluar
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to='/login'
+                  className='flex items-center gap-1.5 text-xs md:text-sm font-medium text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors px-2 md:px-4 py-2'
+                >
+                  <span className='sm:inline'>Login</span>
+                </Link>
+                <Link
+                  to='/register'
+                  className='flex items-center gap-1.5 text-xs md:text-sm font-bold bg-gradient-to-r from-[var(--primary)] to-blue-600 text-white px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all'
+                >
+                  <span className='whitespace-nowrap'>Kontribusi Sekarang</span>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </motion.nav>
@@ -684,18 +729,35 @@ const LandingPage = () => {
             transition={{ delay: 0.4 }}
             className='flex flex-col-2 sm:flex-row gap-4 md:gap-6 justify-center px-6 md:px-0'
           >
-            <Link
-              to='/register'
-              className='text-xs md:text-sm bg-white text-[var(--primary)] px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all'
-            >
-              Kontribusi Sekarang
-            </Link>
-            <Link
-              to='/login'
-              className='text-xs md:text-sm bg-blue-700/30 backdrop-blur-md text-white border-2 border-white/30 px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-blue-700/50 transition-all'
-            >
-              Masuk Kembali
-            </Link>
+            {user ? (
+              <Link
+                to={
+                  user.role === 'admin'
+                    ? '/admin'
+                    : user.role === 'student'
+                      ? '/student'
+                      : '/alumni'
+                }
+                className='bg-white text-[var(--primary)] px-6 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all'
+              >
+                Kembali ke Dashboard
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to='/register'
+                  className='text-xs md:text-sm bg-white text-[var(--primary)] px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all'
+                >
+                  Kontribusi Sekarang
+                </Link>
+                <Link
+                  to='/login'
+                  className='text-xs md:text-sm bg-blue-700/30 backdrop-blur-md text-white border-2 border-white/30 px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-blue-700/50 transition-all'
+                >
+                  Masuk Kembali
+                </Link>
+              </>
+            )}
           </motion.div>
         </div>
       </motion.section>
@@ -725,6 +787,17 @@ const LandingPage = () => {
           </div>
         </div>
       </footer>
+
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        title='Konfirmasi Logout'
+        message='Apakah Anda yakin ingin keluar dari aplikasi?'
+        confirmText='Ya, Keluar'
+        cancelText='Batal'
+      />
+      <ToastContainer />
     </div>
   );
 };

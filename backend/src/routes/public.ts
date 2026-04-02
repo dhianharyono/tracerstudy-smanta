@@ -8,6 +8,7 @@ const router = express.Router();
 // Get public statistics for landing page
 router.get('/stats', async (req: Request, res: Response) => {
     try {
+        console.log('Fetching public stats...');
         const totalAlumni = await User.countDocuments({ role: 'alumni' });
         const totalStudents = await User.countDocuments({ role: 'student' });
         const workingAlumni = await User.countDocuments({ role: 'alumni', 'profile.isWorking': true });
@@ -20,15 +21,15 @@ router.get('/stats', async (req: Request, res: Response) => {
 
         const allUniversities = await User.distinct('university.name', { 
             role: 'alumni', 
-            'university.name': { $exists: true, $ne: null } 
-        });
+            'university.name': { $exists: true, $nin: [null, ''] } 
+        }) || [];
         const totalConnectedUniversities = allUniversities.length;
 
         const universityStats = await User.aggregate([
             {
                 $match: {
                     role: 'alumni',
-                    'university.name': { $exists: true, $ne: null }
+                    'university.name': { $exists: true, $nin: [null, ''] }
                 }
             },
             {
@@ -45,7 +46,7 @@ router.get('/stats', async (req: Request, res: Response) => {
             {
                 $match: {
                     role: 'alumni',
-                    'university.major': { $exists: true, $ne: null }
+                    'university.major': { $exists: true, $nin: [null, ''] }
                 }
             },
             {
@@ -71,7 +72,8 @@ router.get('/stats', async (req: Request, res: Response) => {
             topMajors: majorStats
         });
     } catch (error: any) {
-        res.status(500).json({ message: error.message });
+        console.error('Error in /api/public/stats:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 });
 
@@ -84,7 +86,8 @@ router.get('/news', async (req: Request, res: Response) => {
             .limit(3);
         res.json(news);
     } catch (error: any) {
-        res.status(500).json({ message: error.message });
+        console.error('Error in /api/public/news:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 });
 
@@ -97,7 +100,8 @@ router.get('/testimonials', async (req: Request, res: Response) => {
             .limit(5);
         res.json(testimonials);
     } catch (error: any) {
-        res.status(500).json({ message: error.message });
+        console.error('Error in /api/public/testimonials:', error);
+        res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 });
 

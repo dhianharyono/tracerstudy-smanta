@@ -22,6 +22,7 @@ import {
   FaChevronRight,
   FaCrown,
   FaChartPie,
+  FaHome,
 } from 'react-icons/fa';
 import './Layout.css';
 import { ToastContainer } from 'react-toastify';
@@ -180,6 +181,8 @@ const Layout = () => {
     if (user?.role === 'alumni') {
       return (
         <div className='space-y-1'>
+          <NavLink to='/' icon={FaHome} label='Halaman Utama' />
+          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
           <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
           <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
@@ -214,6 +217,8 @@ const Layout = () => {
     if (user?.role === 'admin') {
       return (
         <div className='space-y-1'>
+          <NavLink to='/' icon={FaHome} label='Halaman Utama' />
+          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
           <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/admin/alumni' icon={FaUsers} label='Data Alumni' />
           <NavLink
@@ -254,6 +259,8 @@ const Layout = () => {
     if (user?.role === 'student') {
       return (
         <div className='space-y-1'>
+          <NavLink to='/' icon={FaHome} label='Halaman Utama' />
+          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
           <NavLink to='/student' icon={FaChartBar} label='Dashboard' />
           <NavLink
             to='/student/universities'
