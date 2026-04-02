@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Toast from '@/components/toast';
-import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaArrowLeft } from 'react-icons/fa';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -54,10 +54,21 @@ const Login = () => {
         <div className='absolute top-[20%] -left-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl'></div>
       </div>
 
-      <div className='w-full max-w-md z-10 animate-fade-in'>
+      <div className='w-full max-w-md z-10 animate-fade-in space-y-6'>
+        {/* Back to Landing */}
+        <Link 
+          to="/" 
+          className='inline-flex items-center gap-2 text-sm font-bold text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-all group'
+        >
+          <div className='p-2 rounded-full bg-[color:var(--bg-card)] border border-[color:var(--border-color)] group-hover:border-[var(--primary)] group-hover:scale-110 transition-all shadow-sm'>
+            <FaArrowLeft />
+          </div>
+          Kembali ke Beranda
+        </Link>
         <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
           {/* Header */}
-          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)]'>
+          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)] relative overflow-hidden'>
+            <div className='absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full -z-0'></div>
             <div className='flex items-center justify-center'>
               <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
             </div>

@@ -15,6 +15,7 @@ import { useAuth } from './contexts/AuthContext';
 const Login = lazy(() => import('./pages/auth/Login'));
 const Register = lazy(() => import('./pages/auth/Register'));
 const Profile = lazy(() => import('./pages/Profile'));
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 
 // Alumni Pages
 const AlumniDashboard = lazy(() => import('./pages/alumni/Dashboard'));
@@ -63,7 +64,7 @@ const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
     case 'student':
       return '/student';
     default:
-      return '/login';
+      return '/';
   }
 };
 
@@ -192,7 +193,7 @@ function App() {
               <Route path='profile' element={<Profile />} />
             </Route>
 
-            <Route path='/' element={<Navigate to='/login' replace />} />
+            <Route path='/' element={<LandingPage />} />
           </Routes>
         </Suspense>
       </Router>

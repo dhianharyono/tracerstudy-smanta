@@ -10,6 +10,7 @@ import {
   FaLock,
   FaEye,
   FaEyeSlash,
+  FaArrowLeft,
 } from 'react-icons/fa';
 
 const Register = () => {
@@ -108,10 +109,24 @@ const Register = () => {
         <div className='absolute -bottom-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl'></div>
       </div>
 
-      <div className='w-full max-w-md z-10 animate-fade-in'>
+      <div className='w-full max-w-md z-10 animate-fade-in space-y-6'>
+        {/* Back to Landing */}
+        <div className='flex justify-start'>
+          <Link
+            to="/"
+            className='inline-flex items-center gap-2 text-sm font-bold text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-all group'
+          >
+            <div className='p-2 rounded-full bg-[color:var(--bg-card)] border border-[color:var(--border-color)] group-hover:border-[var(--primary)] group-hover:scale-110 transition-all shadow-sm'>
+              <FaArrowLeft />
+            </div>
+            Kembali ke Beranda
+          </Link>
+        </div>
+
         <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
           {/* Header */}
-          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)]'>
+          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)] relative overflow-hidden'>
+            <div className='absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full -z-0'></div>
             <div className='flex items-center justify-center'>
               <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
             </div>
@@ -151,11 +166,10 @@ const Register = () => {
                   <button
                     type='button'
                     onClick={() => setFormData({ ...formData, role: 'alumni' })}
-                    className={`relative overflow-hidden rounded-xl border-2 p-2 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${
-                      formData.role === 'alumni'
-                        ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
-                        : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
+                    className={`relative overflow-hidden rounded-xl border-2 p-2 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${formData.role === 'alumni'
+                      ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
+                      : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
+                      }`}
                   >
                     <div>
                       <div
@@ -175,11 +189,10 @@ const Register = () => {
                     onClick={() =>
                       setFormData({ ...formData, role: 'student' })
                     }
-                    className={`relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${
-                      formData.role === 'student'
-                        ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
-                        : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
-                    }`}
+                    className={`relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${formData.role === 'student'
+                      ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
+                      : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
+                      }`}
                   >
                     <div>
                       <div
