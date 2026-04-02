@@ -12,6 +12,17 @@ router.get('/stats', async (req: Request, res: Response) => {
         const totalStudents = await User.countDocuments({ role: 'student' });
         const workingAlumni = await User.countDocuments({ role: 'alumni', 'profile.isWorking': true });
         const studyingAlumni = await User.countDocuments({ role: 'alumni', 'profile.isStudying': true });
+        
+        // Detailed college types
+        const ptnCount = await User.countDocuments({ role: 'alumni', 'university.type': 'negeri' });
+        const ptsCount = await User.countDocuments({ role: 'alumni', 'university.type': 'swasta' });
+        const kedinasanCount = await User.countDocuments({ role: 'alumni', 'university.type': 'kedinasan' });
+
+        const allUniversities = await User.distinct('university.name', { 
+            role: 'alumni', 
+            'university.name': { $exists: true, $ne: null } 
+        });
+        const totalConnectedUniversities = allUniversities.length;
 
         const universityStats = await User.aggregate([
             {
@@ -52,6 +63,10 @@ router.get('/stats', async (req: Request, res: Response) => {
             totalStudents,
             workingAlumni,
             studyingAlumni,
+            ptnCount,
+            ptsCount,
+            kedinasanCount,
+            totalConnectedUniversities,
             topUniversities: universityStats,
             topMajors: majorStats
         });
