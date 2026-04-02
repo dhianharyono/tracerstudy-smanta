@@ -157,7 +157,7 @@ const LandingPage = () => {
                                     className="text-xl md:text-3xl font-black text-[color:var(--text-primary)] leading-tight"
                                 >
                                     Menavigasi Persimpangan Jalan <br className="hidden md:block" />
-                                    <span className="text-[var(--primary)]">Masa Depan Alumni SMANTA</span>
+                                    <span className="text-[var(--primary)]">Setelah Lulus Sekolah</span>
                                 </motion.h3>
                                 <div className="w-16 h-1 bg-[var(--primary)] rounded-full"></div>
                             </div>
@@ -200,7 +200,7 @@ const LandingPage = () => {
                     >
                         <h3 className="text-2xl md:text-4xl font-black text-[color:var(--text-primary)]">Fitur Siswa dan Alumni</h3>
                         <div className="w-16 md:w-20 h-1.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 mx-auto rounded-full"></div>
-                        <p className="text-sm md:text-base text-[color:var(--text-secondary)] max-w-2xl mx-auto">Dirancang untuk memudahkan interaksi dan memberikan manfaat nyata bagi seluruh warga SMANTA.</p>
+                        <p className="text-sm md:text-base text-[color:var(--text-secondary)] max-w-2xl mx-auto">Dirancang untuk memudahkan interaksi dan memberikan manfaat nyata bagi seluruh warga dan Alumni SMANTA.</p>
                     </motion.div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
@@ -472,9 +472,25 @@ const LandingPage = () => {
             {/* Simple Footer */}
             <footer className="py-10 md:py-12 border-t border-[color:var(--border-color)] px-4 sm:px-6">
                 <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8">
-                    <div className="flex items-center gap-3">
-                        <img src="/logo.png" alt="Logo" className="h-8 w-8" />
-                        <span className="font-black text-sm md:text-base text-[color:var(--text-primary)]">TRACER STUDY SMANTA</span>
+                    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-4">
+                        <div className="flex items-center gap-3">
+                            <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+                        </div>
+                        <div className="text-[10px] md:text-xs text-[color:var(--text-tertiary)] font-bold text-center md:text-left">
+                            &copy; {new Date().getFullYear()} SMAN 1 Tawangsari
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-1 text-[10px] md:text-xs font-bold text-[color:var(--text-tertiary)] opacity-60 hover:opacity-100 transition-opacity">
+                        <span>Developed by</span>
+                        <a
+                            href="https://cetha-tech.vercel.app/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors"
+                        >
+                            Cetha Technologies
+                        </a>
                     </div>
                 </div>
             </footer>
