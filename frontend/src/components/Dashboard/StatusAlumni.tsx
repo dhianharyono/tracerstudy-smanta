@@ -3,7 +3,6 @@ import {
   FaGraduationCap,
   FaBriefcase,
   FaExclamationCircle,
-  FaUserGraduate,
   FaCalendarAlt,
 } from 'react-icons/fa';
 
