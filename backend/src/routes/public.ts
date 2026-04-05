@@ -39,24 +39,26 @@ router.get('/stats', async (req: Request, res: Response) => {
                 }
             },
             { $sort: { count: -1 } },
-            { $limit: 5 }
+            { $limit: 10 }
         ]);
 
         const majorStats = await User.aggregate([
             {
                 $match: {
                     role: 'alumni',
-                    'university.major': { $exists: true, $nin: [null, ''] }
+                    'university.major': { $exists: true, $nin: [null, ''] },
+                    'university.name': { $exists: true, $nin: [null, ''] }
                 }
             },
             {
                 $group: {
                     _id: '$university.major',
-                    count: { $sum: 1 }
+                    count: { $sum: 1 },
+                    universities: { $addToSet: '$university.name' }
                 }
             },
             { $sort: { count: -1 } },
-            { $limit: 5 }
+            { $limit: 6 }
         ]);
 
         res.json({

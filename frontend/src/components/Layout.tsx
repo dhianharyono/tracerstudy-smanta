@@ -312,7 +312,7 @@ const Layout = () => {
   };
 
   return (
-    <div className='flex h-screen overflow-hidden bg-[color:var(--bg-secondary)]'>
+    <div className='flex h-dvh overflow-hidden bg-[color:var(--bg-secondary)]'>
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
@@ -332,7 +332,7 @@ const Layout = () => {
           <div className='p-6'>
             <div className='flex items-center gap-1'>
               <div className='flex items-center justify-center'>
-                <img src='/logo.png' alt='Logo' className='h-10 w-1h-10' />
+                <img src='/logo.png' alt='Logo' className='h-10 w-10' />
               </div>
               <div className='mt-1'>
                 <h1 className='!mb-0 text-lg font-bold leading-tight tracking-tight text-[color:var(--text-primary)]'>
@@ -382,12 +382,12 @@ const Layout = () => {
       </aside>
 
       {/* Main Content Wrapper */}
-      <div className='flex w-0 flex-1 flex-col'>
+      <div className='flex min-w-0 flex-1 flex-col'>
         {/* Mobile Header */}
-        <div className='flex items-center justify-between border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-4 lg:hidden sticky top-0 z-30'>
+        <div className='flex h-[72px] shrink-0 items-center justify-between border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-4 lg:hidden'>
           <div className='flex items-center gap-1'>
             <div className='flex items-center justify-center'>
-              <img src='/logo.png' alt='Logo' className='h-10 w-1h-10' />
+              <img src='/logo.png' alt='Logo' className='h-10 w-10' />
             </div>
             <div className='mt-1'>
               <div className='!mb-0 text-sm font-bold leading-tight tracking-tight text-[color:var(--text-primary)]'>
