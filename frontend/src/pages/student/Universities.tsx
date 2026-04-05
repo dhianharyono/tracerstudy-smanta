@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { createPortal } from 'react-dom';
 import {
-  FaUniversity,
-  FaSearch,
-  FaFilter,
-  FaUsers,
-  FaGraduationCap,
-  FaBook,
-  FaTimes,
-  FaArrowRight,
+   FaUniversity,
+   FaSearch,
+   FaUsers,
+   FaGraduationCap,
+   FaBook,
+   FaTimes,
+   FaArrowRight,
+   FaChevronRight,
 } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
@@ -19,401 +20,319 @@ import { isStudentProfileComplete } from '@/utils/helpers';
 import SmartLoader from '@/components/SmartLoader';
 
 interface UniversityAggregate {
-  _id: {
-    name: string;
-    type: string;
-  };
-  count: number;
-  alumni: {
-    id: string;
-    name: string;
-    graduationYear: number;
-    major: string;
-  }[];
+   _id: {
+      name: string;
+      type: string;
+   };
+   count: number;
+   alumni: {
+      id: string;
+      name: string;
+      graduationYear: number;
+      major: string;
+   }[];
 }
 
 interface UniversityDetailModalProps {
-  university: UniversityAggregate | null;
-  isOpen: boolean;
-  onClose: () => void;
-  onViewAll: (universityName: string) => void;
-  getBadgeColor: (type: string) => string;
+   university: UniversityAggregate | null;
+   isOpen: boolean;
+   onClose: () => void;
+   onViewAll: (universityName: string) => void;
 }
 
 const UniversityDetailModal = ({
-  university,
-  isOpen,
-  onClose,
-  onViewAll,
+   university,
+   isOpen,
+   onClose,
+   onViewAll,
 }: UniversityDetailModalProps) => {
-  if (!isOpen || !university) return null;
+   if (!isOpen || !university) return null;
 
-  // Calculate top majors
-  const majorStats = university.alumni.reduce((acc: any, curr) => {
-    acc[curr.major] = (acc[curr.major] || 0) + 1;
-    return acc;
-  }, {});
+   const majorStats = university.alumni.reduce((acc: any, curr) => {
+      acc[curr.major] = (acc[curr.major] || 0) + 1;
+      return acc;
+   }, {});
 
-  const topMajors = Object.entries(majorStats)
-    .sort(([, a]: any, [, b]: any) => b - a)
-    .slice(0, 5);
+   const topMajors = Object.entries(majorStats)
+      .sort(([, a]: any, [, b]: any) => b - a)
+      .slice(0, 4);
 
-  return createPortal(
-    <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200'>
-      <div
-        className='relative w-full max-w-2xl bg-[color:var(--bg-card)] rounded-2xl shadow-xl border border-[color:var(--border-color)] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]'
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className='p-6 border-b border-[color:var(--border-color)] flex justify-between items-start bg-[color:var(--bg-tertiary)]/30'>
-          <div className='flex gap-1 items-center'>
-            <div className='h-10 w-10 rounded-xl bg-[var(--primary)]/10 flex items-center justify-center shrink-0'>
-              <FaUniversity className='text-lg md:text-xl text-[var(--primary)]' />
-            </div>
-            <div>
-              {/* <div className='flex items-center gap-2 mb-2 text-sm'>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${getBadgeColor(
-                    university._id.type,
-                  )}`}
-                >
-                  {university._id.type
-                    ? university._id.type.charAt(0).toUpperCase() +
-                    university._id.type.slice(1)
-                    : 'Umum'}
-                </span>
-              </div> */}
-              <div className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] leading-tight'>
-                {university._id.name}
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className='p-2 hover:bg-[color:var(--bg-tertiary)] rounded-full transition-colors text-[color:var(--text-secondary)]'
-          >
-            <FaTimes />
-          </button>
-        </div>
-
-        {/* Body */}
-        <div className='p-6 overflow-y-auto max-h-[70vh]'>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
-            {/* Left Column: Stats */}
-            <div className='space-y-6'>
-              <div className='bg-[color:var(--bg-tertiary)]/50 rounded-xl p-4 border border-[color:var(--border-color)]'>
-                <div className='flex items-center gap-2 text-[color:var(--text-secondary)] mb-2'>
-                  <FaUsers />
-                  <span className='font-medium text-sm md:text-xl'>
-                    Total Alumni
-                  </span>
-                </div>
-                <div className='text-2xl md:text-3xl font-bold text-[var(--primary)]'>
-                  {university.count}
-                </div>
-                <div className='text-xs text-[color:var(--text-secondary)] mt-1'>
-                  Terdaftar di sistem
-                </div>
-              </div>
-
-              <div>
-                <h3 className='font-semibold text-[color:var(--text-primary)] flex items-center gap-2'>
-                  <FaBook className='text-[var(--primary)]' />
-                  <div className='flex flex-col ml-1'>
-                    <p className='text-sm md:text-xl'>Jurusan Terpopuler</p>
-                    <p className='text-[10px] md:text-[10px] text-[color:var(--text-secondary)]'>
-                      Berdasarkan jumlah alumni yang terdaftar
-                    </p>
+   return createPortal(
+      <AnimatePresence>
+         <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4'>
+            <motion.div
+               initial={{ opacity: 0 }}
+               animate={{ opacity: 1 }}
+               exit={{ opacity: 0 }}
+               className='absolute inset-0 bg-black/60 backdrop-blur-sm'
+               onClick={onClose}
+            />
+            <motion.div
+               initial={{ scale: 0.95, opacity: 0, y: 20 }}
+               animate={{ scale: 1, opacity: 1, y: 0 }}
+               exit={{ scale: 0.95, opacity: 0, y: 20 }}
+               className='relative w-full max-w-2xl bg-[color:var(--bg-card)] rounded-[2rem] shadow-2xl border border-[color:var(--border-color)] overflow-hidden flex flex-col max-h-[90vh]'
+            >
+               {/* Hero Header */}
+               <div className='relative h-48 bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 p-8 flex flex-col justify-end'>
+                  <div className='absolute top-6 right-6'>
+                     <button
+                        onClick={onClose}
+                        className='p-2 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all'
+                     >
+                        <FaTimes />
+                     </button>
                   </div>
-                </h3>
-                <div className='space-y-1'>
-                  {topMajors.map(([major, count]: any, index) => (
-                    <div
-                      key={index}
-                      className='flex items-center justify-between text-sm p-2 rounded-lg hover:bg-[color:var(--bg-tertiary)] transition-colors'
-                    >
-                      <span
-                        className='text-[color:var(--text-primary)] truncate max-w-[180px] text-xs md:text-sm'
-                        title={major}
-                      >
-                        {major}
-                      </span>
-                      <span className='font-medium bg-[var(--primary)]/10 text-[var(--primary)] px-2 py-0.5 rounded-full text-xs'>
-                        {count} Alumni
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+                  <div className='flex items-center gap-4'>
+                     <div className='w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center shadow-2xl'>
+                        <FaUniversity className='text-3xl text-white' />
+                     </div>
+                     <div>
+                        <div className='flex items-center gap-2 mb-1'>
+                           <span className='px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-black text-white uppercase tracking-wider backdrop-blur-md border border-white/20'>
+                              {university._id.type || 'Umum'}
+                           </span>
+                        </div>
+                        <h2 className='text-xl md:text-2xl font-black text-white leading-tight'>{university._id.name}</h2>
+                     </div>
+                  </div>
+               </div>
 
-            {/* Right Column: Recent Alumni */}
-            <div>
-              <h3 className='font-semibold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
-                <FaGraduationCap className='text-[var(--primary)]' />
-                <p className='text-sm md:text-xl'>Alumni Terbaru</p>
-              </h3>
-              <div className='space-y-3'>
-                {university.alumni.slice(0, 5).map((alum, idx) => (
-                  <div
-                    key={idx}
-                    className='flex items-start gap-3 p-3 rounded-xl border border-[color:var(--border-color)] hover:border-[var(--primary)] transition-colors bg-[color:var(--bg-card)]'
+               <div className='flex-1 overflow-y-auto p-8 custom-scrollbar'>
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+                     {/* Stats Left */}
+                     <div className='space-y-6'>
+                        <div className='grid grid-cols-1 gap-4'>
+                           <div className='p-6 rounded-3xl bg-blue-500/5 border border-blue-500/10 flex items-center justify-between'>
+                              <div>
+                                 <p className='text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-1'>Jumlah Alumni</p>
+                                 <p className='text-3xl font-black text-[color:var(--primary)]'>{university.count}</p>
+                              </div>
+                              <div className='w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center'>
+                                 <FaUsers className='text-blue-500 text-xl' />
+                              </div>
+                           </div>
+                        </div>
+
+                        <div>
+                           <h3 className='text-xs font-black text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                              <FaBook className='text-indigo-500' /> Jurusan Terpopuler
+                           </h3>
+                           <div className='space-y-2'>
+                              {topMajors.map(([major, count]: any, idx) => (
+                                 <div key={idx} className='flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-700'>
+                                    <span className='text-[11px] font-bold text-text-secondary truncate pr-2'>{major}</span>
+                                    <span className='text-[10px] font-black text-blue-500 whitespace-nowrap bg-blue-500/10 px-2 py-0.5 rounded-lg'>{count} Siswa</span>
+                                 </div>
+                              ))}
+                           </div>
+                        </div>
+                     </div>
+
+                     {/* Right List */}
+                     <div>
+                        <h3 className='text-xs font-black text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                           <FaGraduationCap className='text-indigo-500' /> Alumni Terbaru
+                        </h3>
+                        <div className='space-y-3'>
+                           {university.alumni.slice(0, 4).map((alum, idx) => (
+                              <div key={idx} className='flex items-center gap-3 p-3 rounded-2xl border border-gray-700 bg-gray-50 dark:bg-gray-800/30'>
+                                 <div className='w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-black text-xs shadow-lg'>
+                                    {alum.name.charAt(0)}
+                                 </div>
+                                 <div className='min-w-0'>
+                                    <p className='text-sm font-black text-text-primary truncate'>{alum.name}</p>
+                                    <p className='text-[10px] font-bold text-text-tertiary truncate'>{alum.major}</p>
+                                    <p className='text-[9px] font-black text-indigo-500 uppercase mt-1'>Angkatan {alum.graduationYear}</p>
+                                 </div>
+                              </div>
+                           ))}
+                        </div>
+                     </div>
+                  </div>
+               </div>
+
+               <div className='p-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-700'>
+                  <button
+                     onClick={() => onViewAll(university._id.name)}
+                     className='w-full py-4 bg-[color:var(--primary)] hover:bg-[color:var(--primary-dark)] text-white rounded-2xl font-black shadow-xl shadow-[var(--primary)]/30 flex items-center justify-center gap-3 transition-all active:scale-[0.98]'
                   >
-                    <div className='h-8 w-8 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center font-bold text-xs text-gray-500 shrink-0'>
-                      {alum.name.charAt(0)}
-                    </div>
-                    <div className='min-w-0'>
-                      <div className='font-medium text-sm text-[color:var(--text-primary)] truncate'>
-                        {alum.name}
-                      </div>
-                      <div className='text-xs text-[color:var(--text-secondary)] truncate'>
-                        {alum.major}
-                      </div>
-                      <div className='text-[10px] text-[color:var(--text-secondary)] mt-0.5 inline-block bg-gray-100 dark:bg-gray-800 rounded'>
-                        Lulus {alum.graduationYear}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className='p-4 border-t border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30 flex justify-end'>
-          <button
-            onClick={() => onViewAll(university._id.name)}
-            className='flex items-center gap-2 px-6 py-2.5 bg-[var(--primary)] text-xs md:text-sm text-white rounded-xl hover:bg-[var(--primary-dark)] transition-all font-medium shadow-md shadow-[var(--primary)]/20 active:scale-95'
-          >
-            Lihat Semua Alumni <FaArrowRight />
-          </button>
-        </div>
-      </div>
-    </div>,
-    document.body,
-  );
+                     Lihat Informasi Selengkapnya <FaArrowRight />
+                  </button>
+               </div>
+            </motion.div>
+         </div>
+      </AnimatePresence>,
+      document.body
+   );
 };
 
 const StudentUniversities = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [universities, setUniversities] = useState<UniversityAggregate[]>([]);
-  const [filteredUniversities, setFilteredUniversities] = useState<
-    UniversityAggregate[]
-  >([]);
-  const [filterType, setFilterType] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [loading, setLoading] = useState(true);
+   const { user } = useAuth();
+   const navigate = useNavigate();
+   const [universities, setUniversities] = useState<UniversityAggregate[]>([]);
+   const [filteredUniversities, setFilteredUniversities] = useState<UniversityAggregate[]>([]);
+   const [filterType, setFilterType] = useState('');
+   const [searchTerm, setSearchTerm] = useState('');
+   const [loading, setLoading] = useState(true);
+   const [selectedUni, setSelectedUni] = useState<UniversityAggregate | null>(null);
+   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Modal State
-  const [selectedUni, setSelectedUni] = useState<UniversityAggregate | null>(
-    null,
-  );
-  const [isModalOpen, setIsModalOpen] = useState(false);
+   useEffect(() => {
+      fetchUniversities();
+   }, [filterType]);
 
-  useEffect(() => {
-    fetchUniversities();
-  }, [filterType]);
+   useEffect(() => {
+      const lowerTerm = searchTerm.toLowerCase();
+      const filtered = universities.filter((uni) =>
+         uni._id?.name?.toLowerCase().includes(lowerTerm)
+      );
+      setFilteredUniversities(filtered);
+   }, [searchTerm, universities]);
 
-  useEffect(() => {
-    const lowerTerm = searchTerm.toLowerCase();
-    const filtered = universities.filter((uni) =>
-      uni._id?.name?.toLowerCase().includes(lowerTerm),
-    );
-    setFilteredUniversities(filtered);
-  }, [searchTerm, universities]);
+   const fetchUniversities = async () => {
+      setLoading(true);
+      try {
+         const url = filterType ? `/api/student/universities?type=${filterType}` : '/api/student/universities';
+         const response = await axios.get<UniversityAggregate[]>(url);
+         setUniversities(response.data);
+         setFilteredUniversities(response.data);
+      } catch (error) {
+         console.error('Error fetching universities:', error);
+      } finally {
+         setLoading(false);
+      }
+   };
 
-  const fetchUniversities = async () => {
-    setLoading(true);
-    try {
-      const url = filterType
-        ? `/api/student/universities?type=${filterType}`
-        : '/api/student/universities';
-      const response = await axios.get<UniversityAggregate[]>(url);
-      setUniversities(response.data);
-      setFilteredUniversities(response.data);
-    } catch (error) {
-      console.error('Error fetching universities:', error);
-      setUniversities([]);
-      setFilteredUniversities([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+   const handleUniversityClick = (uni: UniversityAggregate) => {
+      setSelectedUni(uni);
+      setIsModalOpen(true);
+   };
 
-  const getBadgeColor = (type: string) => {
-    const t = type?.toLowerCase();
-    if (t === 'negeri')
-      return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
-    if (t === 'swasta')
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300';
-    if (t === 'kedinasan')
-      return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
-    return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300';
-  };
+   const handleViewAllAlumni = (uniName: string) => {
+      navigate(`/student/alumni?university=${encodeURIComponent(uniName)}`);
+   };
 
-  const handleUniversityClick = (uni: UniversityAggregate) => {
-    setSelectedUni(uni);
-    setIsModalOpen(true);
-  };
+   if (loading) return <SmartLoader />;
+   if (!isStudentProfileComplete(user)) return <RestrictedAccess type='profile_incomplete' role='student' />;
 
-  const handleViewAllAlumni = (uniName: string) => {
-    navigate(`/student/alumni?university=${encodeURIComponent(uniName)}`);
-  };
+   const typeConfig = [
+      { value: '', label: 'Semua Kampus', icon: <FaUniversity />, bg: 'bg-gray-500' },
+      { value: 'negeri', label: 'PTN', icon: <div className='w-2 h-2 rounded-full bg-amber-600' />, bg: 'bg-amber-500/10', color: 'text-amber-600' },
+      { value: 'swasta', label: 'PTS', icon: <div className='w-2 h-2 rounded-full bg-pink-500' />, bg: 'bg-pink-500/10', color: 'text-pink-600' },
+      { value: 'kedinasan', label: 'Kedinasan', icon: <div className='w-2 h-2 rounded-full bg-emerald-500' />, bg: 'bg-emerald-500/10', color: 'text-emerald-600' },
+   ];
 
-  if (loading) {
-    return <SmartLoader />;
-  }
+   return (
+      <div className='p-4 md:p-8 page-fade-in space-y-8'>
+         {/* Hero Search Section */}
+         <div className='relative rounded-3xl bg-gradient-to-br from-indigo-700 via-blue-600 to-indigo-800 p-6 md:p-10 overflow-hidden shadow-2xl shadow-blue-500/20'>
+            <div className='absolute inset-0 bg-grid-white/5'></div>
+            <div className='relative z-10 max-w-2xl'>
+               <h1 className='text-xl md:text-2xl font-black text-white mb-3 leading-tight'>
+                  Eksplorasi Kampus Impianmu
+               </h1>
+               <p className='text-blue-100 text-xs md:text-sm mb-6 max-w-xl font-medium opacity-90 leading-relaxed'>
+                  Temukan ribuan alumni SMANTA yang tersebar di berbagai universitas terbaik.
+               </p>
 
-  if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type='profile_incomplete' role='student' />;
-  }
+               <div className='relative max-w-xl group'>
+                  <div className='absolute inset-y-0 left-0 flex items-center pl-5 text-white/50 group-focus-within:text-white transition-colors'>
+                     <FaSearch className='text-base' />
+                  </div>
+                  <input
+                     type="text"
+                     placeholder='Cari nama perguruan tinggi...'
+                     className='w-full py-3.5 pl-12 pr-6 rounded-2xl bg-white/10 backdrop-blur-xl border border-white/20 text-white placeholder:text-white/40 focus:bg-white/20 focus:outline-none focus:ring-4 focus:ring-white/10 transition-all text-base font-medium'
+                     value={searchTerm}
+                     onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+               </div>
+            </div>
+            <div className='absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-1/4 translate-y-1/4'>
+               <FaUniversity size={250} className='text-white' />
+            </div>
+         </div>
 
-  return (
-    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in relative'>
-      {/* Header Section */}
-      <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='text-center md:text-left mb-2'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-            Perguruan Tinggi
-          </h1>
-          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-            Persebaran alumni berdasarkan universitas, klik untuk melihat detailnya
-          </p>
-        </div>
+         {/* Filter Chips */}
+         <div className='flex flex-wrap items-center gap-3 px-2'>
+            {typeConfig.map((config) => (
+               <button
+                  key={config.value}
+                  onClick={() => setFilterType(config.value)}
+                  className={`flex items-center gap-3 px-6 py-3 rounded-full text-xs font-black transition-all ${filterType === config.value
+                     ? 'bg-blue-600 text-white shadow-xl shadow-blue-500/30'
+                     : 'bg-white dark:bg-gray-800 text-text-secondary border border-gray-700 hover:border-[var(--primary)]'
+                     }`}
+               >
+                  {config.icon} {config.label}
+               </button>
+            ))}
+         </div>
 
-        {/* Controls */}
-        <div className='flex flex-col gap-3 sm:flex-row sm:items-center bg-[color:var(--bg-card)] p-2 rounded-xl shadow-sm border border-[color:var(--border-color)]'>
-          <div className='relative group'>
-            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[var(--primary)] transition-colors' />
-            <input
-              type='text'
-              placeholder='Cari Universitas...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full sm:w-64 rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-4 text-sm outline-none ring-1 ring-transparent focus:ring-[var(--primary)] transition-all'
+         {/* Main Grid */}
+         {filteredUniversities.length === 0 ? (
+            <div className='py-20 text-center space-y-4'>
+               <div className='w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto text-gray-400'>
+                  <FaUniversity size={32} />
+               </div>
+               <p className='text-text-tertiary font-bold tracking-widest uppercase text-xs'>Kampus tidak ditemukan</p>
+            </div>
+         ) : (
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'>
+               {filteredUniversities.map((uni, idx) => (
+                  <motion.div
+                     layout
+                     key={idx}
+                     initial={{ opacity: 0, y: 20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ delay: idx * 0.05 }}
+                     onClick={() => handleUniversityClick(uni)}
+                     className='group relative bg-[color:var(--bg-card)] rounded-[2rem] p-6 border border-[color:var(--border-color)] shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 cursor-pointer overflow-hidden flex flex-col h-full'
+                  >
+                     {/* Top Content */}
+                     <div className='flex-grow'>
+                        <div className='flex justify-between items-start mb-4'>
+                           <span className={`rounded-full text-[9px] font-black uppercase tracking-wider ${uni._id.type?.toLowerCase() === 'negeri' ? 'text-amber-600' :
+                              uni._id.type?.toLowerCase() === 'swasta' ? 'text-pink-600' :
+                                 'text-emerald-600'
+                              }`}>
+                              {uni._id.type || 'Umum'}
+                           </span>
+                        </div>
+
+                        <div className='mb-6'>
+                           <h3 className='text-lg font-black text-text-primary leading-tight line-clamp-3 group-hover:text-blue-600 transition-colors'>
+                              {uni._id.name}
+                           </h3>
+                        </div>
+                     </div>
+
+                     {/* Bottom Footer */}
+                     <div className='flex items-center justify-between pt-5 border-t border-[color:var(--border-color)]/20 mt-auto'>
+                        <div className='space-y-0.5'>
+                           <p className='text-[10px] font-bold text-text-tertiary uppercase tracking-tighter'>Jumlah Alumni</p>
+                           <p className='text-lg font-black text-text-primary'>{uni.count} <span className='text-[10px] uppercase'>Alumni</span></p>
+                        </div>
+                        <div className='w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-all'>
+                           <FaChevronRight />
+                        </div>
+                     </div>
+                  </motion.div>
+               ))}
+            </div>
+         )}
+
+         {selectedUni && (
+            <UniversityDetailModal
+               university={selectedUni}
+               isOpen={isModalOpen}
+               onClose={() => setIsModalOpen(false)}
+               onViewAll={handleViewAllAlumni}
             />
-          </div>
-          <div className='h-8 w-[1px] bg-gray-200 dark:bg-gray-700 hidden sm:block'></div>
-          <div className='relative'>
-            <FaFilter className='pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className='w-full cursor-pointer appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-10 text-sm text-[color:var(--text-primary)] outline-none transition-colors hover:border-[var(--primary)] focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] sm:w-auto'
-            >
-              <option
-                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
-                value=''
-              >
-                Semua Jenis
-              </option>
-              <option
-                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
-                value='negeri'
-              >
-                Negeri
-              </option>
-              <option
-                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
-                value='swasta'
-              >
-                Swasta
-              </option>
-              <option
-                className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-primary)]'
-                value='kedinasan'
-              >
-                Kedinasan
-              </option>
-            </select>
-            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg
-                className='h-4 w-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
+         )}
       </div>
-
-      {/* Content Grid */}
-      {filteredUniversities.length === 0 ? (
-        <div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[color:var(--bg-card)] p-12 text-center dark:border-gray-700'>
-          <div className='mb-4 rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
-            <FaUniversity className='text-4xl text-gray-400' />
-          </div>
-          <h3 className='text-lg font-medium text-[color:var(--text-primary)]'>
-            Tidak ditemukan
-          </h3>
-          <p className='text-gray-500'>
-            Belum ada data universitas yang sesuai dengan filter Anda.
-          </p>
-        </div>
-      ) : (
-        <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {filteredUniversities.map((uni, index) => (
-            <div
-              key={index}
-              onClick={() => handleUniversityClick(uni)}
-              className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
-            >
-              <div className='flex items-start justify-between'>
-                <div className='rounded-lg bg-[var(--primary)] p-3 text-[var(--primary)]/10 group-hover:bg-[var(--primary)] group-hover:text-white transition-colors duration-300'>
-                  <FaUniversity className='text-sm md:text-xl' />
-                </div>
-                <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-medium ${getBadgeColor(
-                    uni._id.type,
-                  )}`}
-                >
-                  {uni._id.type
-                    ? uni._id.type.charAt(0).toUpperCase() +
-                    uni._id.type.slice(1)
-                    : 'Umum'}
-                </span>
-              </div>
-
-              <div className='mt-4 mb-4 min-h-[4rem]'>
-                <h3 className='line-clamp-3 text-xs md:text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
-                  {uni._id.name}
-                </h3>
-              </div>
-
-              <div className='flex items-center justify-between border-t border-[color:var(--border-color)] pt-4'>
-                <div className='flex items-center gap-2 text-xs md:text-sm font-medium text-[color:var(--text-secondary)]'>
-                  <FaUsers className='text-gray-400 group-hover:text-[var(--primary-light)] transition-colors' />
-                  <span>Total Alumni</span>
-                </div>
-                <span className='text-sm md:text-lg font-bold text-[var(--primary)]'>
-                  {uni.count}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* University Detail Modal */}
-      <UniversityDetailModal
-        university={selectedUni}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onViewAll={handleViewAllAlumni}
-        getBadgeColor={getBadgeColor}
-      />
-    </div>
-  );
+   );
 };
 
 export default StudentUniversities;
