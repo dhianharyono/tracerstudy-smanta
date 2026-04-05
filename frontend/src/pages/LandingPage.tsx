@@ -138,7 +138,7 @@ const LandingPage = () => {
       </motion.nav>
 
       {/* Hero Section */}
-      <section className='relative pt-24 pb-16 md:pt-48 md:pb-32 overflow-hidden px-4 sm:px-6'>
+      <section className='relative pt-24 pb-16 md:pt-32 md:pb-32 overflow-hidden px-4 sm:px-6'>
         <div className='absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-hidden pointer-events-none'>
           <div className='absolute top-[-10%] right-[-10%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-blue-500/10 rounded-full blur-[80px] md:blur-[120px]'></div>
           <div className='absolute bottom-[-5%] left-[-10%] w-[250px] h-[250px] md:w-[400px] md:h-[400px] bg-indigo-500/10 rounded-full blur-[60px] md:blur-[100px]'></div>
