@@ -218,7 +218,7 @@ const LandingPage = () => {
                     ))}
                   </div>
                   <span className='text-[10px] md:text-xs font-bold text-blue-200'>
-                    +{stats?.totalAlumni || 0} Alumni Tertaut
+                    +{stats?.totalAlumni || 0} Alumni Terhubung
                   </span>
                 </div>
               </div>
@@ -445,7 +445,7 @@ const LandingPage = () => {
       {/* Stats Dashboard Section */}
       <section
         id='stats'
-        className='py-20 px-4 sm:px-6 relative bg-[color:var(--bg-secondary)]/20'
+        className='py-20 px-4 sm:px-6 relative bg-[color:var(--bg-secondary)]/20 scroll-mt-24'
       >
         <div className='max-w-7xl mx-auto'>
           <motion.div
@@ -591,7 +591,7 @@ const LandingPage = () => {
             <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5'>
               <div className='flex items-center justify-between mb-6 md:mb-8'>
                 <h5 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
-                  Top Perguruan Tinggi
+                  Top 10 Perguruan Tinggi
                 </h5>
                 <div className='p-1.5 md:p-2 bg-[color:var(--bg-tertiary)] rounded-full text-[var(--primary)]'>
                   <FaUniversity className='w-4 h-4 md:w-5 md:h-5' />
