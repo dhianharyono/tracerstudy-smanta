@@ -279,7 +279,7 @@ const StudentUniversities = () => {
             Perguruan Tinggi
           </h1>
           <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-            Persebaran Alumni berdasarkan Universitas
+            Persebaran alumni berdasarkan universitas, klik untuk melihat detailnya
           </p>
         </div>
 
@@ -379,7 +379,7 @@ const StudentUniversities = () => {
                 >
                   {uni._id.type
                     ? uni._id.type.charAt(0).toUpperCase() +
-                      uni._id.type.slice(1)
+                    uni._id.type.slice(1)
                     : 'Umum'}
                 </span>
               </div>

@@ -99,7 +99,7 @@ const Layout = () => {
       '/student/universities': 'Perguruan Tinggi',
       '/student/majors': 'Jurusan',
       '/student/alumni': 'Alumni',
-      '/student/college-plan': 'Rencana Angkatan',
+
       '/student/events': 'Event Siswa',
       '/student/news': 'Berita Siswa',
       '/student/feedback': 'Kritik & Saran Siswa',
@@ -226,11 +226,7 @@ const Layout = () => {
             icon={FaGraduationCap}
             label='Data Student'
           />
-          <NavLink
-            to='/admin/college-plans'
-            icon={FaUniversity}
-            label='Rencana Kuliah'
-          />
+
           <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
           <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
@@ -274,11 +270,7 @@ const Layout = () => {
             icon={FaUserTie}
             label='Hubungi Alumni'
           />
-          <NavLink
-            to='/student/college-plan'
-            icon={FaGraduationCap}
-            label='Rencana Angkatan'
-          />
+
           <NavLink to='/student/events' icon={FaChartBar} label='Event' />
           <NavLink
             to='/student/news'

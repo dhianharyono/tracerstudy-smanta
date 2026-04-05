@@ -8,6 +8,8 @@ import {
   FaTimes,
   FaSave,
   FaUser,
+  FaSearch,
+  FaSync,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import PageHeader from '@/components/common/PageHeader';
@@ -33,6 +35,11 @@ const AdminStudents = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState<any>(null);
+  const [filters, setFilters] = useState({
+    search: '',
+    entryYear: '',
+    graduationYear: '',
+  });
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -44,13 +51,31 @@ const AdminStudents = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [pagination.page]);
+  }, [pagination.page, filters.entryYear, filters.graduationYear]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (pagination.page !== 1) {
+        setPagination({ ...pagination, page: 1 });
+      } else {
+        fetchStudents();
+      }
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [filters.search]);
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(
-        `/api/admin/students?page=${pagination.page}&limit=${pagination.limit}`,
-      );
+      const params = new URLSearchParams({
+        page: pagination.page.toString(),
+        limit: pagination.limit.toString(),
+        ...(filters.search && { search: filters.search }),
+        ...(filters.entryYear && { entryYear: filters.entryYear }),
+        ...(filters.graduationYear && { graduationYear: filters.graduationYear }),
+      });
+
+      const response = await axios.get(`/api/admin/students?${params}`);
       setStudents(response.data.students);
       setPagination(response.data.pagination);
     } catch (error) {
@@ -58,6 +83,21 @@ const AdminStudents = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFilters({ ...filters, [name]: value });
+    setPagination({ ...pagination, page: 1 });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      entryYear: '',
+      graduationYear: '',
+    });
+    setPagination({ ...pagination, page: 1 });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -274,6 +314,52 @@ const AdminStudents = () => {
         </Card>
       )
       }
+
+      <Card className='mb-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+          <div className='relative'>
+            <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
+              <FaSearch size={14} />
+            </span>
+            <input
+              type='text'
+              name='search'
+              value={filters.search}
+              onChange={handleFilterChange}
+              placeholder='Cari Nama/Username/Email...'
+              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            />
+          </div>
+          <div>
+            <input
+              type='number'
+              name='entryYear'
+              value={filters.entryYear}
+              onChange={handleFilterChange}
+              placeholder='Tahun Masuk'
+              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            />
+          </div>
+          <div>
+            <input
+              type='number'
+              name='graduationYear'
+              value={filters.graduationYear}
+              onChange={handleFilterChange}
+              placeholder='Tahun Lulus'
+              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            />
+          </div>
+          <div className='flex gap-2'>
+            <button
+              onClick={clearFilters}
+              className='flex flex-1 items-center justify-center gap-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] transition-colors'
+            >
+              <FaSync size={12} /> Reset
+            </button>
+          </div>
+        </div>
+      </Card>
 
       <TableContainer>
         <TableHeader>

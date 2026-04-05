@@ -337,6 +337,33 @@ router.get(
               { $match: { role: 'alumni', questionnaireCompleted: true } },
               { $count: 'count' },
             ],
+            totalStudents: [
+              { $match: { role: 'student' } },
+              { $count: 'count' },
+            ],
+            completedStudents: [
+              { $match: { role: 'student', questionnaireCompleted: true } },
+              { $count: 'count' },
+            ],
+            incompleteStudents: [
+              { $match: { role: 'student', questionnaireCompleted: false } },
+              { $count: 'count' },
+            ],
+            studentYearStats: [
+              {
+                $match: {
+                  role: 'student',
+                  'profile.graduationYear': { $exists: true, $ne: null },
+                },
+              },
+              {
+                $group: {
+                  _id: '$profile.graduationYear',
+                  count: { $sum: 1 },
+                },
+              },
+              { $sort: { _id: 1 } },
+            ],
             workingAlumni: [
               { $match: { role: 'alumni', 'profile.isWorking': true } },
               { $count: 'count' },
@@ -363,10 +390,6 @@ router.get(
                 },
               },
             ],
-            totalStudents: [
-              { $match: { role: 'student' } },
-              { $count: 'count' }
-            ],
             majorStats: [
               {
                 $match: {
@@ -381,6 +404,22 @@ router.get(
                 },
               },
               { $sort: { count: -1 } },
+            ],
+            universityStats: [
+              {
+                $match: {
+                  role: 'alumni',
+                  'university.name': { $exists: true, $ne: null, $nin: ['', 'null'] },
+                },
+              },
+              {
+                $group: {
+                  _id: '$university.name',
+                  count: { $sum: 1 },
+                },
+              },
+              { $sort: { count: -1 } },
+              { $limit: 10 },
             ],
             yearStats: [
               {
@@ -397,6 +436,31 @@ router.get(
               },
               { $sort: { _id: -1 } },
             ],
+            statusStats: [
+              {
+                $match: {
+                  role: 'alumni',
+                  questionnaireCompleted: true,
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    isWorking: '$profile.isWorking',
+                    isStudying: '$profile.isStudying',
+                  },
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+            completedData: [
+              { $match: { role: 'alumni', questionnaireCompleted: true } },
+              { $count: 'count' },
+            ],
+            incompleteData: [
+              { $match: { role: 'alumni', questionnaireCompleted: false } },
+              { $count: 'count' },
+            ],
           },
         },
       ]);
@@ -409,15 +473,29 @@ router.get(
           kedinasan: 0,
         });
 
+      const statusStats = stats.statusStats.map((s: any) => {
+        let label = 'Mencari Kerja';
+        if (s._id.isWorking && s._id.isStudying) label = 'Kerja & Kuliah';
+        else if (s._id.isWorking) label = 'Bekerja';
+        else if (s._id.isStudying) label = 'Kuliah';
+        return { name: label, count: s.count };
+      });
+
       res.json({
         totalAlumni: getCount(stats.totalAlumni),
-        completedQuestionnaire: getCount(stats.completedQuestionnaire),
+        totalStudents: getCount(stats.totalStudents),
+        completedStudentsCount: getCount(stats.completedStudents),
+        incompleteStudentsCount: getCount(stats.incompleteStudents),
         workingAlumni: getCount(stats.workingAlumni),
         studyingAlumni: getCount(stats.studyingAlumni),
+        completedCount: getCount(stats.completedData),
+        incompleteCount: getCount(stats.incompleteData),
+        studentYearStats: stats.studentYearStats || [],
         activeMentors: getCount(stats.activeMentors),
         universityTypes: getMap(stats.universityTypes),
-        totalStudents: getCount(stats.totalStudents),
         majorStats: stats.majorStats,
+        universityStats: stats.universityStats,
+        statusStats,
         yearStats: stats.yearStats,
       });
     } catch (error: any) {

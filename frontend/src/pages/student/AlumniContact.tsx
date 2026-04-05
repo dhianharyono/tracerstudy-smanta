@@ -227,7 +227,7 @@ const AlumniContact = () => {
           Hubungi Alumni
         </h1>
         <p className='text-[color:var(--text-secondary)] text-sm mt-1'>
-          Cari dan hubungi alumni berdasarkan universitas dan jurusan tujuanmu.
+          Cari dan hubungi alumni melalui sosial medianya
         </p>
       </div>
 
@@ -339,13 +339,13 @@ const AlumniContact = () => {
             selectedMajor ||
             isMentorFilter ||
             selectedBadge) && (
-            <button
-              onClick={resetFilters}
-              className='text-xs text-red-500 font-bold hover:underline'
-            >
-              Reset Filter
-            </button>
-          )}
+              <button
+                onClick={resetFilters}
+                className='text-xs text-red-500 font-bold hover:underline'
+              >
+                Reset Filter
+              </button>
+            )}
         </div>
 
         <div className='overflow-x-auto'>

@@ -2,17 +2,19 @@ import { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '../../contexts/AuthContext';
-import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
+import TopUniversities from '@/components/Dashboard/TopUniversities';
 import WelcomeCard from '@/components/Dashboard/WelcomeCard';
 import Statistic from '@/components/Dashboard/Statistic';
 import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
+import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
 import EventWelcomeCard from '@/components/Dashboard/EventWelcomeCard';
 import EventRegisterModal from '@/components/EventRegisterModal';
+import GraduationConfirmationModal from '@/components/Dashboard/GraduationConfirmationModal';
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -24,6 +26,7 @@ const StudentDashboard = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(new Date().getMonth() === 4);
   const notificationRef = useRef<HTMLDivElement>(null);
   console.log(stats);
   useEffect(() => {
@@ -148,13 +151,14 @@ const StudentDashboard = () => {
         <News data={news} />
       </div>
 
-      <div className=' w-full rounded-2xl bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
-        <InteractiveAlumniMap apiEndpoint='/api/student/alumni-map' />
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
+        <TopUniversities data={stats?.universityStats || []} />
+        <Jurusan data={stats} chartWidth={chartWidth} title="Jurusan Populer" />
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        <Jurusan data={stats} chartWidth={chartWidth} />
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <TahunLulus data={stats} chartWidth={chartWidth} />
+        <AlumniDataProgress stats={stats} />
       </div>
 
       <EventRegisterModal
@@ -163,6 +167,13 @@ const StudentDashboard = () => {
         event={selectedEvent}
         onSuccess={() => {
           window.location.reload();
+        }}
+      />
+      <GraduationConfirmationModal 
+        isOpen={isGraduationModalOpen}
+        onClose={() => setIsGraduationModalOpen(false)}
+        onSuccess={() => {
+          window.location.href = '/alumni';
         }}
       />
     </div>

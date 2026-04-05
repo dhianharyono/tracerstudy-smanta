@@ -1,19 +1,19 @@
 import {
   Tooltip,
-  Legend,
   XAxis,
   YAxis,
   CartesianGrid,
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   ResponsiveContainer,
+  Cell,
 } from 'recharts';
-import { FaChartLine } from 'react-icons/fa';
+import { FaChartBar } from 'react-icons/fa';
+import { COLORS } from '@/pages/constant';
 
 interface YearStat {
   _id: string;
   count: number;
-  value?: number;
 }
 
 interface TahunLulusProps {
@@ -27,60 +27,108 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
   const yearStats = data?.yearStats || [];
   const hasData = yearStats.length > 0;
 
-  const chartHeight = 400;
+  // Sort by year to ensure correct sequence
+  const sortedData = [...yearStats].sort((a, b) => parseInt(a._id) - parseInt(b._id));
 
   return (
-    <div className='mb-6 md:mb-8 card max-w-sm md:max-w-md lg:max-w-full'>
-      <h2 className='mb-6 text-lg md:text-xl flex items-center gap-3 text-text-primary'>
-        <FaChartLine />
-        <span>Statistik Tahun Lulus Alumni</span>
-      </h2>
+    <div className='card h-full flex flex-col'>
+      <div className='flex items-center justify-between mb-8'>
+        <h2 className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
+          <div className='p-2 bg-indigo-500/10 rounded-lg'>
+            <FaChartBar className='text-indigo-500' />
+          </div>
+          <span>Statistik Data Tahun Lulus Alumni</span>
+        </h2>
+        {hasData && (
+          <span className='px-3 py-1 bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full'>
+            {sortedData.length} Tahun Terdata
+          </span>
+        )}
+      </div>
+
       {!hasData ? (
-        <div className='h-[350px] content-center'>
-          <p className='text-center text-gray-500 py-10'>No data available</p>
+        <div className='flex-grow flex items-center justify-center'>
+          <div className='text-center'>
+            <p className='text-gray-500 py-10'>Belum ada data tersedia</p>
+          </div>
         </div>
       ) : (
-        <div className='chart-container w-full'>
+        <div className='chart-container w-full flex-grow h-[400px]'>
           <div className='w-full h-full'>
-            <ResponsiveContainer width='100%' height={chartHeight}>
-              <LineChart
-                data={yearStats}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            <ResponsiveContainer width='100%' height="100%">
+              <BarChart
+                data={sortedData}
+                margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
+                barSize={45}
               >
                 <CartesianGrid
                   strokeDasharray='3 3'
-                  stroke='rgba(148, 163, 184, 0.2)'
+                  vertical={false}
+                  stroke='rgba(148, 163, 184, 0.1)'
                 />
                 <XAxis
                   dataKey='_id'
                   stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)' }}
+                  tick={{ fill: 'var(--text-secondary)', fontSize: 13, fontWeight: 600 }}
+                  axisLine={false}
+                  tickLine={false}
+                  dy={10}
                 />
                 <YAxis
                   stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)' }}
+                  tick={{ fill: 'var(--text-secondary)', fontSize: 12 }}
                   allowDecimals={false}
-                  tickFormatter={(value) => Math.round(value).toString()}
+                  axisLine={false}
+                  tickLine={false}
+                  dx={-10}
                 />
                 <Tooltip
+                  cursor={{ fill: 'rgba(99, 102, 241, 0.05)' }}
                   contentStyle={{
                     backgroundColor: 'var(--bg-card)',
                     border: '1px solid var(--border-color)',
-                    borderRadius: '8px',
-                    boxShadow: 'var(--shadow-lg)',
+                    borderRadius: '12px',
+                    boxShadow: 'var(--shadow-xl)',
                     color: 'var(--text-primary)',
+                    padding: '12px',
                   }}
-                  labelStyle={{ color: 'var(--text-primary)' }}
+                  itemStyle={{ fontWeight: '800', color: '#4f46e5' }}
+                  labelStyle={{ marginBottom: '4px', fontWeight: 'bold', color: 'var(--indigo-500)' }}
+                  formatter={(value: number) => [`${value} Alumni`, 'Jumlah']}
+                  labelFormatter={(value) => `Angkatan Tahun ${value}`}
                 />
-                <Legend wrapperStyle={{ color: 'var(--text-primary)' }} />
-                <Line
-                  type='monotone'
+                <Bar
                   dataKey='count'
-                  stroke='var(--gray-300)'
-                  strokeWidth={2}
-                />
-              </LineChart>
+                  radius={[8, 8, 4, 4]}
+                  label={{
+                    position: 'top',
+                    fill: 'var(--text-primary)',
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    offset: 10,
+                  }}
+                >
+                  {sortedData.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Bar>
+              </BarChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
+      {hasData && (
+        <div className='mt-6 pt-6 border-t border-[color:var(--border-color)] flex justify-center gap-8'>
+          <div className='text-center'>
+            <p className='text-[10px] uppercase tracking-widest text-text-tertiary font-bold mb-1'>Lulusan Terbaru</p>
+            <p className='text-xl font-black text-indigo-500'>{sortedData[sortedData.length - 1]._id}</p>
+          </div>
+          <div className='text-center'>
+            <p className='text-[10px] uppercase tracking-widest text-text-tertiary font-bold mb-1'>Total Alumni</p>
+            <p className='text-xl font-black text-indigo-500'>
+              {sortedData.reduce((sum, item) => sum + item.count, 0)}
+            </p>
           </div>
         </div>
       )}

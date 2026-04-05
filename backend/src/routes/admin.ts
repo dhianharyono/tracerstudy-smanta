@@ -90,6 +90,29 @@ router.get('/dashboard', async (req: Request, res: Response) => {
         $facet: {
           totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
           totalStudents: [{ $match: { role: 'student' } }, { $count: 'count' }],
+          completedStudents: [
+            { $match: { role: 'student', questionnaireCompleted: true } },
+            { $count: 'count' },
+          ],
+          incompleteStudents: [
+            { $match: { role: 'student', questionnaireCompleted: false } },
+            { $count: 'count' },
+          ],
+          studentYearStats: [
+            {
+              $match: {
+                role: 'student',
+                'profile.graduationYear': { $exists: true, $ne: null },
+              },
+            },
+            {
+              $group: {
+                _id: '$profile.graduationYear',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { _id: 1 } },
+          ],
           completedQuestionnaire: [
             { $match: { role: 'alumni', questionnaireCompleted: true } },
             { $count: 'count' },
@@ -135,6 +158,22 @@ router.get('/dashboard', async (req: Request, res: Response) => {
             },
             { $sort: { count: -1 } },
           ],
+          universityStats: [
+            {
+              $match: {
+                role: 'alumni',
+                'university.name': { $exists: true, $ne: null, $nin: ['', 'null'] },
+              },
+            },
+            {
+              $group: {
+                _id: '$university.name',
+                count: { $sum: 1 },
+              },
+            },
+            { $sort: { count: -1 } },
+            { $limit: 10 },
+          ],
           yearStats: [
             {
               $match: {
@@ -149,6 +188,31 @@ router.get('/dashboard', async (req: Request, res: Response) => {
               },
             },
             { $sort: { _id: -1 } },
+          ],
+          statusStats: [
+            {
+              $match: {
+                role: 'alumni',
+                questionnaireCompleted: true,
+              },
+            },
+            {
+              $group: {
+                _id: {
+                  isWorking: '$profile.isWorking',
+                  isStudying: '$profile.isStudying',
+                },
+                count: { $sum: 1 },
+              },
+            },
+          ],
+          completedData: [
+            { $match: { role: 'alumni', questionnaireCompleted: true } },
+            { $count: 'count' },
+          ],
+          incompleteData: [
+            { $match: { role: 'alumni', questionnaireCompleted: false } },
+            { $count: 'count' },
           ],
         },
       },
@@ -167,16 +231,31 @@ router.get('/dashboard', async (req: Request, res: Response) => {
         kedinasan: 0,
       });
 
+    const statusStats = stats.statusStats.map((s: any) => {
+      let label = 'Mencari Kerja';
+      if (s._id.isWorking && s._id.isStudying) label = 'Kerja & Kuliah';
+      else if (s._id.isWorking) label = 'Bekerja';
+      else if (s._id.isStudying) label = 'Kuliah';
+      return { name: label, count: s.count };
+    });
+
     res.json({
       totalAlumni: getCount(stats.totalAlumni),
       totalStudents: getCount(stats.totalStudents),
+      completedStudentsCount: getCount(stats.completedStudents),
+      incompleteStudentsCount: getCount(stats.incompleteStudents),
       completedQuestionnaire: getCount(stats.completedQuestionnaire),
+      completedCount: getCount(stats.completedData),
+      incompleteCount: getCount(stats.incompleteData),
+      studentYearStats: stats.studentYearStats || [],
       workingAlumni: getCount(stats.workingAlumni),
       studyingAlumni: getCount(stats.studyingAlumni),
       totalMentors: getCount(stats.totalMentors),
       universityTypes: getMap(stats.universityTypes),
       yearStats: stats.yearStats,
       majorStats: stats.majorStats,
+      universityStats: stats.universityStats,
+      statusStats,
       onlineUsers,
     });
   } catch (error: any) {
@@ -502,14 +581,33 @@ router.get('/students', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
+    const { search, entryYear, graduationYear } = req.query;
 
-    const students = await User.find({ role: 'student' })
+    const query: any = { role: 'student' };
+
+    if (search) {
+      query.$or = [
+        { username: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { 'profile.fullName': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (entryYear) {
+      query['profile.entryYear'] = parseInt(entryYear as string);
+    }
+
+    if (graduationYear) {
+      query['profile.graduationYear'] = parseInt(graduationYear as string);
+    }
+
+    const students = await User.find(query)
       .select('-password')
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
 
-    const total = await User.countDocuments({ role: 'student' });
+    const total = await User.countDocuments(query);
 
     res.json({
       students,

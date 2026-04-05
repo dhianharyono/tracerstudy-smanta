@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import InteractiveAlumniMap from '../../components/InteractiveAlumniMap';
+import TopUniversities from '@/components/Dashboard/TopUniversities';
 import Statistic from '@/components/Dashboard/Statistic';
 import PerguruanTinggi from '@/components/Dashboard/PerguruanTinggi';
 import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
+import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
 import SmartLoader from '@/components/SmartLoader';
 
 const AdminDashboard = () => {
@@ -88,13 +89,14 @@ const AdminDashboard = () => {
         <News data={news} />
       </div>
 
-      <div className='w-full rounded-2xl bg-[color:var(--bg-card)] p-1 overflow-hidden shadow-sm'>
-        <InteractiveAlumniMap apiEndpoint='/api/admin/alumni-map' />
+      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
+        <TopUniversities data={stats?.universityStats || []} />
+        <Jurusan data={stats} chartWidth={chartWidth} title="Jurusan Populer" />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        <Jurusan data={stats} chartWidth={chartWidth} />
         <TahunLulus data={stats} chartWidth={chartWidth} />
+        <AlumniDataProgress stats={stats} />
       </div>
     </div>
   );
