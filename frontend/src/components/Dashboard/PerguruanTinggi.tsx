@@ -61,7 +61,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
           </div>
           <span>Jalur Studi Alumni</span>
         </h2>
-        <div className='flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full border border-border-color/50'>
+        <div className='flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full border border-gray-700'>
           <div className='w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse'></div>
           <span className='text-[10px] font-bold text-text-secondary uppercase tracking-wider'>
             Live Stats
@@ -69,19 +69,19 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-5 gap-8 overflow-y-auto custom-scrollbar pr-2'>
+      <div className='grid grid-cols-1 lg:grid-cols-5 gap-6 overflow-y-auto custom-scrollbar pr-1'>
         {/* Chart Section */}
-        <div className='lg:col-span-2 relative min-h-[220px]'>
+        <div className='lg:col-span-2 relative min-h-[180px]'>
           {hasData ? (
             <>
               <div className='absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10'>
-                <span className='text-[9px] font-bold text-text-tertiary uppercase tracking-widest'>
-                  Total
+                <span className='text-[8px] font-black text-text-tertiary uppercase tracking-widest'>
+                  TOTAL
                 </span>
-                <span className='text-2xl font-black text-text-primary -mt-1'>
+                <span className='text-xl font-black text-text-primary -mt-1'>
                   {totalValue}
                 </span>
-                <span className='text-[8px] font-bold text-text-tertiary uppercase'>
+                <span className='text-[7px] font-black text-text-tertiary uppercase'>
                   Alumni
                 </span>
               </div>
@@ -91,8 +91,8 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                     data={displayData}
                     cx='50%'
                     cy='50%'
-                    innerRadius='65%'
-                    outerRadius='85%'
+                    innerRadius='60%'
+                    outerRadius='80%'
                     paddingAngle={8}
                     dataKey='value'
                     animationBegin={0}
@@ -106,16 +106,16 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                     ))}
                   </Pie>
                   <Tooltip
-                    position={{ y: 0 }}
+                    position={{ y: -5 }}
                     content={({ active, payload }) => {
                       if (active && payload && payload.length) {
                         const { name, value } = payload[0];
                         return (
-                          <div className='bg-white dark:bg-gray-900 p-3 rounded-2xl shadow-2xl border border-blue-500/30 animate-in slide-in-from-top-2 duration-300'>
-                            <p className='text-[9px] font-black text-text-tertiary uppercase tracking-widest mb-0.5'>
+                          <div className='bg-white dark:bg-gray-900 p-2 rounded-xl shadow-2xl border border-blue-500/30 animate-in slide-in-from-top-2 duration-300'>
+                            <p className='text-[8px] font-black text-text-tertiary uppercase tracking-widest mb-0.5'>
                               {name}
                             </p>
-                            <p className='text-xs font-black text-[color:var(--primary)] text-center'>
+                            <p className='text-[10px] font-black text-blue-500 text-center'>
                               {value} Alumni
                             </p>
                           </div>
@@ -128,62 +128,48 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
               </ResponsiveContainer>
             </>
           ) : (
-            <div className='h-full flex flex-col items-center justify-center text-text-tertiary gap-2'>
-              <FaInfoCircle className='text-2xl' />
-              <p className='text-xs font-medium'>Belum ada data tersedia</p>
+            <div className='absolute inset-0 flex flex-col items-center justify-center text-text-tertiary'>
+              <FaUniversity className='text-4xl opacity-10 mb-2' />
+              <p className='text-[10px] font-bold uppercase tracking-widest'>No Data</p>
             </div>
           )}
         </div>
 
-        {/* Info Section */}
-        <div className='lg:col-span-3 space-y-4'>
-          <p className='text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-2 px-1'>
+        {/* Details Section */}
+        <div className='lg:col-span-3 flex flex-col justify-center gap-3'>
+          <h3 className='text-[9px] font-black text-text-tertiary uppercase tracking-[0.2em] mb-1 px-1'>
             Rincian Jalur & Kategori
-          </p>
-          <div className='space-y-3'>
+          </h3>
+          <div className='space-y-2.5'>
             {displayData.map((item, index) => {
-              const config = typeConfig[
-                item.name as keyof typeof typeConfig
-              ] || {
+              const percentage = totalValue > 0 ? Math.round((item.value / totalValue) * 100) : 0;
+              const config = typeConfig[item.name] || {
                 label: item.name,
-                description: 'Kategori pendidikan lainnya.',
-                color: 'text-gray-500',
-                bgColor: 'bg-gray-500/10',
+                description: '',
+                color: 'text-gray-400',
+                bgColor: 'bg-gray-400/10',
               };
-              const percentage =
-                totalValue > 0
-                  ? ((item.value / totalValue) * 100).toFixed(0)
-                  : 0;
 
               return (
                 <div
                   key={index}
-                  className='p-3.5 rounded-2xl bg-gray-50 dark:bg-gray-800/40 border border-border-color/30 hover:border-blue-500/30 transition-all duration-300 group/item'
+                  className='p-2.5 rounded-xl bg-gray-50/50 dark:bg-gray-800/40 border border-gray-700 hover:border-blue-500/30 transition-all duration-300 group/item'
                 >
-                  <div className='flex items-start justify-between mb-1.5'>
+                  <div className='flex items-start justify-between mb-1'>
                     <div className='flex items-center gap-2'>
-                      <div
-                        className={`w-2.5 h-2.5 rounded-full`}
-                        style={{
-                          backgroundColor: COLORS[index % COLORS.length],
-                        }}
-                      ></div>
-                      <span className='font-black text-xs text-text-primary tracking-tight'>
+                      <div className={`w-1.5 h-1.5 rounded-full ${config.bgColor.replace('/10', '')}`}></div>
+                      <span className='text-xs font-black text-text-primary whitespace-nowrap group-hover/item:text-blue-500 transition-colors'>
                         {config.label}
                       </span>
                     </div>
                     <div className='flex items-center gap-2'>
-                      <span className='text-[10px] font-black text-text-secondary'>
-                        {item.value} Alumni
-                      </span>
-                      <span
-                        className={`px-2 py-0.5 rounded-md ${config.bgColor} ${config.color} text-[10px] font-black`}
-                      >
+                      <span className='text-xs font-black text-text-primary'>{item.value} <span className='text-[8px] font-bold opacity-50 uppercase'>Alumni</span></span>
+                      <span className={`px-1.5 py-0.5 rounded text-xs font-black ${config.bgColor} ${config.color}`}>
                         {percentage}%
                       </span>
                     </div>
                   </div>
-                  <p className='text-[10px] text-text-secondary leading-relaxed pl-4 line-clamp-2'>
+                  <p className='text-[10px] text-text-tertiary leading-relaxed font-medium line-clamp-3'>
                     {config.description}
                   </p>
                 </div>
@@ -194,7 +180,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
       </div>
 
       {/* Footer / CTA */}
-      <div className='mt-8 pt-4 border-t border-border-color/50 flex items-center justify-between'>
+      <div className='mt-8 pt-4 border-t border-gray-700 flex items-center justify-between'>
         <div className='flex items-center gap-2 text-[10px] text-text-tertiary italic'>
           <FaInfoCircle />
           <span>
