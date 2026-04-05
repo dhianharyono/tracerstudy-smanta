@@ -11,7 +11,6 @@ import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
-import MutualSection from '@/components/Dashboard/MutualSection';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import MentorshipPromoCard from '@/components/Dashboard/MentorshipPromoCard';
 
@@ -20,7 +19,6 @@ const AlumniDashboard = () => {
   const [profile, setProfile] = useState<any>(null);
   const [stats, setStats] = useState<any>(null);
   const [news, setNews] = useState<any[]>([]);
-  const [mutualAlumni, setMutualAlumni] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
@@ -31,7 +29,7 @@ const AlumniDashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, statsRes, newsRes, mutualRes] = await Promise.all([
+        const [profileRes, statsRes, newsRes] = await Promise.all([
           axios.get('/api/alumni/profile'),
           axios.get('/api/alumni/dashboard'),
           axios.get('/api/alumni/news?limit=3'),
@@ -40,7 +38,6 @@ const AlumniDashboard = () => {
         setProfile(profileRes.data);
         setStats(statsRes.data);
         setNews(newsRes.data);
-        setMutualAlumni(mutualRes.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -100,10 +97,10 @@ const AlumniDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   const handleCloseQuestionnaireCard = () => {
@@ -180,7 +177,6 @@ const AlumniDashboard = () => {
         <Statistic stats={stats} />
       </div>
 
-
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
@@ -188,7 +184,7 @@ const AlumniDashboard = () => {
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <TopUniversities data={stats?.universityStats || []} />
-        <Jurusan data={stats} chartWidth={chartWidth} title="Jurusan Populer" />
+        <Jurusan data={stats} chartWidth={chartWidth} title='Jurusan Populer' />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
