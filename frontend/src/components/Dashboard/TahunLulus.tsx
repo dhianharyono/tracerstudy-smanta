@@ -32,13 +32,13 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
 
   return (
     <div className='card h-full flex flex-col'>
-      <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
+      <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
+        <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
           <div className='p-2 bg-indigo-500/10 rounded-lg'>
             <FaChartBar className='text-indigo-500' />
           </div>
           <span>Statistik Data Tahun Lulus Alumni</span>
-        </h2>
+        </div>
         {hasData && (
           <span className='px-3 py-1 bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full'>
             {sortedData.length} Tahun Terdata
@@ -119,13 +119,13 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
       )}
 
       {hasData && (
-        <div className='mt-6 pt-6 border-t border-[color:var(--border-color)] flex justify-center gap-8'>
+        <div className='mt-8 pt-8 border-t border-[color:var(--border-color)] flex justify-center gap-12'>
           <div className='text-center'>
-            <p className='text-[10px] uppercase tracking-widest text-text-tertiary font-bold mb-1'>Lulusan Terbaru</p>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-black mb-2'>Lulusan Terbaru</p>
             <p className='text-xl font-black text-indigo-500'>{sortedData[sortedData.length - 1]._id}</p>
           </div>
           <div className='text-center'>
-            <p className='text-[10px] uppercase tracking-widest text-text-tertiary font-bold mb-1'>Total Alumni</p>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-black mb-2'>Total Alumni</p>
             <p className='text-xl font-black text-indigo-500'>
               {sortedData.reduce((sum, item) => sum + item.count, 0)}
             </p>

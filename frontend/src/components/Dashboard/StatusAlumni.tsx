@@ -81,32 +81,34 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
         <span>Progress Kelengkapan Data</span>
       </h2>
 
-      <div className='flex-grow space-y-8 overflow-y-auto pr-2 custom-scrollbar'>
+      <div className='flex-grow space-y-10 overflow-y-auto pr-2 custom-scrollbar'>
         {/* Section Alumni */}
         <div>
-          <div className='flex items-center gap-2 mb-4'>
-            <span className='text-[10px] items-center px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 font-black uppercase tracking-widest'>
+          <div className='flex items-center gap-2 mb-6'>
+            <span className='text-xs items-center px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 font-bold uppercase tracking-widest'>
               Alumni
             </span>
             <div className='h-[1px] flex-grow bg-border-color/50'></div>
           </div>
-          <div className='space-y-4'>
+          <div className='space-y-6'>
             {alumniItems.map((item, index) => (
-              <div key={index} className='space-y-1.5'>
-                <div className='flex justify-between items-center text-xs'>
-                  <div className='flex items-center gap-2 font-bold text-text-secondary'>
-                    {item.icon}
+              <div key={index} className='space-y-2'>
+                <div className='flex justify-between items-center'>
+                  <div className='flex items-center gap-3 font-bold text-text-secondary text-sm'>
+                    <div className='p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50'>
+                      {item.icon}
+                    </div>
                     <span>{item.label}</span>
                   </div>
-                  <span className='font-black text-text-primary'>
+                  <span className='font-black text-text-primary text-base'>
                     {item.value.toLocaleString()}
                   </span>
                 </div>
                 <div
-                  className={`w-full h-1.5 ${item.bgColor} rounded-full overflow-hidden`}
+                  className={`w-full h-2 ${item.bgColor} rounded-full overflow-hidden shadow-inner`}
                 >
                   <div
-                    className={`h-full ${item.color} transition-all duration-1000 ease-out`}
+                    className={`h-full ${item.color} transition-all duration-1000 ease-out shadow-lg shadow-current/20`}
                     style={{ width: `${Math.min(100, item.percentage)}%` }}
                   />
                 </div>
@@ -117,43 +119,43 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
 
         {/* Section Siswa (Years Only) */}
         <div>
-          <div className='flex items-center gap-2 mb-4'>
-            <span className='text-[10px] items-center px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-600 font-black uppercase tracking-widest'>
+          <div className='flex items-center gap-2 mb-6'>
+            <span className='text-xs items-center px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 font-bold uppercase tracking-widest'>
               Siswa (Per Angkatan)
             </span>
             <div className='h-[1px] flex-grow bg-border-color/50'></div>
           </div>
-          <div className='space-y-3'>
+          <div className='space-y-4'>
             {sortedStudentYears.length === 0 ? (
-              <p className='text-xs text-center text-text-tertiary py-2 italic whitespace-normal'>
+              <p className='text-sm text-center text-text-tertiary py-4 italic whitespace-normal'>
                 Belum ada data angkatan siswa
               </p>
             ) : (
               sortedStudentYears.map((item, index) => (
                 <div
                   key={index}
-                  className='flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-700 hover:border-indigo-500/50 transition-colors'
+                  className='flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 dark:bg-gray-800/40 border border-transparent hover:border-indigo-500/30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm'
                 >
-                  <div className='flex items-center gap-3'>
-                    <div className='w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center'>
-                      <FaCalendarAlt className='text-indigo-500 text-xs' />
+                  <div className='flex items-center gap-4'>
+                    <div className='w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center shadow-inner'>
+                      <FaCalendarAlt className='text-indigo-500 text-sm' />
                     </div>
                     <div>
-                      <p className='text-[10px] text-text-tertiary font-bold uppercase leading-none mb-1'>
+                      <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
                         Angkatan
                       </p>
-                      <p className='text-sm font-black text-text-primary leading-none'>
+                      <p className='text-base font-black text-text-primary'>
                         {item._id}
                       </p>
                     </div>
                   </div>
                   <div className='text-right'>
-                    <p className='text-[10px] text-text-tertiary font-bold uppercase leading-none mb-1'>
+                    <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
                       Jumlah
                     </p>
-                    <p className='text-base font-black text-indigo-500 leading-none'>
+                    <p className='text-lg font-black text-indigo-500'>
                       {item.count}{' '}
-                      <span className='text-[10px] font-bold text-text-tertiary'>
+                      <span className='text-xs font-bold text-text-tertiary'>
                         Siswa
                       </span>
                     </p>
@@ -165,24 +167,25 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
         </div>
       </div>
 
-      <div className='mt-8 pt-4 border-t border-[color:var(--border-color)] grid grid-cols-2 gap-4'>
+      <div className='mt-8 pt-6 border-t border-[color:var(--border-color)] grid grid-cols-2 gap-8'>
         <div>
-          <p className='text-[9px] font-bold text-text-tertiary uppercase tracking-tighter'>
+          <p className='text-xs font-black text-text-tertiary uppercase tracking-widest mb-1'>
             Total Alumni
           </p>
-          <p className='text-base font-black text-blue-500'>
+          <p className='text-xl font-black text-blue-500'>
             {totalAlumni.toLocaleString()}
           </p>
         </div>
         <div className='text-right'>
-          <p className='text-[9px] font-bold text-text-tertiary uppercase tracking-tighter'>
+          <p className='text-xs font-black text-text-tertiary uppercase tracking-widest mb-1'>
             Total Siswa
           </p>
-          <p className='text-base font-black text-indigo-500'>
+          <p className='text-xl font-black text-indigo-500'>
             {totalStudents.toLocaleString()}
           </p>
         </div>
       </div>
+
     </div>
   );
 };

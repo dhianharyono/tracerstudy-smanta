@@ -107,10 +107,10 @@ const News = ({ data }: NewsProps) => {
                   <span className='text-[8px] font-black text-text-tertiary uppercase opacity-50'>{new Date(newsItem.createdAt).toLocaleDateString('id-ID', { month: 'short' })}</span>
                 </div>
                 <div className='min-w-0 flex-1'>
-                  <h3 className='text-[11px] font-black text-text-primary mb-1 line-clamp-2 leading-tight group-hover/item:text-blue-500 transition-colors'>
+                  <h3 className='text-xs font-black text-text-primary mb-1 line-clamp-2 leading-tight group-hover/item:text-blue-500 transition-colors'>
                     {newsItem.title}
                   </h3>
-                  <div className='flex items-center gap-2 text-[9px] font-bold text-text-tertiary'>
+                  <div className='flex text-xs items-center gap-2 text-[9px] font-bold text-text-tertiary'>
                     <span className='flex items-center gap-1'><FaUserEdit /> {newsItem.author?.username || 'Admin'}</span>
                     <span>•</span>
                     <span className='uppercase'>{new Date(newsItem.createdAt).getFullYear()}</span>

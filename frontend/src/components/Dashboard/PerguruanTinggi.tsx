@@ -19,10 +19,10 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
   const displayData = hasData
     ? data
     : [
-      { name: 'PTN', value: 0 },
-      { name: 'PTS', value: 0 },
-      { name: 'Kedinasan', value: 0 },
-    ];
+        { name: 'PTN', value: 0 },
+        { name: 'PTS', value: 0 },
+        { name: 'Kedinasan', value: 0 },
+      ];
 
   const typeConfig: Record<
     string,
@@ -54,13 +54,13 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
   return (
     <div className='card h-full flex flex-col overflow-hidden group'>
       {/* Header */}
-      <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold !mb-0'>
+      <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
+        <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold !mb-0'>
           <div className='p-2 bg-blue-500/10 rounded-lg group-hover:scale-110 transition-transform duration-300'>
             <FaUniversity className='text-blue-500' />
           </div>
           <span>Jalur Studi Alumni</span>
-        </h2>
+        </div>
         <div className='flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full border border-gray-700'>
           <div className='w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse'></div>
           <span className='text-[10px] font-bold text-text-secondary uppercase tracking-wider'>
@@ -71,17 +71,17 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
 
       <div className='grid grid-cols-1 lg:grid-cols-5 gap-6 overflow-y-auto custom-scrollbar pr-1'>
         {/* Chart Section */}
-        <div className='lg:col-span-2 relative min-h-[180px]'>
+        <div className='lg:col-span-2 relative min-h-[200px]'>
           {hasData ? (
             <>
               <div className='absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10'>
-                <span className='text-[8px] font-black text-text-tertiary uppercase tracking-widest'>
+                <span className='text-[10px] font-black text-text-tertiary uppercase tracking-widest'>
                   TOTAL
                 </span>
-                <span className='text-xl font-black text-text-primary -mt-1'>
+                <span className='text-3xl font-black text-text-primary -mt-1'>
                   {totalValue}
                 </span>
-                <span className='text-[7px] font-black text-text-tertiary uppercase'>
+                <span className='text-[10px] font-black text-text-tertiary uppercase tracking-wider'>
                   Alumni
                 </span>
               </div>
@@ -91,8 +91,8 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                     data={displayData}
                     cx='50%'
                     cy='50%'
-                    innerRadius='60%'
-                    outerRadius='80%'
+                    innerRadius='65%'
+                    outerRadius='85%'
                     paddingAngle={8}
                     dataKey='value'
                     animationBegin={0}
@@ -111,11 +111,11 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                       if (active && payload && payload.length) {
                         const { name, value } = payload[0];
                         return (
-                          <div className='bg-white dark:bg-gray-900 p-2 rounded-xl shadow-2xl border border-blue-500/30 animate-in slide-in-from-top-2 duration-300'>
-                            <p className='text-[8px] font-black text-text-tertiary uppercase tracking-widest mb-0.5'>
+                          <div className='bg-white dark:bg-gray-900 px-4 py-3 rounded-2xl shadow-2xl border border-blue-500/30 animate-in zoom-in-95 duration-300'>
+                            <p className='text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-1'>
                               {name}
                             </p>
-                            <p className='text-[10px] font-black text-blue-500 text-center'>
+                            <p className='text-sm font-black text-blue-500 text-center'>
                               {value} Alumni
                             </p>
                           </div>
@@ -129,20 +129,25 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
             </>
           ) : (
             <div className='absolute inset-0 flex flex-col items-center justify-center text-text-tertiary'>
-              <FaUniversity className='text-4xl opacity-10 mb-2' />
-              <p className='text-[10px] font-bold uppercase tracking-widest'>No Data</p>
+              <FaUniversity className='text-5xl opacity-10 mb-3' />
+              <p className='text-xs font-bold uppercase tracking-widest'>
+                No Data
+              </p>
             </div>
           )}
         </div>
 
         {/* Details Section */}
-        <div className='lg:col-span-3 flex flex-col justify-center gap-3'>
-          <h3 className='text-[9px] font-black text-text-tertiary uppercase tracking-[0.2em] mb-1 px-1'>
+        <div className='lg:col-span-3 flex flex-col justify-center gap-4'>
+          <h3 className='text-xs font-black text-text-tertiary uppercase tracking-[0.2em] mb-1 px-1'>
             Rincian Jalur & Kategori
           </h3>
-          <div className='space-y-2.5'>
+          <div className='space-y-4'>
             {displayData.map((item, index) => {
-              const percentage = totalValue > 0 ? Math.round((item.value / totalValue) * 100) : 0;
+              const percentage =
+                totalValue > 0
+                  ? Math.round((item.value / totalValue) * 100)
+                  : 0;
               const config = typeConfig[item.name] || {
                 label: item.name,
                 description: '',
@@ -153,23 +158,35 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
               return (
                 <div
                   key={index}
-                  className='p-2.5 rounded-xl bg-gray-50/50 dark:bg-gray-800/40 border border-gray-700 hover:border-blue-500/30 transition-all duration-300 group/item'
+                  className='p-4 rounded-2xl bg-gray-50/50 dark:bg-gray-800/40 border border-transparent hover:border-blue-500/30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 group/item relative overflow-hidden shadow-sm'
                 >
-                  <div className='flex items-start justify-between mb-1'>
-                    <div className='flex items-center gap-2'>
-                      <div className={`w-1.5 h-1.5 rounded-full ${config.bgColor.replace('/10', '')}`}></div>
-                      <span className='text-xs font-black text-text-primary whitespace-nowrap group-hover/item:text-blue-500 transition-colors'>
+                  <div 
+                    className={`absolute left-0 top-0 bottom-0 w-1 ${config.bgColor.replace('/10', '')} opacity-40`}
+                  />
+                  <div className='flex items-start justify-between mb-2'>
+                    <div className='flex items-center gap-3'>
+                      <div
+                        className={`w-2.5 h-2.5 rounded-full ${config.bgColor.replace('/10', '')} shadow-lg shadow-current/20`}
+                      ></div>
+                      <span className='text-sm font-bold text-text-primary group-hover/item:text-blue-500 transition-colors'>
                         {config.label}
                       </span>
                     </div>
-                    <div className='flex items-center gap-2'>
-                      <span className='text-xs font-black text-text-primary'>{item.value} <span className='text-[8px] font-bold opacity-50 uppercase'>Alumni</span></span>
-                      <span className={`px-1.5 py-0.5 rounded text-xs font-black ${config.bgColor} ${config.color}`}>
+                    <div className='flex items-center gap-3'>
+                      <span className='text-sm font-black text-text-primary'>
+                        {item.value}{' '}
+                        <span className='text-[10px] font-bold text-text-tertiary uppercase'>
+                          Alumni
+                        </span>
+                      </span>
+                      <span
+                        className={`px-2 py-1 rounded-lg text-xs font-black ${config.bgColor} ${config.color}`}
+                      >
                         {percentage}%
                       </span>
                     </div>
                   </div>
-                  <p className='text-[10px] text-text-tertiary leading-relaxed font-medium line-clamp-3'>
+                  <p className='text-xs text-text-tertiary leading-relaxed font-medium'>
                     {config.description}
                   </p>
                 </div>
@@ -177,6 +194,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
             })}
           </div>
         </div>
+
       </div>
 
       {/* Footer / CTA */}
