@@ -12,7 +12,7 @@ import {
 import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LandingPage = () => {
@@ -859,7 +859,6 @@ const LandingPage = () => {
         confirmText='Ya, Keluar'
         cancelText='Batal'
       />
-      <ToastContainer />
     </div>
   );
 };

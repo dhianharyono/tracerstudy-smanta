@@ -25,7 +25,6 @@ import {
   FaHome,
 } from 'react-icons/fa';
 import './Layout.css';
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = () => {
@@ -404,7 +403,6 @@ const Layout = () => {
           className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
         >
           <div className='mx-auto max-w-7xl w-full flex-grow animate-fade-in pb-8'>
-            <ToastContainer stacked={false} />
             <Outlet />
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>

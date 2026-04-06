@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import Toast from '@/components/toast';
@@ -13,13 +13,22 @@ const Login = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const toastShown = useRef(false);
 
   useEffect(() => {
-    if (location.state?.successMessage) {
+    if (location.state?.successMessage && !toastShown.current) {
+      toastShown.current = true;
       Toast(location.state.successMessage, 'success');
-      window.history.replaceState({}, document.title);
+      
+      // Clear the state after a short delay to ensure the toast registers
+      const timer = setTimeout(() => {
+        navigate(location.pathname, { replace: true, state: {} });
+      }, 500);
+      return () => {
+        clearTimeout(timer);
+      };
     }
-  }, [location]);
+  }, [location.state, location.pathname, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
