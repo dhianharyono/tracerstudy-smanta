@@ -13,11 +13,12 @@ const PageVisitSchema = new Schema<IPageVisit>(
         userId: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+            required: false,
         },
         role: {
             type: String,
-            required: true,
+            required: false,
+            default: 'public',
         },
         path: {
             type: String,

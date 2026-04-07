@@ -8,6 +8,7 @@ import {
   FaBriefcase,
   FaUniversity,
   FaQuoteLeft,
+  FaEye,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '@/contexts/AuthContext';
@@ -38,11 +39,20 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
+    const logVisit = async () => {
+      try {
+        await axios.post('/api/public/log-visit', { path: '/', menuName: 'Landing Page' });
+      } catch (error) {
+        console.error('Error logging visit:', error);
+      }
+    };
+
     const fetchData = async () => {
       try {
         const [statsRes, testimonialsRes] = await Promise.all([
           axios.get('/api/public/stats'),
           axios.get('/api/public/testimonials'),
+          logVisit(),
         ]);
         setStats(statsRes.data);
         setTestimonials(testimonialsRes.data);
@@ -463,6 +473,54 @@ const LandingPage = () => {
               tinggi favorit.
             </p>
           </motion.div>
+
+          {/* New Website Stats Section */}
+          <div className='mb-12'>
+            <div className='flex items-center gap-3 mb-6'>
+              <div className='w-1 h-8 bg-blue-500 rounded-full'></div>
+              <h4 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
+                Statistik Website
+              </h4>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className='bg-gradient-to-br from-blue-600/90 to-blue-800 p-6 md:p-10 rounded-[2.5rem] text-white shadow-2xl relative overflow-hidden group mb-12'
+            >
+              <div className='absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-bl-full blur-3xl pointer-events-none'></div>
+              <div className='absolute -bottom-20 -left-20 w-80 h-80 bg-blue-400/20 rounded-full blur-3xl pointer-events-none'></div>
+
+              <div className='relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center'>
+                <div className='space-y-4 text-center md:text-left'>
+                  <div className='inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-2'>
+                    <FaEye className='animate-pulse' /> Landing Page Traffic
+                  </div>
+                  <h3 className='text-3xl md:text-5xl font-black leading-tight'>
+                    Statistik Pengunjung <br className='hidden md:block' /> Landing Page
+                  </h3>
+                  <p className='text-blue-100 text-sm md:text-base max-w-md'>
+                    Jumlah total akses yang diterima oleh halaman utama Tracer Study SMANTA sejak sistem diaktifkan.
+                  </p>
+                </div>
+
+                <div className='flex justify-center md:justify-end'>
+                  <div className='bg-white/10 backdrop-blur-md p-8 md:p-12 rounded-[3.5rem] border border-white/20 shadow-2xl flex flex-col items-center justify-center min-w-[240px] hover:scale-105 transition-transform duration-500'>
+                    <div className='w-16 h-16 bg-white text-blue-600 rounded-2xl flex items-center justify-center mb-6 shadow-xl'>
+                      <FaEye size={32} />
+                    </div>
+                    <div className='text-5xl md:text-7xl font-black mb-2 tracking-tighter'>
+                      {stats?.totalVisits || 0}
+                    </div>
+                    <div className='text-xs md:text-sm font-bold uppercase tracking-[0.2em] text-blue-200'>
+                      Total Pengunjung
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
 
           <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
             {/* Stats Cards */}

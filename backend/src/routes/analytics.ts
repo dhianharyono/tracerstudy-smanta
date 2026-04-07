@@ -35,13 +35,21 @@ router.post('/log', async (req: Request, res: Response) => {
 router.get('/stats', authorize('admin'), async (req: Request, res: Response) => {
     try {
         // 1. Visits over time (last 7 days)
-        const period = (req.query.period as string) || 'week'; // 'today', 'week', 'month', 'year'
+        const period = (req.query.period as string) || 'week'; // 'today', 'yesterday', 'week', 'month', 'year'
         let startDate = new Date();
+        let endDate: Date | undefined = undefined;
         let groupFormat = '%Y-%m-%d';
 
         switch (period) {
             case 'today':
                 startDate.setHours(0, 0, 0, 0);
+                groupFormat = '%H:00'; // Hourly Grouping
+                break;
+            case 'yesterday':
+                startDate.setDate(startDate.getDate() - 1);
+                startDate.setHours(0, 0, 0, 0);
+                endDate = new Date();
+                endDate.setHours(0, 0, 0, 0);
                 groupFormat = '%H:00'; // Hourly Grouping
                 break;
             case 'week':
@@ -58,8 +66,10 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
                 startDate.setDate(startDate.getDate() - 7);
         }
 
+        const dateFilter = endDate ? { $gte: startDate, $lt: endDate } : { $gte: startDate };
+
         const visitsByDate = await PageVisit.aggregate([
-            { $match: { timestamp: { $gte: startDate }, role: { $ne: 'admin' } } },
+            { $match: { timestamp: dateFilter, role: { $ne: 'admin' } } },
             {
                 $group: {
                     _id: { $dateToString: { format: groupFormat, date: '$timestamp', timezone: '+07:00' } }, // Adjust timezone if needed (e.g. WIB)
@@ -73,7 +83,7 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
         const popularPages = await PageVisit.aggregate([
             {
                 $match: {
-                    timestamp: { $gte: startDate },
+                    timestamp: dateFilter,
                     role: { $ne: 'admin' },
                     path: { $nin: ['/student', '/alumni'] } // Exclude dashboard home pages
                 }
@@ -118,7 +128,7 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
 
         // 3. User Activity Breakdown (visits by role, filtered by period)
         const visitsByRole = await PageVisit.aggregate([
-            { $match: { timestamp: { $gte: startDate }, role: { $ne: 'admin' } } },
+            { $match: { timestamp: dateFilter, role: { $ne: 'admin' } } },
             {
                 $group: {
                     _id: '$role',

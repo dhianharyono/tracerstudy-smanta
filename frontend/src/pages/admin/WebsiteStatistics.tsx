@@ -134,6 +134,11 @@ const WebsiteStatistics = () => {
           </span>
         );
       }
+      if (path === '/') {
+        return (
+          <span className='text-[color:var(--text-primary)]'>Landing Page</span>
+        );
+      }
     }
     return menuName;
   };
@@ -156,6 +161,7 @@ const WebsiteStatistics = () => {
             className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] text-[color:var(--text-primary)] text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 outline-none'
           >
             <option value='today'>Hari Ini</option>
+            <option value='yesterday'>Kemarin</option>
             <option value='week'>7 Hari Terakhir</option>
             <option value='month'>30 Hari Terakhir</option>
             <option value='year'>1 Tahun Terakhir</option>
@@ -174,11 +180,13 @@ const WebsiteStatistics = () => {
                 Total Kunjungan (
                 {period === 'today'
                   ? 'Hari Ini'
-                  : period === 'week'
-                    ? '7 Hari'
-                    : period === 'month'
-                      ? '30 Hari'
-                      : '1 Tahun'}
+                  : period === 'yesterday'
+                    ? 'Kemarin'
+                    : period === 'week'
+                      ? '7 Hari'
+                      : period === 'month'
+                        ? '30 Hari'
+                        : '1 Tahun'}
                 )
               </p>
               <div className='group relative'>
@@ -235,11 +243,13 @@ const WebsiteStatistics = () => {
             Trafik Kunjungan (
             {period === 'today'
               ? 'Per Jam'
-              : period === 'week'
-                ? '7 Hari Terakhir'
-                : period === 'month'
-                  ? '30 Hari Terakhir'
-                  : 'Bulanan'}
+              : period === 'yesterday'
+                ? 'Kemarin (Per Jam)'
+                : period === 'week'
+                  ? '7 Hari Terakhir'
+                  : period === 'month'
+                    ? '30 Hari Terakhir'
+                    : 'Bulanan'}
             )
           </h3>
           <div className='h-80'>
@@ -293,7 +303,7 @@ const WebsiteStatistics = () => {
                   dataKey='count'
                   nameKey='_id'
                   label={({ name, percent }) =>
-                    `${name === 'student' ? 'Siswa' : 'Alumni'} ${(percent * 100).toFixed(0)}%`
+                    `${name === 'student' ? 'Siswa' : name === 'alumni' ? 'Alumni' : 'Publik'} ${(percent * 100).toFixed(0)}%`
                   }
                 >
                   {stats?.visitsByRole?.map((_entry: any, index: number) => (
@@ -306,7 +316,7 @@ const WebsiteStatistics = () => {
                 <Tooltip />
                 <Legend
                   formatter={(value) =>
-                    value === 'student' ? 'Siswa' : 'Alumni'
+                    value === 'student' ? 'Siswa' : value === 'alumni' ? 'Alumni' : 'Publik'
                   }
                 />
               </PieChart>
@@ -363,9 +373,13 @@ const WebsiteStatistics = () => {
                     {renderMenuName(page.menuName, page.path)}
                   </td>
                   <td
-                    className={`px-6 py-4 font-medium text-[color:var(--text-tertiary)] ${page.path.includes('/student') ? 'text-blue-300' : 'text-green-300'}`}
+                    className={`px-6 py-4 font-medium text-[color:var(--text-tertiary)] ${page.path.includes('/student') ? 'text-blue-300' : page.path.includes('/alumni') ? 'text-green-300' : 'text-amber-300'}`}
                   >
-                    {page.path.includes('/student') ? 'Siswa' : 'Alumni'}
+                    {page.path.includes('/student')
+                      ? 'Siswa'
+                      : page.path.includes('/alumni')
+                        ? 'Alumni'
+                        : 'Publik'}
                   </td>
                   <td className='px-6 py-4 font-medium text-[color:var(--text-tertiary)] italic'>
                     {page.path}
