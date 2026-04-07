@@ -281,7 +281,7 @@ const Profile = () => {
               />
             </div>
 
-            {user?.role !== 'admin' && (
+            {user?.role !== 'admin' && user?.role !== 'school' && (
               <div className='space-y-2'>
                 <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
@@ -301,7 +301,7 @@ const Profile = () => {
               </div>
             )}
 
-            {user?.role !== 'admin' && (
+            {user?.role !== 'admin' && user?.role !== 'school' && (
               <div className='space-y-2'>
                 <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}

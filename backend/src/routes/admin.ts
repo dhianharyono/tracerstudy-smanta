@@ -847,6 +847,107 @@ router.delete('/admins/:id', async (req: Request, res: Response) => {
   }
 });
 
+// School users management
+router.get('/school-users', async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    const schoolUsers = await User.find({ role: 'school' })
+      .select('-password')
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    const total = await User.countDocuments({ role: 'school' });
+
+    res.json({
+      schoolUsers,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post('/school-users', async (req: Request, res: Response) => {
+  try {
+    const { username, email, password, fullName } = req.body;
+
+    if (!username || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: 'Username, email, and password are required' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const user = new User({
+      username,
+      email,
+      password: hashedPassword,
+      role: 'school',
+      profile: {
+        fullName: fullName || '',
+      },
+    });
+
+    await user.save();
+    const { password: pw, ...userObj } = user.toObject();
+    res.status(201).json(userObj);
+  } catch (error: any) {
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ message: 'Username or email already exists' });
+    }
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put('/school-users/:id', async (req: Request, res: Response) => {
+  try {
+    const { password, ...updateData } = req.body;
+    const update: any = { ...updateData };
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      update.password = await bcrypt.hash(password, salt);
+    }
+
+    const user = await User.findOneAndUpdate(
+      { _id: req.params.id, role: 'school' },
+      { $set: update },
+      { new: true, runValidators: true }
+    ).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ message: 'School user not found' });
+    }
+    res.json(user);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/school-users/:id', async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOneAndDelete({ _id: req.params.id, role: 'school' });
+    if (!user) {
+      return res.status(404).json({ message: 'School user not found' });
+    }
+    res.json({ message: 'School user deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // News routes
 // Get all news
 router.get('/news', async (req: Request, res: Response) => {

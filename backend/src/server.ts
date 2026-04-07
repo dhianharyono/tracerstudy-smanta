@@ -12,6 +12,7 @@ import userRoutes from './routes/user';
 import eventRoutes from './routes/events';
 import analyticsRoutes from './routes/analytics';
 import publicRoutes from './routes/public';
+import schoolRoutes from './routes/school';
 
 dotenv.config();
 
@@ -119,6 +120,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/school', schoolRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

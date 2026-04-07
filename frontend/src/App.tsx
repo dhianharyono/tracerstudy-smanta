@@ -42,6 +42,11 @@ const AdminBadges = lazy(() => import('./pages/admin/Badges'));
 const AdminEventManagement = lazy(() => import('./pages/admin/EventManagement'));
 const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
 const AdminCollegePlans = lazy(() => import('./pages/admin/CollegePlans'));
+const AdminSchoolUsers = lazy(() => import('./pages/admin/SchoolUsers'));
+
+// School Pages
+const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
+const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -55,7 +60,7 @@ const StudentCollegePlan = lazy(() => import('./pages/student/CollegePlan'));
 const StudentAlumniContact = lazy(() => import('./pages/student/AlumniContact'));
 const StudentEvents = lazy(() => import('./pages/student/Events'));
 
-const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
+const getDashboardPath = (role: 'alumni' | 'admin' | 'student' | 'school') => {
   switch (role) {
     case 'alumni':
       return '/alumni';
@@ -63,6 +68,8 @@ const getDashboardPath = (role: 'alumni' | 'admin' | 'student') => {
       return '/admin';
     case 'student':
       return '/student';
+    case 'school':
+      return '/school';
     default:
       return '/';
   }
@@ -168,6 +175,21 @@ function App() {
               <Route path='events' element={<AdminEventManagement />} />
               <Route path='stats' element={<AdminStatistics />} />
               <Route path='college-plans' element={<AdminCollegePlans />} />
+              <Route path='school-users' element={<AdminSchoolUsers />} />
+              <Route path='profile' element={<Profile />} />
+            </Route>
+
+            {/* School Monitoring Routes */}
+            <Route
+              path='/school'
+              element={
+                <PrivateRoute allowedRoles={['school']}>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<SchoolDashboard />} />
+              <Route path='alumni' element={<SchoolAlumniList />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

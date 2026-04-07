@@ -12,7 +12,7 @@ interface User {
   id: string;
   username: string;
   email: string;
-  role: 'alumni' | 'admin' | 'student';
+  role: 'alumni' | 'admin' | 'student' | 'school';
   questionnaireCompleted?: boolean;
   profile?: {
     fullName?: string;

@@ -59,7 +59,7 @@ const UserSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      enum: ['alumni', 'admin', 'student'],
+      enum: ['alumni', 'admin', 'student', 'school'],
       required: true,
     },
     profile: {

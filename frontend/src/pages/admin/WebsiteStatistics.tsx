@@ -14,7 +14,7 @@ import {
   Area,
 } from 'recharts';
 import SmartLoader from '@/components/SmartLoader';
-import { FaChartLine, FaGlobe, FaWifi, FaInfoCircle } from 'react-icons/fa';
+import { FaChartLine, FaGlobe, FaWifi, FaInfoCircle, FaEye } from 'react-icons/fa';
 
 const WebsiteStatistics = () => {
   const [stats, setStats] = useState<any>(null);
@@ -169,69 +169,81 @@ const WebsiteStatistics = () => {
         </div>
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4'>
+      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-blue-500 transition-all'>
           <div className='p-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
+            <FaEye size={24} />
+          </div>
+          <div>
+            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>PENGUNJUNG LANDING</p>
+            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+              {stats?.landingPageVisits || 0}
+            </h3>
+            <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
+              Lifetime: <span className='text-[color:var(--text-secondary)]'>{stats?.totalLandingPageVisits || 0}</span>
+            </p>
+          </div>
+        </div>
+        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-[var(--primary)] transition-all'>
+          <div className='p-4 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'>
             <FaGlobe size={24} />
           </div>
           <div>
             <div className='flex items-center gap-2 mb-1'>
-              <p className='text-sm text-[color:var(--text-secondary)]'>
-                Total Kunjungan (
-                {period === 'today'
-                  ? 'Hari Ini'
-                  : period === 'yesterday'
-                    ? 'Kemarin'
-                    : period === 'week'
-                      ? '7 Hari'
-                      : period === 'month'
-                        ? '30 Hari'
-                        : '1 Tahun'}
-                )
+              <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest'>
+                TOTAL KUNJUNGAN
               </p>
-              <div className='group relative'>
+              <div className='group/tip relative'>
                 <FaInfoCircle className='cursor-help text-[color:var(--text-tertiary)] hover:text-[color:var(--primary)] transition-colors text-xs' />
-                <div className='pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 rounded bg-gray-800 p-2 text-center text-xs text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 z-50'>
-                  Menghitung setiap kali halaman dibuka (Page View), termasuk
-                  refresh halaman.
+                <div className='pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 rounded bg-gray-800 p-2 text-center text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100 z-50'>
+                  Total Page Views (termasuk refresh) selama periode {period}.
                   <div className='absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-gray-800'></div>
                 </div>
               </div>
             </div>
-            <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
               {stats?.visitsByDate?.reduce(
                 (acc: number, curr: any) => acc + curr.count,
                 0,
               ) || 0}
             </h3>
+            <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
+              Semua Halaman
+            </p>
           </div>
         </div>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4'>
+        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-green-500 transition-all'>
           <div className='p-4 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'>
             <FaWifi size={24} />
           </div>
           <div>
-            <p className='text-sm text-[color:var(--text-secondary)]'>
-              User Online (5 Menit)
+            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>
+              PENGGUNA ONLINE
             </p>
-            <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
+            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
               {stats?.activeUsers || 0}
             </h3>
+            <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
+              Aktif (5 Menit)
+            </p>
           </div>
         </div>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4'>
+        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-purple-500 transition-all'>
           <div className='p-4 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-300'>
             <FaChartLine size={24} />
           </div>
           <div>
-            <p className='text-sm text-[color:var(--text-secondary)]'>
-              Halaman Terpopuler
+            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>
+              TOP HALAMAN
             </p>
-            <h3 className='text-lg font-bold text-[color:var(--text-primary)] truncate max-w-[250px]'>
+            <h3 className='text-lg font-black text-[color:var(--text-primary)] truncate max-w-[200px]'>
               {stats?.popularPages?.[0]?.path
                 ? renderMenuName('', stats?.popularPages?.[0]?.path)
                 : '-'}
             </h3>
+            <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
+              Paling Sering Dibuka
+            </p>
           </div>
         </div>
       </div>

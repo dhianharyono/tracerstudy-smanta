@@ -146,11 +146,24 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
             role: { $ne: 'admin' }
         });
 
+        // 5. Landing Page specific stats
+        const landingPageVisits = await PageVisit.countDocuments({
+            path: '/',
+            timestamp: dateFilter,
+            role: { $ne: 'admin' }
+        });
+
+        const totalLandingPageVisits = await PageVisit.countDocuments({
+            path: '/'
+        });
+
         res.json({
             visitsByDate,
             popularPages,
             visitsByRole,
-            activeUsers: activeUsersCount.length
+            activeUsers: activeUsersCount.length,
+            landingPageVisits,
+            totalLandingPageVisits
         });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
