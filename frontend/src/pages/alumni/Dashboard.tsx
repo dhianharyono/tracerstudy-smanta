@@ -23,7 +23,6 @@ const AlumniDashboard = () => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const [chartWidth, setChartWidth] = useState(900);
-  const [hideQuestionnaireCard, setHideQuestionnaireCard] = useState(false);
   const [hideMentorPromo, setHideMentorPromo] = useState(false);
 
   useEffect(() => {
@@ -66,10 +65,6 @@ const AlumniDashboard = () => {
   }, []);
 
   useEffect(() => {
-    const hidden = localStorage.getItem('hideQuestionnaireCard');
-    if (hidden === 'true') {
-      setHideQuestionnaireCard(true);
-    }
     const hiddenPromo = localStorage.getItem('hideMentorPromo');
     if (hiddenPromo === 'true') {
       setHideMentorPromo(true);
@@ -102,11 +97,6 @@ const AlumniDashboard = () => {
         { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
       ]
     : [];
-
-  const handleCloseQuestionnaireCard = () => {
-    setHideQuestionnaireCard(true);
-    localStorage.setItem('hideQuestionnaireCard', 'true');
-  };
 
   const handleCloseMentorPromo = () => {
     setHideMentorPromo(true);
@@ -166,8 +156,6 @@ const AlumniDashboard = () => {
       <WelcomCardAlumni
         user={user}
         profile={profile}
-        hideQuestionnaireCard={hideQuestionnaireCard}
-        handleCloseQuestionnaireCard={handleCloseQuestionnaireCard}
       />
 
       {!hideMentorPromo && (
