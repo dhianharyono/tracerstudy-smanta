@@ -475,231 +475,231 @@ const LandingPage = () => {
             <SmartLoader fullScreen={false} messages={['Memuat laporan statistik...']} />
           ) : (
             <>
-          <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
-            {/* Stats Cards */}
-            {[
-              {
-                icon: FaUsers,
-                label: 'Total Alumni',
-                val: stats?.totalAlumni,
-                color: 'text-blue-500',
-                bg: 'bg-blue-500/10',
-              },
-              {
-                icon: FaBriefcase,
-                label: 'Alumni Bekerja',
-                val: stats?.workingAlumni,
-                color: 'text-green-500',
-                bg: 'bg-green-500/10',
-              },
-              {
-                icon: FaGraduationCap,
-                label: 'Alumni Kuliah',
-                val: stats?.studyingAlumni,
-                color: 'text-purple-500',
-                bg: 'bg-purple-500/10',
-              },
-              {
-                icon: FaUniversity,
-                label: 'Kampus Teregistrasi',
-                val: stats?.totalConnectedUniversities,
-                color: 'text-amber-500',
-                bg: 'bg-amber-500/10',
-              },
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className='bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300'
-              >
-                <div
-                  className={`w-10 h-10 md:w-14 md:h-14 ${item.bg} rounded-lg md:rounded-2xl flex items-center justify-center ${item.color} mb-4 md:mb-6`}
-                >
-                  <item.icon size={20} className='md:w-[28px] md:h-[28px]' />
-                </div>
-                <h4 className='text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight'>
-                  {item.val || 0}
-                </h4>
-                <p className='font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest'>
-                  {item.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className='mb-12'>
-            <div className='mb-8 text-center md:text-left'>
-              <h3 className='text-2xl md:text-3xl font-black text-[color:var(--text-primary)]'>
-                Distribusi Perguruan Tinggi
-              </h3>
-              <p className='text-sm md:text-base text-[color:var(--text-secondary)] mt-2'>
-                Persebaran alumni SMANTA berdasarkan tipe institusi pendidikan
-                tinggi.
-              </p>
-            </div>
-
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
-              {/* Detailed College Stats */}
-              {[
-                {
-                  label: 'PTN (Negeri)',
-                  val: stats?.ptnCount,
-                  color: 'text-blue-500',
-                  bg: 'bg-blue-500/5',
-                  border: 'border-blue-500/20',
-                },
-                {
-                  label: 'PTS (Swasta)',
-                  val: stats?.ptsCount,
-                  color: 'text-indigo-500',
-                  bg: 'bg-indigo-500/5',
-                  border: 'border-indigo-500/20',
-                },
-                {
-                  label: 'Kedinasan',
-                  val: stats?.kedinasanCount,
-                  color: 'text-orange-500',
-                  bg: 'bg-orange-500/5',
-                  border: 'border-orange-500/20',
-                },
-              ].map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.2 + idx * 0.1 }}
-                  className={`flex flex-col p-6 md:p-8 bg-[color:var(--bg-card)] rounded-[2rem] border ${item.border} ${item.bg} shadow-sm group hover:scale-[1.02] transition-all`}
-                >
-                  <span className='text-xs md:text-sm font-bold text-[color:var(--text-tertiary)] uppercase tracking-widest mb-2'>
-                    {item.label}
-                  </span>
-                  <div className='flex items-baseline gap-2'>
-                    <span
-                      className={`text-3xl md:text-5xl font-black ${item.color}`}
+              <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
+                {/* Stats Cards */}
+                {[
+                  {
+                    icon: FaUsers,
+                    label: 'Total Alumni',
+                    val: stats?.totalAlumni,
+                    color: 'text-blue-500',
+                    bg: 'bg-blue-500/10',
+                  },
+                  {
+                    icon: FaBriefcase,
+                    label: 'Alumni Bekerja',
+                    val: stats?.workingAlumni,
+                    color: 'text-green-500',
+                    bg: 'bg-green-500/10',
+                  },
+                  {
+                    icon: FaGraduationCap,
+                    label: 'Alumni Kuliah',
+                    val: stats?.studyingAlumni,
+                    color: 'text-purple-500',
+                    bg: 'bg-purple-500/10',
+                  },
+                  {
+                    icon: FaUniversity,
+                    label: 'Kampus Teregistrasi',
+                    val: stats?.totalConnectedUniversities,
+                    color: 'text-amber-500',
+                    bg: 'bg-amber-500/10',
+                  },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className='bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5 hover:-translate-y-2 transition-transform duration-300'
+                  >
+                    <div
+                      className={`w-10 h-10 md:w-14 md:h-14 ${item.bg} rounded-lg md:rounded-2xl flex items-center justify-center ${item.color} mb-4 md:mb-6`}
                     >
+                      <item.icon size={20} className='md:w-[28px] md:h-[28px]' />
+                    </div>
+                    <h4 className='text-2xl md:text-5xl font-black text-[color:var(--text-primary)] mb-1 md:mb-2 tracking-tight'>
                       {item.val || 0}
-                    </span>
-                    <span className='text-xs md:text-sm font-bold text-[color:var(--text-tertiary)]'>
-                      Alumni
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className='grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8'
-          >
-            {/* Top Universities Card */}
-            <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5'>
-              <div className='flex items-center justify-between mb-6 md:mb-8'>
-                <h5 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
-                  Top 10 Perguruan Tinggi
-                </h5>
-                <div className='p-1.5 md:p-2 bg-[color:var(--bg-tertiary)] rounded-full text-[var(--primary)]'>
-                  <FaUniversity className='w-4 h-4 md:w-5 md:h-5' />
-                </div>
-              </div>
-              <div className='space-y-4 md:space-y-6'>
-                {stats?.topUniversities?.map((uni: any, idx: number) => (
-                  <div key={idx} className='group'>
-                    <div className='flex justify-between items-center mb-1.5'>
-                      <span className='text-xs md:text-sm font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors truncate max-w-[70%]'>
-                        {uni._id}
-                      </span>
-                      <span className='text-[10px] md:text-xs font-bold text-[color:var(--text-tertiary)] shrink-0'>
-                        {uni.count} Alumni
-                      </span>
-                    </div>
-                    <div className='w-full bg-[color:var(--bg-tertiary)] h-1.5 md:h-2.5 rounded-full overflow-hidden'>
-                      <div
-                        className='bg-gradient-to-r from-[var(--primary)] to-blue-400 h-full rounded-full transition-all duration-1000 ease-out'
-                        style={{
-                          width:
-                            stats.totalAlumni > 0
-                              ? `${(uni.count / stats.totalAlumni) * 100 * 2}%`
-                              : '0%',
-                        }}
-                      ></div>
-                    </div>
-                  </div>
+                    </h4>
+                    <p className='font-bold text-[color:var(--text-secondary)] uppercase text-[9px] md:text-xs tracking-widest'>
+                      {item.label}
+                    </p>
+                  </motion.div>
                 ))}
               </div>
-            </div>
 
-            {/* Top Majors Card */}
-            <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5'>
-              <div className='flex items-center justify-between mb-6 md:mb-8'>
-                <h5 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
-                  Jurusan Populer
-                </h5>
-                <div className='p-1.5 md:p-2 bg-[color:var(--bg-tertiary)] rounded-full text-indigo-500'>
-                  <FaGraduationCap className='w-4 h-4 md:w-5 md:h-5' />
+              <div className='mb-12'>
+                <div className='mb-8 text-center md:text-left'>
+                  <h3 className='text-2xl md:text-3xl font-black text-[color:var(--text-primary)]'>
+                    Distribusi Perguruan Tinggi
+                  </h3>
+                  <p className='text-sm md:text-base text-[color:var(--text-secondary)] mt-2'>
+                    Persebaran alumni SMANTA berdasarkan tipe institusi pendidikan
+                    tinggi.
+                  </p>
                 </div>
-              </div>
-              <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4'>
-                {stats?.topMajors?.map((major: any, idx: number) => (
-                  <div
-                    key={idx}
-                    className='relative p-5 bg-[color:var(--bg-tertiary)] rounded-[1.5rem] border border-[color:var(--border-color)] overflow-hidden group hover:border-[var(--primary)] transition-all'
-                  >
-                    {/* Background rank decorative text */}
-                    <div className='absolute -right-2 -bottom-2 text-6xl font-black text-white/5 group-hover:text-[var(--primary)]/10 transition-colors pointer-events-none'>
-                      #{idx + 1}
-                    </div>
 
-                    <div className='flex items-start justify-between relative z-10'>
-                      <div className='flex flex-col min-w-0 flex-1 mr-4'>
-                        <div className='flex items-center gap-2 mb-2.5'>
-                          <span className='px-2 py-0.5 bg-indigo-500/10 text-indigo-400 text-[8px] md:text-[10px] font-bold rounded-md uppercase tracking-widest border border-indigo-500/10'>
-                            Rank #{idx + 1}
-                          </span>
-                        </div>
-
-                        <h6 className='text-sm md:text-base font-black text-[color:var(--text-primary)] mb-3 group-hover:text-[var(--primary)] transition-colors truncate max-w-full leading-tight'>
-                          {major._id}
-                        </h6>
-
-                        <div className='flex flex-col gap-1.5'>
-                          {major.universities.slice(0, 3).map((uni: string, i: number) => (
-                            <div key={i} className='flex items-start gap-2.5 min-w-0'>
-                              <div className='w-1.5 h-1.5 rounded-full bg-[var(--primary)]/40 mt-1.5 shrink-0 shadow-sm'></div>
-                              <span className='text-[10px] md:text-[11px] font-medium text-[color:var(--text-tertiary)] truncate leading-relaxed line-clamp-1'>
-                                {uni}
-                              </span>
-                            </div>
-                          ))}
-                          {major.universities.length > 3 && (
-                            <span className='text-[9px] md:text-[10px] font-bold text-indigo-500/50 ml-4 italic'>
-                              + {major.universities.length - 3} Perguruan Tinggi Lainnya
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className='flex flex-col items-center justify-center bg-[color:var(--bg-card)] px-3 py-2.5 rounded-[1rem] border border-[color:var(--border-color)] shadow-sm shrink-0 min-w-[3.5rem] group-hover:border-[var(--primary)] transition-colors'>
-                        <span className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
-                          {major.count}
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
+                  {/* Detailed College Stats */}
+                  {[
+                    {
+                      label: 'PTN (Negeri)',
+                      val: stats?.ptnCount,
+                      color: 'text-blue-500',
+                      bg: 'bg-blue-500/5',
+                      border: 'border-blue-500/20',
+                    },
+                    {
+                      label: 'PTS (Swasta)',
+                      val: stats?.ptsCount,
+                      color: 'text-indigo-500',
+                      bg: 'bg-indigo-500/5',
+                      border: 'border-indigo-500/20',
+                    },
+                    {
+                      label: 'Kedinasan',
+                      val: stats?.kedinasanCount,
+                      color: 'text-orange-500',
+                      bg: 'bg-orange-500/5',
+                      border: 'border-orange-500/20',
+                    },
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: 0.2 + idx * 0.1 }}
+                      className={`flex flex-col p-6 md:p-8 bg-[color:var(--bg-card)] rounded-[2rem] border ${item.border} ${item.bg} shadow-sm group hover:scale-[1.02] transition-all`}
+                    >
+                      <span className='text-xs md:text-sm font-bold text-[color:var(--text-tertiary)] uppercase tracking-widest mb-2'>
+                        {item.label}
+                      </span>
+                      <div className='flex items-baseline gap-2'>
+                        <span
+                          className={`text-3xl md:text-5xl font-black ${item.color}`}
+                        >
+                          {item.val || 0}
                         </span>
-                        <span className='text-[8px] font-bold text-[color:var(--text-tertiary)] uppercase leading-none mt-1'>
+                        <span className='text-xs md:text-sm font-bold text-[color:var(--text-tertiary)]'>
                           Alumni
                         </span>
                       </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className='grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8'
+              >
+                {/* Top Universities Card */}
+                <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5'>
+                  <div className='flex items-center justify-between mb-6 md:mb-8'>
+                    <h5 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
+                      Top 10 Perguruan Tinggi
+                    </h5>
+                    <div className='p-1.5 md:p-2 bg-[color:var(--bg-tertiary)] rounded-full text-[var(--primary)]'>
+                      <FaUniversity className='w-4 h-4 md:w-5 md:h-5' />
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-          </>
+                  <div className='space-y-4 md:space-y-6'>
+                    {stats?.topUniversities?.map((uni: any, idx: number) => (
+                      <div key={idx} className='group'>
+                        <div className='flex justify-between items-center mb-1.5'>
+                          <span className='text-xs md:text-sm font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors truncate max-w-[70%]'>
+                            {uni._id}
+                          </span>
+                          <span className='text-[10px] md:text-xs font-bold text-[color:var(--text-tertiary)] shrink-0'>
+                            {uni.count} Alumni
+                          </span>
+                        </div>
+                        <div className='w-full bg-[color:var(--bg-tertiary)] h-1.5 md:h-2.5 rounded-full overflow-hidden'>
+                          <div
+                            className='bg-gradient-to-r from-[var(--primary)] to-blue-400 h-full rounded-full transition-all duration-1000 ease-out'
+                            style={{
+                              width:
+                                stats.totalAlumni > 0
+                                  ? `${(uni.count / stats.totalAlumni) * 100 * 2}%`
+                                  : '0%',
+                            }}
+                          ></div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Top Majors Card */}
+                <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl shadow-black/5'>
+                  <div className='flex items-center justify-between mb-6 md:mb-8'>
+                    <h5 className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
+                      Jurusan Populer
+                    </h5>
+                    <div className='p-1.5 md:p-2 bg-[color:var(--bg-tertiary)] rounded-full text-indigo-500'>
+                      <FaGraduationCap className='w-4 h-4 md:w-5 md:h-5' />
+                    </div>
+                  </div>
+                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4'>
+                    {stats?.topMajors?.map((major: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className='relative p-5 bg-[color:var(--bg-tertiary)] rounded-[1.5rem] border border-[color:var(--border-color)] overflow-hidden group hover:border-[var(--primary)] transition-all'
+                      >
+                        {/* Background rank decorative text */}
+                        <div className='absolute -right-2 -bottom-2 text-6xl font-black text-white/5 group-hover:text-[var(--primary)]/10 transition-colors pointer-events-none'>
+                          #{idx + 1}
+                        </div>
+
+                        <div className='flex items-start justify-between relative z-10'>
+                          <div className='flex flex-col min-w-0 flex-1 mr-4'>
+                            <div className='flex items-center gap-2 mb-2.5'>
+                              <span className='px-2 py-0.5 bg-indigo-500/10 text-indigo-400 text-[8px] md:text-[10px] font-bold rounded-md uppercase tracking-widest border border-indigo-500/10'>
+                                Rank #{idx + 1}
+                              </span>
+                            </div>
+
+                            <h6 className='text-sm md:text-base font-black text-[color:var(--text-primary)] mb-3 group-hover:text-[var(--primary)] transition-colors truncate max-w-full leading-tight'>
+                              {major._id}
+                            </h6>
+
+                            <div className='flex flex-col gap-1.5'>
+                              {major.universities.slice(0, 3).map((uni: string, i: number) => (
+                                <div key={i} className='flex items-start gap-2.5 min-w-0'>
+                                  <div className='w-1.5 h-1.5 rounded-full bg-[var(--primary)]/40 mt-1.5 shrink-0 shadow-sm'></div>
+                                  <span className='text-[10px] md:text-[11px] font-medium text-[color:var(--text-tertiary)] truncate leading-relaxed line-clamp-1'>
+                                    {uni}
+                                  </span>
+                                </div>
+                              ))}
+                              {major.universities.length > 3 && (
+                                <span className='text-[9px] md:text-[10px] font-bold text-indigo-500/50 ml-4 italic'>
+                                  + {major.universities.length - 3} Perguruan Tinggi Lainnya
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className='flex flex-col items-center justify-center bg-[color:var(--bg-card)] px-3 py-2.5 rounded-[1rem] border border-[color:var(--border-color)] shadow-sm shrink-0 min-w-[3.5rem] group-hover:border-[var(--primary)] transition-colors'>
+                            <span className='text-lg md:text-xl font-black text-[color:var(--text-primary)]'>
+                              {major.count}
+                            </span>
+                            <span className='text-[8px] font-bold text-[color:var(--text-tertiary)] uppercase leading-none mt-1'>
+                              Alumni
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            </>
           )}
         </div>
       </section>
@@ -730,48 +730,48 @@ const LandingPage = () => {
           {loading ? (
             <SmartLoader fullScreen={false} messages={['Memuat testimoni...']} />
           ) : (
-          <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar'>
-            {testimonials.length > 0 ? (
-              testimonials.map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.9, x: 20 }}
-                  whileInView={{ opacity: 1, scale: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-[color:var(--bg-card)] p-6 md:p-8 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden flex flex-col'
-                >
-                  <FaQuoteLeft className='text-3xl md:text-4xl text-blue-50/20 mb-4 md:mb-6' />
-                  <p className='text-sm md:text-base text-[color:var(--text-primary)] italic leading-relaxed mb-6 md:mb-8 flex-grow'>
-                    "
-                    {item.kritik ||
-                      item.saran ||
-                      'Tracer Study ini sangat membantu kami untuk tetap terhubung dan berbagi informasi.'}
-                    "
+            <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar'>
+              {testimonials.length > 0 ? (
+                testimonials.map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-[color:var(--bg-card)] p-6 md:p-8 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden flex flex-col'
+                  >
+                    <FaQuoteLeft className='text-3xl md:text-4xl text-blue-50/20 mb-4 md:mb-6' />
+                    <p className='text-sm md:text-base text-[color:var(--text-primary)] italic leading-relaxed mb-6 md:mb-8 flex-grow'>
+                      "
+                      {item.kritik ||
+                        item.saran ||
+                        'Tracer Study ini sangat membantu kami untuk tetap terhubung dan berbagi informasi.'}
+                      "
+                    </p>
+                    <div className='flex items-center gap-3 md:gap-4 mt-auto'>
+                      <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-lg'>
+                        A
+                      </div>
+                      <div>
+                        <h6 className='text-sm md:text-base font-bold text-[color:var(--text-primary)]'>
+                          Anonymous
+                        </h6>
+                        <p className='text-[10px] md:text-xs font-bold text-indigo-500 uppercase tracking-widest'>
+                          {item.user?.role || 'Alumni'}
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className='w-full text-center py-16 md:py-20 bg-[color:var(--bg-tertiary)] rounded-2xl border-2 border-dashed border-[color:var(--border-color)]'>
+                  <p className='text-xs md:text-sm text-[color:var(--text-tertiary)] italic'>
+                    Belum ada testimoni terbaru.
                   </p>
-                  <div className='flex items-center gap-3 md:gap-4 mt-auto'>
-                    <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-lg'>
-                      A
-                    </div>
-                    <div>
-                      <h6 className='text-sm md:text-base font-bold text-[color:var(--text-primary)]'>
-                        Anonymous
-                      </h6>
-                      <p className='text-[10px] md:text-xs font-bold text-indigo-500 uppercase tracking-widest'>
-                        {item.user?.role || 'Alumni'}
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              ))
-            ) : (
-              <div className='w-full text-center py-16 md:py-20 bg-[color:var(--bg-tertiary)] rounded-2xl border-2 border-dashed border-[color:var(--border-color)]'>
-                <p className='text-xs md:text-sm text-[color:var(--text-tertiary)] italic'>
-                  Belum ada testimoni terbaru.
-                </p>
-              </div>
-            )}
-          </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </motion.section>

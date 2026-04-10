@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import {
   FaEdit,
@@ -9,7 +10,10 @@ import {
   FaShareAlt,
   FaSave,
   FaGraduationCap,
+  FaInstagram,
+  FaTimes,
 } from 'react-icons/fa';
+import html2canvas from 'html2canvas';
 
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
@@ -237,6 +241,8 @@ const AlumniQuestionnaire = () => {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {},
   );
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const [storyImage, setStoryImage] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -464,6 +470,65 @@ const AlumniQuestionnaire = () => {
     }
   };
 
+  const handleShareIG = async () => {
+    // Generate image first
+    try {
+      const element = document.getElementById('ig-story-template');
+      if (element) {
+        // Temporarily ensure it's visible if hidden (though we'll render it off-screen)
+        element.style.display = 'flex';
+        const canvas = await html2canvas(element, { backgroundColor: '#0f172a', scale: 2 });
+        element.style.display = 'none';
+
+        const imgData = canvas.toDataURL('image/png');
+        setStoryImage(imgData);
+        setShowStoryModal(true);
+      }
+    } catch (e) {
+      console.error(e);
+      Toast('Gagal membuat template story.', 'error');
+    }
+  };
+
+  const handleDownloadStory = async () => {
+    if (storyImage) {
+      if (navigator.share) {
+        try {
+          const res = await fetch(storyImage);
+          const blob = await res.blob();
+          const file = new File([blob], 'tracer-study-smanta-story.png', { type: blob.type });
+
+          await navigator.share({
+            title: 'Tracer Study SMANTA',
+            text: 'Saya sudah berkontribusi di Tracer Study SMANTA! Yuk teman-teman alumni lainnya ikut berkontribusi. #TracerStudySMANTA',
+            files: [file],
+          });
+          Toast('Terima kasih sudah membagikan ke IG Story!', 'success');
+        } catch (err: any) {
+          if (err.name !== 'AbortError') {
+            // Fallback to download
+            const link = document.createElement('a');
+            link.href = storyImage;
+            link.download = 'tracer-study-smanta-story.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            Toast('Gambar berhasil diunduh! Silakan upload ke IG Story Anda.', 'success');
+          }
+        }
+      } else {
+        // Fallback to download
+        const link = document.createElement('a');
+        link.href = storyImage;
+        link.download = 'tracer-study-smanta-story.png';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        Toast('Gambar berhasil diunduh! Silakan upload ke IG Story Anda.', 'success');
+      }
+    }
+  };
+
   if (loading || submitLoading) {
     return <SmartLoader />;
   }
@@ -497,13 +562,22 @@ const AlumniQuestionnaire = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsReadOnly(false)}
-              className='flex w-full md:w-auto items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
-            >
-              <FaEdit className='text-base' />
-              <span>Edit Data</span>
-            </button>
+            <div className='flex flex-col sm:flex-row w-full md:w-auto gap-3 mt-4 md:mt-0'>
+              <button
+                onClick={handleShareIG}
+                className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]'
+              >
+                <FaInstagram className='text-base' />
+                <span>Share ke IG Story</span>
+              </button>
+              <button
+                onClick={() => setIsReadOnly(false)}
+                className='flex items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
+              >
+                <FaEdit className='text-base' />
+                <span>Edit Data</span>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
@@ -823,6 +897,105 @@ const AlumniQuestionnaire = () => {
           </div>
         )}
       </form>
+
+      {/* Hidden IG Story Template rendering area */}
+      <div
+        id="ig-story-template"
+        className="fixed top-[-9999px] left-[-9999px] w-[1080px] h-[1920px] bg-[#0f172a] text-white flex-col justify-center items-center overflow-hidden"
+        style={{ display: 'none', background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)' }}
+      >
+        {/* Abstract Background Elements */}
+        <div className="absolute top-[-200px] left-[-200px] w-[800px] h-[800px] bg-purple-600 rounded-full blur-[200px] opacity-30"></div>
+        <div className="absolute bottom-[-300px] right-[-300px] w-[1000px] h-[1000px] bg-blue-600 rounded-full blur-[250px] opacity-40"></div>
+        <div className="absolute top-[40%] right-[-100px] w-[600px] h-[600px] bg-cyan-600 rounded-full blur-[150px] opacity-20"></div>
+
+        <div className="relative z-10 w-full h-full flex flex-col items-center justify-between py-32 px-24 text-center">
+
+          {/* Header */}
+          <div className="flex flex-col items-center gap-6 mt-16">
+            <div className="w-40 h-40 bg-white/10 backdrop-blur-xl p-6 rounded-full border border-white/20 shadow-2xl flex items-center justify-center mb-8">
+              <img src="/logo.png" alt="Logo SMANTA" className="w-full h-full object-contain" />
+            </div>
+            <div className="px-8 py-3 bg-blue-500/20 backdrop-blur-md rounded-full border border-blue-400/30 text-blue-300 text-3xl font-bold tracking-widest uppercase">
+              Tracer Study SMANTA
+            </div>
+          </div>
+
+          {/* Main Content */}
+          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-16 w-full shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500 rounded-full blur-[100px] opacity-30"></div>
+            <div className="relative z-10">
+              <h1 className="text-8xl font-black mb-12 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 leading-[1.2]">
+                SAYA<br />SUDAH<br />BERKONTRIBUSI!
+              </h1>
+              <div className="w-32 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-12"></div>
+
+              <div className="mb-12">
+                <p className="text-4xl text-gray-300 font-medium mb-6">
+                  Terima kasih,
+                </p>
+                <p className="text-6xl font-black text-white px-8 py-4 bg-white/5 rounded-3xl inline-block border border-white/10 mt-10">
+                  {formData.profile.fullName || 'Alumni SMANTA'}
+                </p>
+              </div>
+
+              <p className="text-3xl text-gray-300 leading-relaxed max-w-[800px] mx-auto opacity-90">
+                Terima kasih telah berkontribusi dalam Tracer Study SMANTA. Kontribusi Anda sangat berarti bagi sekolah dan menjadi inspirasi bagi siswa-siswi SMANTA untuk melanjutkan studi.
+              </p>
+            </div>
+          </div>
+
+          {/* Footer - Space for IG Link Sticker */}
+          <div className="flex flex-col items-center gap-8 mb-16">
+            <p className="text-2xl font-medium text-gray-400 mt-6 tracking-wide">
+              Membangun Database & Kolaborasi Alumni
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Story Preview Modal */}
+      {showStoryModal && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" style={{ zIndex: 99999 }}>
+          <div className="bg-[color:var(--bg-card)] rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-fade-in flex flex-col max-h-[90vh]">
+            <button
+              onClick={() => setShowStoryModal(false)}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[color:var(--bg-tertiary)] hover:bg-red-500 hover:text-white rounded-full transition-colors"
+            >
+              <FaTimes />
+            </button>
+            <h3 className="text-lg font-bold text-[color:var(--text-primary)] mb-4 text-center mt-2">
+              Template IG Story Anda
+            </h3>
+
+            <div className="flex-1 overflow-y-auto rounded-2xl border-2 border-[color:var(--border-color)] relative">
+              {storyImage ? (
+                <img src={storyImage} alt="IG Story Preview" className="w-full h-auto" />
+              ) : (
+                <div className="flex items-center justify-center h-full w-full py-20">
+                  <div className="animate-spin text-[var(--primary)] text-4xl">
+                    <FaSpinner />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3">
+              <button
+                onClick={handleDownloadStory}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 p-4 text-sm font-bold text-white shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
+              >
+                <FaInstagram className="text-lg" />
+                <span>Bagikan ke IG Story</span>
+              </button>
+              <p className="text-xs text-center text-[color:var(--text-tertiary)] px-4">
+                Gambar ini akan dibagikan ke Instagram Story Anda. Jangan lupa tambahkan Link Sticker <span className="font-bold text-[color:var(--text-secondary)]">https://tracerstudy-smanta.com</span>!
+              </p>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
