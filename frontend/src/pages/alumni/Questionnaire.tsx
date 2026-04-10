@@ -498,7 +498,7 @@ const AlumniQuestionnaire = () => {
 
       const triggerFallbackDownload = () => {
         if (isInstagramOrFB || isMobile) {
-          Toast('Browser ini memblokir download otomatis. Silakan TAHAN (Long-Press) gambar di atas, lalu pilih "Simpan Gambar / Save Image", kemudian upload ke IG Story Anda secara manual!', 'info', 6000);
+          Toast('Browser ini memblokir download otomatis. Silakan TAHAN (Long-Press) gambar di atas, lalu pilih "Simpan Gambar / Save Image", kemudian upload ke IG Story Anda secara manual!', 'info');
         } else {
           // Fallback to normal download for Desktop / Standard Browsers
           const link = document.createElement('a');

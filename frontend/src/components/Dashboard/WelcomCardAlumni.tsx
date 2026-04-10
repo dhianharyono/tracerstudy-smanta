@@ -1,4 +1,4 @@
-import { FaEdit, FaUser, FaCheckCircle, FaTimes } from 'react-icons/fa';
+import { FaEdit, FaUser } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
@@ -17,15 +17,11 @@ interface WelcomeCardAlumniProps {
     profile: Profile;
     questionnaireCompleted: boolean;
   };
-  hideQuestionnaireCard: boolean;
-  handleCloseQuestionnaireCard: () => void;
 }
 
 const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
   user,
   profile,
-  hideQuestionnaireCard,
-  handleCloseQuestionnaireCard,
 }) => {
   return (
     <div
