@@ -22,7 +22,7 @@ interface FeedbackResponse {
 }
 
 interface FeedbackFormProps {
-  role: 'alumni' | 'student';
+  role: 'alumni' | 'student' | 'school';
   showHeader?: boolean;
   onSuccess?: () => void;
 }

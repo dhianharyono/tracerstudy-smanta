@@ -108,6 +108,8 @@ const Layout = () => {
       // School
       '/school': 'Dashboard Sekolah',
       '/school/alumni': 'Data Alumni Sekolah',
+      '/school/universities': 'Perguruan Tinggi Sekolah',
+      '/school/feedback': 'Kritik & Saran Sekolah',
       '/school/profile': 'Profil Monitoring',
     };
 
@@ -266,6 +268,8 @@ const Layout = () => {
           <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
           <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
+          <NavLink to='/school/universities' icon={FaUniversity} label='Perguruan Tinggi' />
+          <NavLink to='/school/feedback' icon={FaCommentDots} label='Kritik & Saran' />
           <NavLink to='/school/profile' icon={FaUser} label='Profil' />
         </div>
       );

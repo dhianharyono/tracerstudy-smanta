@@ -191,9 +191,8 @@ const Profile = () => {
               <div className='flex items-center justify-between md:justify-end gap-4 bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/10 w-full md:w-auto'>
                 <div className='text-left md:text-right'>
                   <span
-                    className={`block text-sm font-bold ${
-                      isMentor ? 'text-amber-300' : 'text-indigo-200'
-                    }`}
+                    className={`block text-sm font-bold ${isMentor ? 'text-amber-300' : 'text-indigo-200'
+                      }`}
                   >
                     {isMentor ? 'Aktif' : 'Nonaktif'}
                   </span>
@@ -205,18 +204,16 @@ const Profile = () => {
                 <button
                   type='button'
                   onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${
-                    isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
-                  }`}
+                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
+                    }`}
                 >
                   <span className='sr-only'>Toggle Mentorship</span>
                   <span
                     aria-hidden='true'
-                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                      isMentor
-                        ? 'translate-x-5 sm:translate-x-6'
-                        : 'translate-x-0'
-                    }`}
+                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor
+                      ? 'translate-x-5 sm:translate-x-6'
+                      : 'translate-x-0'
+                      }`}
                   />
                 </button>
               </div>
@@ -363,89 +360,116 @@ const Profile = () => {
           )}
 
         {/* Password Section */}
-        <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
-          <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
-            <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
-              <div className='flex items-center gap-3'>
-                <div className='p-2 bg-red-500/10 rounded-lg text-red-500'>
+        {user?.role === 'school' ? (
+          <div className='bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-200 dark:border-blue-800/50 overflow-hidden shadow-sm'>
+            <div className='p-6'>
+              <div className='flex items-start gap-4'>
+                <div className='p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400'>
                   <FaLock className='text-xl' />
                 </div>
-                <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
-                  Ubah Password
-                </h2>
+                <div>
+                  <h2 className='text-sm md:text-lg font-bold text-blue-900 dark:text-blue-100 mb-1'>
+                    Keamanan Password
+                  </h2>
+                  <p className='text-xs md:text-sm text-blue-800 dark:text-blue-300/80 leading-relaxed'>
+                    Jika Anda perlu mengganti password, silakan hubungi kami melalui Instagram:{' '}
+                    <a
+                      href='https://www.instagram.com/tracerstudysmanta/'
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='inline-block font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors mt-1'
+                    >
+                      @tracerstudysmanta
+                    </a>
+                  </p>
+                </div>
               </div>
-              <button
-                type='button'
-                onClick={() => {
-                  setShowPasswordFields(!showPasswordFields);
-                  if (showPasswordFields) {
-                    setPassword('');
-                    setConfirmPassword('');
-                  }
-                }}
-                className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${
-                  showPasswordFields
-                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                }`}
-              >
-                {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
-              </button>
             </div>
           </div>
-
-          {showPasswordFields && (
-            <div className='p-6 grid gap-6 md:grid-cols-2 animate-slide-down'>
-              <div className='space-y-2 relative'>
-                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
-                  Password Baru
-                </label>
-                <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
-                  <FaLock />
+        ) : (
+          <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
+            <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
+              <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
+                <div className='flex items-center gap-3'>
+                  <div className='p-2 bg-red-500/10 rounded-lg text-red-500'>
+                    <FaLock className='text-xl' />
+                  </div>
+                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
+                    Ubah Password
+                  </h2>
                 </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
-                  placeholder='Masukkan password baru'
-                  required={showPasswordFields}
-                />
                 <button
                   type='button'
-                  onClick={() => setShowPassword(!showPassword)}
-                  className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                  onClick={() => {
+                    setShowPasswordFields(!showPasswordFields);
+                    if (showPasswordFields) {
+                      setPassword('');
+                      setConfirmPassword('');
+                    }
+                  }}
+                  className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
+                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
+                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                    }`}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
-                </button>
-              </div>
-
-              <div className='space-y-2 relative'>
-                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
-                  Konfirmasi Password
-                </label>
-                <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
-                  <FaLock />
-                </div>
-                <input
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
-                  placeholder='Ulangi password baru'
-                  required={showPasswordFields}
-                />
-                <button
-                  type='button'
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
-                >
-                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
                 </button>
               </div>
             </div>
-          )}
-        </div>
+
+            {showPasswordFields && (
+              <div className='p-6 grid gap-6 md:grid-cols-2 animate-slide-down'>
+                <div className='space-y-2 relative'>
+                  <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
+                    Password Baru
+                  </label>
+                  <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                    <FaLock />
+                  </div>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    placeholder='Masukkan password baru'
+                    required={showPasswordFields}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+
+                <div className='space-y-2 relative'>
+                  <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
+                    Konfirmasi Password
+                  </label>
+                  <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                    <FaLock />
+                  </div>
+                  <input
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    placeholder='Ulangi password baru'
+                    required={showPasswordFields}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         <div className='flex justify-end'>
           <button

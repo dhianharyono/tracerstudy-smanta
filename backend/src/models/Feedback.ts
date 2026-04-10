@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IFeedback extends Document {
   user: mongoose.Types.ObjectId;
-  role: 'alumni' | 'student';
+  role: 'alumni' | 'student' | 'school';
   rating: number;
   kritik?: string;
   saran?: string;
@@ -24,7 +24,7 @@ const FeedbackSchema = new Schema<IFeedback>(
     },
     role: {
       type: String,
-      enum: ['alumni', 'student'],
+      enum: ['alumni', 'student', 'school'],
       required: true,
     },
     rating: {

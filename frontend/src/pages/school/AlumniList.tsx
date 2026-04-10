@@ -70,7 +70,7 @@ const SchoolAlumniList = () => {
       person.profile?.fullName || 'Anonim',
       person.profile?.graduationYear || '-',
       person.email || '-',
-      person.questionnaireCompleted ? 'Selesai' : 'Belum Selesai',
+      person.profile?.fullName && person.email && person.profile?.graduationYear && person.university?.name ? 'Lengkap' : 'Belum Lengkap',
       person.profile?.isStudying && person.profile?.isWorking ? 'Kuliah & Kerja' : person.profile?.isStudying ? 'Kuliah' : person.profile?.isWorking ? 'Bekerja' : 'Belum Terdata',
       person.university?.name || '-',
       person.university?.major || '-',
@@ -201,11 +201,11 @@ const SchoolAlumniList = () => {
           <table className='w-full text-left text-sm'>
             <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] border-b border-[color:var(--border-color)]'>
               <tr>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Alumni</th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Nama & Email</th>
                 <th className='px-6 py-4 font-bold uppercase tracking-wider'>Angkatan</th>
                 <th className='px-6 py-4 font-bold uppercase tracking-wider'>Perguruan Tinggi</th>
                 <th className='px-6 py-4 font-bold uppercase tracking-wider'>Pekerjaan</th>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Survei</th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Kelengkapan Data</th>
               </tr>
             </thead>
             <tbody className='divide-y divide-[color:var(--border-color)]'>
@@ -266,10 +266,10 @@ const SchoolAlumniList = () => {
                       )}
                     </td>
                     <td className='px-6 py-4'>
-                      {person.questionnaireCompleted ? (
+                      {person.profile?.fullName && person.email && person.profile?.graduationYear && person.university?.name ? (
                         <div className='flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold'>
                           <FaCheckCircle size={14} />
-                          <span>Selesai</span>
+                          <span>Lengkap</span>
                         </div>
                       ) : (
                         <div className='flex items-center gap-2 text-amber-500 font-bold'>
@@ -311,7 +311,7 @@ const SchoolAlumniList = () => {
           </button>
         </div>
       </div>
-      
+
     </div>
   );
 };

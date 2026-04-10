@@ -62,70 +62,61 @@ const SchoolDashboard = () => {
       </div>
 
       {/* Overview Cards */}
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8'>
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='p-2.5 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg'>
+      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8'>
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
+          <div className='flex flex-col'>
+            <div className='w-10 h-10 mb-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center'>
               <FaUsers size={20} />
             </div>
-            <div>
-              <p className='text-xs text-[color:var(--text-secondary)]'>Total Alumni</p>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>{stats?.totalAlumni}</h3>
-            </div>
+            <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>{stats?.totalAlumni || 0}</h3>
+            <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>Total Alumni</p>
           </div>
         </div>
 
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='p-2.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-lg'>
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
+          <div className='flex flex-col'>
+            <div className='w-10 h-10 mb-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center'>
               <FaGraduationCap size={20} />
             </div>
-            <div>
-              <p className='text-xs text-[color:var(--text-secondary)]'>Total Siswa</p>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>{stats?.totalStudents}</h3>
-            </div>
+            <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>{stats?.totalStudents || 0}</h3>
+            <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>Total Siswa</p>
           </div>
         </div>
 
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='p-2.5 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-lg'>
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
+          <div className='flex flex-col'>
+            <div className='w-10 h-10 mb-3 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center'>
               <FaCheckCircle size={20} />
             </div>
-            <div>
-              <p className='text-xs text-[color:var(--text-secondary)]'>Data Terisi</p>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>
-                {stats?.completedAlumni} <span className='text-xs font-normal text-[color:var(--text-tertiary)]'>({((stats.completedAlumni / (stats.totalAlumni || 1)) * 100).toFixed(0)}%)</span>
-              </h3>
+            <div className='flex items-baseline gap-2'>
+              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>{stats?.completedAlumni || 0}</h3>
+              {stats?.totalAlumni > 0 && (
+                <span className='text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-md'>
+                  {((stats.completedAlumni / stats.totalAlumni) * 100).toFixed(0)}%
+                </span>
+              )}
             </div>
+            <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>Data Terisi</p>
           </div>
         </div>
 
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='p-2.5 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-lg'>
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
+          <div className='flex flex-col'>
+            <div className='w-10 h-10 mb-3 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center'>
               <FaBriefcase size={20} />
             </div>
-            <div>
-              <p className='text-xs text-[color:var(--text-secondary)]'>Bekerja</p>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>
-                {stats?.workingAlumni}
-              </h3>
-            </div>
+            <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>{stats?.workingAlumni || 0}</h3>
+            <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>Bekerja</p>
           </div>
         </div>
 
-        <div className='bg-[color:var(--bg-card)] p-4 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
-          <div className='flex items-center gap-3'>
-            <div className='p-2.5 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-lg'>
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
+          <div className='flex flex-col'>
+            <div className='w-10 h-10 mb-3 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center'>
               <FaUniversity size={20} />
             </div>
-            <div>
-              <p className='text-xs text-[color:var(--text-secondary)]'>Kuliah</p>
-              <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>
-                {stats?.studyingAlumni}
-              </h3>
-            </div>
+            <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>{stats?.studyingAlumni || 0}</h3>
+            <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>Kuliah</p>
           </div>
         </div>
       </div>
@@ -257,52 +248,65 @@ const SchoolDashboard = () => {
 
             {/* Students Sections */}
             <div>
-              <div className='flex items-center gap-2 mb-4 mt-4'>
-                <span className='text-[10px] items-center px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 font-bold uppercase tracking-widest'>
+              <div className='flex items-center gap-2 mb-4 mt-2'>
+                <span className='px-3 py-1 rounded-md bg-indigo-500/10 text-indigo-600 font-bold text-xs uppercase tracking-widest'>
                   Siswa Aktif
                 </span>
-                <div className='h-[1px] flex-grow bg-[color:var(--border-color)] opacity-50'></div>
+                <div className='h-[1px] flex-grow bg-[color:var(--border-color)]'></div>
               </div>
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
-                {stats?.studentsByYear?.slice().sort((a: any, b: any) => a._id - b._id).map((item: any) => (
-                  <div key={item._id} className='p-3 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent hover:border-indigo-500 transition-all'>
-                    <div className='flex justify-between items-center'>
-                      <div>
-                        <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase'>Lulus Tahun</p>
-                        <p className='text-sm font-black text-[color:var(--text-primary)]'>{item._id}</p>
-                      </div>
-                      <div className='text-right'>
-                        <p className='text-sm font-black text-indigo-500'>{item.count}</p>
-                        <p className='text-[9px] text-[color:var(--text-tertiary)] font-bold uppercase'>Siswa</p>
+                {stats?.studentsByYear?.slice().sort((a: any, b: any) => a._id - b._id).map((item: any) => {
+                  const maxStudents = Math.max(...(stats.studentsByYear.map((s: any) => s.count) || [1]));
+                  const width = `${(item.count / maxStudents) * 100}%`;
+                  
+                  return (
+                    <div key={item._id} className='relative p-4 rounded-xl bg-[color:var(--bg-tertiary)] group overflow-hidden border border-[color:var(--border-color)]'>
+                      <div className='absolute left-0 top-0 bottom-0 bg-indigo-500/10' style={{ width }}></div>
+                      <div className='relative z-10 flex items-center justify-between'>
+                        <div>
+                          <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider mb-1'>Angkatan</p>
+                          <p className='text-lg font-black text-[color:var(--text-primary)]'>{item._id}</p>
+                        </div>
+                        <div className='text-right'>
+                          <p className='text-xl font-black text-indigo-500'>{item.count}</p>
+                          <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider'>Siswa</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
+            
             {/* Alumni Sections */}
-            <div>
+            <div className='pt-2'>
               <div className='flex items-center gap-2 mb-4'>
-                <span className='text-[10px] items-center px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 font-bold uppercase tracking-widest'>
-                  Alumni
+                <span className='px-3 py-1 rounded-md bg-blue-500/10 text-blue-600 font-bold text-xs uppercase tracking-widest'>
+                  Alumni Terdata
                 </span>
-                <div className='h-[1px] flex-grow bg-[color:var(--border-color)] opacity-50'></div>
+                <div className='h-[1px] flex-grow bg-[color:var(--border-color)]'></div>
               </div>
-              <div className='grid grid-cols-1 gap-3'>
-                {stats?.alumniByYear?.slice().sort((a: any, b: any) => b._id - a._id).map((item: any) => (
-                  <div key={item._id} className='p-3 rounded-xl bg-[color:var(--bg-tertiary)] border border-transparent hover:border-[var(--primary)] transition-all'>
-                    <div className='flex justify-between items-center'>
-                      <div>
-                        <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase'>Angkatan</p>
-                        <p className='text-sm font-black text-[color:var(--text-primary)]'>{item._id}</p>
-                      </div>
-                      <div className='text-right'>
-                        <p className='text-sm font-black text-[var(--primary)]'>{item.count}</p>
-                        <p className='text-[9px] text-[color:var(--text-tertiary)] font-bold uppercase'>Alumni</p>
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-3'>
+                {stats?.alumniByYear?.slice().sort((a: any, b: any) => b._id - a._id).map((item: any) => {
+                  const maxAlumni = Math.max(...(stats.alumniByYear.map((s: any) => s.count) || [1]));
+                  const width = `${(item.count / maxAlumni) * 100}%`;
+                  
+                  return (
+                    <div key={item._id} className='relative p-4 rounded-xl bg-[color:var(--bg-tertiary)] group overflow-hidden border border-[color:var(--border-color)]'>
+                      <div className='absolute left-0 top-0 bottom-0 bg-[var(--primary)]/10' style={{ width }}></div>
+                      <div className='relative z-10 flex items-center justify-between'>
+                        <div>
+                          <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider mb-1'>Lulus Tahun</p>
+                          <p className='text-lg font-black text-[color:var(--text-primary)]'>{item._id}</p>
+                        </div>
+                        <div className='text-right'>
+                          <p className='text-xl font-black text-[var(--primary)]'>{item.count}</p>
+                          <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider'>Alumni</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           </div>

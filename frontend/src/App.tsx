@@ -44,9 +44,10 @@ const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
 const AdminCollegePlans = lazy(() => import('./pages/admin/CollegePlans'));
 const AdminSchoolUsers = lazy(() => import('./pages/admin/SchoolUsers'));
 
-// School Pages
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
+const SchoolUniversityList = lazy(() => import('./pages/school/UniversityList'));
+const SchoolFeedback = lazy(() => import('./pages/school/Feedback'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -190,6 +191,8 @@ function App() {
             >
               <Route index element={<SchoolDashboard />} />
               <Route path='alumni' element={<SchoolAlumniList />} />
+              <Route path='universities' element={<SchoolUniversityList />} />
+              <Route path='feedback' element={<SchoolFeedback />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 
