@@ -492,7 +492,26 @@ const AlumniQuestionnaire = () => {
 
   const handleDownloadStory = async () => {
     if (storyImage) {
-      if (navigator.share) {
+      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      const isInstagramOrFB = /Instagram|FBAN|FBAV/i.test(userAgent);
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
+
+      const triggerFallbackDownload = () => {
+        if (isInstagramOrFB || isMobile) {
+          Toast('Browser ini memblokir download otomatis. Silakan TAHAN (Long-Press) gambar di atas, lalu pilih "Simpan Gambar / Save Image", kemudian upload ke IG Story Anda secara manual!', 'info', 6000);
+        } else {
+          // Fallback to normal download for Desktop / Standard Browsers
+          const link = document.createElement('a');
+          link.href = storyImage;
+          link.download = 'tracer-study-smanta-story.png';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          Toast('Gambar berhasil diunduh! Silakan bagikan ke IG Story Anda.', 'success');
+        }
+      };
+
+      if (navigator.share && !isInstagramOrFB) {
         try {
           const res = await fetch(storyImage);
           const blob = await res.blob();
@@ -506,25 +525,11 @@ const AlumniQuestionnaire = () => {
           Toast('Terima kasih sudah membagikan ke IG Story!', 'success');
         } catch (err: any) {
           if (err.name !== 'AbortError') {
-            // Fallback to download
-            const link = document.createElement('a');
-            link.href = storyImage;
-            link.download = 'tracer-study-smanta-story.png';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            Toast('Gambar berhasil diunduh! Silakan upload ke IG Story Anda.', 'success');
+            triggerFallbackDownload();
           }
         }
       } else {
-        // Fallback to download
-        const link = document.createElement('a');
-        link.href = storyImage;
-        link.download = 'tracer-study-smanta-story.png';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        Toast('Gambar berhasil diunduh! Silakan upload ke IG Story Anda.', 'success');
+        triggerFallbackDownload();
       }
     }
   };
@@ -898,59 +903,59 @@ const AlumniQuestionnaire = () => {
         )}
       </form>
 
-      {/* Hidden IG Story Template rendering area */}
       <div
         id="ig-story-template"
-        className="fixed top-[-9999px] left-[-9999px] w-[1080px] h-[1920px] bg-[#0f172a] text-white flex-col justify-center items-center overflow-hidden"
-        style={{ display: 'none', background: 'linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)' }}
+        className="fixed top-[-9999px] left-[-9999px] w-[1080px] h-[1920px] bg-[#0f172a] text-white flex flex-col justify-center items-center overflow-hidden"
+        style={{ display: 'none', background: '#0f172a' }}
       >
-        {/* Abstract Background Elements */}
-        <div className="absolute top-[-200px] left-[-200px] w-[800px] h-[800px] bg-purple-600 rounded-full blur-[200px] opacity-30"></div>
-        <div className="absolute bottom-[-300px] right-[-300px] w-[1000px] h-[1000px] bg-blue-600 rounded-full blur-[250px] opacity-40"></div>
-        <div className="absolute top-[40%] right-[-100px] w-[600px] h-[600px] bg-cyan-600 rounded-full blur-[150px] opacity-20"></div>
+        {/* Background Decorative */}
+        <div className="absolute inset-0 w-[1080px] h-[1920px] overflow-hidden pointer-events-none flex justify-center items-center">
+          <div className="absolute top-[-200px] right-[-200px] w-[800px] h-[800px] bg-blue-600 rounded-full blur-[200px] opacity-20"></div>
+          <div className="absolute bottom-[-200px] left-[-200px] w-[800px] h-[800px] bg-purple-600 rounded-full blur-[200px] opacity-20"></div>
+        </div>
 
-        <div className="relative z-10 w-full h-full flex flex-col items-center justify-between py-32 px-24 text-center">
+        <div className="relative z-10 w-full h-[1920px] flex flex-col items-center justify-center p-20 text-center">
 
-          {/* Header */}
-          <div className="flex flex-col items-center gap-6 mt-16">
-            <div className="w-40 h-40 bg-white/10 backdrop-blur-xl p-6 rounded-full border border-white/20 shadow-2xl flex items-center justify-center mb-8">
-              <img src="/logo.png" alt="Logo SMANTA" className="w-full h-full object-contain" />
+          {/* Certificate Card */}
+          <div className="bg-[#1e293b]/90 border-[3px] border-blue-500/40 rounded-[4rem] w-full p-20 shadow-[0_0_80px_rgba(59,130,246,0.2)] relative flex flex-col items-center justify-center mx-auto my-auto">
+
+            {/* Subtle inner border */}
+            <div className="absolute inset-6 border border-blue-400/20 rounded-[3rem] pointer-events-none"></div>
+
+            {/* Logo */}
+            <div className="w-48 h-48 bg-[#0f172a] p-8 rounded-full border-4 border-blue-500/30 flex items-center justify-center mb-10 mx-auto shadow-[0_0_30px_rgba(59,130,246,0.2)]">
+              <img src="/logo.png" alt="Logo SMANTA" className="w-full h-full object-contain mx-auto" />
             </div>
-            <div className="px-8 py-3 bg-blue-500/20 backdrop-blur-md rounded-full border border-blue-400/30 text-blue-300 text-3xl font-bold tracking-widest uppercase">
-              Tracer Study SMANTA
-            </div>
-          </div>
 
-          {/* Main Content */}
-          <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[3rem] p-16 w-full shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500 rounded-full blur-[100px] opacity-30"></div>
-            <div className="relative z-10">
-              <h1 className="text-8xl font-black mb-12 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 leading-[1.2]">
-                SAYA<br />SUDAH<br />BERKONTRIBUSI!
-              </h1>
-              <div className="w-32 h-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-12"></div>
+            <h1 className="text-3xl font-bold tracking-[0.3em] text-blue-400 uppercase mb-12 text-center w-full mx-auto">
+              Tracer Study Smanta
+            </h1>
 
-              <div className="mb-12">
-                <p className="text-4xl text-gray-300 font-medium mb-6">
-                  Terima kasih,
-                </p>
-                <p className="text-6xl font-black text-white px-8 py-4 bg-white/5 rounded-3xl inline-block border border-white/10 mt-10">
-                  {formData.profile.fullName || 'Alumni SMANTA'}
-                </p>
-              </div>
+            <div className="w-64 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto mb-16"></div>
 
-              <p className="text-3xl text-gray-300 leading-relaxed max-w-[800px] mx-auto opacity-90">
-                Terima kasih telah berkontribusi dalam Tracer Study SMANTA. Kontribusi Anda sangat berarti bagi sekolah dan menjadi inspirasi bagi siswa-siswi SMANTA untuk melanjutkan studi.
+            <h2 className="text-[5.5rem] font-black text-white mb-4 uppercase tracking-widest text-center w-full mx-auto" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+              CERTIFICATE
+            </h2>
+            <h3 className="text-4xl font-light text-blue-200 tracking-[0.4em] mb-20 text-center w-full mx-auto">
+              OF APPRECIATION
+            </h3>
+
+            <p className="text-3xl text-gray-400 font-medium mb-12 text-center w-full mx-auto">
+              Diberikan dengan bangga kepada:
+            </p>
+
+            <div className="bg-[#0f172a]/50 px-16 py-10 rounded-[3rem] border border-blue-500/20 mb-16 w-full max-w-[85%] mx-auto flex flex-col items-center justify-center">
+              <p className="text-6xl font-black text-white text-center w-full m-0 p-0 leading-normal flex items-center justify-center">
+                {formData.profile.fullName || 'Alumni SMANTA'}
               </p>
             </div>
-          </div>
 
-          {/* Footer - Space for IG Link Sticker */}
-          <div className="flex flex-col items-center gap-8 mb-16">
-            <p className="text-2xl font-medium text-gray-400 mt-6 tracking-wide">
-              Membangun Database & Kolaborasi Alumni
+            <p className="text-3xl text-gray-300 leading-[1.6] max-w-[90%] mx-auto opacity-90 mb-16 text-center w-full">
+              Atas kontribusi positif dan partisipasinya dalam membangun database <span className="text-blue-300 font-bold">Tracer Study SMANTA.</span><br />
+              Semoga jejak ini menjadi inspirasi bagi generasi selanjutnya.
             </p>
           </div>
+
         </div>
       </div>
 

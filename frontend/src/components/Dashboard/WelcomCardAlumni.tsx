@@ -52,7 +52,7 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
         </div>
       </div>
 
-      {!profile?.questionnaireCompleted ? (
+      {!profile?.questionnaireCompleted && (
         <div className='mt-5 rounded-xl border-2 border-dashed border-[color:var(--warning)] bg-[color:var(--bg-tertiary)] p-6'>
           <div className='mb-4 flex items-center gap-3'>
             <FaEdit className='text-3xl text-[color:var(--warning)]' />
@@ -71,42 +71,6 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
             <span>Isi Kuesioner Sekarang</span>
           </Link>
         </div>
-      ) : (
-        !hideQuestionnaireCard && (
-          <div className='card relative mt-5 rounded-xl border border-[color:var(--success)] p-6'>
-            <button
-              onClick={handleCloseQuestionnaireCard}
-              className='absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-md border-none bg-transparent p-1 text-xl text-[color:var(--text-tertiary)] transition-all hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] focus:outline-none'
-            >
-              <FaTimes />
-            </button>
-            <div className='mb-4 flex items-center gap-3'>
-              <FaCheckCircle className='text-xl md:text-3xl text-[color:var(--success)]' />
-              <div>
-                <h3 className='mb-1 text-sm md:text-lg'>Kuesioner Lengkap</h3>
-                <p className='text-xs md:text-sm text-[color:var(--text-secondary)]'>
-                  Data kuesioner Anda sudah lengkap
-                </p>
-              </div>
-            </div>
-            <div className='flex flex-wrap gap-3'>
-              <Link
-                to='/alumni/profile'
-                className='btn btn-success flex items-center gap-2'
-              >
-                <FaUser />
-                <span>Lihat Profil</span>
-              </Link>
-              <Link
-                to='/alumni/questionnaire'
-                className='btn btn-primary flex items-center gap-2'
-              >
-                <FaEdit />
-                <span>Edit Kuesioner</span>
-              </Link>
-            </div>
-          </div>
-        )
       )}
     </div>
   );
