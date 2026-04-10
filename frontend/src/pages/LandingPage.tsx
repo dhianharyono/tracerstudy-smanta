@@ -72,8 +72,6 @@ const LandingPage = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  if (loading) return <SmartLoader />;
-
   return (
     <div className='bg-[color:var(--bg-primary)] min-h-screen font-sans selection:bg-[var(--primary)] selection:text-white'>
       {/* Navigation Overlay */}
@@ -227,7 +225,7 @@ const LandingPage = () => {
                     ))}
                   </div>
                   <span className='text-[10px] md:text-xs font-bold text-blue-200'>
-                    +{stats?.totalAlumni || 0} Alumni Terhubung
+                    +{loading ? '...' : (stats?.totalAlumni || 0)} Alumni Terhubung
                   </span>
                 </div>
               </div>
@@ -473,8 +471,10 @@ const LandingPage = () => {
             </p>
           </motion.div>
 
-
-
+          {loading ? (
+            <SmartLoader fullScreen={false} messages={['Memuat laporan statistik...']} />
+          ) : (
+            <>
           <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
             {/* Stats Cards */}
             {[
@@ -699,6 +699,8 @@ const LandingPage = () => {
               </div>
             </div>
           </motion.div>
+          </>
+          )}
         </div>
       </section>
 
@@ -725,6 +727,9 @@ const LandingPage = () => {
             </p>
           </motion.div>
 
+          {loading ? (
+            <SmartLoader fullScreen={false} messages={['Memuat testimoni...']} />
+          ) : (
           <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar'>
             {testimonials.length > 0 ? (
               testimonials.map((item, idx) => (
@@ -767,6 +772,7 @@ const LandingPage = () => {
               </div>
             )}
           </div>
+          )}
         </div>
       </motion.section>
 
