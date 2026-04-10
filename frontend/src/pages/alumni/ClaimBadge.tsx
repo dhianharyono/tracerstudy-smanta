@@ -34,6 +34,10 @@ const ClaimBadge = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
+  if (!user?.university?.name) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
+  }
+
   return (
     <div className='min-h-[80vh] flex items-center justify-center p-5 page-fade-in'>
       <div className='max-w-md w-full bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] shadow-xl overflow-hidden'>

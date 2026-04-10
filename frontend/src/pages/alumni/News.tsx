@@ -48,6 +48,10 @@ const AlumniNews = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
+  if (!user?.university?.name) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
+  }
+
   return (
     <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
       <div className='flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8'>

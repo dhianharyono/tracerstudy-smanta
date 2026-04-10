@@ -66,6 +66,10 @@ const MutualAlumni = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
+  if (!user?.university?.name) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
+  }
+
   return (
     <div className='p-3 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       <div className='mb-6 md:mb-8 text-center md:text-left'>

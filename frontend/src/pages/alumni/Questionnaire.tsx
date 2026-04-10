@@ -36,7 +36,7 @@ const InputField = ({
     {label && (
       <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
         {label}{' '}
-        {required && !disabled && <span className='text-red-500'>*</span>}
+        {required && <span className='text-red-500'>*</span>}
       </label>
     )}
     <input
@@ -79,7 +79,7 @@ const SelectField = ({
     {label && (
       <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
         {label}{' '}
-        {required && !disabled && <span className='text-red-500'>*</span>}
+        {required && <span className='text-red-500'>*</span>}
       </label>
     )}
     <div className='relative'>
@@ -134,14 +134,13 @@ interface ProfileData {
   entryYear: string;
   graduationYear: string;
   lastEducation: '' | 'tidak kuliah' | 'd3' | 'd4' | 's1' | 's2' | 's3';
-  isStudying: '' | 'ya' | 'tidak';
-  isWorking: '' | 'ya' | 'tidak';
 }
 
 interface UniversityData {
   name: string;
   type: '' | 'negeri' | 'swasta' | 'kedinasan';
   entryYear: string;
+  graduationYear: string;
   major: string;
 }
 
@@ -168,6 +167,7 @@ type ValidationErrors = Record<string, string>;
 
 interface AlumniProfile {
   questionnaireCompleted: boolean;
+  email?: string;
   profile?: {
     fullName?: string;
     gender?: string;
@@ -181,6 +181,7 @@ interface AlumniProfile {
     name?: string;
     type?: string;
     entryYear?: number;
+    graduationYear?: number;
     major?: string;
   };
   job?: {
@@ -202,13 +203,12 @@ const initialFormData: FormData = {
     entryYear: '',
     graduationYear: '',
     lastEducation: '',
-    isStudying: '',
-    isWorking: '',
   },
   university: {
     name: '',
     type: '',
     entryYear: '',
+    graduationYear: '',
     major: '',
   },
   job: {
@@ -253,48 +253,50 @@ const AlumniQuestionnaire = () => {
         setUniversities(univList);
         setMajors(COMMON_MAJORS);
 
-        if (profileRes.data?.questionnaireCompleted) {
-          setIsEditMode(true);
-          setIsReadOnly(true);
+        if (profileRes.data) {
           const profile = profileRes.data;
 
-          setFormData({
-            profile: {
-              fullName: profile.profile?.fullName || '',
-              gender: (profile.profile?.gender as ProfileData['gender']) || '',
-              entryYear: profile.profile?.entryYear?.toString() || '',
-              graduationYear: profile.profile?.graduationYear?.toString() || '',
-              lastEducation:
-                (profile.profile
-                  ?.lastEducation as ProfileData['lastEducation']) || '',
-              isStudying: profile.profile?.isStudying
-                ? 'ya'
-                : profile.profile?.isStudying === false
-                  ? 'tidak'
-                  : '',
-              isWorking: profile.profile?.isWorking
-                ? 'ya'
-                : profile.profile?.isWorking === false
-                  ? 'tidak'
-                  : '',
-            },
-            university: {
-              name: profile.university?.name || '',
-              type: (profile.university?.type as UniversityData['type']) || '',
-              entryYear: profile.university?.entryYear?.toString() || '',
-              major: profile.university?.major || '',
-            },
-            job: {
-              position: profile.job?.position || '',
-              institution: profile.job?.institution || '',
-              jobTitle: profile.job?.jobTitle || '',
-            },
-            socialMedia: {
-              email: profile.socialMedia?.email || '',
-              linkedin: profile.socialMedia?.linkedin || '',
-              instagram: profile.socialMedia?.instagram || '',
-            },
-          });
+          if (profile.questionnaireCompleted) {
+            setIsEditMode(true);
+            setIsReadOnly(true);
+
+            setFormData({
+              profile: {
+                fullName: profile.profile?.fullName || '',
+                gender: (profile.profile?.gender as ProfileData['gender']) || '',
+                entryYear: profile.profile?.entryYear?.toString() || '',
+                graduationYear: profile.profile?.graduationYear?.toString() || '',
+                lastEducation:
+                  (profile.profile
+                    ?.lastEducation as ProfileData['lastEducation']) || '',
+              },
+              university: {
+                name: profile.university?.name || '',
+                type: (profile.university?.type as UniversityData['type']) || '',
+                entryYear: profile.university?.entryYear?.toString() || '',
+                graduationYear: profile.university?.graduationYear?.toString() || '',
+                major: profile.university?.major || '',
+              },
+              job: {
+                position: profile.job?.position || '',
+                institution: profile.job?.institution || '',
+                jobTitle: profile.job?.jobTitle || '',
+              },
+              socialMedia: {
+                email: profile.socialMedia?.email || profile.email || '',
+                linkedin: profile.socialMedia?.linkedin || '',
+                instagram: profile.socialMedia?.instagram || '',
+              },
+            });
+          } else {
+            setFormData(prev => ({
+              ...prev,
+              socialMedia: {
+                ...prev.socialMedia,
+                email: profile.socialMedia?.email || profile.email || '',
+              }
+            }));
+          }
         }
       } catch (err) {
         console.error('Failed to fetch data:', err);
@@ -380,19 +382,17 @@ const AlumniQuestionnaire = () => {
     if (!formData.profile.graduationYear) {
       errors['profile.graduationYear'] = 'Tahun lulus SMA wajib diisi';
     }
-    if (formData.profile.isStudying === 'ya') {
-      if (!formData.university.name) {
-        errors['university.name'] = 'Nama kampus wajib diisi';
-      }
-      if (!formData.university.type) {
-        errors['university.type'] = 'Jenis perguruan tinggi wajib diisi';
-      }
-      if (!formData.university.entryYear) {
-        errors['university.entryYear'] = 'Tahun masuk kuliah wajib diisi';
-      }
-      if (!formData.university.major) {
-        errors['university.major'] = 'Jurusan kuliah wajib diisi';
-      }
+    if (!formData.university.name) {
+      errors['university.name'] = 'Nama kampus wajib diisi';
+    }
+    if (!formData.university.type) {
+      errors['university.type'] = 'Jenis perguruan tinggi wajib diisi';
+    }
+    if (!formData.university.entryYear) {
+      errors['university.entryYear'] = 'Tahun masuk kuliah wajib diisi';
+    }
+    if (!formData.university.major) {
+      errors['university.major'] = 'Jurusan kuliah wajib diisi';
     }
 
     setValidationErrors(errors);
@@ -422,19 +422,19 @@ const AlumniQuestionnaire = () => {
           graduationYear: formData.profile.graduationYear
             ? parseInt(formData.profile.graduationYear)
             : undefined,
-          isStudying: formData.profile.isStudying === 'ya',
-          isWorking: formData.profile.isWorking === 'ya',
+          isStudying: true,
+          isWorking: !!(formData.job.position || formData.job.institution || formData.job.jobTitle),
         },
-        university:
-          formData.profile.isStudying === 'ya'
-            ? {
-              ...formData.university,
-              entryYear: formData.university.entryYear
-                ? parseInt(formData.university.entryYear)
-                : undefined,
-            }
+        university: {
+          ...formData.university,
+          entryYear: formData.university.entryYear
+            ? parseInt(formData.university.entryYear)
             : undefined,
-        job: formData.profile.isWorking === 'ya' ? formData.job : undefined,
+          graduationYear: formData.university.graduationYear
+            ? parseInt(formData.university.graduationYear)
+            : undefined,
+        },
+        job: (formData.job.position || formData.job.institution || formData.job.jobTitle) ? formData.job : undefined,
         socialMedia: {
           email: formData.socialMedia.email?.trim() || undefined,
           linkedin: formData.socialMedia.linkedin?.trim() || undefined,
@@ -610,169 +610,129 @@ const AlumniQuestionnaire = () => {
               disabled={isReadOnly}
             />
           </div>
-
-          <div className='mt-6 grid gap-6 md:grid-cols-2'>
-            <div className='form-group'>
-              <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-                Status
-              </label>
-              <div className='space-y-4 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] p-4'>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
-                    Kuliah
-                  </span>
-                  <select
-                    name='profile.isStudying'
-                    value={formData.profile.isStudying}
-                    onChange={(e) => {
-                      handleChange(e);
-                    }}
-                    disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                      : ''
-                      }`}
-                  >
-                    <option value=''>Pilih</option>
-                    <option value='ya'>Ya</option>
-                    <option value='tidak'>Tidak</option>
-                  </select>
-                </div>
-                <div className='flex items-center justify-between'>
-                  <span className='text-sm font-medium text-[color:var(--text-primary)] w-52'>
-                    Bekerja
-                  </span>
-                  <select
-                    name='profile.isWorking'
-                    value={formData.profile.isWorking}
-                    onChange={handleChange}
-                    disabled={isReadOnly}
-                    className={`rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-1.5 text-sm text-[color:var(--text-primary)] focus:outline-none focus:border-[var(--primary)] ${isReadOnly
-                      ? 'opacity-70 cursor-not-allowed grayscale-[0.5]'
-                      : ''
-                      }`}
-                  >
-                    <option value=''>Pilih</option>
-                    <option value='ya'>Ya</option>
-                    <option value='tidak'>Tidak</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* University Section */}
-        {formData.profile.isStudying === 'ya' && (
-          <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
-                <FaGraduationCap className='text-sm md:text-xl' />
-              </div>
-              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
-                Data Perguruan Tinggi
-              </h2>
+        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
+              <FaGraduationCap className='text-sm md:text-xl' />
             </div>
-
-            <div className='grid gap-6 md:grid-cols-2'>
-              <SearchableSelect
-                label='Nama Kampus'
-                name='university.name'
-                value={formData.university.name}
-                options={universities}
-                onChange={handleChange}
-                required
-                placeholder='Pilih atau cari nama kampus...'
-                disabled={isReadOnly}
-                validationErrors={validationErrors}
-              />
-
-              <SelectField
-                label='Jenis Perguruan Tinggi'
-                name='university.type'
-                value={formData.university.type}
-                onChange={handleChange}
-                required
-                options={[
-                  { value: 'negeri', label: 'Negeri' },
-                  { value: 'swasta', label: 'Swasta' },
-                  { value: 'kedinasan', label: 'Kedinasan' },
-                ]}
-                validationErrors={validationErrors}
-                disabled={isReadOnly}
-              />
-
-              <InputField
-                label='Tahun Masuk'
-                name='university.entryYear'
-                type='number'
-                value={formData.university.entryYear}
-                onChange={handleChange}
-                min='1900'
-                max={new Date().getFullYear()}
-                placeholder='Ex: 2021'
-                validationErrors={validationErrors}
-                disabled={isReadOnly}
-              />
-
-              <SearchableSelect
-                label='Jurusan'
-                name='university.major'
-                value={formData.university.major}
-                options={majors}
-                onChange={handleChange}
-                required
-                placeholder='Pilih atau cari jurusan...'
-                disabled={isReadOnly}
-                validationErrors={validationErrors}
-              />
-            </div>
+            <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              Data Perguruan Tinggi
+            </h2>
           </div>
-        )}
+
+          <div className='grid gap-6 md:grid-cols-2'>
+            <SearchableSelect
+              label='Nama Kampus'
+              name='university.name'
+              value={formData.university.name}
+              options={universities}
+              onChange={handleChange}
+              required
+              placeholder='Pilih atau cari nama kampus...'
+              disabled={isReadOnly}
+              validationErrors={validationErrors}
+            />
+
+            <SelectField
+              label='Jenis Perguruan Tinggi'
+              name='university.type'
+              value={formData.university.type}
+              onChange={handleChange}
+              required
+              options={[
+                { value: 'negeri', label: 'Negeri' },
+                { value: 'swasta', label: 'Swasta' },
+                { value: 'kedinasan', label: 'Kedinasan' },
+              ]}
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+            />
+
+            <InputField
+              label='Tahun Masuk'
+              name='university.entryYear'
+              type='number'
+              value={formData.university.entryYear}
+              onChange={handleChange}
+              min='1900'
+              max={new Date().getFullYear()}
+              placeholder='Ex: 2021'
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+              required
+            />
+
+            <InputField
+              label='Tahun Lulus (Opsional)'
+              name='university.graduationYear'
+              type='number'
+              value={formData.university.graduationYear}
+              onChange={handleChange}
+              min='1900'
+              max={new Date().getFullYear() + 10}
+              placeholder='Ex: 2025'
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+            />
+
+            <SearchableSelect
+              label='Jurusan'
+              name='university.major'
+              value={formData.university.major}
+              options={majors}
+              onChange={handleChange}
+              required
+              placeholder='Pilih atau cari jurusan...'
+              disabled={isReadOnly}
+              validationErrors={validationErrors}
+            />
+          </div>
+        </div>
 
         {/* Job Section */}
-        {formData.profile.isWorking === 'ya' && (
-          <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
-                <FaBriefcase className='text-sm md:text-xl' />
-              </div>
-              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
-                Data Pekerjaan
-              </h2>
+        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
+              <FaBriefcase className='text-sm md:text-xl' />
             </div>
-
-            <div className='grid gap-6 md:grid-cols-2'>
-              <InputField
-                label='Posisi/Jabatan'
-                name='job.position'
-                value={formData.job.position}
-                onChange={handleChange}
-                placeholder='Ex: Staff IT'
-                validationErrors={validationErrors}
-                disabled={isReadOnly}
-              />
-              <InputField
-                label='Nama Instansi/Perusahaan'
-                name='job.institution'
-                value={formData.job.institution}
-                onChange={handleChange}
-                placeholder='Ex: PT. Maju Jaya'
-                validationErrors={validationErrors}
-                disabled={isReadOnly}
-              />
-              <InputField
-                label='Nama Pekerjaan'
-                name='job.jobTitle'
-                value={formData.job.jobTitle}
-                onChange={handleChange}
-                placeholder='Ex: Web Developer'
-                validationErrors={validationErrors}
-                disabled={isReadOnly}
-              />
-            </div>
+            <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+              Data Pekerjaan
+            </h2>
           </div>
-        )}
+
+          <div className='grid gap-6 md:grid-cols-2'>
+            <InputField
+              label='Posisi/Jabatan'
+              name='job.position'
+              value={formData.job.position}
+              onChange={handleChange}
+              placeholder='Ex: Staff IT'
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+            />
+            <InputField
+              label='Nama Instansi/Perusahaan'
+              name='job.institution'
+              value={formData.job.institution}
+              onChange={handleChange}
+              placeholder='Ex: PT. Maju Jaya'
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+            />
+            <InputField
+              label='Nama Pekerjaan'
+              name='job.jobTitle'
+              value={formData.job.jobTitle}
+              onChange={handleChange}
+              placeholder='Ex: Web Developer'
+              validationErrors={validationErrors}
+              disabled={isReadOnly}
+            />
+          </div>
+        </div>
 
         {/* Social Media Section */}
         <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>

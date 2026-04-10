@@ -18,6 +18,7 @@ export interface IUser extends Document {
     name?: string;
     type?: 'negeri' | 'swasta' | 'kedinasan';
     entryYear?: number;
+    graduationYear?: number;
     major?: string;
   };
   job?: {
@@ -81,6 +82,7 @@ const UserSchema = new Schema<IUser>(
         enum: ['negeri', 'swasta', 'kedinasan'],
       },
       entryYear: Number,
+      graduationYear: Number,
       major: String,
     },
     job: {

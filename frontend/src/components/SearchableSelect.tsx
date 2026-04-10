@@ -62,7 +62,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
             {label && (
                 <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
                     {label}{' '}
-                    {required && !disabled && <span className='text-red-500'>*</span>}
+                    {required && <span className='text-red-500'>*</span>}
                 </label>
             )}
 

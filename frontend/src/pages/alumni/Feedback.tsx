@@ -37,6 +37,10 @@ const AlumniFeedback = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
+  if (!user?.university?.name) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
+  }
+
   if (loading) return <SmartLoader />;
 
   return (

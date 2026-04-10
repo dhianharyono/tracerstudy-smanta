@@ -260,6 +260,10 @@ const AlumniEventHub = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
+  if (!user?.university?.name) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
+  }
+
   return (
     <div className='p-6 page-fade-in'>
       <div className='mb-8 text-center md:text-left'>

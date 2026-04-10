@@ -3,12 +3,13 @@ import { Link } from 'react-router-dom';
 import { FaUserEdit, FaClipboardList, FaLock } from 'react-icons/fa';
 
 interface RestrictedAccessProps {
-  type: 'profile_incomplete' | 'questionnaire_incomplete';
+  type: 'profile_incomplete' | 'questionnaire_incomplete' | 'university_incomplete';
   role: 'student' | 'alumni';
 }
 
 const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type }) => {
   const isProfile = type === 'profile_incomplete';
+  const isUniversity = type === 'university_incomplete';
 
   return (
     <div className='min-h-[60vh] flex items-center justify-center p-5 animate-fade-in'>
@@ -33,17 +34,23 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type }) => {
         <p className='text-[color:var(--text-secondary)] mb-8 leading-relaxed text-xs md:text-sm'>
           {isProfile
             ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
-            : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
+            : isUniversity
+              ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
+              : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
         </p>
 
         {/* Action Button */}
         <Link
-          to={isProfile ? '/student/profile' : '/alumni/questionnaire'}
+          to={isProfile ? '/student/profile' : isUniversity ? '/alumni/questionnaire' : '/alumni/questionnaire'}
           className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200'
         >
           {isProfile ? (
             <>
               <FaUserEdit /> Lengkapi Profil Sekarang
+            </>
+          ) : isUniversity ? (
+            <>
+              <FaUserEdit /> Isi Data Universitas
             </>
           ) : (
             <>

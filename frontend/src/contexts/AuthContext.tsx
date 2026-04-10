@@ -19,6 +19,13 @@ interface User {
     entryYear?: number;
     graduationYear?: number;
   };
+  university?: {
+    name?: string;
+    type?: string;
+    entryYear?: number;
+    graduationYear?: number;
+    major?: string;
+  };
   badges?: any[];
 }
 
