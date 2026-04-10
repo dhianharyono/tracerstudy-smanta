@@ -751,11 +751,11 @@ const LandingPage = () => {
                   </p>
                   <div className='flex items-center gap-3 md:gap-4 mt-auto'>
                     <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-indigo-500 flex items-center justify-center text-white font-black text-lg shadow-lg'>
-                      {item.user?.profile?.fullName?.[0] || 'U'}
+                      A
                     </div>
                     <div>
                       <h6 className='text-sm md:text-base font-bold text-[color:var(--text-primary)]'>
-                        {item.user?.profile?.fullName || 'Hidden User'}
+                        Anonymous
                       </h6>
                       <p className='text-[10px] md:text-xs font-bold text-indigo-500 uppercase tracking-widest'>
                         {item.user?.role || 'Alumni'}
