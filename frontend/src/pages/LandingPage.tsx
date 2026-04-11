@@ -9,7 +9,6 @@ import {
   FaUniversity,
   FaQuoteLeft,
 } from 'react-icons/fa';
-import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '@/contexts/AuthContext';
 import ConfirmationModal from '@/components/ConfirmationModal';
 import { toast } from 'react-toastify';
@@ -472,7 +471,81 @@ const LandingPage = () => {
           </motion.div>
 
           {loading ? (
-            <SmartLoader fullScreen={false} messages={['Memuat laporan statistik...']} />
+            <div className='w-full animate-pulse'>
+              {/* Stats Cards Skeleton */}
+              <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className='bg-[color:var(--bg-card)] p-5 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl'>
+                    <div className='w-10 h-10 md:w-14 md:h-14 bg-gray-200 dark:bg-gray-700 rounded-lg md:rounded-2xl mb-4 md:mb-6'></div>
+                    <div className='h-8 md:h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-1/2 mb-2'></div>
+                    <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded-lg w-3/4'></div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Distribusi Perguruan Tinggi Skeleton */}
+              <div className='mb-12'>
+                <div className='mb-8 text-center md:text-left'>
+                  <div className='h-8 md:h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-64 md:w-96 mb-3 mx-auto md:mx-0'></div>
+                  <div className='h-4 md:h-5 bg-gray-200 dark:bg-gray-700 rounded-lg w-48 md:w-72 mx-auto md:mx-0'></div>
+                </div>
+                <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className='p-6 md:p-8 bg-[color:var(--bg-card)] rounded-[2rem] border border-[color:var(--border-color)] flex flex-col'>
+                      <div className='h-4 mb-4 bg-gray-200 dark:bg-gray-700 rounded-lg w-24'></div>
+                      <div className='flex items-baseline gap-2'>
+                        <div className='h-10 md:h-12 bg-gray-200 dark:bg-gray-700 rounded-lg w-16'></div>
+                        <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded-lg w-12'></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Top Colleges & Majors Skeleton */}
+              <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8'>
+                <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl'>
+                  <div className='flex items-center justify-between mb-6 md:mb-8'>
+                    <div className='h-6 md:h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-48 md:w-64'></div>
+                    <div className='w-8 h-8 md:w-9 md:h-9 bg-gray-200 dark:bg-gray-700 rounded-full'></div>
+                  </div>
+                  <div className='space-y-4 md:space-y-6'>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className='space-y-2'>
+                        <div className='flex justify-between items-center'>
+                          <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2'></div>
+                          <div className='h-2 md:h-3 bg-gray-200 dark:bg-gray-700 rounded w-16'></div>
+                        </div>
+                        <div className='w-full h-1.5 md:h-2.5 bg-[color:var(--bg-tertiary)] rounded-full'></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className='bg-[color:var(--bg-card)] p-6 md:p-8 rounded-2xl md:rounded-3xl border border-[color:var(--border-color)] shadow-xl'>
+                  <div className='flex items-center justify-between mb-6 md:mb-8'>
+                    <div className='h-6 md:h-8 bg-gray-200 dark:bg-gray-700 rounded-lg w-40 md:w-48'></div>
+                    <div className='w-8 h-8 md:w-9 md:h-9 bg-gray-200 dark:bg-gray-700 rounded-full'></div>
+                  </div>
+                  <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4'>
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className='p-5 bg-[color:var(--bg-tertiary)] rounded-[1.5rem] border border-[color:var(--border-color)] flex items-start justify-between'>
+                        <div className='flex-1 mr-4 space-y-3'>
+                          <div className='h-3 bg-gray-200 dark:bg-gray-700 rounded w-16'></div>
+                          <div className='h-4 bg-gray-200 dark:bg-gray-700 rounded w-full'></div>
+                          <div className='space-y-2 mt-2'>
+                            <div className='h-2 bg-gray-200 dark:bg-gray-700 rounded w-3/4'></div>
+                            <div className='h-2 bg-gray-200 dark:bg-gray-700 rounded w-5/6'></div>
+                            <div className='h-2 bg-gray-200 dark:bg-gray-700 rounded w-1/2'></div>
+                          </div>
+                        </div>
+                        <div className='w-14 h-14 bg-gray-200 dark:bg-gray-700 rounded-[1rem] shrink-0'></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
               <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
@@ -728,7 +801,25 @@ const LandingPage = () => {
           </motion.div>
 
           {loading ? (
-            <SmartLoader fullScreen={false} messages={['Memuat testimoni...']} />
+            <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar w-full'>
+              {[1, 2, 3].map((i) => (
+                <div key={i} className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-[color:var(--bg-card)] p-6 md:p-8 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl animate-pulse flex flex-col h-[250px] md:h-[300px]'>
+                  <div className='w-8 h-8 md:w-10 md:h-10 bg-gray-200 dark:bg-gray-700 rounded-full mb-4 md:mb-6'></div>
+                  <div className='space-y-3 mb-6 md:mb-8 flex-grow mt-2'>
+                    <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded w-full'></div>
+                    <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6'></div>
+                    <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded w-4/5'></div>
+                  </div>
+                  <div className='flex items-center gap-3 md:gap-4 mt-auto'>
+                    <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gray-200 dark:bg-gray-700 shrink-0'></div>
+                    <div className='space-y-2 flex-grow'>
+                      <div className='h-3 md:h-4 bg-gray-200 dark:bg-gray-700 rounded w-32'></div>
+                      <div className='h-2 md:h-3 bg-gray-200 dark:bg-gray-700 rounded w-20'></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
             <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar'>
               {testimonials.length > 0 ? (
