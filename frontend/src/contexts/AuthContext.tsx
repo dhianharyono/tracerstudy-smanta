@@ -7,31 +7,13 @@ import React, {
   ReactNode,
 } from 'react';
 import axios from 'axios';
+import { User } from '../types';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  role: 'alumni' | 'admin' | 'student' | 'school';
-  questionnaireCompleted?: boolean;
-  profile?: {
-    fullName?: string;
-    entryYear?: number;
-    graduationYear?: number;
-  };
-  university?: {
-    name?: string;
-    type?: string;
-    entryYear?: number;
-    graduationYear?: number;
-    major?: string;
-  };
-  badges?: any[];
-}
+// Global axios configuration for cookies
+axios.defaults.withCredentials = true;
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
   login: (username: string, password: string) => Promise<void>;
   register: (
     username: string,
@@ -59,20 +41,48 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+  const logout = useCallback(async () => {
+    try {
+      await axios.post('/api/auth/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setUser(null);
+      localStorage.removeItem('user');
     }
-    setLoading(false);
   }, []);
+
+  const checkAuth = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/auth/me');
+      if (response.data) {
+        const userData = response.data;
+        // Map _id to id if necessary
+        const formattedUser = {
+          ...userData,
+          id: userData._id || userData.id
+        };
+        setUser(formattedUser);
+        localStorage.setItem('user', JSON.stringify(formattedUser));
+      }
+    } catch (error) {
+      setUser(null);
+      localStorage.removeItem('user');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Initial check on mount
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+    checkAuth();
+  }, [checkAuth]);
 
   const login = async (username: string, password: string) => {
     try {
@@ -80,13 +90,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         username,
         password,
       });
-      const { token: newToken, user: newUser } = response.data;
-
-      setToken(newToken);
-      setUser(newUser);
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${newToken}`;
+      const { user: newUser } = response.data;
+      const formattedUser = {
+        ...newUser,
+        id: newUser.id || newUser._id
+      };
+      setUser(formattedUser);
+      localStorage.setItem('user', JSON.stringify(formattedUser));
     } catch (error: any) {
       throw new Error(
         error.response?.data?.message ||
@@ -103,32 +113,35 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     captchaToken: string,
   ) => {
     try {
-      await axios.post('/api/auth/register', {
+      const response = await axios.post('/api/auth/register', {
         username,
         email,
         password,
         role,
         captchaToken,
       });
+      const { user: newUser } = response.data;
+      const formattedUser = {
+        ...newUser,
+        id: newUser.id || newUser._id
+      };
+      setUser(formattedUser);
+      localStorage.setItem('user', JSON.stringify(formattedUser));
     } catch (error: any) {
       throw new Error(error.response?.data?.message || 'Registration failed');
     }
   };
-
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    delete axios.defaults.headers.common['Authorization'];
-  }, []);
 
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response?.status === 401) {
-          logout();
+          // Prevent infinite loop if already null
+          if (user) {
+            setUser(null);
+            localStorage.removeItem('user');
+          }
         }
         return Promise.reject(error);
       },
@@ -137,7 +150,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     return () => {
       axios.interceptors.response.eject(interceptor);
     };
-  }, [logout]);
+  }, [user]);
+
   const updateUser = (newUser: any) => {
     const formattedUser = {
       ...newUser,
@@ -149,7 +163,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <AuthContext.Provider
-      value={{ user, token, login, register, logout, updateUser, loading }}
+      value={{ user, login, register, logout, updateUser, loading }}
     >
       {children}
     </AuthContext.Provider>

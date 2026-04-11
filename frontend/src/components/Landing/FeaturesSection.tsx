@@ -1,0 +1,143 @@
+import { motion } from 'framer-motion';
+import { FaGraduationCap, FaUsers } from 'react-icons/fa';
+
+const FeaturesSection = () => {
+  return (
+    <section className='py-20 px-4 sm:px-6 bg-[color:var(--bg-secondary)]/10'>
+      <div className='max-w-7xl mx-auto'>
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className='text-center mb-16 space-y-4'
+        >
+          <h3 className='text-2xl md:text-4xl font-black text-[color:var(--text-primary)]'>
+            Fitur Siswa dan Alumni
+          </h3>
+          <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 mx-auto rounded-full'></div>
+          <p className='text-sm md:text-base text-[color:var(--text-secondary)] max-w-2xl mx-auto'>
+            Dirancang untuk memudahkan interaksi dan memberikan manfaat nyata bagi seluruh warga dan Alumni SMANTA.
+          </p>
+        </motion.div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12'>
+          {/* Student Features */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className='bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group'
+          >
+            <div className='absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
+            <div className='relative z-10'>
+              <div className='flex items-center gap-4 mb-8'>
+                <div className='w-12 h-12 md:w-14 md:h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 shadow-inner'>
+                  <FaGraduationCap size={24} className='md:w-[28px] md:h-[28px]' />
+                </div>
+                <h4 className='text-xl md:text-2xl font-black text-[color:var(--text-primary)]'>
+                  Untuk Siswa Aktif
+                </h4>
+              </div>
+              <ul className='space-y-4 md:space-y-5'>
+                {[
+                  {
+                    title: 'Eksplorasi Kampus',
+                    desc: 'Lihat data persebaran alumni di berbagai universitas favorit.',
+                  },
+                  {
+                    title: 'Daftar Jurusan',
+                    desc: 'Identifikasi jurusan paling populer dan diminati alumni SMANTA.',
+                  },
+                  {
+                    title: 'Rencana Kuliah',
+                    desc: 'Kelola dan simpan target studi lanjutan Anda.',
+                  },
+                  {
+                    title: 'Terhubung Dengan Alumni',
+                    desc: 'Konsultasi langsung dengan alumni yang berpengalaman lewat media sosial',
+                  },
+                  {
+                    title: 'Berita Terkini',
+                    desc: 'Dapatkan informasi terbaru seputar kampus dan beasiswa.',
+                  },
+                ].map((f, i) => (
+                  <li key={i} className='flex gap-4 group/item'>
+                    <div className='mt-1.5 w-2 h-2 rounded-full bg-blue-500 shrink-0 group-hover/item:scale-125 transition-transform'></div>
+                    <div>
+                      <p className='text-sm md:text-base font-bold text-[color:var(--text-primary)] mb-0.5'>
+                        {f.title}
+                      </p>
+                      <p className='text-[11px] md:text-sm text-[color:var(--text-tertiary)]'>
+                        {f.desc}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+
+          {/* Alumni Features */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className='bg-[color:var(--bg-card)] p-6 md:p-10 rounded-[30px] md:rounded-[40px] border border-[color:var(--border-color)] shadow-xl relative overflow-hidden group'
+          >
+            <div className='absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
+            <div className='relative z-10'>
+              <div className='flex items-center gap-4 mb-8'>
+                <div className='w-12 h-12 md:w-14 md:h-14 bg-indigo-500/10 rounded-2xl flex items-center justify-center text-indigo-500 shadow-inner'>
+                  <FaUsers size={24} className='md:w-[28px] md:h-[28px]' />
+                </div>
+                <h4 className='text-xl md:text-2xl font-black text-[color:var(--text-primary)]'>
+                  Untuk Alumni
+                </h4>
+              </div>
+              <ul className='space-y-4 md:space-y-5'>
+                {[
+                  {
+                    title: 'Tracer Survey',
+                    desc: 'Laporkan perkembangan karir Anda untuk data sekolah.',
+                  },
+                  {
+                    title: 'Rekan Seangkatan',
+                    desc: 'Temukan dan terhubung kembali dengan teman lama.',
+                  },
+                  {
+                    title: 'Manajemen Profil',
+                    desc: 'Bangun personal branding dan portofolio profesional.',
+                  },
+                  {
+                    title: 'Badge Prestasi',
+                    desc: 'Dapatkan lencana penghargaan atas kontribusi Anda.',
+                  },
+                  {
+                    title: 'Program Mentorship',
+                    desc: 'Berikan bimbingan kepada adik-adik kelas SMANTA.',
+                  },
+                ].map((f, i) => (
+                  <li key={i} className='flex gap-4 group/item'>
+                    <div className='mt-1.5 w-2 h-2 rounded-full bg-indigo-500 shrink-0 group-hover/item:scale-125 transition-transform'></div>
+                    <div>
+                      <p className='text-sm md:text-base font-bold text-[color:var(--text-primary)] mb-0.5'>
+                        {f.title}
+                      </p>
+                      <p className='text-[11px] md:text-sm text-[color:var(--text-tertiary)]'>
+                        {f.desc}
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default FeaturesSection;

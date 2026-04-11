@@ -2,6 +2,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
+import mongoSanitize from 'express-mongo-sanitize';
+import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
@@ -21,6 +23,8 @@ const PORT = process.env.PORT || 5000;
 
 // Security Middleware
 app.use(helmet());
+app.use(mongoSanitize());
+app.use(cookieParser());
 
 // CORS configuration
 const rawOrigins =

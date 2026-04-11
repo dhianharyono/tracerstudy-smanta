@@ -114,6 +114,14 @@ router.post(
         expiresIn: '7d',
       });
 
+      // Set cookie for security
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
       res.status(201).json({
         token,
         user: {
@@ -167,6 +175,14 @@ router.post(
         expiresIn: '7d',
       });
 
+      // Set cookie for security
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
+
       res.json({
         token,
         user: {
@@ -184,6 +200,12 @@ router.post(
     }
   },
 );
+
+// Logout
+router.post('/logout', (req: Request, res: Response) => {
+  res.clearCookie('token');
+  res.json({ message: 'Logged out successfully' });
+});
 
 // Get current user
 router.get(
