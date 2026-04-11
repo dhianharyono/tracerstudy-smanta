@@ -4,7 +4,7 @@ export interface IUser extends Document {
   username: string;
   email: string;
   password: string;
-  role: 'alumni' | 'admin' | 'student';
+  role: 'alumni' | 'admin' | 'student' | 'school';
   profile?: {
     fullName?: string;
     gender?: 'male' | 'female';

@@ -261,7 +261,7 @@ const Layout = () => {
       );
     }
 
-    if (user?.role === 'school') {
+    if ((user?.role as string) === 'school') {
       return (
         <div className='space-y-1'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />

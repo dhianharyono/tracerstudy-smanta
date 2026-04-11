@@ -1,8 +1,9 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { UserRole } from '../types';
 
 interface PrivateRouteProps {
-  allowedRoles: ('alumni' | 'admin' | 'student' | 'school')[];
+  allowedRoles: UserRole[];
   children?: React.ReactElement;
 }
 

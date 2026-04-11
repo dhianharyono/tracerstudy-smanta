@@ -98,7 +98,7 @@ const Profile = () => {
         typeof graduationYear === 'number' ? graduationYear : null,
       );
 
-      if (user?.role === 'student') {
+      if ((user?.role as string) === 'student') {
         setTimeout(() => {
           navigate('/student');
         }, 1500);
@@ -278,7 +278,7 @@ const Profile = () => {
               />
             </div>
 
-            {user?.role !== 'admin' && user?.role !== 'school' && (
+            {(user?.role as string) !== 'admin' && (user?.role as string) !== 'school' && (
               <div className='space-y-2'>
                 <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
@@ -298,7 +298,7 @@ const Profile = () => {
               </div>
             )}
 
-            {user?.role !== 'admin' && user?.role !== 'school' && (
+            {(user?.role as string) !== 'admin' && (user?.role as string) !== 'school' && (
               <div className='space-y-2'>
                 <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
                   <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}
@@ -360,7 +360,7 @@ const Profile = () => {
           )}
 
         {/* Password Section */}
-        {user?.role === 'school' ? (
+        {(user?.role as string) === 'school' ? (
           <div className='bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-200 dark:border-blue-800/50 overflow-hidden shadow-sm'>
             <div className='p-6'>
               <div className='flex items-start gap-4'>

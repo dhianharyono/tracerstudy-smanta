@@ -1,16 +1,25 @@
+export type UserRole = 'admin' | 'alumni' | 'student' | 'school';
+
 export interface User {
   id: string;
   username: string;
   email: string;
-  role: 'admin' | 'alumni' | 'student';
+  role: UserRole;
   profile?: {
     fullName?: string;
     graduationYear?: number;
     isWorking?: boolean;
     isStudying?: boolean;
+    entryYear?: number;
   };
   questionnaireCompleted?: boolean;
   badges?: any[];
+  isMentor?: boolean;
+  university?: {
+    name?: string;
+    type?: string;
+    major?: string;
+  };
 }
 
 export interface UniversityStats {

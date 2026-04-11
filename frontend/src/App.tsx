@@ -10,6 +10,7 @@ import SmartLoader from './components/SmartLoader';
 import PrivateRoute from './components/PrivateRoute';
 import Layout from './components/Layout';
 import { useAuth } from './contexts/AuthContext';
+import { UserRole } from './types';
 
 // Auth Pages
 const Login = lazy(() => import('./pages/auth/Login'));
@@ -61,7 +62,7 @@ const StudentCollegePlan = lazy(() => import('./pages/student/CollegePlan'));
 const StudentAlumniContact = lazy(() => import('./pages/student/AlumniContact'));
 const StudentEvents = lazy(() => import('./pages/student/Events'));
 
-const getDashboardPath = (role: 'alumni' | 'admin' | 'student' | 'school') => {
+const getDashboardPath = (role: UserRole) => {
   switch (role) {
     case 'alumni':
       return '/alumni';
