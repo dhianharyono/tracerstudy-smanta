@@ -17,6 +17,8 @@ interface StatsObject {
   totalMentors?: number | string;
   activeMentors?: number | string;
   completedQuestionnaire?: number | string;
+  completedCount?: number | string;
+  incompleteCount?: number | string;
   universityTypes: {
     negeri: number | string;
     swasta: number | string;
@@ -71,7 +73,9 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   const totalAlumni = Number(stats?.totalAlumni || 0);
   const completed = Number(stats?.completedQuestionnaire || 0);
-  const incompleteAlumni = Math.max(0, totalAlumni - completed);
+  const incompleteAlumni = stats?.incompleteCount !== undefined 
+    ? Number(stats.incompleteCount) 
+    : Math.max(0, totalAlumni - completed);
 
   const statItems = [
     {

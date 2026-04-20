@@ -24,7 +24,8 @@ router.get('/stats', async (req: Request, res: Response) => {
         // Profiles completion
         const completedAlumni = await User.countDocuments({ 
             role: 'alumni', 
-            questionnaireCompleted: true 
+            questionnaireCompleted: true,
+            'university.name': { $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] }
         });
 
         // Employment stats
@@ -127,22 +128,19 @@ router.get('/alumni', async (req: Request, res: Response) => {
 
         if (surveyStatus === 'completed') {
             andConditions.push({
-                'profile.fullName': { $exists: true, $ne: '' },
-                'email': { $exists: true, $ne: '' },
+                'profile.fullName': { $exists: true, $nin: [null, '', '-'] },
+                'email': { $exists: true, $nin: [null, '', '-'] },
                 'profile.graduationYear': { $exists: true, $ne: null },
-                'university.name': { $exists: true, $ne: '' }
+                'university.name': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] }
             });
         } else if (surveyStatus === 'not_completed') {
             andConditions.push({
                 $or: [
-                    { 'profile.fullName': { $exists: false } },
-                    { 'profile.fullName': '' },
-                    { 'email': { $exists: false } },
-                    { 'email': '' },
+                    { 'profile.fullName': { $in: [null, '', '-'] } },
+                    { 'email': { $in: [null, '', '-'] } },
                     { 'profile.graduationYear': { $exists: false } },
                     { 'profile.graduationYear': null },
-                    { 'university.name': { $exists: false } },
-                    { 'university.name': '' }
+                    { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
                 ]
             });
         }

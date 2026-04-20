@@ -11,6 +11,7 @@ import {
   FaClock,
 } from 'react-icons/fa';
 import Card from '@/components/common/Card';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const SchoolAlumniList = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
@@ -70,7 +71,7 @@ const SchoolAlumniList = () => {
       person.profile?.fullName || 'Anonim',
       person.profile?.graduationYear || '-',
       person.email || '-',
-      person.profile?.fullName && person.email && person.profile?.graduationYear && person.university?.name ? 'Lengkap' : 'Belum Lengkap',
+      !isUniversityIncomplete(person) ? 'Lengkap' : 'Belum Lengkap',
       person.profile?.isStudying && person.profile?.isWorking ? 'Kuliah & Kerja' : person.profile?.isStudying ? 'Kuliah' : person.profile?.isWorking ? 'Bekerja' : 'Belum Terdata',
       person.university?.name || '-',
       person.university?.major || '-',
@@ -266,7 +267,7 @@ const SchoolAlumniList = () => {
                       )}
                     </td>
                     <td className='px-6 py-4'>
-                      {person.profile?.fullName && person.email && person.profile?.graduationYear && person.university?.name ? (
+                      {!isUniversityIncomplete(person) ? (
                         <div className='flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-bold'>
                           <FaCheckCircle size={14} />
                           <span>Lengkap</span>

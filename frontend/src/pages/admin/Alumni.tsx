@@ -15,6 +15,7 @@ import {
   FaSearch,
   FaSave,
 } from 'react-icons/fa';
+import { isUniversityIncomplete } from '@/utils/validation';
 import PageHeader from '@/components/common/PageHeader';
 import Card from '@/components/common/Card';
 import Pagination from '@/components/common/Pagination';
@@ -476,7 +477,7 @@ const AdminAlumni = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  {alum.questionnaireCompleted ? (
+                  {!isUniversityIncomplete(alum) ? (
                     <span className='flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400'>
                       <FaCheckCircle /> Lengkap
                     </span>

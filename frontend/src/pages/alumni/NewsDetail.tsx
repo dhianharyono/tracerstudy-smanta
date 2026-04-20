@@ -4,6 +4,9 @@ import axios from 'axios';
 import Toast from '@/components/toast';
 import NewsDetail from '../../components/News/NewsDetail';
 import SmartLoader from '@/components/SmartLoader';
+import { useAuth } from '@/contexts/AuthContext';
+import RestrictedAccess from '@/components/RestrictedAccess';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 interface NewsDetail {
   _id: string;
@@ -20,6 +23,7 @@ const AlumniNewsDetail = () => {
   const navigate = useNavigate();
   const [news, setNews] = useState<NewsDetail | null>(null);
   const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
 
   useEffect(() => {
     if (id) {
@@ -53,6 +57,14 @@ const AlumniNewsDetail = () => {
 
   if (loading) {
     return <SmartLoader />;
+  }
+
+  if (user?.questionnaireCompleted === false) {
+    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   if (!news) {

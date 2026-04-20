@@ -114,7 +114,16 @@ router.get('/dashboard', async (req: Request, res: Response) => {
             { $sort: { _id: 1 } },
           ],
           completedQuestionnaire: [
-            { $match: { role: 'alumni', questionnaireCompleted: true } },
+            {
+              $match: {
+                role: 'alumni',
+                questionnaireCompleted: true,
+                'university.name': {
+                  $exists: true,
+                  $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                },
+              },
+            },
             { $count: 'count' },
           ],
           workingAlumni: [
@@ -130,6 +139,10 @@ router.get('/dashboard', async (req: Request, res: Response) => {
               $match: {
                 role: 'alumni',
                 'university.type': { $in: ['negeri', 'swasta', 'kedinasan'] },
+                'university.name': {
+                  $exists: true,
+                  $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                },
               },
             },
             {
@@ -162,7 +175,10 @@ router.get('/dashboard', async (req: Request, res: Response) => {
             {
               $match: {
                 role: 'alumni',
-                'university.name': { $exists: true, $ne: null, $nin: ['', 'null'] },
+                'university.name': {
+                  $exists: true,
+                  $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                },
               },
             },
             {
@@ -194,6 +210,10 @@ router.get('/dashboard', async (req: Request, res: Response) => {
               $match: {
                 role: 'alumni',
                 questionnaireCompleted: true,
+                'university.name': {
+                  $exists: true,
+                  $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                },
               },
             },
             {
@@ -207,11 +227,28 @@ router.get('/dashboard', async (req: Request, res: Response) => {
             },
           ],
           completedData: [
-            { $match: { role: 'alumni', questionnaireCompleted: true } },
+            {
+              $match: {
+                role: 'alumni',
+                questionnaireCompleted: true,
+                'university.name': {
+                  $exists: true,
+                  $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                },
+              },
+            },
             { $count: 'count' },
           ],
           incompleteData: [
-            { $match: { role: 'alumni', questionnaireCompleted: false } },
+            {
+              $match: {
+                role: 'alumni',
+                $or: [
+                  { questionnaireCompleted: false },
+                  { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
+                ]
+              },
+            },
             { $count: 'count' },
           ],
         },
@@ -352,8 +389,13 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const major = req.query.major as string;
     const questionnaireStatus = req.query.questionnaireStatus as string;
     const badgeId = req.query.badgeId as string;
+    const name = (req.query.name || req.query.search) as string;
 
     const filter: any = { role: 'alumni' };
+
+    if (name) {
+      filter['profile.fullName'] = { $regex: name, $options: 'i' };
+    }
 
     if (university) {
       filter['university.name'] = university;
@@ -370,8 +412,12 @@ router.get('/alumni', async (req: Request, res: Response) => {
     if (questionnaireStatus) {
       if (questionnaireStatus === 'completed') {
         filter['questionnaireCompleted'] = true;
+        filter['university.name'] = { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] };
       } else if (questionnaireStatus === 'incomplete') {
-        filter['questionnaireCompleted'] = { $ne: true };
+        filter['$or'] = [
+          { questionnaireCompleted: { $ne: true } },
+          { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
+        ];
       }
     }
 

@@ -13,6 +13,7 @@ import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
 import WelcomCardAlumni from '@/components/Dashboard/WelcomCardAlumni';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import MentorshipPromoCard from '@/components/Dashboard/MentorshipPromoCard';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const AlumniDashboard = () => {
   const { user } = useAuth();
@@ -119,7 +120,7 @@ const AlumniDashboard = () => {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 
-  if (profile && (!profile.university || !profile.university.name)) {
+  if (profile && isUniversityIncomplete(profile)) {
     return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 

@@ -10,6 +10,8 @@ import {
   FaUser,
   FaSearch,
   FaSync,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import PageHeader from '@/components/common/PageHeader';
@@ -48,6 +50,7 @@ const AdminStudents = () => {
     entryYear: '',
     graduationYear: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -120,6 +123,7 @@ const AdminStudents = () => {
         entryYear: '',
         graduationYear: '',
       });
+      setShowPassword(false);
       fetchStudents();
     } catch (error: any) {
       Toast(
@@ -170,6 +174,7 @@ const AdminStudents = () => {
       entryYear: '',
       graduationYear: '',
     });
+    setShowPassword(false);
   };
 
   if (loading) {
@@ -282,15 +287,24 @@ const AdminStudents = () => {
                   Password{' '}
                   {editingStudent ? '(kosongkan jika tidak ingin diubah)' : '*'}
                 </label>
-                <input
-                  type='password'
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-                  required={!editingStudent}
-                />
+                <div className='relative'>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 pr-10 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                    required={!editingStudent}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                  >
+                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                  </button>
+                </div>
               </div>
             </div>
 

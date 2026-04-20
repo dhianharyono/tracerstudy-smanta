@@ -7,6 +7,7 @@ import PageHeader from '@/components/common/PageHeader';
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import SmartLoader from '@/components/SmartLoader';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const AlumniFeedback = () => {
   const { user } = useAuth();
@@ -35,6 +36,10 @@ const AlumniFeedback = () => {
 
   if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   if (loading) return <SmartLoader />;

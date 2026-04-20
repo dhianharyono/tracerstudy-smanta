@@ -369,6 +369,7 @@ const AlumniQuestionnaire = () => {
 
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
+    const placeholders = ['-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
 
     if (!formData.profile.fullName.trim()) {
       errors['profile.fullName'] = 'Nama lengkap wajib diisi';
@@ -388,8 +389,9 @@ const AlumniQuestionnaire = () => {
     if (!formData.profile.graduationYear) {
       errors['profile.graduationYear'] = 'Tahun lulus SMA wajib diisi';
     }
-    if (!formData.university.name) {
-      errors['university.name'] = 'Nama kampus wajib diisi';
+    
+    if (!formData.university.name || placeholders.includes(formData.university.name.trim().toLowerCase())) {
+      errors['university.name'] = 'Nama kampus wajib diisi dengan benar';
     }
     if (!formData.university.type) {
       errors['university.type'] = 'Jenis perguruan tinggi wajib diisi';
@@ -397,8 +399,8 @@ const AlumniQuestionnaire = () => {
     if (!formData.university.entryYear) {
       errors['university.entryYear'] = 'Tahun masuk kuliah wajib diisi';
     }
-    if (!formData.university.major) {
-      errors['university.major'] = 'Jurusan kuliah wajib diisi';
+    if (!formData.university.major || placeholders.includes(formData.university.major.trim().toLowerCase())) {
+      errors['university.major'] = 'Jurusan kuliah wajib diisi dengan benar';
     }
 
     setValidationErrors(errors);

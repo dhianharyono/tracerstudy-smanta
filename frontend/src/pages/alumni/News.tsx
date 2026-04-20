@@ -5,6 +5,7 @@ import NewsList, { NewsItem } from '../../components/News/NewsList';
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import SmartLoader from '@/components/SmartLoader';
+import { isUniversityIncomplete } from '@/utils/validation';
 import { FaSearch } from 'react-icons/fa';
 
 const AlumniNews = () => {
@@ -46,6 +47,10 @@ const AlumniNews = () => {
 
   if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   return (

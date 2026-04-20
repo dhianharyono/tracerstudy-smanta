@@ -334,7 +334,16 @@ router.get(
           $facet: {
             totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
             completedQuestionnaire: [
-              { $match: { role: 'alumni', questionnaireCompleted: true } },
+              {
+                $match: {
+                  role: 'alumni',
+                  questionnaireCompleted: true,
+                  'university.name': {
+                    $exists: true,
+                    $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                  },
+                },
+              },
               { $count: 'count' },
             ],
             totalStudents: [
@@ -381,6 +390,10 @@ router.get(
                 $match: {
                   role: 'alumni',
                   'university.type': { $in: ['negeri', 'swasta', 'kedinasan'] },
+                  'university.name': {
+                    $exists: true,
+                    $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                  },
                 },
               },
               {
@@ -409,7 +422,10 @@ router.get(
               {
                 $match: {
                   role: 'alumni',
-                  'university.name': { $exists: true, $ne: null, $nin: ['', 'null'] },
+                  'university.name': {
+                    $exists: true,
+                    $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                  },
                 },
               },
               {
@@ -441,6 +457,10 @@ router.get(
                 $match: {
                   role: 'alumni',
                   questionnaireCompleted: true,
+                  'university.name': {
+                    $exists: true,
+                    $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                  },
                 },
               },
               {
@@ -454,11 +474,28 @@ router.get(
               },
             ],
             completedData: [
-              { $match: { role: 'alumni', questionnaireCompleted: true } },
+              {
+                $match: {
+                  role: 'alumni',
+                  questionnaireCompleted: true,
+                  'university.name': {
+                    $exists: true,
+                    $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'],
+                  },
+                },
+              },
               { $count: 'count' },
             ],
             incompleteData: [
-              { $match: { role: 'alumni', questionnaireCompleted: false } },
+              {
+                $match: {
+                  role: 'alumni',
+                  $or: [
+                    { questionnaireCompleted: false },
+                    { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
+                  ]
+                },
+              },
               { $count: 'count' },
             ],
           },

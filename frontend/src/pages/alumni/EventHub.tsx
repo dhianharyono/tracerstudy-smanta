@@ -11,6 +11,7 @@ import {
   LuUsers,
 } from 'react-icons/lu';
 import RestrictedAccess from '@/components/RestrictedAccess';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const AlumniEventHub = () => {
   const { user } = useAuth();
@@ -258,6 +259,10 @@ const AlumniEventHub = () => {
 
   if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   return (

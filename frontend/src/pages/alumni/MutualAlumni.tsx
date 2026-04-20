@@ -37,6 +37,7 @@ interface AlumniData {
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import SmartLoader from '@/components/SmartLoader';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const MutualAlumni = () => {
   const { user } = useAuth();
@@ -64,6 +65,10 @@ const MutualAlumni = () => {
 
   if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   return (

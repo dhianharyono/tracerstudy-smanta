@@ -5,6 +5,7 @@ import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import RestrictedAccess from '@/components/RestrictedAccess';
+import { isUniversityIncomplete } from '@/utils/validation';
 
 const ClaimBadge = () => {
   const { updateUser, user } = useAuth();
@@ -32,6 +33,10 @@ const ClaimBadge = () => {
 
   if (user?.questionnaireCompleted === false) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+  }
+
+  if (user && isUniversityIncomplete(user)) {
+    return <RestrictedAccess type='university_incomplete' role='alumni' />;
   }
 
   return (

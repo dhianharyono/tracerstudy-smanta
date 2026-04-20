@@ -8,6 +8,8 @@ import {
   FaTimes,
   FaSave,
   FaUserShield,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
@@ -28,6 +30,7 @@ const AdminAdmins = () => {
     password: '',
     fullName: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     fetchAdmins();
@@ -60,6 +63,7 @@ const AdminAdmins = () => {
       setShowForm(false);
       setEditingAdmin(null);
       setFormData({ username: '', email: '', password: '', fullName: '' });
+      setShowPassword(false);
       fetchAdmins();
     } catch (error: any) {
       Toast(error.response?.data?.message || 'Gagal menyimpan admin', 'error');
@@ -95,6 +99,7 @@ const AdminAdmins = () => {
     setShowForm(false);
     setEditingAdmin(null);
     setFormData({ username: '', email: '', password: '', fullName: '' });
+    setShowPassword(false);
   };
 
   if (loading) {
@@ -184,15 +189,24 @@ const AdminAdmins = () => {
                   Password{' '}
                   {editingAdmin ? '(kosongkan jika tidak ingin diubah)' : '*'}
                 </label>
-                <input
-                  type='password'
-                  value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
-                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-                  required={!editingAdmin}
-                />
+                <div className='relative'>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={formData.password}
+                    onChange={(e) =>
+                      setFormData({ ...formData, password: e.target.value })
+                    }
+                    className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 pr-10 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                    required={!editingAdmin}
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+                  >
+                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                  </button>
+                </div>
               </div>
             </div>
 
@@ -231,7 +245,7 @@ const AdminAdmins = () => {
               {admins.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={4}
+                    colSpan={5}
                     className='p-8 text-center text-[color:var(--text-secondary)]'
                   >
                     Tidak ada data admin.
