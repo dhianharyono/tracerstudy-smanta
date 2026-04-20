@@ -49,6 +49,7 @@ const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
 const SchoolUniversityList = lazy(() => import('./pages/school/UniversityList'));
 const SchoolFeedback = lazy(() => import('./pages/school/Feedback'));
+const SchoolVerification = lazy(() => import('./pages/school/DataVerification'));
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
@@ -194,6 +195,7 @@ function App() {
               <Route path='alumni' element={<SchoolAlumniList />} />
               <Route path='universities' element={<SchoolUniversityList />} />
               <Route path='feedback' element={<SchoolFeedback />} />
+              <Route path='verification' element={<SchoolVerification />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

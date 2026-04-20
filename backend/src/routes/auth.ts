@@ -190,6 +190,7 @@ router.post(
           username: user.username,
           email: user.email,
           role: user.role,
+          schoolRole: user.schoolRole,
           questionnaireCompleted: user.questionnaireCompleted,
           profile: user.profile,
           badges: user.badges,

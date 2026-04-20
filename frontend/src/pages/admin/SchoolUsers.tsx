@@ -10,6 +10,7 @@ import {
   FaUniversity,
   FaEye,
   FaEyeSlash,
+  FaUserCog,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
@@ -29,6 +30,7 @@ const AdminSchoolUsers = () => {
     email: '',
     password: '',
     fullName: '',
+    schoolRole: 'teacher',
   });
   const [showPassword, setShowPassword] = useState(false);
 
@@ -62,7 +64,13 @@ const AdminSchoolUsers = () => {
       }
       setShowForm(false);
       setEditingUser(null);
-      setFormData({ username: '', email: '', password: '', fullName: '' });
+      setFormData({ 
+        username: '', 
+        email: '', 
+        password: '', 
+        fullName: '',
+        schoolRole: 'teacher' 
+      });
       setShowPassword(false);
       fetchSchoolUsers();
     } catch (error: any) {
@@ -77,6 +85,7 @@ const AdminSchoolUsers = () => {
       email: user.email,
       password: '',
       fullName: user.profile?.fullName || '',
+      schoolRole: user.schoolRole || 'teacher',
     });
     setShowForm(true);
   };
@@ -98,7 +107,13 @@ const AdminSchoolUsers = () => {
   const handleCancel = () => {
     setShowForm(false);
     setEditingUser(null);
-    setFormData({ username: '', email: '', password: '', fullName: '' });
+    setFormData({ 
+      username: '', 
+      email: '', 
+      password: '', 
+      fullName: '',
+      schoolRole: 'teacher' 
+    });
     setShowPassword(false);
   };
 
@@ -114,7 +129,7 @@ const AdminSchoolUsers = () => {
             Kelola User Sekolah
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
-            Manajemen akun monitoring untuk pihak sekolah
+            Manajemen akun monitoring dan verifikasi sekolah
           </p>
         </div>
         {!showForm && (
@@ -155,6 +170,21 @@ const AdminSchoolUsers = () => {
                   className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
                   placeholder='Contoh: Kepala Sekolah SMAN 1 Tawangsari'
                 />
+              </div>
+              <div className='form-group'>
+                <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
+                  Tipe User (Role)
+                </label>
+                <select
+                  value={formData.schoolRole}
+                  onChange={(e) =>
+                    setFormData({ ...formData, schoolRole: e.target.value })
+                  }
+                  className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] p-2.5 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+                >
+                  <option value='teacher'>Guru Umum / Monitoring</option>
+                  <option value='bk'>Guru BK (Bisa Sinkronisasi)</option>
+                </select>
               </div>
               <div className='form-group'>
                 <label className='block text-sm font-medium text-[color:var(--text-secondary)] mb-1'>
@@ -236,6 +266,7 @@ const AdminSchoolUsers = () => {
               <tr>
                 <th className='px-6 py-4'>Username</th>
                 <th className='px-6 py-4'>Nama / Instansi</th>
+                <th className='px-6 py-4'>Tipe</th>
                 <th className='px-6 py-4'>Email</th>
                 <th className='px-6 py-4'>Tanggal Dibuat</th>
                 <th className='px-6 py-4 text-center'>Aksi</th>
@@ -245,7 +276,7 @@ const AdminSchoolUsers = () => {
               {schoolUsers.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className='p-8 text-center text-[color:var(--text-secondary)]'
                   >
                     Tidak ada data user sekolah.
@@ -267,9 +298,16 @@ const AdminSchoolUsers = () => {
                         </span>
                       </div>
                     </td>
+                    <td className='px-6 py-4 text-[color:var(--text-primary)]'>
+                      {user.profile?.fullName || '-'}
+                    </td>
                     <td className='px-6 py-4'>
-                      <span className='font-medium text-[color:var(--text-primary)]'>
-                        {user.profile?.fullName || '-'}
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                        user.schoolRole === 'bk' 
+                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                      }`}>
+                        {user.schoolRole === 'bk' ? <><FaUserCog size={10} /> Guru BK</> : 'Guru Umum'}
                       </span>
                     </td>
                     <td className='px-6 py-4 text-[color:var(--text-secondary)]'>

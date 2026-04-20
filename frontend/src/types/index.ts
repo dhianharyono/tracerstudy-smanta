@@ -15,6 +15,7 @@ export interface User {
   questionnaireCompleted?: boolean;
   badges?: any[];
   isMentor?: boolean;
+  schoolRole?: 'bk' | 'teacher';
   university?: {
     name?: string;
     type?: string;

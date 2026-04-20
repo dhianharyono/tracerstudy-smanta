@@ -924,7 +924,7 @@ router.get('/school-users', async (req: Request, res: Response) => {
 
 router.post('/school-users', async (req: Request, res: Response) => {
   try {
-    const { username, email, password, fullName } = req.body;
+    const { username, email, password, fullName, schoolRole } = req.body;
 
     if (!username || !email || !password) {
       return res
@@ -940,6 +940,7 @@ router.post('/school-users', async (req: Request, res: Response) => {
       email,
       password: hashedPassword,
       role: 'school',
+      schoolRole: schoolRole || 'teacher',
       profile: {
         fullName: fullName || '',
       },

@@ -34,6 +34,9 @@ export interface IUser extends Document {
   questionnaireCompleted: boolean;
   isMentor: boolean;
   badges: mongoose.Types.ObjectId[];
+  isVerifiedBySchool: boolean;
+  verifiedAt?: Date;
+  schoolRole?: 'bk' | 'teacher';
   createdAt: Date;
   updatedAt: Date;
   lastActiveAt?: Date;
@@ -107,6 +110,15 @@ const UserSchema = new Schema<IUser>(
       type: Schema.Types.ObjectId,
       ref: 'Badge'
     }],
+    isVerifiedBySchool: {
+      type: Boolean,
+      default: false,
+    },
+    verifiedAt: Date,
+    schoolRole: {
+      type: String,
+      enum: ['bk', 'teacher'],
+    },
     lastActiveAt: {
       type: Date,
       default: Date.now,

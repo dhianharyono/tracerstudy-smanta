@@ -3,14 +3,20 @@ import { authenticate, authorize } from '../middleware/auth';
 import User from '../models/User';
 import Feedback from '../models/Feedback';
 
+import multer from 'multer';
+import * as XLSX from 'xlsx';
+import path from 'path';
+
 interface AuthenticatedRequest extends Request {
   user?: {
     _id: string;
     role: string;
+    schoolRole?: string;
   };
 }
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.use(authenticate);
 router.use(authorize('school'));
@@ -21,11 +27,15 @@ router.get('/stats', async (req: Request, res: Response) => {
         const totalAlumni = await User.countDocuments({ role: 'alumni' });
         const totalStudents = await User.countDocuments({ role: 'student' });
         
-        // Profiles completion
         const completedAlumni = await User.countDocuments({ 
             role: 'alumni', 
             questionnaireCompleted: true,
             'university.name': { $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] }
+        });
+
+        const verifiedAlumni = await User.countDocuments({ 
+            role: 'alumni', 
+            isVerifiedBySchool: true 
         });
 
         // Employment stats
@@ -63,6 +73,7 @@ router.get('/stats', async (req: Request, res: Response) => {
             totalAlumni,
             totalStudents,
             completedAlumni,
+            verifiedAlumni,
             workingAlumni,
             studyingAlumni,
             bothAlumni,
@@ -294,6 +305,126 @@ router.get('/feedback/stats', async (req: Request, res: Response) => {
         const average = total > 0 ? sum / total : 0;
 
         res.json({ total, average, ratings });
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Download excel template for verification
+router.get('/alumni/template', (req: Request, res: Response) => {
+    try {
+        const wb = XLSX.utils.book_new();
+        const data = [
+            ['Nama Lengkap', 'Tahun Lulus', 'Status (Kuliah/Kerja/Lainnya)', 'Nama Universitas', 'Nama Perusahaan/Instansi'],
+            ['Contoh: Budi Santoso', 2023, 'Kuliah', 'Universitas Indonesia', ''],
+            ['Contoh: Siti Aminah', 2022, 'Kerja', '', 'PT Maju Jaya']
+        ];
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        
+        // Set column widths
+        ws['!cols'] = [
+            { wch: 30 }, // Nama
+            { wch: 15 }, // Tahun Lulus
+            { wch: 25 }, // Status
+            { wch: 30 }, // Universitas
+            { wch: 30 }  // Perusahaan
+        ];
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Template Verifikasi');
+        const buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' });
+
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', 'attachment; filename=template_verifikasi_alumni.xlsx');
+        res.send(buffer);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Bulk verify alumni from excel
+router.post('/alumni/verify-bulk', upload.single('file'), async (req: AuthenticatedRequest, res: Response) => {
+    try {
+        if (req.user?.schoolRole !== 'bk') {
+            return res.status(403).json({ message: 'Hanya Guru BK yang dapat melakukan sinkronisasi data' });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ message: 'File tidak ditemukan' });
+        }
+
+        const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+
+        const results = {
+            verified: 0,
+            mismatch: [] as any[],
+            notFound: [] as any[]
+        };
+
+        for (const row of (data as any[])) {
+            const rawName = row['Nama Lengkap'];
+            const gradYear = parseInt(row['Tahun Lulus']);
+            const excelStatus = row['Status (Kuliah/Kerja/Lainnya)']?.toLowerCase() || '';
+            const excelUniv = row['Nama Universitas'] || '';
+            const excelWork = row['Nama Perusahaan/Instansi'] || '';
+
+            if (!rawName || isNaN(gradYear)) continue;
+
+            // Find alumni in DB
+            const alumni = await User.findOne({
+                role: 'alumni',
+                'profile.graduationYear': gradYear,
+                'profile.fullName': { $regex: new RegExp(`^${rawName.trim()}$`, 'i') }
+            });
+
+            if (alumni) {
+                // Check for mismatches
+                let isMismatch = false;
+                const dbStatus = alumni.profile?.isStudying ? 'kuliah' : (alumni.profile?.isWorking ? 'kerja' : 'lainnya');
+                
+                if (excelStatus && dbStatus !== excelStatus) {
+                    isMismatch = true;
+                }
+
+                if (isMismatch) {
+                    results.mismatch.push({
+                        name: rawName,
+                        gradYear,
+                        dbData: {
+                            status: dbStatus,
+                            university: alumni.university?.name || '-',
+                            institution: alumni.job?.institution || '-'
+                        },
+                        excelData: {
+                            status: excelStatus,
+                            university: excelUniv || '-',
+                            institution: excelWork || '-'
+                        }
+                    });
+                } else {
+                    // Update as verified
+                    alumni.isVerifiedBySchool = true;
+                    alumni.verifiedAt = new Date();
+                    await alumni.save();
+                    results.verified++;
+                }
+            } else {
+                results.notFound.push({ name: rawName, gradYear });
+            }
+        }
+
+        res.json({
+            message: 'Proses sinkronisasi selesai',
+            summary: {
+                totalProcessed: data.length,
+                verifiedCount: results.verified,
+                mismatchCount: results.mismatch.length,
+                notFoundCount: results.notFound.length
+            },
+            details: results
+        });
     } catch (error: any) {
         res.status(500).json({ message: error.message });
     }
