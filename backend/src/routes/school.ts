@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
 import User from '../models/User';
+import AuditLog from '../models/AuditLog';
 import Feedback from '../models/Feedback';
 
 import multer from 'multer';
@@ -16,7 +17,20 @@ interface AuthenticatedRequest extends Request {
 }
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ 
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB Limit
+    fileFilter: (req, file, cb) => {
+        const filetypes = /xlsx|xls|spreadsheetml|ms-excel/;
+        const mimetype = filetypes.test(file.mimetype);
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        }
+        cb(new Error('Hanya file Excel yang diperbolehkan (.xlsx atau .xls)'));
+    }
+});
 
 router.use(authenticate);
 router.use(authorize('school'));
@@ -424,6 +438,21 @@ router.post('/alumni/verify-bulk', upload.single('file'), async (req: Authentica
                 notFoundCount: results.notFound.length
             },
             details: results
+        });
+
+        // Add to audit log
+        await AuditLog.create({
+            action: 'VERIFY_BULK',
+            actor: {
+                userId: (req as any).user._id,
+                username: (req as any).user.username,
+                role: (req as any).user.role
+            },
+            target: {
+                type: 'bulk',
+                name: 'Data Alumni dari Sekolah'
+            },
+            details: `Sinkronisasi massal: ${results.verified} diverifikasi, ${results.mismatch.length} mismatch, ${results.notFound.length} tidak ditemukan.`
         });
     } catch (error: any) {
         res.status(500).json({ message: error.message });

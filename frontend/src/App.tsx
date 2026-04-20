@@ -31,7 +31,6 @@ const AlumniEventHub = lazy(() => import('./pages/alumni/EventHub'));
 // Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
 const AdminAlumni = lazy(() => import('./pages/admin/Alumni'));
-const AdminReports = lazy(() => import('./pages/admin/Reports'));
 const AdminStudents = lazy(() => import('./pages/admin/Students'));
 const AdminMentors = lazy(() => import('./pages/admin/Mentors'));
 const AdminAdmins = lazy(() => import('./pages/admin/Admins'));
@@ -44,6 +43,7 @@ const AdminEventManagement = lazy(() => import('./pages/admin/EventManagement'))
 const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
 const AdminCollegePlans = lazy(() => import('./pages/admin/CollegePlans'));
 const AdminSchoolUsers = lazy(() => import('./pages/admin/SchoolUsers'));
+const AdminVerificationLogs = lazy(() => import('./pages/admin/AdminVerificationLogs'));
 
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
@@ -167,7 +167,6 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path='alumni' element={<AdminAlumni />} />
               <Route path='mentors' element={<AdminMentors />} />
-              <Route path='reports' element={<AdminReports />} />
               <Route path='students' element={<AdminStudents />} />
               <Route path='admins' element={<AdminAdmins />} />
               <Route path='news' element={<AdminNews />} />
@@ -179,6 +178,7 @@ function App() {
               <Route path='stats' element={<AdminStatistics />} />
               <Route path='college-plans' element={<AdminCollegePlans />} />
               <Route path='school-users' element={<AdminSchoolUsers />} />
+              <Route path='verification-logs' element={<AdminVerificationLogs />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

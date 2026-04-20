@@ -457,7 +457,7 @@ const AlumniQuestionnaire = () => {
         await axios.post('/api/alumni/questionnaire', submitData);
       }
 
-      const userRes = await axios.get('/api/users/profile');
+      const userRes = await axios.get('/api/auth/me');
       updateUser(userRes.data);
 
       Toast('Kuesioner berhasil diperbarui!', 'success');

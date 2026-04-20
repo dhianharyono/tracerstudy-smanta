@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { authenticate, authorize } from '../middleware/auth';
 import User from '../models/User';
 import News from '../models/News';
+import AuditLog from '../models/AuditLog';
 import Feedback from '../models/Feedback';
 import Settings from '../models/Settings';
 import Badge from '../models/Badge';
@@ -509,6 +510,21 @@ router.put('/alumni/:id', async (req: Request, res: Response) => {
     }
 
     res.json(alumni);
+
+    // Dynamic logging
+    await AuditLog.create({
+      action: 'UPDATE_ALUMNI',
+      actor: {
+        userId: (req as any).user._id,
+        username: (req as any).user.username,
+        role: (req as any).user.role,
+      },
+      target: {
+        type: 'alumni',
+        name: alumni.profile?.fullName || alumni.username,
+      },
+      details: `Mengupdate data alumni: ${alumni.profile?.fullName || alumni.username}`,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -527,6 +543,21 @@ router.delete('/alumni/:id', async (req: Request, res: Response) => {
     }
 
     res.json({ message: 'Alumni deleted successfully' });
+
+    // Dynamic logging
+    await AuditLog.create({
+      action: 'DELETE_ALUMNI',
+      actor: {
+        userId: (req as any).user._id,
+        username: (req as any).user.username,
+        role: (req as any).user.role,
+      },
+      target: {
+        type: 'alumni',
+        name: alumni.profile?.fullName || alumni.username,
+      },
+      details: `Menghapus data alumni: ${alumni.profile?.fullName || alumni.username}`,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
@@ -990,6 +1021,34 @@ router.delete('/school-users/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'School user not found' });
     }
     res.json({ message: 'School user deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Audit logs monitoring
+router.get('/audit-logs', async (req: Request, res: Response) => {
+  try {
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 20;
+    const skip = (page - 1) * limit;
+
+    const logs = await AuditLog.find()
+      .sort({ timestamp: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const total = await AuditLog.countDocuments();
+
+    res.json({
+      logs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit),
+      },
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

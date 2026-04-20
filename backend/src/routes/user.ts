@@ -62,8 +62,11 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
             user.profile = { ...user.profile, ...profile };
         }
 
-        if (isMentor !== undefined && user.role === 'alumni') {
-            user.isMentor = isMentor;
+        // Auto-complete questionnaire status if university data is now complete
+        if (user.role === 'alumni' && !user.questionnaireCompleted) {
+            if (user.university?.name && user.university?.major) {
+                user.questionnaireCompleted = true;
+            }
         }
 
         await user.save();

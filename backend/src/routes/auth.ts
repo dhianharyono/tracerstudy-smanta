@@ -9,11 +9,19 @@ import { authenticate } from '../middleware/auth';
 
 // Rate limiting untuk login dan register
 const authLimiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 menit
-  max: 1000, // maksimal 1000 request per menit
-  message: 'Too many login/register attempts from this IP, please try again later.',
+  windowMs: 15 * 60 * 1000, // 15 menit
+  max: 100, // maksimal 100 request
+  message: 'Terlalu banyak permintaan akses, silakan coba lagi dalam 15 menit.',
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+// Pengetatan login brute force
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 menit
+  max: 5, // Maksimal 5 kali percobaan gagal sebelum diblokir sementara
+  skipSuccessfulRequests: true,
+  message: 'Terlalu banyak percobaan login yang gagal. Silakan coba lagi nanti.',
 });
 
 // Helper untuk verifikasi CAPTCHA
@@ -59,8 +67,10 @@ router.post(
       .withMessage('Username must be at least 3 characters'),
     body('email').isEmail().withMessage('Please provide a valid email'),
     body('password')
-      .isLength({ min: 6 })
-      .withMessage('Password must be at least 6 characters'),
+      .isLength({ min: 8 })
+      .withMessage('Password minimal harus 8 karakter')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+      .withMessage('Password harus mengandung huruf besar, huruf kecil, angka, dan simbol'),
     body('role')
       .isIn(['alumni', 'admin', 'student'])
       .withMessage('Invalid role'),
@@ -111,7 +121,7 @@ router.post(
       }
 
       const token = jwt.sign({ userId: user._id }, jwtSecret || 'secret', {
-        expiresIn: '7d',
+        expiresIn: '2d',
       });
 
       // Set cookie for security
@@ -119,11 +129,10 @@ router.post(
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       });
 
       res.status(201).json({
-        token,
         user: {
           id: user._id,
           username: user.username,
@@ -143,6 +152,7 @@ router.post(
 router.post(
   '/login',
   authLimiter,
+  loginLimiter,
   [
     body('username').notEmpty().withMessage('Username is required'),
     body('password').notEmpty().withMessage('Password is required'),
@@ -172,7 +182,7 @@ router.post(
 
       const jwtSecret = process.env.JWT_SECRET;
       const token = jwt.sign({ userId: user._id }, jwtSecret || 'secret', {
-        expiresIn: '7d',
+        expiresIn: '2d',
       });
 
       // Set cookie for security
@@ -180,11 +190,10 @@ router.post(
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
       });
 
       res.json({
-        token,
         user: {
           id: user._id,
           username: user.username,

@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { authenticate, authorize } from '../middleware/auth';
 import User from '../models/User';
+import { maskEmail } from '../utils/masking';
 import News from '../models/News';
 import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
@@ -41,7 +42,17 @@ router.get(
         .populate('badges')
         .sort({ 'profile.fullName': 1 });
 
-      res.json(alumni);
+      const maskedAlumni = alumni.map(a => {
+        const alumniObj = (a as any).toObject();
+        const userRole = (req as any).user?.role;
+
+        if (userRole !== 'admin' && userRole !== 'school') {
+          if (alumniObj.email) alumniObj.email = maskEmail(alumniObj.email);
+        }
+        return alumniObj;
+      });
+
+      res.json(maskedAlumni);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

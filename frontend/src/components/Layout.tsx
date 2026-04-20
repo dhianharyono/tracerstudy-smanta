@@ -12,7 +12,6 @@ import {
   FaUsers,
   FaGraduationCap,
   FaUserTie,
-  FaChartLine,
   FaUniversity,
   FaBook,
   FaSignOutAlt,
@@ -164,14 +163,14 @@ const Layout = () => {
       <Link
         to={to}
         className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
           }`}
       >
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-              ? 'bg-white/20'
-              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+            ? 'bg-white/20'
+            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
             }`}
         >
           <Icon className='text-lg' />
@@ -251,7 +250,7 @@ const Layout = () => {
             icon={FaChartPie}
             label='Statistik Website'
           />
-          <NavLink to='/admin/reports' icon={FaChartLine} label='Laporan' />
+          <NavLink to='/admin/verification-logs' icon={FaSync} label='Verifikasi Data Alumni' />
           <NavLink
             to='/admin/feedback'
             icon={FaCommentDots}

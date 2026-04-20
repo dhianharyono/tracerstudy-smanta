@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
+import hpp from 'hpp';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
@@ -22,8 +23,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Security Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'"],
+      upgradeInsecureRequests: [],
+    },
+  },
+}));
 app.use(mongoSanitize());
+app.use(hpp());
 app.use(cookieParser());
 
 // CORS configuration
