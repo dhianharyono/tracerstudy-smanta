@@ -169,7 +169,7 @@ router.post(
       const user = await User.findOne({ username }).populate('badges');
       if (!user) {
         return res.status(400).json({
-          message: 'Username yang Anda masukkan tidak ditemukan',
+          message: 'Username atau password yang Anda masukkan salah',
         });
       }
 
@@ -177,7 +177,7 @@ router.post(
       if (!isMatch) {
         return res
           .status(400)
-          .json({ message: 'Password yang Anda masukkan salah' });
+          .json({ message: 'Username atau password yang Anda masukkan salah' });
       }
 
       const jwtSecret = process.env.JWT_SECRET;
