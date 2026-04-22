@@ -1054,6 +1054,27 @@ router.get('/audit-logs', async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/audit-logs', async (req: Request, res: Response) => {
+  try {
+    await AuditLog.deleteMany({});
+    res.json({ message: 'Audit logs cleared successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.delete('/audit-logs/:id', async (req: Request, res: Response) => {
+  try {
+    const log = await AuditLog.findByIdAndDelete(req.params.id);
+    if (!log) {
+      return res.status(404).json({ message: 'Log not found' });
+    }
+    res.json({ message: 'Log entry deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // News routes
 // Get all news
 router.get('/news', async (req: Request, res: Response) => {

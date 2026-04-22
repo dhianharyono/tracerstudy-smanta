@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { 
-  FaHistory, 
-  FaSearch, 
-  FaFilter, 
-  FaUserCog, 
+import {
+  FaHistory,
+  FaSearch,
+  FaUserCog,
   FaExclamationCircle,
   FaCheckCircle,
   FaTrashAlt,
@@ -13,6 +12,7 @@ import {
 import Card from '@/components/common/Card';
 import PageHeader from '@/components/common/PageHeader';
 import SmartLoader from '@/components/SmartLoader';
+import { toast } from 'react-toastify';
 
 const AdminVerificationLogs = () => {
   const [logs, setLogs] = useState<any[]>([]);
@@ -40,6 +40,36 @@ const AdminVerificationLogs = () => {
     }
   };
 
+  const handleDeleteLogs = async () => {
+    if (!window.confirm('Apakah Anda yakin ingin menghapus seluruh riwayat aktivitas? Tindakan ini tidak dapat dibatalkan.')) {
+      return;
+    }
+
+    try {
+      await axios.delete('/api/admin/audit-logs');
+      toast.success('Seluruh riwayat aktivitas berhasil dihapus');
+      fetchLogs();
+    } catch (error) {
+      console.error('Error deleting audit logs:', error);
+      toast.error('Gagal menghapus riwayat aktivitas');
+    }
+  };
+
+  const handleDeleteSingleLog = async (id: string) => {
+    if (!window.confirm('Hapus log aktivitas ini?')) {
+      return;
+    }
+
+    try {
+      await axios.delete(`/api/admin/audit-logs/${id}`);
+      toast.success('Log aktivitas berhasil dihapus');
+      fetchLogs();
+    } catch (error) {
+      console.error('Error deleting audit log:', error);
+      toast.error('Gagal menghapus log aktivitas');
+    }
+  };
+
   const getActionIcon = (action: string) => {
     switch (action) {
       case 'VERIFY_BULK': return <FaSync className="text-blue-500" />;
@@ -51,11 +81,11 @@ const AdminVerificationLogs = () => {
 
   const getActionBadge = (action: string) => {
     switch (action) {
-      case 'VERIFY_BULK': 
+      case 'VERIFY_BULK':
         return <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Sinkronisasi</span>;
-      case 'UPDATE_ALUMNI': 
+      case 'UPDATE_ALUMNI':
         return <span className="bg-amber-100 text-amber-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Update Data</span>;
-      case 'DELETE_ALUMNI': 
+      case 'DELETE_ALUMNI':
         return <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Hapus Data</span>;
       default: return <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Aktivitas</span>;
     }
@@ -77,19 +107,24 @@ const AdminVerificationLogs = () => {
               <FaHistory /> Riwayat Aktivitas
             </h3>
             <div className="flex gap-2">
-               <div className="relative">
-                  <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
-                    <FaSearch size={12} />
-                  </span>
-                  <input 
-                    type="text" 
-                    placeholder="Cari aktor..." 
-                    className="pl-9 pr-4 py-1.5 text-xs rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] focus:outline-none focus:border-[var(--primary)]"
-                  />
-               </div>
-               <button className="p-2 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] rounded-lg text-gray-500 hover:text-[var(--primary)] transition-colors">
-                  <FaFilter size={12} />
-               </button>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                  <FaSearch size={12} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Cari aktor..."
+                  className="pl-9 pr-4 py-1.5 text-xs rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] focus:outline-none focus:border-[var(--primary)]"
+                />
+              </div>
+              <button
+                onClick={handleDeleteLogs}
+                className="px-3 py-1.5 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 hover:bg-red-500 hover:text-white transition-all text-xs font-medium flex items-center gap-1.5"
+                title="Hapus Semua Riwayat"
+              >
+                <FaTrashAlt size={12} />
+                <span>Hapus Riwayat</span>
+              </button>
             </div>
           </div>
 
@@ -99,15 +134,16 @@ const AdminVerificationLogs = () => {
                 <tr>
                   <th className="px-6 py-4">Waktu</th>
                   <th className="px-6 py-4">Pelaku</th>
-                  <th className="px-6 py-4">Aksi</th>
+                  <th className="px-6 py-4">Jenis Aktivitas</th>
                   <th className="px-6 py-4">Target / Alumni</th>
                   <th className="px-6 py-4">Ringkasan Detail</th>
+                  <th className="px-6 py-4 text-right"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[color:var(--border-color)]">
                 {logs.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-6 py-12 text-center text-gray-400 italic">
+                    <td colSpan={6} className="px-6 py-12 text-center text-gray-400 italic">
                       Belum ada log aktivitas tercatat.
                     </td>
                   </tr>
@@ -144,6 +180,15 @@ const AdminVerificationLogs = () => {
                           {log.details}
                         </p>
                       </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => handleDeleteSingleLog(log._id)}
+                          className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                          title="Hapus Log Ini"
+                        >
+                          <FaTrashAlt size={14} />
+                        </button>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -157,15 +202,15 @@ const AdminVerificationLogs = () => {
               Total {pagination.total} log aktivitas
             </span>
             <div className="flex gap-2">
-              <button 
-                onClick={() => setPagination({...pagination, page: pagination.page - 1})}
+              <button
+                onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
                 disabled={pagination.page === 1}
                 className="px-3 py-1 text-xs border rounded disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white dark:hover:bg-gray-800"
               >
                 Prev
               </button>
-              <button 
-                onClick={() => setPagination({...pagination, page: pagination.page + 1})}
+              <button
+                onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
                 disabled={pagination.page === pagination.pages}
                 className="px-3 py-1 text-xs border rounded disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white dark:hover:bg-gray-800"
               >
