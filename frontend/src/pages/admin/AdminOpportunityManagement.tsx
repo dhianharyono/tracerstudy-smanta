@@ -4,11 +4,9 @@ import {
   FaBriefcase, 
   FaCheck, 
   FaTimes, 
-  FaEye, 
   FaClock, 
   FaUser, 
-  FaExclamationCircle,
-  FaSearch
+  FaExclamationCircle
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
 import SmartLoader from '@/components/SmartLoader';

@@ -12,7 +12,6 @@ import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isUniversityIncomplete } from '@/utils/validation';
-import { isStudentProfileComplete } from '@/utils/helpers';
 
 const JOB_CATEGORIES = [
   'Teknologi & IT',
