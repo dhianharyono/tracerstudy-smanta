@@ -72,7 +72,8 @@ const Opportunities = () => {
 
   // Alumni Restrictions
   if (user?.role === 'alumni') {
-    if (user.questionnaireCompleted === false) {
+    const hasUniversityData = !!(user?.university?.name);
+    if (user.questionnaireCompleted === false && !hasUniversityData) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
     }
     if (isUniversityIncomplete(user)) {

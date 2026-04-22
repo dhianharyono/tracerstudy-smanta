@@ -1,8 +1,5 @@
 export const isUniversityIncomplete = (profile: any) => {
   if (!profile) return true;
-  
-  // If the user hasn't filled the questionnaire flag, it's definitely incomplete
-  if (!profile.questionnaireCompleted) return true;
 
   const universityName = profile.university?.name || '';
   const major = profile.university?.major || '';
@@ -21,8 +18,6 @@ export const isUniversityIncomplete = (profile: any) => {
 };
 export const isJobIncomplete = (profile: any) => {
   if (!profile) return true;
-  
-  if (!profile.questionnaireCompleted) return true;
 
   const jobPosition = profile.job?.position || '';
   const jobInstitution = profile.job?.institution || '';

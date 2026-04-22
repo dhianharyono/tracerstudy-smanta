@@ -40,7 +40,8 @@ const PostOpportunity = () => {
   const [loading, setLoading] = useState(isEdit);
 
   if (user?.role === 'alumni') {
-    if (user.questionnaireCompleted === false) {
+    const hasUniversityData = !!(user?.university?.name);
+    if (user.questionnaireCompleted === false && !hasUniversityData) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
     }
     if (isUniversityIncomplete(user)) {

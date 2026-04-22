@@ -202,6 +202,8 @@ router.post(
           schoolRole: user.schoolRole,
           questionnaireCompleted: user.questionnaireCompleted,
           profile: user.profile,
+          university: user.university,
+          job: user.job,
           badges: user.badges,
         },
       });
