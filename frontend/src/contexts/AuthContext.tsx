@@ -128,7 +128,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       setUser(formattedUser);
       localStorage.setItem('user', JSON.stringify(formattedUser));
     } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Registration failed');
+      const serverErrors = error.response?.data?.errors;
+      const message = serverErrors && serverErrors.length > 0 
+        ? serverErrors[0].msg 
+        : (error.response?.data?.message || 'Pendaftaran gagal');
+      throw new Error(message);
     }
   };
 

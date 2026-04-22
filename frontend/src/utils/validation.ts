@@ -19,3 +19,23 @@ export const isUniversityIncomplete = (profile: any) => {
 
   return false;
 };
+export const isJobIncomplete = (profile: any) => {
+  if (!profile) return true;
+  
+  if (!profile.questionnaireCompleted) return true;
+
+  const jobPosition = profile.job?.position || '';
+  const jobInstitution = profile.job?.institution || '';
+  
+  const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
+  
+  if (!jobPosition.trim() || placeholders.includes(jobPosition.trim().toLowerCase())) {
+    return true;
+  }
+  
+  if (!jobInstitution.trim() || placeholders.includes(jobInstitution.trim().toLowerCase())) {
+    return true;
+  }
+
+  return false;
+};

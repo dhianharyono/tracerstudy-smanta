@@ -27,6 +27,9 @@ const AlumniNewsDetail = lazy(() => import('./pages/alumni/NewsDetail'));
 const MutualAlumni = lazy(() => import('./pages/alumni/MutualAlumni'));
 const AlumniClaimBadge = lazy(() => import('./pages/alumni/ClaimBadge'));
 const AlumniEventHub = lazy(() => import('./pages/alumni/EventHub'));
+const ManageMyJobs = lazy(() => import('./pages/alumni/ManageMyJobs'));
+const PostOpportunity = lazy(() => import('./pages/alumni/PostOpportunity'));
+const Opportunities = lazy(() => import('./pages/shared/Opportunities'));
 
 // Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -44,6 +47,7 @@ const AdminStatistics = lazy(() => import('./pages/admin/WebsiteStatistics'));
 const AdminCollegePlans = lazy(() => import('./pages/admin/CollegePlans'));
 const AdminSchoolUsers = lazy(() => import('./pages/admin/SchoolUsers'));
 const AdminVerificationLogs = lazy(() => import('./pages/admin/AdminVerificationLogs'));
+const AdminJobManagement = lazy(() => import('./pages/admin/AdminOpportunityManagement'));
 
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
@@ -153,6 +157,9 @@ function App() {
               <Route path='mutual-alumni' element={<MutualAlumni />} />
               <Route path='claim-badge' element={<AlumniClaimBadge />} />
               <Route path='events' element={<AlumniEventHub />} />
+              <Route path='jobs' element={<ManageMyJobs />} />
+              <Route path='jobs/new' element={<PostOpportunity />} />
+              <Route path='jobs/edit/:id' element={<PostOpportunity />} />
             </Route>
 
             {/* Admin Routes */}
@@ -179,6 +186,7 @@ function App() {
               <Route path='college-plans' element={<AdminCollegePlans />} />
               <Route path='school-users' element={<AdminSchoolUsers />} />
               <Route path='verification-logs' element={<AdminVerificationLogs />} />
+              <Route path='jobs' element={<AdminJobManagement />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 
@@ -219,6 +227,18 @@ function App() {
               <Route path='news/:id' element={<StudentNewsDetail />} />
               <Route path='events' element={<StudentEvents />} />
               <Route path='profile' element={<Profile />} />
+            </Route>
+
+            {/* Shared Authenticated Routes */}
+            <Route
+              path='/jobs'
+              element={
+                <PrivateRoute allowedRoles={['alumni', 'admin']}>
+                  <Layout />
+                </PrivateRoute>
+              }
+            >
+              <Route index element={<Opportunities />} />
             </Route>
 
             <Route path='/' element={<LandingPage />} />

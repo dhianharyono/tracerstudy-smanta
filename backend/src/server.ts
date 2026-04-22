@@ -16,6 +16,7 @@ import eventRoutes from './routes/events';
 import analyticsRoutes from './routes/analytics';
 import publicRoutes from './routes/public';
 import schoolRoutes from './routes/school';
+import jobRoutes from './routes/job';
 
 dotenv.config();
 
@@ -139,6 +140,7 @@ app.use('/api/events', eventRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/school', schoolRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

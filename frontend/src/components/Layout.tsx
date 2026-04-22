@@ -23,6 +23,7 @@ import {
   FaChartPie,
   FaHome,
   FaSync,
+  FaBriefcase,
 } from 'react-icons/fa';
 import './Layout.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -111,6 +112,9 @@ const Layout = () => {
       '/school/universities': 'Perguruan Tinggi Sekolah',
       '/school/feedback': 'Kritik & Saran Sekolah',
       '/school/profile': 'Profil Monitoring',
+      '/jobs': 'Bursa Kerja',
+      '/alumni/jobs': 'Kelola Loker Saya',
+      '/admin/jobs': 'Moderasi Loker',
     };
 
     if (
@@ -201,6 +205,8 @@ const Layout = () => {
             label='News'
             activeCheck
           />
+          <NavLink to='/jobs' icon={FaBriefcase} label='Bursa Kerja' />
+          <NavLink to='/alumni/jobs' icon={FaBriefcase} label='Loker Saya' />
           {feedbackMenuVisible && (
             <NavLink
               to='/alumni/feedback'
@@ -245,6 +251,7 @@ const Layout = () => {
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
+          <NavLink to='/admin/jobs' icon={FaBriefcase} label='Moderasi Loker' />
           <NavLink
             to='/admin/stats'
             icon={FaChartPie}

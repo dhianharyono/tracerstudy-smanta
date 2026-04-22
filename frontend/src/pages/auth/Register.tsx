@@ -53,8 +53,15 @@ const Register = () => {
       return;
     }
 
-    if (formData.password.length < 6) {
-      setError('Password harus minimal 6 karakter');
+    // Match backend complexity requirement
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    if (formData.password.length < 8) {
+      setError('Password minimal harus 8 karakter');
+      return;
+    }
+    
+    if (!passwordRegex.test(formData.password)) {
+      setError('Password harus mengandung huruf besar, huruf kecil, angka, dan simbol');
       return;
     }
 
@@ -262,7 +269,7 @@ const Register = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required
-                    placeholder='Minimal 6 karakter'
+                    placeholder='Buat password kuat'
                     className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
                   />
                   <button
@@ -273,6 +280,25 @@ const Register = () => {
                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                
+                {/* Real-time Validation Checklist */}
+                {formData.password.length > 0 && (
+                  <div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-1 p-3 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] animate-slide-up'>
+                    {[
+                      { label: 'Min. 8 Karakter', met: formData.password.length >= 8 },
+                      { label: 'Huruf Besar & Kecil', met: /[a-z]/.test(formData.password) && /[A-Z]/.test(formData.password) },
+                      { label: 'Angka', met: /\d/.test(formData.password) },
+                      { label: 'Simbol (@$!%*?&)', met: /[@$!%*?&]/.test(formData.password) }
+                    ].map((req, i) => (
+                      <div key={i} className={`flex items-center gap-1.5 text-[10px] font-bold ${req.met ? 'text-green-500' : 'text-[color:var(--text-tertiary)]'}`}>
+                        <div className={`w-3 h-3 rounded-full flex items-center justify-center ${req.met ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>
+                          {req.met && <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>}
+                        </div>
+                        {req.label}
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className='space-y-1.5'>
@@ -300,6 +326,17 @@ const Register = () => {
                     {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 </div>
+                {formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword && (
+                  <p className='text-[10px] font-bold text-red-500 mt-1 animate-pulse'>
+                    Password tidak cocok!
+                  </p>
+                )}
+                {formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword && (
+                  <p className='text-[10px] font-bold text-green-500 mt-1 flex items-center gap-1'>
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                    Password cocok
+                  </p>
+                )}
               </div>
 
               {/* CAPTCHA Section */}
