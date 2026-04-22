@@ -21,6 +21,14 @@ export interface IUser extends Document {
     graduationYear?: number;
     major?: string;
   };
+  universityS2?: {
+    name?: string;
+    major?: string;
+  };
+  universityS3?: {
+    name?: string;
+    major?: string;
+  };
   job?: {
     position?: string;
     institution?: string;
@@ -86,6 +94,14 @@ const UserSchema = new Schema<IUser>(
       },
       entryYear: Number,
       graduationYear: Number,
+      major: String,
+    },
+    universityS2: {
+      name: String,
+      major: String,
+    },
+    universityS3: {
+      name: String,
       major: String,
     },
     job: {

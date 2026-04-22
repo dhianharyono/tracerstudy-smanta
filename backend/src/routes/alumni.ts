@@ -112,6 +112,8 @@ router.put(
       const {
         profile,
         university,
+        universityS2,
+        universityS3,
         job,
         socialMedia,
         questionnaireCompleted,
@@ -124,6 +126,8 @@ router.put(
           $set: {
             profile,
             university,
+            universityS2,
+            universityS3,
             job,
             socialMedia,
             questionnaireCompleted:
@@ -149,7 +153,7 @@ router.post(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { profile, university, job, socialMedia } = req.body;
+      const { profile, university, universityS2, universityS3, job, socialMedia } = req.body;
 
       const user = await User.findByIdAndUpdate(
         req.user!._id,
@@ -157,6 +161,8 @@ router.post(
           $set: {
             profile,
             university,
+            universityS2,
+            universityS3,
             job,
             socialMedia,
             questionnaireCompleted: true,
@@ -178,7 +184,7 @@ router.put(
   authorize('alumni'),
   async (req: AuthenticatedRequest, res: Response) => {
     try {
-      const { profile, university, job, socialMedia } = req.body;
+      const { profile, university, universityS2, universityS3, job, socialMedia } = req.body;
 
       const user = await User.findByIdAndUpdate(
         req.user!._id,
@@ -186,6 +192,8 @@ router.put(
           $set: {
             profile,
             university,
+            universityS2,
+            universityS3,
             job,
             socialMedia,
             questionnaireCompleted: true,

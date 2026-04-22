@@ -148,6 +148,11 @@ interface UniversityData {
   major: string;
 }
 
+interface UniversitySData {
+  name: string;
+  major: string;
+}
+
 interface JobData {
   position: string;
   institution: string;
@@ -163,6 +168,8 @@ interface SocialMediaData {
 interface FormData {
   profile: ProfileData;
   university: UniversityData;
+  universityS2: UniversitySData;
+  universityS3: UniversitySData;
   job: JobData;
   socialMedia: SocialMediaData;
 }
@@ -186,6 +193,14 @@ interface AlumniProfile {
     type?: string;
     entryYear?: number;
     graduationYear?: number;
+    major?: string;
+  };
+  universityS2?: {
+    name?: string;
+    major?: string;
+  };
+  universityS3?: {
+    name?: string;
     major?: string;
   };
   job?: {
@@ -213,6 +228,14 @@ const initialFormData: FormData = {
     type: '',
     entryYear: '',
     graduationYear: '',
+    major: '',
+  },
+  universityS2: {
+    name: '',
+    major: '',
+  },
+  universityS3: {
+    name: '',
     major: '',
   },
   job: {
@@ -283,6 +306,14 @@ const AlumniQuestionnaire = () => {
                 graduationYear: profile.university?.graduationYear?.toString() || '',
                 major: profile.university?.major || '',
               },
+              universityS2: {
+                name: profile.universityS2?.name || '',
+                major: profile.universityS2?.major || '',
+              },
+              universityS3: {
+                name: profile.universityS3?.name || '',
+                major: profile.universityS3?.major || '',
+              },
               job: {
                 position: profile.job?.position || '',
                 institution: profile.job?.institution || '',
@@ -343,6 +374,24 @@ const AlumniQuestionnaire = () => {
         ...prev,
         university: {
           ...prev.university,
+          [field]: value,
+        },
+      }));
+    } else if (name.startsWith('universityS2.')) {
+      const field = name.split('.')[1] as keyof UniversitySData;
+      setFormData((prev) => ({
+        ...prev,
+        universityS2: {
+          ...prev.universityS2,
+          [field]: value,
+        },
+      }));
+    } else if (name.startsWith('universityS3.')) {
+      const field = name.split('.')[1] as keyof UniversitySData;
+      setFormData((prev) => ({
+        ...prev,
+        universityS3: {
+          ...prev.universityS3,
           [field]: value,
         },
       }));
@@ -442,6 +491,8 @@ const AlumniQuestionnaire = () => {
             ? parseInt(formData.university.graduationYear)
             : undefined,
         },
+        universityS2: formData.universityS2.name ? formData.universityS2 : undefined,
+        universityS3: formData.universityS3.name ? formData.universityS3 : undefined,
         job: (formData.job.position || formData.job.institution || formData.job.jobTitle) ? formData.job : undefined,
         socialMedia: {
           email: formData.socialMedia.email?.trim() || undefined,
@@ -609,7 +660,7 @@ const AlumniQuestionnaire = () => {
 
       <form onSubmit={handleSubmit} className='space-y-6'>
         {/* Personal Information Card */}
-        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
               <FaUser className='text-sm md:text-xl' />
@@ -694,7 +745,7 @@ const AlumniQuestionnaire = () => {
         </div>
 
         {/* University Section */}
-        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
               <FaGraduationCap className='text-sm md:text-xl' />
@@ -773,8 +824,82 @@ const AlumniQuestionnaire = () => {
           </div>
         </div>
 
+        {/* S2 University Section */}
+        {['s2', 's3'].includes(formData.profile.lastEducation) && (
+          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
+                <FaGraduationCap className='text-sm md:text-xl' />
+              </div>
+              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+                Data Perguruan Tinggi (S2)
+              </h2>
+            </div>
+
+            <div className='grid gap-6 md:grid-cols-2'>
+              <SearchableSelect
+                label='Nama Kampus S2'
+                name='universityS2.name'
+                value={formData.universityS2.name}
+                options={universities}
+                onChange={handleChange}
+                placeholder='Pilih atau cari nama kampus...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
+              <SearchableSelect
+                label='Jurusan S2'
+                name='universityS2.major'
+                value={formData.universityS2.major}
+                options={majors}
+                onChange={handleChange}
+                placeholder='Pilih atau cari jurusan...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
+            </div>
+          </div>
+        )}
+
+        {/* S3 University Section */}
+        {formData.profile.lastEducation === 's3' && (
+          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'>
+                <FaGraduationCap className='text-sm md:text-xl' />
+              </div>
+              <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
+                Data Perguruan Tinggi (S3)
+              </h2>
+            </div>
+
+            <div className='grid gap-6 md:grid-cols-2'>
+              <SearchableSelect
+                label='Nama Kampus S3'
+                name='universityS3.name'
+                value={formData.universityS3.name}
+                options={universities}
+                onChange={handleChange}
+                placeholder='Pilih atau cari nama kampus...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
+              <SearchableSelect
+                label='Jurusan S3'
+                name='universityS3.major'
+                value={formData.universityS3.major}
+                options={majors}
+                onChange={handleChange}
+                placeholder='Pilih atau cari jurusan...'
+                disabled={isReadOnly}
+                validationErrors={validationErrors}
+              />
+            </div>
+          </div>
+        )}
+
         {/* Job Section */}
-        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
               <FaBriefcase className='text-sm md:text-xl' />
@@ -816,7 +941,7 @@ const AlumniQuestionnaire = () => {
         </div>
 
         {/* Social Media Section */}
-        <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
               <FaShareAlt className='text-sm md:text-xl' />
