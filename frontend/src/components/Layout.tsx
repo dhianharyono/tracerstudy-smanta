@@ -114,7 +114,7 @@ const Layout = () => {
       '/school/profile': 'Profil Monitoring',
       '/jobs': 'Bursa Kerja',
       '/alumni/jobs': 'Kelola Loker Saya',
-      '/admin/jobs': 'Moderasi Loker',
+      '/admin/jobs': 'Bursa Kerja',
     };
 
     if (
@@ -253,7 +253,7 @@ const Layout = () => {
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
-          <NavLink to='/admin/jobs' icon={FaBriefcase} label='Moderasi Loker' />
+          <NavLink to='/admin/jobs' icon={FaBriefcase} label='Bursa Kerja' />
           <NavLink
             to='/admin/stats'
             icon={FaChartPie}

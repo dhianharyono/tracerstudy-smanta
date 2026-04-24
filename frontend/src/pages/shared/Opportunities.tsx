@@ -26,7 +26,11 @@ const JOB_CATEGORIES = [
 
 const JOB_TYPES = ['Full-time', 'Part-time', 'Internship', 'Freelance'];
 
-const Opportunities = () => {
+interface OpportunitiesProps {
+  hideHeader?: boolean;
+}
+
+const Opportunities = ({ hideHeader = false }: OpportunitiesProps) => {
   const { user } = useAuth();
   const [jobs, setJobs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,14 +88,17 @@ const Opportunities = () => {
 
   return (
     <div className='p-4 md:p-8 animate-fade-in'>
-      <div className='mb-6 md:mb-8 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-2 flex items-center justify-center md:justify-start gap-3'>
-          Bursa Kerja & Peluang
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Temukan lowongan kerja, magang, dan proyek dari rekan alumni SMANTA
-        </p>
-      </div>
+      {!hideHeader && (
+        <div className='mb-6 md:mb-8 text-center md:text-left'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-2 flex items-center justify-center md:justify-start gap-3'>
+            Bursa Kerja & Peluang
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
+            Temukan lowongan kerja, magang, dan proyek dari rekan alumni
+            SMANTA
+          </p>
+        </div>
+      )}
 
       {/* Filters Section */}
       <div className='bg-[color:var(--bg-card)] p-4 md:p-6 rounded-2xl border border-[color:var(--border-color)] shadow-sm mb-6'>
