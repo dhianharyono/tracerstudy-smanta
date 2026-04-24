@@ -24,6 +24,8 @@ import {
   FaHome,
   FaSync,
   FaBriefcase,
+  FaUserShield,
+  FaHistory,
 } from 'react-icons/fa';
 import './Layout.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -188,13 +190,22 @@ const Layout = () => {
   };
 
   const getNavLinks = () => {
+    const SectionLabel = ({ label }: { label: string }) => (
+      <p className='mt-6 mb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] opacity-80'>
+        {label}
+      </p>
+    );
+
     if (user?.role === 'alumni') {
       return (
-        <div className='space-y-1'>
+        <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
+          
+          <SectionLabel label='Dashboard' />
           <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
+          
+          <SectionLabel label='Sosial & Berita' />
           <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
           <NavLink
             to='/alumni/mutual-alumni'
@@ -207,8 +218,12 @@ const Layout = () => {
             label='News'
             activeCheck
           />
+
+          <SectionLabel label='Karir & Bursa Kerja' />
           <NavLink to='/jobs' icon={FaBriefcase} label='Bursa Kerja' />
           <NavLink to='/alumni/jobs' icon={FaBriefcase} label='Loker Saya' />
+          
+          <SectionLabel label='Lainnya' />
           {feedbackMenuVisible && (
             <NavLink
               to='/alumni/feedback'
@@ -227,11 +242,20 @@ const Layout = () => {
     }
 
     if (user?.role === 'admin') {
+
       return (
-        <div className='space-y-1'>
+        <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
+          
+          <SectionLabel label='Dashboard & Statistik' />
           <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
+          <NavLink
+            to='/admin/stats'
+            icon={FaChartPie}
+            label='Statistik Website'
+          />
+
+          <SectionLabel label='Manajemen Pengguna' />
           <NavLink to='/admin/alumni' icon={FaUsers} label='Data Alumni' />
           <NavLink
             to='/admin/students'
@@ -243,9 +267,10 @@ const Layout = () => {
             icon={FaUserTie}
             label='Kelola User Sekolah'
           />
-
-          <NavLink to='/admin/admins' icon={FaUserTie} label='Data Admin' />
+          <NavLink to='/admin/admins' icon={FaUserShield} label='Data Admin' />
           <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
+
+          <SectionLabel label='Konten & Moderasi' />
           <NavLink
             to='/admin/events'
             icon={FaChartBar}
@@ -254,14 +279,11 @@ const Layout = () => {
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
           <NavLink to='/admin/jobs' icon={FaBriefcase} label='Bursa Kerja' />
-          <NavLink
-            to='/admin/stats'
-            icon={FaChartPie}
-            label='Statistik Website'
-          />
+
+          <SectionLabel label='Audit & Feedback' />
           <NavLink
             to='/admin/verification-logs'
-            icon={FaSync}
+            icon={FaHistory}
             label='Verifikasi Data'
           />
           <NavLink
@@ -269,6 +291,8 @@ const Layout = () => {
             icon={FaCommentDots}
             label='Kritik & Saran'
           />
+
+          <SectionLabel label='Akun' />
           <NavLink to='/admin/profile' icon={FaUser} label='Profil' />
         </div>
       );
@@ -276,9 +300,10 @@ const Layout = () => {
 
     if ((user?.role as string) === 'school') {
       return (
-        <div className='space-y-1'>
+        <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
+          
+          <SectionLabel label='Monitoring' />
           <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
           <NavLink
@@ -291,6 +316,8 @@ const Layout = () => {
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
+
+          <SectionLabel label='Lainnya' />
           <NavLink
             to='/school/feedback'
             icon={FaCommentDots}
@@ -303,9 +330,10 @@ const Layout = () => {
 
     if (user?.role === 'student') {
       return (
-        <div className='space-y-1'>
+        <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
+          
+          <SectionLabel label='Eksplorasi Alumni' />
           <NavLink to='/student' icon={FaChartBar} label='Dashboard' />
           <NavLink
             to='/student/universities'
@@ -320,6 +348,7 @@ const Layout = () => {
             label='Hubungi Alumni'
           />
 
+          <SectionLabel label='Informasi' />
           <NavLink to='/student/events' icon={FaChartBar} label='Event' />
           <NavLink
             to='/student/news'
@@ -327,6 +356,8 @@ const Layout = () => {
             label='News'
             activeCheck
           />
+
+          <SectionLabel label='Lainnya' />
           {feedbackMenuVisible && (
             <NavLink
               to='/student/feedback'
@@ -389,9 +420,6 @@ const Layout = () => {
 
           {/* Nav Links */}
           <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
-            <p className='mb-4 px-4 text-xs font-semibold uppercase tracking-wider text-[color:var(--text-tertiary)]'>
-              Menu Utama
-            </p>
             {getNavLinks()}
           </nav>
 
