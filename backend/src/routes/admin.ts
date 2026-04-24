@@ -598,6 +598,52 @@ router.delete('/alumni/:id', async (req: Request, res: Response) => {
   }
 });
 
+// Demote alumni to student
+router.patch('/alumni/:id/demote', async (req: Request, res: Response) => {
+  try {
+    const alumni = await User.findOneAndUpdate(
+      { _id: req.params.id, role: 'alumni' },
+      { 
+        $set: { 
+          role: 'student',
+          questionnaireCompleted: false,
+          isVerifiedBySchool: false,
+          'profile.isWorking': false,
+          'profile.isStudying': false,
+          'university.name': '',
+          'university.major': '',
+          'university.type': '',
+          badges: []
+        } 
+      },
+      { new: true }
+    ).select('-password');
+
+    if (!alumni) {
+      return res.status(404).json({ message: 'Alumni not found' });
+    }
+
+    res.json({ message: 'User demoted to student successfully', user: alumni });
+
+    // Logging
+    await AuditLog.create({
+      action: 'DEMOTE_ALUMNI',
+      actor: {
+        userId: (req as any).user._id,
+        username: (req as any).user.username,
+        role: (req as any).user.role,
+      },
+      target: {
+        type: 'student',
+        name: alumni.profile?.fullName || alumni.username,
+      },
+      details: `Mengubah role alumni ${alumni.profile?.fullName || alumni.username} menjadi student`,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Remove badge from alumni
 router.delete(
   '/alumni/:userId/badges/:badgeId',

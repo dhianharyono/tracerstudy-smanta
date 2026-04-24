@@ -14,7 +14,9 @@ import {
   FaEdit,
   FaSearch,
   FaSave,
+  FaUndo,
 } from 'react-icons/fa';
+import ConfirmationModal from '@/components/ConfirmationModal';
 import { isUniversityIncomplete } from '@/utils/validation';
 import { getSocialUrl } from '@/utils/helpers';
 import PageHeader from '@/components/common/PageHeader';
@@ -62,6 +64,7 @@ const AdminAlumni = () => {
 
   // Edit State
   const [editingAlumni, setEditingAlumni] = useState<any | null>(null);
+  const [demotingAlumni, setDemotingAlumni] = useState<any | null>(null);
   const [editForm, setEditForm] = useState({
     fullName: '',
     university: '',
@@ -69,11 +72,22 @@ const AdminAlumni = () => {
     major: '',
     graduationYear: '',
     jobPosition: '',
-
     jobInstitution: '',
   });
   const [univList, setUnivList] = useState<string[]>([]);
   const [majorList, setMajorList] = useState<string[]>([]);
+
+  const handleDemote = async () => {
+    if (!demotingAlumni) return;
+    try {
+      await axios.patch(`/api/admin/alumni/${demotingAlumni._id}/demote`);
+      Toast('User berhasil diubah menjadi Student', 'success');
+      setAlumni((prev) => prev.filter((a) => a._id !== demotingAlumni._id));
+      setDemotingAlumni(null);
+    } catch (error) {
+      Toast('Gagal mengubah role user', 'error');
+    }
+  };
 
   useEffect(() => {
     setUnivList(INDONESIA_UNIVERSITIES);
@@ -485,7 +499,7 @@ const AdminAlumni = () => {
                   )}
                 </TableCell>
                 <TableCell>
-                  <div className='flex gap-2'>
+                  <div className='flex gap-1'>
                     <button
                       onClick={() => handleEdit(alum)}
                       className='rounded p-2 text-amber-500 hover:bg-amber-50 hover:text-amber-700 transition-colors dark:hover:bg-amber-900/20'
@@ -493,6 +507,15 @@ const AdminAlumni = () => {
                     >
                       <FaEdit size={14} />
                     </button>
+                    {(alum.profile?.graduationYear >= new Date().getFullYear() || !alum.profile?.graduationYear) && (
+                      <button
+                        onClick={() => setDemotingAlumni(alum)}
+                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                        title='Ubah ke Student'
+                      >
+                        <FaUndo size={14} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
@@ -683,6 +706,19 @@ const AdminAlumni = () => {
           </div>,
           document.body,
         )}
+      {createPortal(
+        <ConfirmationModal
+          isOpen={!!demotingAlumni}
+          onClose={() => setDemotingAlumni(null)}
+          onConfirm={handleDemote}
+          title='Ubah ke Student'
+          message={`Apakah Anda yakin ingin mengubah status ${demotingAlumni?.profile?.fullName || 'user ini'} kembali menjadi Student? Data alumni (Pekerjaan, Kuliah, Badge) akan dihapus.`}
+          confirmText='Ya, Ubah ke Student'
+          cancelText='Batal'
+          variant='warning'
+        />,
+        document.body
+      )}
     </div>
   );
 };
