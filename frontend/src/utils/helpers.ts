@@ -40,3 +40,20 @@ export const isStudentProfileComplete = (user: any): boolean => {
     user.profile?.graduationYear
   );
 };
+
+export const getSocialUrl = (type: 'linkedin' | 'instagram', value: string) => {
+  if (!value) return '#';
+  const cleanValue = value.trim();
+  if (cleanValue.startsWith('http://') || cleanValue.startsWith('https://')) {
+    return cleanValue;
+  }
+  if (type === 'linkedin') {
+    if (cleanValue.includes('linkedin.com')) return `https://${cleanValue}`;
+    return `https://www.linkedin.com/in/${cleanValue}`;
+  }
+  if (type === 'instagram') {
+    if (cleanValue.includes('instagram.com')) return `https://${cleanValue}`;
+    return `https://instagram.com/${cleanValue.replace('@', '')}`;
+  }
+  return value;
+};

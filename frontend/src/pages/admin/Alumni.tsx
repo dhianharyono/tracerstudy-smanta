@@ -16,6 +16,7 @@ import {
   FaSave,
 } from 'react-icons/fa';
 import { isUniversityIncomplete } from '@/utils/validation';
+import { getSocialUrl } from '@/utils/helpers';
 import PageHeader from '@/components/common/PageHeader';
 import Card from '@/components/common/Card';
 import Pagination from '@/components/common/Pagination';
@@ -439,11 +440,7 @@ const AdminAlumni = () => {
                   <div className='flex gap-2'>
                     {alum.socialMedia?.linkedin && (
                       <a
-                        href={
-                          (alum.socialMedia.linkedin.startsWith('http')
-                            ? ''
-                            : 'https://') + alum.socialMedia.linkedin
-                        }
+                        href={getSocialUrl('linkedin', alum.socialMedia.linkedin)}
                         target='_blank'
                         rel='noreferrer'
                         className='text-blue-600 hover:text-blue-800'
@@ -453,7 +450,7 @@ const AdminAlumni = () => {
                     )}
                     {alum.socialMedia?.instagram && (
                       <a
-                        href={alum.socialMedia.instagram}
+                        href={getSocialUrl('instagram', alum.socialMedia.instagram)}
                         target='_blank'
                         rel='noreferrer'
                         className='text-pink-600 hover:text-pink-800'

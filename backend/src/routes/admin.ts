@@ -42,6 +42,41 @@ router.get(
 router.use(authenticate);
 router.use(authorize('admin'));
 
+// Get verification stats
+router.get('/verification-stats', async (req: Request, res: Response) => {
+  try {
+    const totalAlumni = await User.countDocuments({ role: 'alumni' });
+    const completedAlumni = await User.countDocuments({
+      role: 'alumni',
+      questionnaireCompleted: true,
+      'university.name': {
+        $nin: [
+          null,
+          '',
+          '-',
+          'null',
+          'undefined',
+          'belum ada',
+          'tidak ada',
+          '.',
+        ],
+      },
+    });
+    const verifiedAlumni = await User.countDocuments({
+      role: 'alumni',
+      isVerifiedBySchool: true,
+    });
+
+    res.json({
+      totalAlumni,
+      completedAlumni,
+      verifiedAlumni,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Get alumni map data (universities with alumni count)
 router.get('/alumni-map', async (req: Request, res: Response) => {
   try {

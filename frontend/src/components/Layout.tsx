@@ -166,16 +166,18 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-          }`}
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-            }`}
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
+            isActive
+              ? 'bg-white/20'
+              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -257,7 +259,11 @@ const Layout = () => {
             icon={FaChartPie}
             label='Statistik Website'
           />
-          <NavLink to='/admin/verification-logs' icon={FaSync} label='Verifikasi Data Alumni' />
+          <NavLink
+            to='/admin/verification-logs'
+            icon={FaSync}
+            label='Verifikasi Data'
+          />
           <NavLink
             to='/admin/feedback'
             icon={FaCommentDots}
@@ -275,9 +281,21 @@ const Layout = () => {
           <div className='my-2 border-b border-[color:var(--border-color)] opacity-50' />
           <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
-          <NavLink to='/school/verification' icon={FaSync} label='Verifikasi Data' />
-          <NavLink to='/school/universities' icon={FaUniversity} label='Perguruan Tinggi' />
-          <NavLink to='/school/feedback' icon={FaCommentDots} label='Kritik & Saran' />
+          <NavLink
+            to='/school/verification'
+            icon={FaSync}
+            label='Verifikasi Data'
+          />
+          <NavLink
+            to='/school/universities'
+            icon={FaUniversity}
+            label='Perguruan Tinggi'
+          />
+          <NavLink
+            to='/school/feedback'
+            icon={FaCommentDots}
+            label='Kritik & Saran'
+          />
           <NavLink to='/school/profile' icon={FaUser} label='Profil' />
         </div>
       );
@@ -347,8 +365,9 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}

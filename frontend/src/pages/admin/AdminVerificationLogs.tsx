@@ -7,7 +7,8 @@ import {
   FaExclamationCircle,
   FaCheckCircle,
   FaTrashAlt,
-  FaSync
+  FaSync,
+  FaInfoCircle
 } from 'react-icons/fa';
 import Card from '@/components/common/Card';
 import PageHeader from '@/components/common/PageHeader';
@@ -23,10 +24,21 @@ const AdminVerificationLogs = () => {
     total: 0,
     pages: 0,
   });
+  const [stats, setStats] = useState<any>(null);
 
   useEffect(() => {
     fetchLogs();
+    fetchStats();
   }, [pagination.page]);
+
+  const fetchStats = async () => {
+    try {
+      const response = await axios.get('/api/admin/verification-stats');
+      setStats(response.data);
+    } catch (error) {
+      console.error('Error fetching verification stats:', error);
+    }
+  };
 
   const fetchLogs = async () => {
     try {
@@ -99,6 +111,60 @@ const AdminVerificationLogs = () => {
         title='Verifikasi Data Alumni'
         description='Monitoring log aktivitas dan sinkronisasi data yang dilakukan oleh Admin & Guru BK'
       />
+
+      {/* Stats Summary */}
+      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
+        <Card className='!bg-blue-50 dark:!bg-blue-900/10 border-blue-100 dark:border-blue-900/30'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-blue-500 rounded-xl text-white'>
+              <FaCheckCircle className='text-2xl' />
+            </div>
+            <div>
+              <p className='text-sm text-blue-600 dark:text-blue-400 font-medium'>
+                Total Alumni Terdaftar
+              </p>
+              <h3 className='text-2xl font-bold text-blue-900 dark:text-blue-100'>
+                {stats?.totalAlumni || 0}
+              </h3>
+            </div>
+          </div>
+        </Card>
+        <Card className='!bg-green-50 dark:!bg-green-900/10 border-green-100 dark:border-green-900/30'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-green-500 rounded-xl text-white'>
+              <FaCheckCircle className='text-2xl' />
+            </div>
+            <div>
+              <p className='text-sm text-green-600 dark:text-green-400 font-medium'>
+                Sudah Mengisi Kuesioner
+              </p>
+              <h3 className='text-2xl font-bold text-green-900 dark:text-green-100'>
+                {stats?.completedAlumni || 0}
+              </h3>
+            </div>
+          </div>
+        </Card>
+        <Card className='!bg-purple-50 dark:!bg-purple-900/10 border-purple-100 dark:border-purple-900/30'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-purple-500 rounded-xl text-white'>
+              <FaInfoCircle className='text-2xl' />
+            </div>
+            <div>
+              <p className='text-sm text-purple-600 dark:text-purple-400 font-medium'>
+                Progress Sinkronisasi
+              </p>
+              <h3 className='text-2xl font-bold text-purple-900 dark:text-purple-100'>
+                {stats?.totalAlumni
+                  ? Math.round(
+                    ((stats?.verifiedAlumni || 0) / stats.totalAlumni) * 100,
+                  )
+                  : 0}
+                %
+              </h3>
+            </div>
+          </div>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-1 gap-6">
         <Card className="!p-0 overflow-hidden border border-[color:var(--border-color)]">

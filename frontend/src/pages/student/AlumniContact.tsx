@@ -14,7 +14,7 @@ import {
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
-import { isStudentProfileComplete } from '@/utils/helpers';
+import { isStudentProfileComplete, getSocialUrl } from '@/utils/helpers';
 
 interface Badge {
   _id: string;
@@ -115,22 +115,6 @@ const AlumniContact = () => {
     }
   }, [selectedUniversity, selectedMajor, isMentorFilter, selectedBadge]);
 
-  const getSocialUrl = (type: 'linkedin' | 'instagram', value: string) => {
-    if (!value) return '#';
-    let cleanValue = value.trim();
-    if (cleanValue.startsWith('http://') || cleanValue.startsWith('https://')) {
-      return cleanValue;
-    }
-    if (type === 'linkedin') {
-      if (cleanValue.includes('linkedin.com')) return `https://${cleanValue}`;
-      return `https://www.linkedin.com/in/${cleanValue}`;
-    }
-    if (type === 'instagram') {
-      if (cleanValue.includes('instagram.com')) return `https://${cleanValue}`;
-      return `https://instagram.com/${cleanValue.replace('@', '')}`;
-    }
-    return value;
-  };
 
   const fetchBadges = async () => {
     try {
