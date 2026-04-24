@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUniversity, FaSearch, FaTrophy, FaBuilding, FaMapMarkedAlt } from 'react-icons/fa';
+import { FaUniversity, FaSearch, FaTrophy, FaBuilding, FaMapMarkedAlt, FaGraduationCap } from 'react-icons/fa';
 import Card from '@/components/common/Card';
 
 interface UnivStat {
@@ -50,53 +50,91 @@ const SchoolUniversityList = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-xl'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
+        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
           <div className='flex items-center gap-4'>
-            <div className='p-4 bg-white/20 rounded-xl backdrop-blur-sm'>
-              <FaUniversity size={24} />
+            <div className='p-3 bg-white/20 rounded-xl backdrop-blur-sm'>
+              <FaUniversity size={20} />
             </div>
             <div>
-              <p className='text-blue-100 text-sm font-medium'>Total PT Terdata</p>
-              <h3 className='text-3xl font-black'>{universities.length} Kampus</h3>
+              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>Total PT Terdata</p>
+              <h3 className='text-2xl font-black'>{universities.length}</h3>
             </div>
           </div>
         </Card>
 
         <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
           <div className='flex items-center gap-4'>
-            <div className='p-4 bg-indigo-500/10 text-indigo-500 rounded-xl'>
-              <FaBuilding size={24} />
+            <div className='p-3 bg-amber-500/10 text-amber-500 rounded-xl'>
+              <FaBuilding size={20} />
             </div>
             <div>
-              <p className='text-[color:var(--text-secondary)] text-sm font-medium'>PT Negeri (PTN)</p>
-              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>PT Negeri (PTN)</p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
                 {universities.filter(u => u.type === 'negeri').length}
               </h3>
             </div>
           </div>
         </Card>
 
-        {topUniversity && (
-          <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
-            <div className='flex items-center gap-4'>
-              <div className='p-4 bg-amber-500/10 text-amber-500 rounded-xl relative overflow-hidden group'>
-                <div className='absolute inset-0 bg-amber-500/20 translate-y-full group-hover:translate-y-0 transition-transform'></div>
-                <FaTrophy size={24} className='relative z-10' />
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-pink-500/10 text-pink-500 rounded-xl'>
+              <FaBuilding size={20} />
+            </div>
+            <div>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>PT Swasta (PTS)</p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+                {universities.filter(u => !u.type || u.type === 'swasta').length}
+              </h3>
+            </div>
+          </div>
+        </Card>
+
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-emerald-500/10 text-emerald-500 rounded-xl'>
+              <FaGraduationCap size={20} />
+            </div>
+            <div>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>Kedinasan</p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+                {universities.filter(u => u.type === 'kedinasan').length}
+              </h3>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {topUniversity && (
+        <Card className='bg-gradient-to-r from-amber-500/5 to-transparent border-l-4 border-l-amber-500 mb-8'>
+          <div className='flex items-center gap-6'>
+            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+              <FaTrophy size={28} />
+            </div>
+            <div className='flex-1 min-w-0'>
+              <div className='flex items-center gap-2 mb-1'>
+                <FaTrophy className='text-amber-500 sm:hidden' />
+                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>Kampus Terfavorit Alumni</p>
               </div>
-              <div className='flex-1 min-w-0'>
-                <p className='text-[color:var(--text-secondary)] text-sm font-medium'>Universitas Terfavorit</p>
-                <h3 className='text-lg font-bold text-[color:var(--text-primary)] truncate overflow-hidden whitespace-nowrap' title={topUniversity._id}>
-                  {topUniversity._id}
-                </h3>
-                <p className='text-xs font-bold text-amber-500'>
-                  {topUniversity.count} Alumni
-                </p>
+              <h3 className='text-xl md:text-2xl font-black text-[color:var(--text-primary)] truncate' title={topUniversity._id}>
+                {topUniversity._id}
+              </h3>
+              <div className='flex items-center gap-3 mt-2'>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase
+                  ${topUniversity.type === 'negeri' ? 'bg-amber-100 text-amber-700'
+                    : topUniversity.type === 'kedinasan' ? 'bg-emerald-100 text-emerald-700'
+                      : 'bg-pink-100 text-pink-700'}`}>
+                  {topUniversity.type || 'Swasta'}
+                </span>
+                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
+                  <span className='text-amber-500'>{topUniversity.count}</span> Alumni Bergabung
+                </span>
               </div>
             </div>
-          </Card>
-        )}
-      </div>
+          </div>
+        </Card>
+      )}
 
       {/* Search and List */}
       <Card className='min-h-[500px]'>

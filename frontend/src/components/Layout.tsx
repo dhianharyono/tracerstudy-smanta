@@ -168,18 +168,16 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-          isActive
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
             ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
             : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
-        }`}
+          }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-            isActive
+          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
               ? 'bg-white/20'
               : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
-          }`}
+            }`}
         >
           <Icon className='text-lg' />
         </span>
@@ -200,11 +198,11 @@ const Layout = () => {
       return (
         <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          
+
           <SectionLabel label='Dashboard' />
           <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
-          
+
           <SectionLabel label='Sosial & Berita' />
           <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
           <NavLink
@@ -222,7 +220,7 @@ const Layout = () => {
           <SectionLabel label='Karir & Bursa Kerja' />
           <NavLink to='/jobs' icon={FaBriefcase} label='Bursa Kerja' />
           <NavLink to='/alumni/jobs' icon={FaBriefcase} label='Loker Saya' />
-          
+
           <SectionLabel label='Lainnya' />
           {feedbackMenuVisible && (
             <NavLink
@@ -246,7 +244,7 @@ const Layout = () => {
       return (
         <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          
+
           <SectionLabel label='Dashboard & Statistik' />
           <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
           <NavLink
@@ -262,13 +260,13 @@ const Layout = () => {
             icon={FaGraduationCap}
             label='Data Student'
           />
+          <NavLink to='/admin/admins' icon={FaUserShield} label='Data Admin' />
+          <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
           <NavLink
             to='/admin/school-users'
             icon={FaUserTie}
             label='Kelola User Sekolah'
           />
-          <NavLink to='/admin/admins' icon={FaUserShield} label='Data Admin' />
-          <NavLink to='/admin/mentors' icon={FaCrown} label='Kelola Mentor' />
 
           <SectionLabel label='Konten & Moderasi' />
           <NavLink
@@ -302,7 +300,7 @@ const Layout = () => {
       return (
         <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          
+
           <SectionLabel label='Monitoring' />
           <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
@@ -332,7 +330,7 @@ const Layout = () => {
       return (
         <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
-          
+
           <SectionLabel label='Eksplorasi Alumni' />
           <NavLink to='/student' icon={FaChartBar} label='Dashboard' />
           <NavLink
@@ -396,9 +394,8 @@ const Layout = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className='flex h-full flex-col'>
           {/* Header */}
