@@ -65,6 +65,46 @@ const Profile = () => {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Field validation
+    const fullNameTrimmed = fullName.trim();
+    if (!fullNameTrimmed) {
+      Toast('Nama lengkap wajib diisi', 'error');
+      return;
+    }
+    if (fullNameTrimmed.length < 3) {
+      Toast('Nama lengkap terlalu pendek (minimal 3 karakter)', 'error');
+      return;
+    }
+    // Only allow letters, spaces, and basic punctuation (dot, apostrophe)
+    if (!/^[a-zA-Z\s\.\']+$/.test(fullNameTrimmed)) {
+      Toast('Nama lengkap hanya boleh berisi huruf', 'error');
+      return;
+    }
+    // Block common placeholder patterns like "...", "---", etc.
+    if (/^[\.\-\_\s]+$/.test(fullNameTrimmed) || fullNameTrimmed.toLowerCase() === 'null' || fullNameTrimmed.toLowerCase() === 'undefined') {
+      Toast('Nama lengkap tidak valid', 'error');
+      return;
+    }
+    if (!username.trim()) {
+      Toast('Username wajib diisi', 'error');
+      return;
+    }
+    if (!email.trim()) {
+      Toast('Email wajib diisi', 'error');
+      return;
+    }
+
+    if (user?.role !== 'admin' && user?.role !== 'school') {
+      if (!entryYear) {
+        Toast('Tahun masuk wajib diisi', 'error');
+        return;
+      }
+      if (!graduationYear) {
+        Toast('Tahun lulus wajib diisi', 'error');
+        return;
+      }
+    }
+
     if (password && password !== confirmPassword) {
       Toast('Password tidak cocok', 'error');
       return;
@@ -245,6 +285,7 @@ const Profile = () => {
                 onChange={(e) => setFullName(e.target.value)}
                 className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
                 placeholder='Masukkan nama lengkap'
+                required
               />
             </div>
 
@@ -291,9 +332,10 @@ const Profile = () => {
                     setEntryYear(e.target.value ? parseInt(e.target.value) : '')
                   }
                   className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                  placeholder='Contoh: 2020'
+                  placeholder='Contoh: 2023'
                   min='1900'
                   max='2100'
+                  required
                 />
               </div>
             )}
@@ -313,9 +355,10 @@ const Profile = () => {
                     )
                   }
                   className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                  placeholder='Contoh: 2023'
+                  placeholder='Contoh: 2026'
                   min='1900'
                   max='2100'
+                  required
                 />
               </div>
             )}

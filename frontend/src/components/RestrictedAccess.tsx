@@ -3,14 +3,17 @@ import { Link } from 'react-router-dom';
 import { FaUserEdit, FaClipboardList, FaLock, FaBriefcase } from 'react-icons/fa';
 
 interface RestrictedAccessProps {
-  type: 'profile_incomplete' | 'questionnaire_incomplete' | 'university_incomplete' | 'job_incomplete';
+  type: 'profile_incomplete' | 'questionnaire_incomplete' | 'university_incomplete' | 'job_incomplete' | 'name_incomplete';
   role: 'student' | 'alumni';
 }
 
-const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type }) => {
+const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
   const isProfile = type === 'profile_incomplete';
   const isUniversity = type === 'university_incomplete';
   const isJob = type === 'job_incomplete';
+  const isName = type === 'name_incomplete';
+
+  const profileLink = role === 'student' ? '/student/profile' : '/alumni/profile';
 
   return (
     <div className='min-h-[60vh] flex items-center justify-center p-5 animate-fade-in'>
@@ -33,21 +36,27 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type }) => {
         </h2>
 
         <p className='text-[color:var(--text-secondary)] mb-8 leading-relaxed text-xs md:text-sm'>
-          {isProfile
-            ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
-            : isUniversity
-              ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
-              : isJob
-                ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah mengisi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
-                : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
+          {isName
+            ? 'Maaf, nama lengkap Anda saat ini tidak valid atau terdeteksi asal-asalan. Anda diwajibkan untuk memperbaiki nama lengkap Anda (minimal 3 karakter dan hanya huruf) di profil untuk membuka akses.'
+            : isProfile
+              ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
+              : isUniversity
+                ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
+                : isJob
+                  ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah mengisi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
+                  : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
         </p>
 
         {/* Action Button */}
         <Link
-          to={isProfile ? '/student/profile' : '/alumni/questionnaire'}
+          to={isName || isProfile || isUniversity ? profileLink : '/alumni/questionnaire'}
           className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200'
         >
-          {isProfile ? (
+          {isName ? (
+            <>
+              <FaUserEdit /> Perbaiki Nama Sekarang
+            </>
+          ) : isProfile ? (
             <>
               <FaUserEdit /> Lengkapi Profil Sekarang
             </>

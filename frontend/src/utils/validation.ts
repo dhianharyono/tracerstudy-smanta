@@ -34,3 +34,27 @@ export const isJobIncomplete = (profile: any) => {
 
   return false;
 };
+export const isNameIncomplete = (profile: any) => {
+  if (!profile || !profile.fullName) return true;
+
+  const fullName = profile.fullName.trim();
+  const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
+
+  if (fullName.length < 3) return true;
+  
+  if (placeholders.includes(fullName.toLowerCase())) {
+    return true;
+  }
+
+  // Check if it's only symbols or numbers
+  if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) {
+    return true;
+  }
+
+  // Check if it's just repeating symbols like "..." or "---"
+  if (/^[\.\-\_\s]+$/.test(fullName)) {
+    return true;
+  }
+
+  return false;
+};

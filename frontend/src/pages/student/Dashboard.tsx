@@ -12,6 +12,7 @@ import TahunLulus from '@/components/Dashboard/TahunLulus';
 import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import { isNameIncomplete } from '@/utils/validation';
 import EventWelcomeCard from '@/components/Dashboard/EventWelcomeCard';
 import EventRegisterModal from '@/components/EventRegisterModal';
 import GraduationConfirmationModal from '@/components/Dashboard/GraduationConfirmationModal';
@@ -26,7 +27,9 @@ const StudentDashboard = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(new Date().getMonth() === 4);
+  const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(
+    new Date().getMonth() === 4,
+  );
   const notificationRef = useRef<HTMLDivElement>(null);
   console.log(stats);
   useEffect(() => {
@@ -36,9 +39,6 @@ const StudentDashboard = () => {
           axios.get('/api/student/dashboard'),
           axios.get('/api/student/news?limit=3'),
           axios.get('/api/events?limit=1'),
-          axios
-            .get('/api/student/news/unread-count')
-            .catch(() => ({ data: { count: 0 } })),
         ]);
         setStats(statsRes.data);
         setNews(newsRes.data);
@@ -91,10 +91,10 @@ const StudentDashboard = () => {
 
   const universityTypeData = stats?.universityTypes
     ? [
-      { name: 'PTN', value: stats.universityTypes.negeri },
-      { name: 'PTS', value: stats.universityTypes.swasta },
-      { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
-    ]
+        { name: 'PTN', value: stats.universityTypes.negeri },
+        { name: 'PTS', value: stats.universityTypes.swasta },
+        { name: 'Kedinasan', value: stats.universityTypes.kedinasan },
+      ]
     : [];
 
   if (loading) {
@@ -107,6 +107,10 @@ const StudentDashboard = () => {
         ]}
       />
     );
+  }
+
+  if (user && isNameIncomplete(user.profile || user)) {
+    return <RestrictedAccess type='name_incomplete' role='student' />;
   }
 
   if (!isStudentProfileComplete(user)) {
@@ -153,7 +157,7 @@ const StudentDashboard = () => {
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <TopUniversities data={stats?.universityStats || []} />
-        <Jurusan data={stats} chartWidth={chartWidth} title="Jurusan Populer" />
+        <Jurusan data={stats} chartWidth={chartWidth} title='Jurusan Populer' />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
@@ -169,7 +173,7 @@ const StudentDashboard = () => {
           window.location.reload();
         }}
       />
-      <GraduationConfirmationModal 
+      <GraduationConfirmationModal
         isOpen={isGraduationModalOpen}
         onClose={() => setIsGraduationModalOpen(false)}
         onSuccess={() => {

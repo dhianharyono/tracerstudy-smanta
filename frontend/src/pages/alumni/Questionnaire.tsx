@@ -420,13 +420,16 @@ const AlumniQuestionnaire = () => {
     const errors: ValidationErrors = {};
     const placeholders = ['-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
 
-    if (!formData.profile.fullName.trim()) {
+    const fullName = formData.profile.fullName.trim();
+    if (!fullName) {
       errors['profile.fullName'] = 'Nama lengkap wajib diisi';
-    } else if (formData.profile.fullName.trim().length < 3) {
+    } else if (fullName.length < 3) {
       errors['profile.fullName'] = 'Nama lengkap minimal 3 karakter';
-    } else if (!/^[a-zA-Z\s]*$/.test(formData.profile.fullName.trim())) {
+    } else if (!/^[a-zA-Z\s\.\']*$/.test(fullName)) {
       errors['profile.fullName'] =
-        'Nama lengkap hanya boleh berisi huruf dan spasi';
+        'Nama lengkap hanya boleh berisi huruf';
+    } else if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+      errors['profile.fullName'] = 'Nama lengkap tidak valid';
     }
 
     if (!formData.profile.gender) {

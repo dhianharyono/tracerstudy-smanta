@@ -36,11 +36,28 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // ... existing username/email checks ...
+        // Validation
+        if (!username) return res.status(400).json({ message: 'Username wajib diisi' });
+        if (!email) return res.status(400).json({ message: 'Email wajib diisi' });
+        
+        const fullName = profile?.fullName?.trim();
+        if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
+        if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
+        if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+        if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+            return res.status(400).json({ message: 'Nama lengkap tidak valid' });
+        }
+
+        if (user.role !== 'admin' && user.role !== 'school') {
+            if (!profile?.entryYear) return res.status(400).json({ message: 'Tahun masuk wajib diisi' });
+            if (!profile?.graduationYear) return res.status(400).json({ message: 'Tahun lulus wajib diisi' });
+        }
+
+        // Check for existing username/email
         if (username && username !== user.username) {
             const existingUsername = await User.findOne({ username });
             if (existingUsername) {
-                return res.status(400).json({ message: 'Username already taken' });
+                return res.status(400).json({ message: 'Username sudah digunakan' });
             }
             user.username = username;
         }
@@ -48,7 +65,7 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
         if (email && email !== user.email) {
             const existingEmail = await User.findOne({ email });
             if (existingEmail) {
-                return res.status(400).json({ message: 'Email already taken' });
+                return res.status(400).json({ message: 'Email sudah digunakan' });
             }
             user.email = email;
         }
@@ -60,6 +77,10 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
 
         if (profile) {
             user.profile = { ...user.profile, ...profile };
+        }
+
+        if (isMentor !== undefined && user.role === 'alumni') {
+            user.isMentor = isMentor;
         }
 
         // Auto-complete questionnaire status if university data is now complete
