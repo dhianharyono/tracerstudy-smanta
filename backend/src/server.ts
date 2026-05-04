@@ -17,6 +17,8 @@ import analyticsRoutes from './routes/analytics';
 import publicRoutes from './routes/public';
 import schoolRoutes from './routes/school';
 import jobRoutes from './routes/job';
+import universityRoutes from './routes/university';
+import { seedUniversities } from './utils/seedUniversities';
 
 dotenv.config();
 
@@ -114,6 +116,9 @@ const connectToDatabase = async () => {
     );
     isConnected = db.connections[0].readyState === 1;
     console.log('New database connection successful');
+    
+    // Seed universities if collection is empty
+    await seedUniversities();
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
@@ -141,6 +146,7 @@ app.use('/api/analytics', analyticsRoutes);
 app.use('/api/public', publicRoutes);
 app.use('/api/school', schoolRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/universities', universityRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

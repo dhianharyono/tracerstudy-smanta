@@ -8,6 +8,7 @@ import Feedback from '../models/Feedback';
 import Settings from '../models/Settings';
 import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
+import { ensureUniversityExists } from '../utils/universityHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -534,11 +535,16 @@ router.get('/alumni/:id', async (req: Request, res: Response) => {
 // Update alumni
 router.put('/alumni/:id', async (req: Request, res: Response) => {
   try {
-    const alumni = await User.findOneAndUpdate(
-      { _id: req.params.id, role: 'alumni' },
-      req.body,
-      { new: true, runValidators: true },
-    ).select('-password');
+      const { university } = req.body;
+      if (university?.name) {
+        await ensureUniversityExists(university.name, (req as any).user._id, university.type);
+      }
+
+      const alumni = await User.findOneAndUpdate(
+        { _id: req.params.id, role: 'alumni' },
+        req.body,
+        { new: true, runValidators: true },
+      ).select('-password');
 
     if (!alumni) {
       return res.status(404).json({ message: 'Alumni not found' });

@@ -18,8 +18,7 @@ import html2canvas from 'html2canvas';
 import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import SearchableSelect from '@/components/SearchableSelect';
-import { COMMON_MAJORS, POLTEKKES_LIST } from '../constant';
-import { INDONESIA_UNIVERSITIES } from '../universityData';
+import { COMMON_MAJORS } from '../constant';
 import SmartLoader from '@/components/SmartLoader';
 
 const InputField = ({
@@ -270,16 +269,21 @@ const AlumniQuestionnaire = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes] = await Promise.all([
+        const [profileRes, univRes] = await Promise.all([
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
+          axios
+            .get<any[]>('/api/universities')
+            .catch(() => ({ data: [] })),
         ]);
 
-        const univList = [
-          ...new Set([...INDONESIA_UNIVERSITIES, ...POLTEKKES_LIST]),
-        ].sort() as string[];
-        setUniversities(univList);
+        const rawUnivList = (univRes.data || []).map((u: any) => u.name);
+        
+        // Use unique names from API or empty if failed
+        const finalUnivList = [...new Set(rawUnivList)].sort() as string[];
+
+        setUniversities(finalUnivList);
         setMajors(COMMON_MAJORS);
 
         if (profileRes.data) {

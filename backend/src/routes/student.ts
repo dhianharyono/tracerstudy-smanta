@@ -7,6 +7,7 @@ import NewsRead from '../models/NewsRead';
 import CollegePlan from '../models/CollegePlan';
 
 import Badge from '../models/Badge';
+import { ensureUniversityExists } from '../utils/universityHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -695,6 +696,12 @@ router.post(
         readinessStatus,
         isAnonymous,
       } = req.body;
+
+      // Ensure university exists in master list
+      if (targetUniversity) {
+        await ensureUniversityExists(targetUniversity, req.user!._id);
+      }
+
       let plan = await CollegePlan.findOne({ user: req.user!._id });
 
       if (plan) {

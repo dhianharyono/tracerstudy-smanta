@@ -6,6 +6,7 @@ import News from '../models/News';
 import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
 import Badge from '../models/Badge';
+import { ensureUniversityExists } from '../utils/universityHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -120,6 +121,17 @@ router.put(
         isMentor,
       } = req.body;
 
+      // Ensure universities exist in master list
+      if (university?.name) {
+        await ensureUniversityExists(university.name, req.user!._id, university.type);
+      }
+      if (universityS2?.name) {
+        await ensureUniversityExists(universityS2.name, req.user!._id);
+      }
+      if (universityS3?.name) {
+        await ensureUniversityExists(universityS3.name, req.user!._id);
+      }
+
       // Validation
       const fullName = profile?.fullName?.trim();
       if (fullName) {
@@ -165,6 +177,17 @@ router.post(
     try {
       const { profile, university, universityS2, universityS3, job, socialMedia } = req.body;
 
+      // Ensure universities exist in master list
+      if (university?.name) {
+        await ensureUniversityExists(university.name, req.user!._id, university.type);
+      }
+      if (universityS2?.name) {
+        await ensureUniversityExists(universityS2.name, req.user!._id);
+      }
+      if (universityS3?.name) {
+        await ensureUniversityExists(universityS3.name, req.user!._id);
+      }
+
       // Validation
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
@@ -204,6 +227,17 @@ router.put(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const { profile, university, universityS2, universityS3, job, socialMedia } = req.body;
+
+      // Ensure universities exist in master list
+      if (university?.name) {
+        await ensureUniversityExists(university.name, req.user!._id, university.type);
+      }
+      if (universityS2?.name) {
+        await ensureUniversityExists(universityS2.name, req.user!._id);
+      }
+      if (universityS3?.name) {
+        await ensureUniversityExists(universityS3.name, req.user!._id);
+      }
 
       // Validation
       const fullName = profile?.fullName?.trim();

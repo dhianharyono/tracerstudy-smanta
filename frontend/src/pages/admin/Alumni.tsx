@@ -33,7 +33,6 @@ import {
 import { createPortal } from 'react-dom';
 import SmartLoader from '@/components/SmartLoader';
 import SearchableSelect from '@/components/SearchableSelect';
-import { INDONESIA_UNIVERSITIES } from '../universityData';
 import { COMMON_MAJORS } from '../constant';
 
 const AdminAlumni = () => {
@@ -90,7 +89,17 @@ const AdminAlumni = () => {
   };
 
   useEffect(() => {
-    setUnivList(INDONESIA_UNIVERSITIES);
+    const fetchUnivs = async () => {
+      try {
+        const res = await axios.get('/api/universities');
+        const rawUnivs = res.data.map((u: any) => u.name);
+        const univs = [...new Set(rawUnivs)].sort();
+        setUnivList(univs as string[]);
+      } catch (error) {
+        setUnivList([]);
+      }
+    };
+    fetchUnivs();
     setMajorList(COMMON_MAJORS);
   }, []);
 
@@ -388,6 +397,7 @@ const AdminAlumni = () => {
           <TableHeadCell>Pendidikan</TableHeadCell>
           <TableHeadCell>Pekerjaan</TableHeadCell>
           <TableHeadCell>Media Sosial</TableHeadCell>
+          <TableHeadCell>Tanggal Dibuat</TableHeadCell>
           <TableHeadCell>Survei</TableHeadCell>
           <TableHeadCell>Aksi</TableHeadCell>
         </TableHeader>
@@ -403,9 +413,7 @@ const AdminAlumni = () => {
             </TableRow>
           ) : (
             alumni.map((alum) => (
-              <TableRow
-                key={alum._id}
-              >
+              <TableRow key={alum._id}>
                 <TableCell>
                   <div>
                     <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
@@ -454,7 +462,10 @@ const AdminAlumni = () => {
                   <div className='flex gap-2'>
                     {alum.socialMedia?.linkedin && (
                       <a
-                        href={getSocialUrl('linkedin', alum.socialMedia.linkedin)}
+                        href={getSocialUrl(
+                          'linkedin',
+                          alum.socialMedia.linkedin,
+                        )}
                         target='_blank'
                         rel='noreferrer'
                         className='text-blue-600 hover:text-blue-800'
@@ -464,7 +475,10 @@ const AdminAlumni = () => {
                     )}
                     {alum.socialMedia?.instagram && (
                       <a
-                        href={getSocialUrl('instagram', alum.socialMedia.instagram)}
+                        href={getSocialUrl(
+                          'instagram',
+                          alum.socialMedia.instagram,
+                        )}
                         target='_blank'
                         rel='noreferrer'
                         className='text-pink-600 hover:text-pink-800'
@@ -488,6 +502,13 @@ const AdminAlumni = () => {
                   </div>
                 </TableCell>
                 <TableCell>
+                  {new Date(alum.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </TableCell>
+                <TableCell>
                   {!isUniversityIncomplete(alum) ? (
                     <span className='flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400'>
                       <FaCheckCircle /> Lengkap
@@ -507,15 +528,17 @@ const AdminAlumni = () => {
                     >
                       <FaEdit size={14} />
                     </button>
-                    {(alum.profile?.graduationYear >= new Date().getFullYear() || !alum.profile?.graduationYear) && (
-                      <button
-                        onClick={() => setDemotingAlumni(alum)}
-                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
-                        title='Ubah ke Student'
-                      >
-                        <FaUndo size={14} />
-                      </button>
-                    )}
+                    {(alum.profile?.graduationYear >=
+                      new Date().getFullYear() ||
+                      !alum.profile?.graduationYear) && (
+                        <button
+                          onClick={() => setDemotingAlumni(alum)}
+                          className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                          title='Ubah ke Student'
+                        >
+                          <FaUndo size={14} />
+                        </button>
+                      )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
@@ -717,7 +740,7 @@ const AdminAlumni = () => {
           cancelText='Batal'
           variant='warning'
         />,
-        document.body
+        document.body,
       )}
     </div>
   );

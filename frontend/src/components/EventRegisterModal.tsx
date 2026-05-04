@@ -4,8 +4,7 @@ import axios from 'axios';
 import { LuX } from 'react-icons/lu';
 import Toast from '@/components/toast';
 import SearchableSelect from '@/components/SearchableSelect';
-import { COMMON_MAJORS, POLTEKKES_LIST } from '../pages/constant';
-import { INDONESIA_UNIVERSITIES } from '../pages/universityData';
+import { COMMON_MAJORS } from '../pages/constant';
 
 interface EventRegisterModalProps {
   isOpen: boolean;
@@ -30,10 +29,17 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
   const [majors, setMajors] = useState<string[]>([]);
 
   useEffect(() => {
-    const univList = [
-      ...new Set([...INDONESIA_UNIVERSITIES, ...POLTEKKES_LIST]),
-    ].sort() as string[];
-    setUniversities(univList);
+    const fetchData = async () => {
+      try {
+        const res = await axios.get('/api/universities');
+        const rawUnivs = res.data.map((u: any) => u.name);
+        const univs = [...new Set(rawUnivs)].sort();
+        setUniversities(univs as string[]);
+      } catch (error) {
+        setUniversities([]);
+      }
+    };
+    fetchData();
     setMajors(COMMON_MAJORS);
   }, []);
 
