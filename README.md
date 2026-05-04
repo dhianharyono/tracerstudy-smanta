@@ -8,6 +8,7 @@ Dashboard untuk penelusuran alumni SMA Negeri 1 Tawangsari (SMANTA) menggunakan 
 
 - Login dan Pendaftaran
 - Pengisian Kuesioner/Survei (Informasi Personal, Perguruan Tinggi, Pekerjaan, Media Sosial)
+- Pencarian Perguruan Tinggi & Jurusan secara Dinamis
 - Pengelolaan Profil
 - Dashboard dengan statistik
 - News/Berita dengan detail
@@ -21,39 +22,38 @@ Dashboard untuk penelusuran alumni SMA Negeri 1 Tawangsari (SMANTA) menggunakan 
   - Statistik berdasarkan jenis perguruan tinggi (PTN, PTS, Kedinasan)
   - Grafik statistik jurusan dan tahun lulus
 - Pengelolaan Data Alumni, Student, dan Admin
+- **Master Data Management**: Verifikasi Perguruan Tinggi dan Jurusan baru yang diinput alumni
 - Pengelolaan News/Berita
 - Analisis dan Pelaporan Data
 - Laporan berdasarkan berbagai kategori
 - Manajemen Kritik & Saran
 
-### Untuk Siswa
+### Fitur Sistem Dinamis (New)
 
-- Login dan Pendaftaran
-- Dashboard dengan ringkasan data
-- Menu Perguruan Tinggi (filter berdasarkan jenis)
-  - Klik item perguruan tinggi untuk melihat alumni berdasarkan perguruan tinggi yang dipilih
-- Menu Jurusan dengan jumlah alumni
-  - Klik item jurusan untuk melihat alumni berdasarkan jurusan yang dipilih
-- Menu Alumni dengan data lengkap dan filter (Universitas, Tahun Lulus, Jurusan)
-- News/Berita dengan detail
-- Kritik & Saran
+- **Dynamic Master Data**: Daftar Perguruan Tinggi dan Jurusan tidak lagi statis, melainkan dikelola melalui database.
+- **Auto-Sync**: Sistem secara otomatis memindai data alumni yang sudah ada dan memasukkan kampus/jurusan baru ke Master List.
+- **User-Driven Growth**: Alumni dapat menginput nama kampus atau jurusan baru yang belum ada di daftar, dan sistem akan otomatis mendaftarkannya (unverified) untuk admin review.
+- **Idempotent Maintenance**: Server secara otomatis membersihkan duplikasi dan melakukan sinkronisasi data setiap kali dijalankan.
 
 ## Teknologi
 
-- **Backend**: Node.js, Express, TypeScript, MongoDB, Mongoose
-- **Frontend**: React, TypeScript, Vite, React Router
+- **Backend**: Node.js, Express, TypeScript, MongoDB (Mongoose)
+- **Frontend**: React, TypeScript, Vite, React Router, Axios
 - **Authentication**: JWT (JSON Web Tokens)
 - **Charts**: Recharts
-- **Styling**: Tailwind CSS, Custom CSS dengan dark theme
-- **Icons**: React Icons (Font Awesome)
+- **Styling**: Tailwind CSS, Custom CSS dengan dark theme & glassmorphism
+- **Icons**: React Icons (Font Awesome, Lucide)
+- **Development**: Husky & lint-staged (Pre-commit checks)
 
-## Fitur Tambahan
+## Script Utama
 
-- **Custom Scrollbar**: Scrollbar yang disesuaikan dengan tema dark
-- **Loading Overlay**: Loading transparan saat perpindahan halaman
-- **Responsive Design**: Desain yang responsif untuk mobile, tablet, dan desktop
-- **URL-based Filtering**: Filter alumni berdasarkan URL parameter untuk navigasi yang lebih mudah
-- **Interactive UI**: Hover effects dan animasi yang smooth
+Di root direktori, Anda dapat menjalankan:
+
+- `npm run dev`: Menjalankan frontend dan backend secara bersamaan.
+- `npm run install:all`: Menginstall semua dependensi (root, frontend, backend).
+- **`npm run lint`**: Mengecek kualitas kode (ESLint) di seluruh proyek.
+- `npm run lint:frontend`: Hanya cek linting di frontend.
+- `npm run lint:backend`: Hanya cek linting di backend.
 
 ## Instalasi
 
@@ -94,50 +94,48 @@ Dashboard untuk penelusuran alumni SMA Negeri 1 Tawangsari (SMANTA) menggunakan 
 tracer-study/
 ├── backend/
 │   ├── src/
-│   │   ├── models/          # MongoDB models
-│   │   ├── routes/          # API routes
-│   │   ├── middleware/      # Auth middleware
-│   │   └── server.ts        # Server entry point
+│   │   ├── models/          # Mongoose Models (User, University, Major, etc.)
+│   │   ├── routes/          # Express Routes
+│   │   ├── middleware/      # Auth & Error Middleware
+│   │   ├── utils/           # Sync & Maintenance Utilities
+│   │   └── server.ts        # Entry point
 │   └── package.json
 ├── frontend/
 │   ├── src/
-│   │   ├── components/      # React components
-│   │   ├── contexts/        # React contexts (Auth)
-│   │   ├── pages/           # Page components
-│   │   └── App.tsx          # Main app component
+│   │   ├── components/      # UI & Feature Components
+│   │   ├── contexts/        # Auth Context
+│   │   ├── pages/           # Page Layouts
+│   │   └── hooks/           # Custom API Hooks
 │   └── package.json
 └── package.json
 ```
 
 ## API Endpoints
 
-### Authentication
+### Master Data
+- `GET /api/universities` - Ambil semua perguruan tinggi
+- `GET /api/majors` - Ambil semua jurusan
+- `GET /api/universities/search?q=...` - Cari perguruan tinggi
+- `POST /api/universities` - Tambah perguruan tinggi (Auth)
+- `POST /api/majors` - Tambah jurusan (Auth)
 
+### Authentication
 - `POST /api/auth/register` - Register user
 - `POST /api/auth/login` - Login
 - `GET /api/auth/me` - Get current user
 
 ### Alumni
-
 - `GET /api/alumni/profile` - Get profile
-- `PUT /api/alumni/profile` - Update profile
-- `POST /api/alumni/questionnaire` - Submit questionnaire
+- `PUT /api/alumni/profile` - Update profile & auto-sync data
+- `POST /api/alumni/questionnaire` - Submit kuesioner & auto-sync data
+- `PUT /api/alumni/questionnaire` - Update kuesioner & auto-sync data
 
 ### Admin
-
-- `GET /api/admin/dashboard` - Get dashboard statistics
-- `GET /api/admin/alumni` - Get all alumni
-- `GET /api/admin/alumni/:id` - Get single alumni
-- `PUT /api/admin/alumni/:id` - Update alumni
-- `DELETE /api/admin/alumni/:id` - Delete alumni
-- `GET /api/admin/reports` - Generate reports
-
-### Student
-
-- `GET /api/student/dashboard` - Get dashboard statistics
-- `GET /api/student/universities` - Get universities
-- `GET /api/student/majors` - Get majors
-- `GET /api/student/alumni` - Get alumni list
+- `GET /api/admin/dashboard` - Statistik dashboard
+- `GET /api/admin/alumni` - Daftar alumni
+- `PUT /api/admin/alumni/:id` - Update alumni data
+- `DELETE /api/admin/alumni/:id` - Hapus alumni
+- `GET /api/admin/reports` - Laporan tracer study
 
 ## License
 
