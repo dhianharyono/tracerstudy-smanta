@@ -1,99 +1,139 @@
 import University from '../models/University';
+import Major from '../models/Major';
 import User from '../models/User';
 
 let isSeeded = false;
 
+const COMMON_MAJORS = [
+  'Teknik Informatika', 'Sistem Informasi', 'Teknik Komputer', 'Sains Data',
+  'Manajemen', 'Akuntansi', 'Ilmu Ekonomi', 'Ekonomi Pembangunan',
+  'Hukum', 'Kedokteran', 'Kedokteran Gigi', 'Farmasi',
+  'Keperawatan', 'Kebidanan', 'Kesehatan Masyarakat', 'Gizi',
+  'Psikologi', 'Ilmu Komunikasi', 'Hubungan Internasional', 'Sosiologi',
+  'Ilmu Politik', 'Administrasi Bisnis/Negara', 'Teknik Sipil', 'Arsitektur',
+  'Teknik Mesin', 'Teknik Elektro', 'Teknik Industri', 'Teknik Kimia',
+  'Teknik Lingkungan', 'Teknik Perkapalan', 'Teknik Geologi', 'Teknik Geodesi',
+  'Matematika', 'Fisika', 'Kimia', 'Biologi', 'Statistika', 'Aktuaria',
+  'Sastra Inggris', 'Sastra Indonesia', 'Sastra Jepang', 'Sastra Arab', 'Sastra Perancis',
+  'Pendidikan Guru SD (PGSD)', 'Pendidikan Bahasa Inggris', 'Pendidikan Matematika',
+  'Pendidikan Jasmani', 'Seni Rupa', 'Desain Komunikasi Visual (DKV)', 'Desain Interior',
+  'Musik', 'Film dan Televisi', 'Kehutanan', 'Pertanian', 'Agribisnis', 'Peternakan',
+  'Perikanan', 'Teknologi Pangan', 'Manajemen Pendidikan Islam', 'Okupasi Terapi',
+  'Pendidikan Biologi', 'Pendidikan Kimia', 'Pendidikan Akuntansi',
+];
+
 /**
- * Maintenance function for universities collection.
- * 1. Syncs unique indexes.
- * 2. Cleans up any existing duplicates.
- * 3. Syncs university names from existing alumni profiles.
+ * Maintenance function for universities and majors.
  */
 export const seedUniversities = async () => {
   try {
-    // 1. Ensure unique index is properly built
-    await University.syncIndexes().catch(err => console.error('[University-Maintenance] Sync indexes error:', err));
+    // 1. Ensure unique indexes are properly built
+    await Promise.all([
+      University.syncIndexes(),
+      Major.syncIndexes(),
+    ]).catch(err => console.error('[Maintenance] Sync indexes error:', err));
     
-    // 2. Aggressive Cleanup of ALL duplicates in the master list
-    const allUniversities = await University.find().sort({ createdAt: 1 });
-    const seenNamesInMaster = new Set();
-    const toDelete = [];
-    
-    for (const u of allUniversities) {
-      const normalizedName = u.name.trim().toLowerCase();
-      if (seenNamesInMaster.has(normalizedName)) {
-        toDelete.push(u._id);
-      } else {
-        seenNamesInMaster.add(normalizedName);
-      }
-    }
-    
-    if (toDelete.length > 0) {
-      console.log(`[University-Maintenance] Removing ${toDelete.length} duplicate universities...`);
-      await University.deleteMany({ _id: { $in: toDelete } });
-    }
+    // 2. Cleanup Duplicates
+    await cleanupDuplicates();
 
-    // 3. Skip the heavy sync if already done in this process lifecycle
+    // 3. Skip heavy sync if already done in this process lifecycle
     if (isSeeded) return;
 
-    // 4. Sync from existing alumni data (S1, S2, S3)
-    await syncAlumniUniversities();
+    // 4. Sync from existing alumni data
+    await Promise.all([
+      syncAlumniUniversities(),
+      syncAlumniMajors(),
+    ]);
     
     isSeeded = true;
   } catch (error) {
-    console.error('[University-Maintenance] Error during university maintenance:', error);
+    console.error('[Maintenance] Error:', error);
   }
 };
 
-/**
- * Collects all universities currently mentioned in alumni profiles
- * and ensures they exist in the master University collection.
- * This makes the system fully dynamic based on actual user data.
- */
+const cleanupDuplicates = async () => {
+  // Cleanup Universities
+  const allUnivs = await University.find().sort({ createdAt: 1 });
+  const seenUnivs = new Set();
+  const univToDelete = [];
+  for (const u of allUnivs) {
+    const n = u.name.trim().toLowerCase();
+    if (seenUnivs.has(n)) univToDelete.push(u._id);
+    else seenUnivs.add(n);
+  }
+  if (univToDelete.length > 0) await University.deleteMany({ _id: { $in: univToDelete } });
+
+  // Cleanup Majors
+  const allMajors = await Major.find().sort({ createdAt: 1 });
+  const seenMajors = new Set();
+  const majorToDelete = [];
+  for (const m of allMajors) {
+    const n = m.name.trim().toLowerCase();
+    if (seenMajors.has(n)) majorToDelete.push(m._id);
+    else seenMajors.add(n);
+  }
+  if (majorToDelete.length > 0) await Major.deleteMany({ _id: { $in: majorToDelete } });
+};
+
 export const syncAlumniUniversities = async () => {
   try {
-    console.log('[Sync] Syncing master list from alumni data...');
-    
-    // Get unique university names from S1, S2, and S3 fields in User collection
+    console.log('[Sync] Syncing universities...');
     const [univS1, univS2, univS3] = await Promise.all([
       User.distinct('university.name', { role: 'alumni' }),
       User.distinct('universityS2.name', { role: 'alumni' }),
       User.distinct('universityS3.name', { role: 'alumni' }),
     ]);
 
-    // Combine, normalize, and filter out placeholders
-    const allNamesFromAlumni = [...new Set([...univS1, ...univS2, ...univS3])]
-      .filter(name => {
-        if (!name) return false;
-        const n = name.toLowerCase().trim();
-        return !['-', 'null', 'undefined', 'belum ada', 'tidak ada', '.', ''].includes(n);
-      })
+    const allNames = [...new Set([...univS1, ...univS2, ...univS3])]
+      .filter(name => name && !['-', 'null', 'undefined', '.', ''].includes(name.toLowerCase().trim()))
       .map(name => name.trim());
 
-    // Fetch existing master names for comparison
-    const existingMasterDocs = await University.find({}, 'name');
-    const existingMasterNames = new Set(existingMasterDocs.map(u => u.name.trim().toLowerCase()));
+    const existingDocs = await University.find({}, 'name');
+    const existingNames = new Set(existingDocs.map(u => u.name.trim().toLowerCase()));
 
-    let syncCount = 0;
-    for (const name of allNamesFromAlumni) {
-      const normalizedName = name.toLowerCase();
-      
-      if (!existingMasterNames.has(normalizedName)) {
-        await University.create({
-          name,
-          isVerified: false, // Synced from user data is marked unverified for admin review
-        });
-        existingMasterNames.add(normalizedName); // Avoid adding duplicates within the same loop
-        syncCount++;
+    for (const name of allNames) {
+      if (!existingNames.has(name.toLowerCase())) {
+        await University.create({ name, isVerified: false });
+        existingNames.add(name.toLowerCase());
       }
     }
-
-    if (syncCount > 0) {
-      console.log(`[Sync] Successfully added ${syncCount} new universities from alumni profiles to the master list.`);
-    } else {
-      console.log('[Sync] Master list is already synchronized with alumni profiles.');
-    }
   } catch (error) {
-    console.error('[Sync] Error syncing universities from alumni:', error);
+    console.error('[Sync] University error:', error);
+  }
+};
+
+export const syncAlumniMajors = async () => {
+  try {
+    console.log('[Sync] Syncing majors...');
+    
+    // Get from User collection
+    const [majorS1, majorS2, majorS3] = await Promise.all([
+      User.distinct('university.major', { role: 'alumni' }),
+      User.distinct('universityS2.major', { role: 'alumni' }),
+      User.distinct('universityS3.major', { role: 'alumni' }),
+    ]);
+
+    // Combine with COMMON_MAJORS and clean up
+    const allNames = [...new Set([...majorS1, ...majorS2, ...majorS3, ...COMMON_MAJORS])]
+      .filter(name => name && !['-', 'null', 'undefined', '.', ''].includes(name.toLowerCase().trim()))
+      .map(name => name.trim());
+
+    const existingDocs = await Major.find({}, 'name');
+    const existingNames = new Set(existingDocs.map(m => m.name.trim().toLowerCase()));
+
+    let count = 0;
+    for (const name of allNames) {
+      if (!existingNames.has(name.toLowerCase())) {
+        await Major.create({ 
+          name, 
+          isVerified: COMMON_MAJORS.includes(name) 
+        });
+        existingNames.add(name.toLowerCase());
+        count++;
+      }
+    }
+    if (count > 0) console.log(`[Sync] Added ${count} new majors.`);
+  } catch (error) {
+    console.error('[Sync] Major error:', error);
   }
 };

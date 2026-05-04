@@ -9,6 +9,7 @@ import Settings from '../models/Settings';
 import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import { ensureUniversityExists } from '../utils/universityHelper';
+import { ensureMajorExists } from '../utils/majorHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -538,6 +539,10 @@ router.put('/alumni/:id', async (req: Request, res: Response) => {
       const { university } = req.body;
       if (university?.name) {
         await ensureUniversityExists(university.name, (req as any).user._id, university.type);
+      }
+      
+      if (university?.major) {
+        await ensureMajorExists(university.major, (req as any).user._id);
       }
 
       const alumni = await User.findOneAndUpdate(

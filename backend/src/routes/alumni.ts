@@ -7,6 +7,7 @@ import Feedback from '../models/Feedback';
 import NewsRead from '../models/NewsRead';
 import Badge from '../models/Badge';
 import { ensureUniversityExists } from '../utils/universityHelper';
+import { ensureMajorExists } from '../utils/majorHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -132,6 +133,17 @@ router.put(
         await ensureUniversityExists(universityS3.name, req.user!._id);
       }
 
+      // Ensure majors exist in master list
+      if (university?.major) {
+        await ensureMajorExists(university.major, req.user!._id);
+      }
+      if (universityS2?.major) {
+        await ensureMajorExists(universityS2.major, req.user!._id);
+      }
+      if (universityS3?.major) {
+        await ensureMajorExists(universityS3.major, req.user!._id);
+      }
+
       // Validation
       const fullName = profile?.fullName?.trim();
       if (fullName) {
@@ -188,6 +200,17 @@ router.post(
         await ensureUniversityExists(universityS3.name, req.user!._id);
       }
 
+      // Ensure majors exist in master list
+      if (university?.major) {
+        await ensureMajorExists(university.major, req.user!._id);
+      }
+      if (universityS2?.major) {
+        await ensureMajorExists(universityS2.major, req.user!._id);
+      }
+      if (universityS3?.major) {
+        await ensureMajorExists(universityS3.major, req.user!._id);
+      }
+
       // Validation
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
@@ -237,6 +260,17 @@ router.put(
       }
       if (universityS3?.name) {
         await ensureUniversityExists(universityS3.name, req.user!._id);
+      }
+
+      // Ensure majors exist in master list
+      if (university?.major) {
+        await ensureMajorExists(university.major, req.user!._id);
+      }
+      if (universityS2?.major) {
+        await ensureMajorExists(universityS2.major, req.user!._id);
+      }
+      if (universityS3?.major) {
+        await ensureMajorExists(universityS3.major, req.user!._id);
       }
 
       // Validation

@@ -4,7 +4,6 @@ import axios from 'axios';
 import { LuX } from 'react-icons/lu';
 import Toast from '@/components/toast';
 import SearchableSelect from '@/components/SearchableSelect';
-import { COMMON_MAJORS } from '../pages/constant';
 
 interface EventRegisterModalProps {
   isOpen: boolean;
@@ -31,16 +30,22 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get('/api/universities');
-        const rawUnivs = res.data.map((u: any) => u.name);
-        const univs = [...new Set(rawUnivs)].sort();
+        const [univRes, majorRes] = await Promise.all([
+          axios.get('/api/universities'),
+          axios.get('/api/majors'),
+        ]);
+        
+        const univs = [...new Set(univRes.data.map((u: any) => u.name))].sort();
+        const majors = [...new Set(majorRes.data.map((m: any) => m.name))].sort();
+        
         setUniversities(univs as string[]);
+        setMajors(majors as string[]);
       } catch (error) {
         setUniversities([]);
+        setMajors([]);
       }
     };
     fetchData();
-    setMajors(COMMON_MAJORS);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {

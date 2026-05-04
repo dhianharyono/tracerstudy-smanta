@@ -18,6 +18,7 @@ import publicRoutes from './routes/public';
 import schoolRoutes from './routes/school';
 import jobRoutes from './routes/job';
 import universityRoutes from './routes/university';
+import majorRoutes from './routes/major';
 import { seedUniversities } from './utils/seedUniversities';
 
 dotenv.config();
@@ -147,6 +148,7 @@ app.use('/api/public', publicRoutes);
 app.use('/api/school', schoolRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/universities', universityRoutes);
+app.use('/api/majors', majorRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

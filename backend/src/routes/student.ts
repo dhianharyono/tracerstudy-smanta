@@ -8,6 +8,7 @@ import CollegePlan from '../models/CollegePlan';
 
 import Badge from '../models/Badge';
 import { ensureUniversityExists } from '../utils/universityHelper';
+import { ensureMajorExists } from '../utils/majorHelper';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -700,6 +701,11 @@ router.post(
       // Ensure university exists in master list
       if (targetUniversity) {
         await ensureUniversityExists(targetUniversity, req.user!._id);
+      }
+      
+      // Ensure major exists in master list
+      if (targetMajor) {
+        await ensureMajorExists(targetMajor, req.user!._id);
       }
 
       let plan = await CollegePlan.findOne({ user: req.user!._id });

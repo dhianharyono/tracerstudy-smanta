@@ -33,7 +33,6 @@ import {
 import { createPortal } from 'react-dom';
 import SmartLoader from '@/components/SmartLoader';
 import SearchableSelect from '@/components/SearchableSelect';
-import { COMMON_MAJORS } from '../constant';
 
 const AdminAlumni = () => {
   const [alumni, setAlumni] = useState<any[]>([]);
@@ -89,18 +88,24 @@ const AdminAlumni = () => {
   };
 
   useEffect(() => {
-    const fetchUnivs = async () => {
+    const fetchData = async () => {
       try {
-        const res = await axios.get('/api/universities');
-        const rawUnivs = res.data.map((u: any) => u.name);
-        const univs = [...new Set(rawUnivs)].sort();
+        const [univRes, majorRes] = await Promise.all([
+          axios.get('/api/universities'),
+          axios.get('/api/majors'),
+        ]);
+        
+        const univs = [...new Set(univRes.data.map((u: any) => u.name))].sort();
+        const majors = [...new Set(majorRes.data.map((m: any) => m.name))].sort();
+        
         setUnivList(univs as string[]);
+        setMajorList(majors as string[]);
       } catch (error) {
         setUnivList([]);
+        setMajorList([]);
       }
     };
-    fetchUnivs();
-    setMajorList(COMMON_MAJORS);
+    fetchData();
   }, []);
 
   useEffect(() => {
