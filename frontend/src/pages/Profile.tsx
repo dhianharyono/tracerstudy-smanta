@@ -76,12 +76,12 @@ const Profile = () => {
       return;
     }
     // Only allow letters, spaces, and basic punctuation (dot, apostrophe)
-    if (!/^[a-zA-Z\s\.\']+$/.test(fullNameTrimmed)) {
+    if (!/^[a-zA-Z\s.']+$/.test(fullNameTrimmed)) {
       Toast('Nama lengkap hanya boleh berisi huruf', 'error');
       return;
     }
     // Block common placeholder patterns like "...", "---", etc.
-    if (/^[\.\-\_\s]+$/.test(fullNameTrimmed) || fullNameTrimmed.toLowerCase() === 'null' || fullNameTrimmed.toLowerCase() === 'undefined') {
+    if (/^[.\-_ \s]+$/.test(fullNameTrimmed) || fullNameTrimmed.toLowerCase() === 'null' || fullNameTrimmed.toLowerCase() === 'undefined') {
       Toast('Nama lengkap tidak valid', 'error');
       return;
     }

@@ -38,20 +38,6 @@ const PostOpportunity = () => {
   const isEdit = !!id;
 
   const [loading, setLoading] = useState(isEdit);
-
-  if (user?.role === 'alumni') {
-    const hasUniversityData = !!(user?.university?.name);
-    if (user.questionnaireCompleted === false && !hasUniversityData) {
-      return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
-    }
-    if (isUniversityIncomplete(user)) {
-      return <RestrictedAccess type='university_incomplete' role='alumni' />;
-    }
-    // Strict requirement: Only alumni who have filled job data can post
-    if (isJobIncomplete(user)) {
-      return <RestrictedAccess type='job_incomplete' role='alumni' />;
-    }
-  }
   const [submitLoading, setSubmitLoading] = useState(false);
   const [requirements, setRequirements] = useState<string[]>(['']);
   const [formData, setFormData] = useState({
@@ -94,6 +80,20 @@ const PostOpportunity = () => {
       fetchJob();
     }
   }, [id, isEdit]);
+
+  if (user?.role === 'alumni') {
+    const hasUniversityData = !!(user?.university?.name);
+    if (user.questionnaireCompleted === false && !hasUniversityData) {
+      return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+    }
+    if (isUniversityIncomplete(user)) {
+      return <RestrictedAccess type='university_incomplete' role='alumni' />;
+    }
+    // Strict requirement: Only alumni who have filled job data can post
+    if (isJobIncomplete(user)) {
+      return <RestrictedAccess type='job_incomplete' role='alumni' />;
+    }
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

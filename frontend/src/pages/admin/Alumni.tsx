@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import Toast from '@/components/toast';
 import {
@@ -95,11 +95,19 @@ const AdminAlumni = () => {
           axios.get('/api/majors'),
         ]);
         
-        const univs = [...new Set(univRes.data.map((u: any) => u.name))].sort();
-        const majors = [...new Set(majorRes.data.map((m: any) => m.name))].sort();
+        const univs = [...new Set(univRes.data.map((u: any) => u.name))].sort() as string[];
+        const majors = [...new Set(majorRes.data.map((m: any) => m.name))].sort() as string[];
         
-        setUnivList(univs as string[]);
-        setMajorList(majors as string[]);
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({ length: currentYear + 1 - 2000 }, (_, i) => currentYear - i);
+
+        setUnivList(univs);
+        setMajorList(majors);
+        setFilterOptions({
+          universities: univs,
+          majors: majors,
+          graduationYears: years,
+        });
       } catch (error) {
         setUnivList([]);
         setMajorList([]);
@@ -121,13 +129,9 @@ const AdminAlumni = () => {
       setFilters((prev) => ({ ...prev, name: debouncedName }));
       setPagination((prev) => ({ ...prev, page: 1 }));
     }
-  }, [debouncedName]);
+  }, [debouncedName, filters.name]);
 
-  useEffect(() => {
-    fetchAlumni();
-  }, [pagination.page, filters]);
-
-  const fetchAlumni = async () => {
+  const fetchAlumni = useCallback(async () => {
     try {
       const params = new URLSearchParams({
         page: pagination.page.toString(),
@@ -146,16 +150,21 @@ const AdminAlumni = () => {
         `/api/admin/alumni?${params.toString()}`,
       );
       setAlumni(response.data.alumni);
-      setPagination(response.data.pagination);
-      if (response.data.filters) {
-        setFilterOptions(response.data.filters);
-      }
+      setPagination((prev) => ({
+        ...prev,
+        total: response.data.total,
+        pages: response.data.pages,
+      }));
     } catch (error) {
-      console.error('Error fetching alumni:', error);
+      Toast('Gagal memuat data alumni', 'error');
     } finally {
       setLoading(false);
     }
-  };
+  }, [pagination.page, pagination.limit, filters]);
+
+  useEffect(() => {
+    fetchAlumni();
+  }, [fetchAlumni]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters({ ...filters, [key]: value });
@@ -272,7 +281,7 @@ const AdminAlumni = () => {
               className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             >
               <option value=''>Semua Universitas</option>
-              {filterOptions.universities.map((univ) => (
+              {filterOptions.universities.map((univ: string) => (
                 <option key={univ} value={univ}>
                   {univ}
                 </option>
@@ -304,7 +313,7 @@ const AdminAlumni = () => {
               className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             >
               <option value=''>Semua Tahun</option>
-              {filterOptions.graduationYears.map((year) => (
+              {filterOptions.graduationYears.map((year: number) => (
                 <option key={year} value={year.toString()}>
                   {year}
                 </option>
@@ -334,7 +343,7 @@ const AdminAlumni = () => {
               className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             >
               <option value=''>Semua Jurusan</option>
-              {filterOptions.majors.map((major) => (
+              {filterOptions.majors.map((major: string) => (
                 <option key={major} value={major}>
                   {major}
                 </option>

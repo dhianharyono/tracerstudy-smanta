@@ -39,9 +39,9 @@ export const isStudentProfileComplete = (user: any): boolean => {
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
   const isValidName = 
     fullName.trim().length >= 3 && 
-    /^[a-zA-Z\s\.\']+$/.test(fullName.trim()) &&
+    /^[a-zA-Z\s.']+$/.test(fullName.trim()) &&
     !placeholders.includes(fullName.trim().toLowerCase()) &&
-    !/^[\.\-\_\s]+$/.test(fullName.trim());
+    !/^[.\-_ \s]+$/.test(fullName.trim());
 
   return !!(
     isValidName &&

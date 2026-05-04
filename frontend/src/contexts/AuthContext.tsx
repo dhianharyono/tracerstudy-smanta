@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         // Map _id to id if necessary
         const formattedUser = {
           ...userData,
-          id: userData._id || userData.id
+          id: userData._id || userData.id,
         };
         setUser(formattedUser);
         localStorage.setItem('user', JSON.stringify(formattedUser));
@@ -93,7 +93,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const { user: newUser } = response.data;
       const formattedUser = {
         ...newUser,
-        id: newUser.id || newUser._id
+        id: newUser.id || newUser._id,
       };
       setUser(formattedUser);
       localStorage.setItem('user', JSON.stringify(formattedUser));
@@ -123,15 +123,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
       const { user: newUser } = response.data;
       const formattedUser = {
         ...newUser,
-        id: newUser.id || newUser._id
+        id: newUser.id || newUser._id,
       };
       setUser(formattedUser);
       localStorage.setItem('user', JSON.stringify(formattedUser));
     } catch (error: any) {
       const serverErrors = error.response?.data?.errors;
-      const message = serverErrors && serverErrors.length > 0 
-        ? serverErrors[0].msg 
-        : (error.response?.data?.message || 'Pendaftaran gagal');
+      const message =
+        serverErrors && serverErrors.length > 0
+          ? serverErrors[0].msg
+          : error.response?.data?.message || 'Pendaftaran gagal';
       throw new Error(message);
     }
   };

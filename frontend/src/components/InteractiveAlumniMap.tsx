@@ -172,7 +172,7 @@ const InteractiveAlumniMap = ({ apiEndpoint }: { apiEndpoint: string }) => {
       }
 
       // Case: Handle Common Abbreviations
-      let expanded = name
+      const expanded = name
         .replace(/\bpoltekkes\b/gi, 'Politeknik Kesehatan')
         .replace(/\bkemenkes\b/gi, 'Kementerian Kesehatan')
         .replace(/\bstikes\b/gi, 'Sekolah Tinggi Ilmu Kesehatan');

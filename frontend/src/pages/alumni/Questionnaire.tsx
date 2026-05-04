@@ -441,10 +441,10 @@ const AlumniQuestionnaire = () => {
       errors['profile.fullName'] = 'Nama lengkap wajib diisi';
     } else if (fullName.length < 3) {
       errors['profile.fullName'] = 'Nama lengkap minimal 3 karakter';
-    } else if (!/^[a-zA-Z\s\.\']*$/.test(fullName)) {
+    } else if (!/^[a-zA-Z\s.']*$/.test(fullName)) {
       errors['profile.fullName'] =
         'Nama lengkap hanya boleh berisi huruf';
-    } else if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+    } else if (/^[.\-_ \s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
       errors['profile.fullName'] = 'Nama lengkap tidak valid';
     }
 

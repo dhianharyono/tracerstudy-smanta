@@ -47,12 +47,12 @@ export const isNameIncomplete = (profile: any) => {
   }
 
   // Check if it's only symbols or numbers
-  if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) {
+  if (!/^[a-zA-Z\s.']+$/.test(fullName)) {
     return true;
   }
 
   // Check if it's just repeating symbols like "..." or "---"
-  if (/^[\.\-\_\s]+$/.test(fullName)) {
+  if (/^[.\-_ \s]+$/.test(fullName)) {
     return true;
   }
 
