@@ -170,7 +170,7 @@ const Profile = () => {
         'success',
       );
       setTimeout(() => {
-        window.location.href = '/alumni/dashboard';
+        window.location.href = '/alumni';
       }, 1500);
     } catch (error: any) {
       console.error('Error graduating:', error);
@@ -368,7 +368,10 @@ const Profile = () => {
         {/* Graduation Alert for Students */}
         {user?.role === 'student' &&
           savedGraduationYear &&
-          new Date().getFullYear() > savedGraduationYear && (
+          (new Date().getFullYear() > savedGraduationYear ||
+            (new Date().getFullYear() === savedGraduationYear &&
+              (new Date().getMonth() > 4 ||
+                (new Date().getMonth() === 4 && new Date().getDate() >= 4)))) && (
             <div className='bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-2xl border border-green-500/30 overflow-hidden shadow-sm'>
               <div className='p-6'>
                 <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>

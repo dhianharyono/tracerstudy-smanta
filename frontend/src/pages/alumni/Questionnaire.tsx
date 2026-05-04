@@ -326,12 +326,20 @@ const AlumniQuestionnaire = () => {
               },
             });
           } else {
-            setFormData(prev => ({
+            // Pre-fill basic info for new alumni
+            setFormData((prev) => ({
               ...prev,
+              profile: {
+                ...prev.profile,
+                fullName: profile.profile?.fullName || '',
+                entryYear: profile.profile?.entryYear?.toString() || '',
+                graduationYear:
+                  profile.profile?.graduationYear?.toString() || '',
+              },
               socialMedia: {
                 ...prev.socialMedia,
                 email: profile.socialMedia?.email || profile.email || '',
-              }
+              },
             }));
           }
         }
@@ -682,7 +690,7 @@ const AlumniQuestionnaire = () => {
               required
               placeholder='Masukkan nama lengkap'
               validationErrors={validationErrors}
-              disabled={isReadOnly}
+              disabled={isReadOnly || !!formData.profile.fullName}
             />
 
             <SelectField
@@ -710,7 +718,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2018'
               validationErrors={validationErrors}
-              disabled={isReadOnly}
+              disabled={isReadOnly || !!formData.profile.entryYear}
             />
 
             <InputField
@@ -724,7 +732,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2021'
               validationErrors={validationErrors}
-              disabled={isReadOnly}
+              disabled={isReadOnly || !!formData.profile.graduationYear}
             />
 
             <SelectField

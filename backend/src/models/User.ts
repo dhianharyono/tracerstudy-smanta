@@ -78,7 +78,7 @@ const UserSchema = new Schema<IUser>(
       fullName: String,
       gender: {
         type: String,
-        enum: ['male', 'female'],
+        enum: ['male', 'female', ''],
       },
       entryYear: Number,
       graduationYear: Number,
@@ -90,7 +90,7 @@ const UserSchema = new Schema<IUser>(
       name: String,
       type: {
         type: String,
-        enum: ['negeri', 'swasta', 'kedinasan'],
+        enum: ['negeri', 'swasta', 'kedinasan', ''],
       },
       entryYear: Number,
       graduationYear: Number,
@@ -133,7 +133,7 @@ const UserSchema = new Schema<IUser>(
     verifiedAt: Date,
     schoolRole: {
       type: String,
-      enum: ['bk', 'teacher'],
+      enum: ['bk', 'teacher', ''],
     },
     lastActiveAt: {
       type: Date,

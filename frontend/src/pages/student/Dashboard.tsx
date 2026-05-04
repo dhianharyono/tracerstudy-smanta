@@ -27,9 +27,7 @@ const StudentDashboard = () => {
   const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(
-    new Date().getMonth() === 4,
-  );
+  const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   console.log(stats);
   useEffect(() => {
@@ -52,6 +50,28 @@ const StudentDashboard = () => {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    // Show graduation confirmation modal if it's past May 4th of their graduation year
+    const gradYear = user?.profile?.graduationYear;
+    if (!gradYear) return;
+
+    const now = new Date();
+    const isPastGradYear = now.getFullYear() > gradYear;
+    const isGraduationDay =
+      now.getFullYear() === gradYear &&
+      (now.getMonth() > 4 || (now.getMonth() === 4 && now.getDate() >= 4));
+
+    const hasShown = sessionStorage.getItem('graduation_modal_shown');
+
+    if ((isPastGradYear || isGraduationDay) && !hasShown && !loading) {
+      const timer = setTimeout(() => {
+        setIsGraduationModalOpen(true);
+        sessionStorage.setItem('graduation_modal_shown', 'true');
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, user]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
