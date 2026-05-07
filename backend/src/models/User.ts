@@ -148,7 +148,11 @@ const UserSchema = new Schema<IUser>(
 UserSchema.index({ role: 1 });
 UserSchema.index({ role: 1, questionnaireCompleted: 1 });
 UserSchema.index({ role: 1, isMentor: 1 });
-UserSchema.index({ 'university.name': 1 }); // For alumni map grouping
+UserSchema.index({ 'profile.graduationYear': 1 });
+UserSchema.index({ 'university.name': 1 });
+UserSchema.index({ 'university.major': 1 });
+UserSchema.index({ 'profile.isWorking': 1 });
+UserSchema.index({ 'profile.isStudying': 1 });
 
 export default mongoose.model<IUser>('User', UserSchema);
 

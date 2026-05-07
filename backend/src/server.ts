@@ -118,8 +118,8 @@ const connectToDatabase = async () => {
     isConnected = db.connections[0].readyState === 1;
     console.log('New database connection successful');
     
-    // Seed universities if collection is empty
-    await seedUniversities();
+    // Seed universities if collection is empty (run in background)
+    seedUniversities();
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;
