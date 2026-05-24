@@ -1631,51 +1631,52 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Tidak ada siswa yang memenuhi kriteria pengiriman email.' });
     }
 
-    // Send emails asynchronously in the background to avoid API timeouts
-    const runEmailSending = async () => {
-      let successCount = 0;
-      let failCount = 0;
+    // IMPORTANT: On Vercel serverless, fire-and-forget does NOT work.
+    // The function is killed immediately after res.json() is called.
+    // We must await all email sending before responding.
+    let successCount = 0;
+    let failCount = 0;
 
-      for (const student of targetStudents) {
-        if (!student.email) {
-          failCount++;
-          continue;
-        }
-        const name = student.profile?.fullName || student.username;
-        const success = await sendAlumniUpgradeReminder(student.email, name);
-        if (success) {
-          successCount++;
-        } else {
-          failCount++;
-        }
+    for (const student of targetStudents) {
+      if (!student.email) {
+        failCount++;
+        continue;
       }
-
-      // Log to AuditLog
-      try {
-        await AuditLog.create({
-          action: 'SEND_EMAIL_REMINDER',
-          actor: {
-            userId: (req as any).user?._id || null,
-            username: (req as any).user?.username || 'system',
-            role: (req as any).user?.role || 'admin',
-          },
-          target: {
-            type: 'student',
-            name: studentId ? (targetStudents[0].profile?.fullName || targetStudents[0].username) : `Bulk (${targetStudents.length} siswa)`,
-          },
-          details: `Mengirim email pengingat tracer study ke ${successCount} siswa (gagal: ${failCount})`,
-        });
-      } catch (err) {
-        console.error('Failed to write AuditLog for email reminders:', err);
+      const name = student.profile?.fullName || student.username;
+      const success = await sendAlumniUpgradeReminder(student.email, name);
+      if (success) {
+        successCount++;
+      } else {
+        failCount++;
       }
-    };
+    }
 
-    // Trigger sending process
-    runEmailSending();
+    // Log to AuditLog
+    try {
+      await AuditLog.create({
+        action: 'SEND_EMAIL_REMINDER',
+        actor: {
+          userId: (req as any).user?._id || null,
+          username: (req as any).user?.username || 'system',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'student',
+          name: studentId
+            ? (targetStudents[0].profile?.fullName || targetStudents[0].username)
+            : `Bulk (${targetStudents.length} siswa)`,
+        },
+        details: `Mengirim email pengingat tracer study ke ${successCount} siswa (gagal: ${failCount})`,
+      });
+    } catch (err) {
+      console.error('Failed to write AuditLog for email reminders:', err);
+    }
 
     res.json({
-      message: `Pemicu email pengingat telah dijalankan untuk ${targetStudents.length} siswa secara latar belakang.`,
+      message: `Email pengingat berhasil dikirim ke ${successCount} siswa${failCount > 0 ? `, gagal: ${failCount}` : ''}.`,
       count: targetStudents.length,
+      successCount,
+      failCount,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
