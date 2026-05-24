@@ -10,6 +10,7 @@ import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import { ensureUniversityExists } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
+import { sendAlumniUpgradeReminder } from '../utils/mailer';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -685,21 +686,23 @@ router.get('/reports', async (req: Request, res: Response) => {
     const reportType = req.query.type as string;
 
     switch (reportType) {
-      case 'working':
+      case 'working': {
         const working = await User.find({
           role: 'alumni',
           'profile.isWorking': true,
         }).select('-password');
         return res.json({ data: working, type: 'working' });
+      }
 
-      case 'studying':
+      case 'studying': {
         const studying = await User.find({
           role: 'alumni',
           'profile.isStudying': true,
         }).select('-password');
         return res.json({ data: studying, type: 'studying' });
+      }
 
-      case 'university-type':
+      case 'university-type': {
         const universityTypes = await User.aggregate([
           {
             $match: {
@@ -716,8 +719,9 @@ router.get('/reports', async (req: Request, res: Response) => {
           },
         ]);
         return res.json({ data: universityTypes, type: 'university-type' });
+      }
 
-      case 'major':
+      case 'major': {
         const majors = await User.aggregate([
           {
             $match: {
@@ -735,6 +739,7 @@ router.get('/reports', async (req: Request, res: Response) => {
           { $sort: { count: -1 } },
         ]);
         return res.json({ data: majors, type: 'major' });
+      }
 
       default:
         return res.status(400).json({ message: 'Invalid report type' });
@@ -819,7 +824,8 @@ router.post('/students', async (req: Request, res: Response) => {
     await user.save();
 
     // Baris 295 yang diperbaiki
-    const { password: userPassword, ...userObjWithoutPassword } =
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _userPassword, ...userObjWithoutPassword } =
       user.toObject();
 
     res.status(201).json(userObjWithoutPassword);
@@ -945,7 +951,8 @@ router.post('/admins', async (req: Request, res: Response) => {
     await user.save();
 
     // Baris 401 yang diperbaiki
-    const { password: userPassword, ...userObjWithoutPassword } =
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _userPassword2, ...userObjWithoutPassword } =
       user.toObject();
 
     res.status(201).json(userObjWithoutPassword);
@@ -1070,7 +1077,8 @@ router.post('/school-users', async (req: Request, res: Response) => {
     });
 
     await user.save();
-    const { password: pw, ...userObj } = user.toObject();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pw, ...userObj } = user.toObject();
     res.status(201).json(userObj);
   } catch (error: any) {
     if (error.code === 11000) {
@@ -1587,6 +1595,88 @@ router.delete('/college-plans/:id', async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Plan not found' });
     }
     res.json({ message: 'Plan deleted successfully' });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Send email reminder to students to upgrade status and fill questionnaire
+router.post('/students/send-reminder', async (req: Request, res: Response) => {
+  try {
+    const { studentId, graduationYear, sendToAll } = req.body;
+
+    let targetStudents: any[] = [];
+
+    if (studentId) {
+      // Send to a single student
+      const student = await User.findOne({ _id: studentId, role: 'student' });
+      if (!student) {
+        return res.status(404).json({ message: 'Siswa tidak ditemukan' });
+      }
+      targetStudents = [student];
+    } else if (graduationYear) {
+      // Send to all students in a graduation year
+      targetStudents = await User.find({
+        role: 'student',
+        'profile.graduationYear': parseInt(graduationYear),
+      });
+    } else if (sendToAll) {
+      // Send to all students
+      targetStudents = await User.find({ role: 'student' });
+    } else {
+      return res.status(400).json({ message: 'Parameter tidak valid. Masukkan studentId, graduationYear, atau sendToAll.' });
+    }
+
+    if (targetStudents.length === 0) {
+      return res.status(404).json({ message: 'Tidak ada siswa yang memenuhi kriteria pengiriman email.' });
+    }
+
+    // Send emails asynchronously in the background to avoid API timeouts
+    const runEmailSending = async () => {
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const student of targetStudents) {
+        if (!student.email) {
+          failCount++;
+          continue;
+        }
+        const name = student.profile?.fullName || student.username;
+        const success = await sendAlumniUpgradeReminder(student.email, name);
+        if (success) {
+          successCount++;
+        } else {
+          failCount++;
+        }
+      }
+
+      // Log to AuditLog
+      try {
+        await AuditLog.create({
+          action: 'SEND_EMAIL_REMINDER',
+          actor: {
+            userId: (req as any).user?._id || null,
+            username: (req as any).user?.username || 'system',
+            role: (req as any).user?.role || 'admin',
+          },
+          target: {
+            type: 'student',
+            name: studentId ? (targetStudents[0].profile?.fullName || targetStudents[0].username) : `Bulk (${targetStudents.length} siswa)`,
+          },
+          details: `Mengirim email pengingat tracer study ke ${successCount} siswa (gagal: ${failCount})`,
+        });
+      } catch (err) {
+        console.error('Failed to write AuditLog for email reminders:', err);
+      }
+    };
+
+    // Trigger sending process
+    runEmailSending();
+
+    res.json({
+      message: `Pemicu email pengingat telah dijalankan untuk ${targetStudents.length} siswa secara latar belakang.`,
+      count: targetStudents.length,
+    });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

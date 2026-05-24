@@ -12,6 +12,7 @@ import {
   FaSync,
   FaEye,
   FaEyeSlash,
+  FaEnvelope,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import PageHeader from '@/components/common/PageHeader';
@@ -51,6 +52,8 @@ const AdminStudents = () => {
     graduationYear: '',
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
+  const [sendingBulk, setSendingBulk] = useState(false);
 
   useEffect(() => {
     fetchStudents();
@@ -67,6 +70,49 @@ const AdminStudents = () => {
     }, 500);
     return () => clearTimeout(timer);
   }, [filters.search]);
+
+  const handleSendReminder = async (studentId: string, email: string) => {
+    if (!window.confirm(`Kirim email pengingat Tracer Study ke siswa ${email}?`)) {
+      return;
+    }
+    setSendingEmailId(studentId);
+    try {
+      await axios.post('/api/admin/students/send-reminder', { studentId });
+      Toast('Email pengingat berhasil dikirim!', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim email pengingat',
+        'error',
+      );
+    } finally {
+      setSendingEmailId(null);
+    }
+  };
+
+  const handleSendBulkReminder = async () => {
+    const yearText = filters.graduationYear ? `angkatan lulus tahun ${filters.graduationYear}` : 'seluruh angkatan';
+    if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke semua siswa ${yearText}?`)) {
+      return;
+    }
+    setSendingBulk(true);
+    try {
+      const payload: any = {};
+      if (filters.graduationYear) {
+        payload.graduationYear = filters.graduationYear;
+      } else {
+        payload.sendToAll = true;
+      }
+      const response = await axios.post('/api/admin/students/send-reminder', payload);
+      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        'error',
+      );
+    } finally {
+      setSendingBulk(false);
+    }
+  };
 
   const fetchStudents = async () => {
     try {
@@ -187,14 +233,24 @@ const AdminStudents = () => {
         title='Kelola Data Student'
         description='Manajemen akun Siswa'
       >
-        {!showForm && (
+        <div className='flex gap-2 flex-wrap'>
           <button
-            onClick={() => setShowForm(true)}
-            className='flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
+            onClick={handleSendBulkReminder}
+            disabled={sendingBulk}
+            className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            title='Kirim pengingat email ke semua siswa sesuai filter tahun lulus'
           >
-            <FaUserPlus /> Tambah Student
+            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Kirim Pengingat Massal'}
           </button>
-        )}
+          {!showForm && (
+            <button
+              onClick={() => setShowForm(true)}
+              className='flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
+            >
+              <FaUserPlus /> Tambah Student
+            </button>
+          )}
+        </div>
       </PageHeader>
 
       {showForm && (
@@ -433,6 +489,14 @@ const AdminStudents = () => {
                 </TableCell>
                 <TableCell>
                   <div className='flex items-center justify-center gap-2'>
+                    <button
+                      onClick={() => handleSendReminder(student._id, student.email)}
+                      disabled={sendingEmailId !== null}
+                      className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
+                      title='Kirim Email Pengingat'
+                    >
+                      <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
+                    </button>
                     <button
                       onClick={() => handleEdit(student)}
                       className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
