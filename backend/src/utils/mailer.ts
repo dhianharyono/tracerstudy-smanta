@@ -28,14 +28,12 @@ const getTransporter = () => {
 export const sendAlumniUpgradeReminder = async (
   toEmail: string,
   fullName: string,
-): Promise<boolean> => {
+): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
   if (!transporter) {
-    console.error(
-      'Email transporter not configured. Cannot send email to:',
-      toEmail,
-    );
-    return false;
+    const errorMsg = 'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
+    console.error(`${errorMsg} Cannot send email to:`, toEmail);
+    return { success: false, error: errorMsg };
   }
 
   const frontendUrl = 'https://tracerstudy-smanta.vercel.app/';
@@ -109,9 +107,9 @@ export const sendAlumniUpgradeReminder = async (
   try {
     const info = await transporter.sendMail(mailOptions);
     console.log(`Email reminder sent to ${toEmail}: ${info.messageId}`);
-    return true;
-  } catch (error) {
+    return { success: true };
+  } catch (error: any) {
     console.error(`Error sending email to ${toEmail}:`, error);
-    return false;
+    return { success: false, error: error?.message || String(error) };
   }
 };

@@ -1636,18 +1636,27 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
     // We must await all email sending before responding.
     let successCount = 0;
     let failCount = 0;
+    const errors: { email: string; error: string }[] = [];
 
     for (const student of targetStudents) {
       if (!student.email) {
         failCount++;
+        errors.push({
+          email: student.username || 'unknown',
+          error: 'Siswa tidak memiliki alamat email.',
+        });
         continue;
       }
       const name = student.profile?.fullName || student.username;
-      const success = await sendAlumniUpgradeReminder(student.email, name);
-      if (success) {
+      const result = await sendAlumniUpgradeReminder(student.email, name);
+      if (result.success) {
         successCount++;
       } else {
         failCount++;
+        errors.push({
+          email: student.email,
+          error: result.error || 'Gagal mengirim email.',
+        });
       }
     }
 
@@ -1677,6 +1686,7 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
       count: targetStudents.length,
       successCount,
       failCount,
+      errors: errors.length > 0 ? errors : undefined,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
