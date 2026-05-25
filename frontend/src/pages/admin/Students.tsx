@@ -90,18 +90,46 @@ const AdminStudents = () => {
   };
 
   const handleSendBulkReminder = async () => {
-    const yearText = filters.graduationYear ? `angkatan lulus tahun ${filters.graduationYear}` : 'seluruh angkatan';
-    if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke semua siswa ${yearText}?`)) {
+    const defaultVal = filters.graduationYear || '';
+    const inputYear = window.prompt(
+      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat.\n\n" +
+      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
+      "Batal/kosongkan untuk membatalkan.",
+      defaultVal
+    );
+
+    if (inputYear === null) {
+      return; // Batal
+    }
+
+    const trimmedInput = inputYear.trim().toLowerCase();
+    if (trimmedInput === '') {
+      Toast('Pengiriman dibatalkan. Tahun tidak boleh kosong.', 'error');
       return;
     }
+
+    const payload: any = {};
+
+    if (trimmedInput === 'semua') {
+      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke SELURUH ANGKATAN siswa?')) {
+        return;
+      }
+      payload.sendToAll = true;
+    } else {
+      const graduationYear = parseInt(trimmedInput);
+      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+        Toast('Tahun kelulusan tidak valid!', 'error');
+        return;
+      }
+      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke siswa angkatan lulus tahun ${graduationYear}?`)) {
+        return;
+      }
+      payload.graduationYear = graduationYear;
+    }
+
     setSendingBulk(true);
     try {
-      const payload: any = {};
-      if (filters.graduationYear) {
-        payload.graduationYear = filters.graduationYear;
-      } else {
-        payload.sendToAll = true;
-      }
       const response = await axios.post('/api/admin/students/send-reminder', payload);
       Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
     } catch (error: any) {
