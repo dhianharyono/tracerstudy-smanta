@@ -42,6 +42,7 @@ const AdminStudents = () => {
     search: '',
     entryYear: '',
     graduationYear: '',
+    status: '',
   });
   const [formData, setFormData] = useState({
     username: '',
@@ -57,7 +58,7 @@ const AdminStudents = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [pagination.page, filters.entryYear, filters.graduationYear]);
+  }, [pagination.page, filters.entryYear, filters.graduationYear, filters.status]);
 
   // Debounced search
   useEffect(() => {
@@ -150,6 +151,7 @@ const AdminStudents = () => {
         ...(filters.search && { search: filters.search }),
         ...(filters.entryYear && { entryYear: filters.entryYear }),
         ...(filters.graduationYear && { graduationYear: filters.graduationYear }),
+        ...(filters.status && { status: filters.status }),
       });
 
       const response = await axios.get(`/api/admin/students?${params}`);
@@ -173,6 +175,7 @@ const AdminStudents = () => {
       search: '',
       entryYear: '',
       graduationYear: '',
+      status: '',
     });
     setPagination({ ...pagination, page: 1 });
   };
@@ -414,7 +417,7 @@ const AdminStudents = () => {
       }
 
       <Card className='mb-6'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
           <div className='relative'>
             <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
               <FaSearch size={14} />
@@ -448,6 +451,18 @@ const AdminStudents = () => {
               className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             />
           </div>
+          <div>
+            <select
+              name='status'
+              value={filters.status}
+              onChange={handleFilterChange}
+              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+            >
+              <option value=''>Semua Status</option>
+              <option value='complete'>Lengkap</option>
+              <option value='incomplete'>Kurang Lengkap</option>
+            </select>
+          </div>
           <div className='flex gap-2'>
             <button
               onClick={clearFilters}
@@ -465,6 +480,7 @@ const AdminStudents = () => {
           <TableHeadCell>Nama Lengkap</TableHeadCell>
           <TableHeadCell>Tahun Masuk</TableHeadCell>
           <TableHeadCell>Tahun Lulus</TableHeadCell>
+          <TableHeadCell>Status</TableHeadCell>
           <TableHeadCell>Email</TableHeadCell>
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
           <TableHeadCell className='text-center'>Aksi</TableHeadCell>
@@ -473,7 +489,7 @@ const AdminStudents = () => {
           {students.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={7}
+                colSpan={8}
                 className='p-8 text-center text-[color:var(--text-secondary)]'
               >
                 Tidak ada data student.
@@ -504,6 +520,17 @@ const AdminStudents = () => {
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {student.profile?.graduationYear || '-'}
+                </TableCell>
+                <TableCell>
+                  {student.profile?.fullName && student.profile?.entryYear && student.profile?.graduationYear ? (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'>
+                      Lengkap
+                    </span>
+                  ) : (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'>
+                      Kurang Lengkap
+                    </span>
+                  )}
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {student.email}

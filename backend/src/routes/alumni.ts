@@ -148,8 +148,8 @@ router.put(
       const fullName = profile?.fullName?.trim();
       if (fullName) {
         if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-        if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
-        if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+        if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+        if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
           return res.status(400).json({ message: 'Nama lengkap tidak valid' });
         }
       }
@@ -215,8 +215,8 @@ router.post(
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
       if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-      if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
-      if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+      if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+      if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
 
@@ -277,8 +277,8 @@ router.put(
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
       if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-      if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
-      if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+      if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+      if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
 
@@ -466,11 +466,31 @@ router.get(
               { $count: 'count' },
             ],
             completedStudents: [
-              { $match: { role: 'student', questionnaireCompleted: true } },
+              {
+                $match: {
+                  role: 'student',
+                  'profile.fullName': { $exists: true, $nin: [null, ''] },
+                  'profile.entryYear': { $exists: true, $ne: null },
+                  'profile.graduationYear': { $exists: true, $ne: null }
+                }
+              },
               { $count: 'count' },
             ],
             incompleteStudents: [
-              { $match: { role: 'student', questionnaireCompleted: false } },
+              {
+                $match: {
+                  role: 'student',
+                  $or: [
+                    { 'profile': { $exists: false } },
+                    { 'profile.fullName': { $exists: false } },
+                    { 'profile.fullName': { $in: [null, ''] } },
+                    { 'profile.entryYear': { $exists: false } },
+                    { 'profile.entryYear': null },
+                    { 'profile.graduationYear': { $exists: false } },
+                    { 'profile.graduationYear': null }
+                  ]
+                }
+              },
               { $count: 'count' },
             ],
             studentYearStats: [

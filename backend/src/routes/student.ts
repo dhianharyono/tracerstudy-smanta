@@ -80,11 +80,31 @@ router.get('/dashboard', async (req: Request, res: Response) => {
           totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
           totalStudents: [{ $match: { role: 'student' } }, { $count: 'count' }],
           completedStudents: [
-            { $match: { role: 'student', questionnaireCompleted: true } },
+            {
+              $match: {
+                role: 'student',
+                'profile.fullName': { $exists: true, $nin: [null, ''] },
+                'profile.entryYear': { $exists: true, $ne: null },
+                'profile.graduationYear': { $exists: true, $ne: null }
+              }
+            },
             { $count: 'count' },
           ],
           incompleteStudents: [
-            { $match: { role: 'student', questionnaireCompleted: false } },
+            {
+              $match: {
+                role: 'student',
+                $or: [
+                  { 'profile': { $exists: false } },
+                  { 'profile.fullName': { $exists: false } },
+                  { 'profile.fullName': { $in: [null, ''] } },
+                  { 'profile.entryYear': { $exists: false } },
+                  { 'profile.entryYear': null },
+                  { 'profile.graduationYear': { $exists: false } },
+                  { 'profile.graduationYear': null }
+                ]
+              }
+            },
             { $count: 'count' },
           ],
           studentYearStats: [
@@ -846,7 +866,7 @@ router.get(
       if (university) filter.targetUniversity = university;
       if (major) filter.targetMajor = major;
 
-      let plansQuery = CollegePlan.find(filter)
+      const plansQuery = CollegePlan.find(filter)
         .populate('user', 'username profile.fullName profile.graduationYear')
         .sort({ createdAt: -1 });
 

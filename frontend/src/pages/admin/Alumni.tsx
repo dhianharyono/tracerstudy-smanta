@@ -63,6 +63,8 @@ const AdminAlumni = () => {
   // Edit State
   const [editingAlumni, setEditingAlumni] = useState<any | null>(null);
   const [demotingAlumni, setDemotingAlumni] = useState<any | null>(null);
+  const [sendingEmailId, setSendingEmailId] = useState<string | null>(null);
+  const [sendingBulk, setSendingBulk] = useState(false);
   const [editForm, setEditForm] = useState({
     fullName: '',
     university: '',
@@ -84,6 +86,77 @@ const AdminAlumni = () => {
       setDemotingAlumni(null);
     } catch (error) {
       Toast('Gagal mengubah role user', 'error');
+    }
+  };
+
+  const handleSendReminder = async (alumniId: string, email: string) => {
+    if (!window.confirm(`Kirim email pengingat pengisian data Tracer Study ke alumni ${email}?`)) {
+      return;
+    }
+    setSendingEmailId(alumniId);
+    try {
+      await axios.post('/api/admin/alumni/send-reminder', { alumniId });
+      Toast('Email pengingat berhasil dikirim!', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim email pengingat',
+        'error',
+      );
+    } finally {
+      setSendingEmailId(null);
+    }
+  };
+
+  const handleSendBulkReminder = async () => {
+    const defaultVal = filters.graduationYear || '';
+    const inputYear = window.prompt(
+      "Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n" +
+      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
+      "Batal/kosongkan untuk membatalkan.",
+      defaultVal
+    );
+
+    if (inputYear === null) {
+      return; // Batal
+    }
+
+    const trimmedInput = inputYear.trim().toLowerCase();
+    if (trimmedInput === '') {
+      Toast('Pengiriman dibatalkan. Tahun tidak boleh kosong.', 'error');
+      return;
+    }
+
+    const payload: any = {};
+
+    if (trimmedInput === 'semua') {
+      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke SELURUH ANGKATAN alumni yang datanya belum lengkap?')) {
+        return;
+      }
+      payload.sendToAll = true;
+    } else {
+      const graduationYear = parseInt(trimmedInput);
+      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+        Toast('Tahun kelulusan tidak valid!', 'error');
+        return;
+      }
+      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke alumni angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`)) {
+        return;
+      }
+      payload.graduationYear = graduationYear;
+    }
+
+    setSendingBulk(true);
+    try {
+      const response = await axios.post('/api/admin/alumni/send-reminder', payload);
+      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        'error',
+      );
+    } finally {
+      setSendingBulk(false);
     }
   };
 
@@ -250,12 +323,22 @@ const AdminAlumni = () => {
         title='Kelola Data Alumni'
         description='Memantau dan mengelola data alumni terdaftar'
       >
-        <button
-          onClick={() => setShowFilters(!showFilters)}
-          className='max-w-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
-        >
-          <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Data'}
-        </button>
+        <div className='flex gap-2 flex-wrap'>
+          <button
+            onClick={handleSendBulkReminder}
+            disabled={sendingBulk}
+            className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            title='Kirim pengingat email ke semua alumni yang belum melengkapi data sesuai filter'
+          >
+            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Kirim Pengingat Massal'}
+          </button>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className='max-w-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
+          >
+            <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Data'}
+          </button>
+        </div>
       </PageHeader>
 
       {/* Filters */}
@@ -535,6 +618,16 @@ const AdminAlumni = () => {
                 </TableCell>
                 <TableCell>
                   <div className='flex gap-1'>
+                    {isUniversityIncomplete(alum) && (
+                      <button
+                        onClick={() => handleSendReminder(alum._id, alum.email)}
+                        disabled={sendingEmailId !== null}
+                        className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
+                        title='Kirim Email Pengingat'
+                      >
+                        <FaEnvelope className={sendingEmailId === alum._id ? 'animate-pulse' : ''} size={14} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleEdit(alum)}
                       className='rounded p-2 text-amber-500 hover:bg-amber-50 hover:text-amber-700 transition-colors dark:hover:bg-amber-900/20'

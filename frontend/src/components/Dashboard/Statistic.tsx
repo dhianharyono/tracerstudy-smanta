@@ -12,6 +12,8 @@ import {
 interface StatsObject {
   totalAlumni: number | string;
   totalStudents?: number | string;
+  completedStudentsCount?: number | string;
+  incompleteStudentsCount?: number | string;
   workingAlumni: number | string;
   studyingAlumni: number | string;
   totalMentors?: number | string;
@@ -73,8 +75,8 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   const totalAlumni = Number(stats?.totalAlumni || 0);
   const completed = Number(stats?.completedQuestionnaire || 0);
-  const incompleteAlumni = stats?.incompleteCount !== undefined 
-    ? Number(stats.incompleteCount) 
+  const incompleteAlumni = stats?.incompleteCount !== undefined
+    ? Number(stats.incompleteCount)
     : Math.max(0, totalAlumni - completed);
 
   const statItems = [
@@ -99,11 +101,11 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
     ...(isAdmin
       ? [
         {
-          title: 'Online Users',
-          value: stats?.onlineUsers || 0,
+          title: 'Data Alumni Belum Lengkap',
+          value: incompleteAlumni,
           icon: FaUserTimes,
-          colorClass: 'text-green-600 dark:text-green-400',
-          bgClass: 'bg-green-100 dark:bg-green-900/50',
+          colorClass: 'text-red-600 dark:text-red-400',
+          bgClass: 'bg-red-100 dark:bg-red-900/50',
         },
       ]
       : []),
@@ -121,11 +123,22 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
     ...(isAdmin
       ? [
         {
-          title: 'Belum Melengkapi',
-          value: incompleteAlumni,
+          title: 'Data Siswa Belum Lengkap',
+          value: stats?.incompleteStudentsCount,
           icon: FaUserTimes,
-          colorClass: 'text-red-600 dark:text-red-400',
-          bgClass: 'bg-red-100 dark:bg-red-900/50',
+          colorClass: 'text-rose-600 dark:text-rose-400',
+          bgClass: 'bg-rose-100 dark:bg-rose-900/50',
+        },
+      ]
+      : []),
+    ...(isAdmin
+      ? [
+        {
+          title: 'Online Users',
+          value: stats?.onlineUsers || 0,
+          icon: FaUserTimes,
+          colorClass: 'text-green-600 dark:text-green-400',
+          bgClass: 'bg-green-100 dark:bg-green-900/50',
         },
       ]
       : []),
@@ -168,7 +181,11 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   return (
     <div
-      className={`grid grid-cols-2 ${isAdmin || isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+      className={`grid grid-cols-2 ${isAdmin
+        ? 'lg:grid-cols-3 xl:grid-cols-5'
+        : isStudent
+          ? 'lg:grid-cols-3'
+          : 'lg:grid-cols-4'
         } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (

@@ -10,7 +10,7 @@ import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import { ensureUniversityExists } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
-import { sendAlumniUpgradeReminder } from '../utils/mailer';
+import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder } from '../utils/mailer';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -130,11 +130,31 @@ router.get('/dashboard', async (req: Request, res: Response) => {
           totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
           totalStudents: [{ $match: { role: 'student' } }, { $count: 'count' }],
           completedStudents: [
-            { $match: { role: 'student', questionnaireCompleted: true } },
+            {
+              $match: {
+                role: 'student',
+                'profile.fullName': { $exists: true, $nin: [null, ''] },
+                'profile.entryYear': { $exists: true, $ne: null },
+                'profile.graduationYear': { $exists: true, $ne: null }
+              }
+            },
             { $count: 'count' },
           ],
           incompleteStudents: [
-            { $match: { role: 'student', questionnaireCompleted: false } },
+            {
+              $match: {
+                role: 'student',
+                $or: [
+                  { 'profile': { $exists: false } },
+                  { 'profile.fullName': { $exists: false } },
+                  { 'profile.fullName': { $in: [null, ''] } },
+                  { 'profile.entryYear': { $exists: false } },
+                  { 'profile.entryYear': null },
+                  { 'profile.graduationYear': { $exists: false } },
+                  { 'profile.graduationYear': null }
+                ]
+              }
+            },
             { $count: 'count' },
           ],
           studentYearStats: [
@@ -755,7 +775,7 @@ router.get('/students', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
-    const { search, entryYear, graduationYear } = req.query;
+    const { search, entryYear, graduationYear, status } = req.query;
 
     const query: any = { role: 'student' };
 
@@ -773,6 +793,24 @@ router.get('/students', async (req: Request, res: Response) => {
 
     if (graduationYear) {
       query['profile.graduationYear'] = parseInt(graduationYear as string);
+    }
+
+    if (status) {
+      if (status === 'complete') {
+        query['profile.fullName'] = { $exists: true, $nin: [null, ''] };
+        query['profile.entryYear'] = { $exists: true, $ne: null };
+        query['profile.graduationYear'] = { $exists: true, $ne: null };
+      } else if (status === 'incomplete') {
+        query.$or = [
+          { 'profile': { $exists: false } },
+          { 'profile.fullName': { $exists: false } },
+          { 'profile.fullName': { $in: [null, ''] } },
+          { 'profile.entryYear': { $exists: false } },
+          { 'profile.entryYear': null },
+          { 'profile.graduationYear': { $exists: false } },
+          { 'profile.graduationYear': null }
+        ];
+      }
     }
 
     const students = await User.find(query)
@@ -800,7 +838,7 @@ router.get('/students', async (req: Request, res: Response) => {
 // Create student
 router.post('/students', async (req: Request, res: Response) => {
   try {
-    const { username, email, password, fullName } = req.body;
+    const { username, email, password, fullName, entryYear, graduationYear } = req.body;
 
     if (!username || !email || !password) {
       return res
@@ -818,6 +856,8 @@ router.post('/students', async (req: Request, res: Response) => {
       role: 'student',
       profile: {
         fullName: fullName || '',
+        entryYear: entryYear ? parseInt(entryYear) : undefined,
+        graduationYear: graduationYear ? parseInt(graduationYear) : undefined,
       },
     });
 
@@ -842,23 +882,25 @@ router.post('/students', async (req: Request, res: Response) => {
 // Update student
 router.put('/students/:id', async (req: Request, res: Response) => {
   try {
-    const { password, ...updateData } = req.body;
+    const { username, email, password, fullName, entryYear, graduationYear } = req.body;
 
-    const update: any = { ...updateData };
+    const update: any = {};
+    if (username !== undefined) update.username = username;
+    if (email !== undefined) update.email = email;
     if (password) {
       const salt = await bcrypt.genSalt(10);
       update.password = await bcrypt.hash(password, salt);
     }
 
     const profileUpdates: any = {};
-    if (updateData.fullName !== undefined) {
-      profileUpdates['profile.fullName'] = updateData.fullName;
+    if (fullName !== undefined) {
+      profileUpdates['profile.fullName'] = fullName;
     }
-    if (updateData.entryYear !== undefined) {
-      profileUpdates['profile.entryYear'] = updateData.entryYear;
+    if (entryYear !== undefined) {
+      profileUpdates['profile.entryYear'] = entryYear ? parseInt(entryYear) : null;
     }
-    if (updateData.graduationYear !== undefined) {
-      profileUpdates['profile.graduationYear'] = updateData.graduationYear;
+    if (graduationYear !== undefined) {
+      profileUpdates['profile.graduationYear'] = graduationYear ? parseInt(graduationYear) : null;
     }
 
     const student = await User.findOneAndUpdate(
@@ -1684,6 +1726,99 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
     res.json({
       message: `Email pengingat berhasil dikirim ke ${successCount} siswa${failCount > 0 ? `, gagal: ${failCount}` : ''}.`,
       count: targetStudents.length,
+      successCount,
+      failCount,
+      errors: errors.length > 0 ? errors : undefined,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Send email reminder to alumni to fill/complete questionnaire
+router.post('/alumni/send-reminder', async (req: Request, res: Response) => {
+  try {
+    const { alumniId, graduationYear } = req.body;
+
+    let targetAlumni: any[] = [];
+
+    if (alumniId) {
+      // Send to a single alumni
+      const alum = await User.findOne({ _id: alumniId, role: 'alumni' });
+      if (!alum) {
+        return res.status(404).json({ message: 'Alumni tidak ditemukan' });
+      }
+      targetAlumni = [alum];
+    } else {
+      const query: any = { role: 'alumni' };
+      
+      // We only want alumni whose data is incomplete
+      query['$or'] = [
+        { questionnaireCompleted: { $ne: true } },
+        { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
+      ];
+
+      if (graduationYear) {
+        query['profile.graduationYear'] = parseInt(graduationYear);
+      }
+
+      targetAlumni = await User.find(query);
+    }
+
+    if (targetAlumni.length === 0) {
+      return res.status(404).json({ message: 'Tidak ada alumni yang memenuhi kriteria pengiriman email.' });
+    }
+
+    let successCount = 0;
+    let failCount = 0;
+    const errors: { email: string; error: string }[] = [];
+
+    for (const alum of targetAlumni) {
+      if (!alum.email) {
+        failCount++;
+        errors.push({
+          email: alum.username || 'unknown',
+          error: 'Alumni tidak memiliki alamat email.',
+        });
+        continue;
+      }
+      const name = alum.profile?.fullName || alum.username;
+      const result = await sendAlumniIncompleteReminder(alum.email, name);
+      if (result.success) {
+        successCount++;
+      } else {
+        failCount++;
+        errors.push({
+          email: alum.email,
+          error: result.error || 'Gagal mengirim email.',
+        });
+      }
+    }
+
+    // Log to AuditLog
+    try {
+      await AuditLog.create({
+        action: 'SEND_ALUMNI_EMAIL_REMINDER',
+        actor: {
+          userId: (req as any).user?._id || null,
+          username: (req as any).user?.username || 'system',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'alumni',
+          name: alumniId
+            ? (targetAlumni[0].profile?.fullName || targetAlumni[0].username)
+            : `Bulk (${targetAlumni.length} alumni)`,
+        },
+        details: `Mengirim email pengingat kuesioner ke ${successCount} alumni (gagal: ${failCount})`,
+      });
+    } catch (err) {
+      console.error('Failed to write AuditLog for alumni email reminders:', err);
+    }
+
+    res.json({
+      message: `Email pengingat berhasil dikirim ke ${successCount} alumni${failCount > 0 ? `, gagal: ${failCount}` : ''}.`,
+      count: targetAlumni.length,
       successCount,
       failCount,
       errors: errors.length > 0 ? errors : undefined,

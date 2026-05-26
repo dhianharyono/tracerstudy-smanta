@@ -113,3 +113,91 @@ export const sendAlumniUpgradeReminder = async (
     return { success: false, error: error?.message || String(error) };
   }
 };
+
+export const sendAlumniIncompleteReminder = async (
+  toEmail: string,
+  fullName: string,
+): Promise<{ success: boolean; error?: string }> => {
+  const transporter = getTransporter();
+  if (!transporter) {
+    const errorMsg = 'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
+    console.error(`${errorMsg} Cannot send email to:`, toEmail);
+    return { success: false, error: errorMsg };
+  }
+
+  const frontendUrl = 'https://tracerstudy-smanta.vercel.app/';
+  const loginUrl = `${frontendUrl}/login`;
+
+  const mailOptions = {
+    from: `"Tracer Study SMA Negeri 1 Tawangsari" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject:
+      'PENTING: Pengisian Data Tracer Study SMA Negeri 1 Tawangsari',
+    html: `
+      <div style="background-color: #f3f4f6; padding: 40px 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb;">
+          
+          <!-- HEADER -->
+          <tr>
+            <td style="background-color: #1e3a8a; padding: 35px 20px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">SMA NEGERI 1 TAWANGSARI</h1>
+              <p style="color: #93c5fd; margin: 5px 0 0 0; font-size: 14px; font-weight: 500;">Tracer Study & Manajemen Data Alumni</p>
+            </td>
+          </tr>
+          
+          <!-- BODY -->
+          <tr>
+            <td style="padding: 40px 30px; color: #374151; line-height: 1.6;">
+              <h2 style="color: #111827; margin-top: 0; font-size: 20px; font-weight: 700;">Halo, ${fullName}! 👋</h2>
+              <p style="margin-bottom: 20px; font-size: 15px;">Kami harap kabar Anda baik dan selalu sukses dalam menjalankan aktivitas sehari-hari.</p>
+              
+              <p style="margin-bottom: 20px; font-size: 15px;">Berdasarkan data sistem Tracer Study SMA Negeri 1 Tawangsari, kami melihat bahwa profil alumni Anda saat ini <strong>belum terisi secara lengkap</strong> (kuesioner/informasi universitas/pekerjaan masih kosong atau kurang lengkap).</p>
+              
+              <!-- LANGKAH-LANGKAH -->
+              <div style="background-color: #f9fafb; border-left: 4px solid #f59e0b; padding: 20px; margin: 25px 0; border-radius: 0 8px 8px 0;">
+                <h3 style="margin-top: 0; margin-bottom: 12px; color: #b45309; font-size: 16px; font-weight: 600;">Langkah Mudah Melengkapi Data Alumni:</h3>
+                <ol style="margin: 0; padding-left: 20px; font-size: 14.5px; color: #4b5563;">
+                  <li style="margin-bottom: 10px;"><strong>Login ke Akun Alumni</strong>: Masuk ke dashboard Tracer Study dengan menggunakan akun alumni Anda.</li>
+                  <li style="margin-bottom: 10px;"><strong>Isi Kuesioner & Profil</strong>: Pilih menu Kuesioner atau Profil, lalu lengkapi data perguruan tinggi, riwayat pekerjaan, dan media sosial Anda secara lengkap.</li>
+                  <li style="margin-bottom: 0;"><strong>Simpan Perubahan</strong>: Pastikan Anda menekan tombol simpan agar status data Anda terverifikasi sebagai <strong>Lengkap</strong>.</li>
+                </ol>
+              </div>
+
+              <!-- BUTTON CTA -->
+              <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 35px auto;">
+                <tr>
+                  <td align="center" style="border-radius: 8px; background-color: #2563eb; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);">
+                    <a href="${loginUrl}" target="_blank" style="display: inline-block; padding: 14px 32px; font-size: 15px; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 8px; letter-spacing: 0.5px;">
+                      Lengkapi Data Sekarang &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <p style="margin-bottom: 0; font-size: 14px; color: #6b7280; text-align: center; font-style: italic;">
+                *Partisipasi Anda dalam mengisi Tracer Study sangat berharga untuk peningkatan mutu kurikulum, akreditasi sekolah, serta jaringan alumni SMAN 1 Tawangsari.
+              </p>
+            </td>
+          </tr>
+          
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 25px 30px; text-align: center; border-top: 1px solid #e5e7eb; color: #9ca3af; font-size: 12px; line-height: 1.5;">
+              <p style="margin: 0 0 5px 0; font-weight: 500; color: #6b7280;">Sistem Informasi Tracer Study SMAN 1 Tawangsari</p>
+              <p style="margin: 0;">Email ini dikirim secara otomatis oleh sistem. Jika Anda sudah melengkapi data Tracer Study Anda, mohon abaikan email ini.</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email reminder sent to alumni ${toEmail}: ${info.messageId}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error(`Error sending email to alumni ${toEmail}:`, error);
+    return { success: false, error: error?.message || String(error) };
+  }
+};

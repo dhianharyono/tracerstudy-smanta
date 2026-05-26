@@ -43,8 +43,8 @@ router.put('/profile', authenticate, async (req: AuthenticatedRequest, res: Resp
         const fullName = profile?.fullName?.trim();
         if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
         if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-        if (!/^[a-zA-Z\s\.\']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
-        if (/^[\.\-\_\s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+        if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+        if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
             return res.status(400).json({ message: 'Nama lengkap tidak valid' });
         }
 
