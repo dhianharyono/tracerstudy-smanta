@@ -156,7 +156,7 @@ app.get('/api/health', (req, res) => {
 });
 
 // Error handling middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
   const status = err.status || 500;
   const message =

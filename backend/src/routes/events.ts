@@ -28,7 +28,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
         }
 
         const limit = req.query.limit ? parseInt(req.query.limit as string) : 0;
-        const sort = { date: 1 }; // Upcoming events first? or recently created? Schema has date. Usually for events "Upcoming" means date >= now.
+        // Upcoming events first? or recently created? Schema has date. Usually for events "Upcoming" means date >= now.
 
         // If limit is set, we probably want the *next* upcoming events, or closest to now.
         // Existing code sorts by date: 1 (ascending).

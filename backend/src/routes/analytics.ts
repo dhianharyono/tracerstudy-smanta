@@ -10,8 +10,7 @@ router.use(authenticate);
 router.post('/log', async (req: Request, res: Response) => {
     try {
         const { path, menuName } = req.body;
-        // @ts-ignore
-        const user = req.user!;
+        const user = (req as any).user!;
 
         if (user.role === 'admin') {
             return res.status(200).json({ message: 'Admin activity ignored' });
@@ -36,7 +35,7 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
     try {
         // 1. Visits over time (last 7 days)
         const period = (req.query.period as string) || 'week'; // 'today', 'yesterday', 'week', 'month', 'year'
-        let startDate = new Date();
+        const startDate = new Date();
         let endDate: Date | undefined = undefined;
         let groupFormat = '%Y-%m-%d';
 

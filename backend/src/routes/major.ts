@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import Major from '../models/Major';
-import { authenticate, authorize } from '../middleware/auth';
+import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
 

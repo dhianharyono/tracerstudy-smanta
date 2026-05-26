@@ -58,7 +58,12 @@ const AdminStudents = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, [pagination.page, filters.entryYear, filters.graduationYear, filters.status]);
+  }, [
+    pagination.page,
+    filters.entryYear,
+    filters.graduationYear,
+    filters.status,
+  ]);
 
   // Debounced search
   useEffect(() => {
@@ -72,17 +77,25 @@ const AdminStudents = () => {
     return () => clearTimeout(timer);
   }, [filters.search]);
 
-  const handleSendReminder = async (studentId: string, email: string, type: 'upgrade' | 'incomplete') => {
-    const confirmMessage = type === 'upgrade'
-      ? `Kirim email pengingat upgrade status alumni ke siswa ${email}?`
-      : `Kirim email pengingat kelengkapan data ke siswa ${email}?`;
+  const handleSendReminder = async (
+    studentId: string,
+    email: string,
+    type: 'upgrade' | 'incomplete',
+  ) => {
+    const confirmMessage =
+      type === 'upgrade'
+        ? `Kirim email pengingat upgrade status alumni ke siswa ${email}?`
+        : `Kirim email pengingat kelengkapan data ke siswa ${email}?`;
 
     if (!window.confirm(confirmMessage)) {
       return;
     }
     setSendingEmailId(studentId);
     try {
-      await axios.post('/api/admin/students/send-reminder', { studentId, type });
+      await axios.post('/api/admin/students/send-reminder', {
+        studentId,
+        type,
+      });
       Toast('Email pengingat berhasil dikirim!', 'success');
     } catch (error: any) {
       Toast(
@@ -97,11 +110,11 @@ const AdminStudents = () => {
   const handleSendBulkUpgradeReminder = async () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
-      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n" +
-      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
-      "Batal/kosongkan untuk membatalkan.",
-      defaultVal
+      'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n' +
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
+      defaultVal,
     );
 
     if (inputYear === null) {
@@ -117,17 +130,29 @@ const AdminStudents = () => {
     const payload: any = { type: 'upgrade' };
 
     if (trimmedInput === 'semua') {
-      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke SELURUH ANGKATAN siswa?')) {
+      if (
+        !window.confirm(
+          'Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke SELURUH ANGKATAN siswa?',
+        )
+      ) {
         return;
       }
       payload.sendToAll = true;
     } else {
       const graduationYear = parseInt(trimmedInput);
-      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+      if (
+        isNaN(graduationYear) ||
+        graduationYear < 1900 ||
+        graduationYear > 2100
+      ) {
         Toast('Tahun kelulusan tidak valid!', 'error');
         return;
       }
-      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke siswa angkatan lulus tahun ${graduationYear}?`)) {
+      if (
+        !window.confirm(
+          `Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke siswa angkatan lulus tahun ${graduationYear}?`,
+        )
+      ) {
         return;
       }
       payload.graduationYear = graduationYear;
@@ -135,11 +160,19 @@ const AdminStudents = () => {
 
     setSendingBulk(true);
     try {
-      const response = await axios.post('/api/admin/students/send-reminder', payload);
-      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+      const response = await axios.post(
+        '/api/admin/students/send-reminder',
+        payload,
+      );
+      Toast(
+        response.data.message ||
+          'Proses pengiriman email massal telah dimulai!',
+        'success',
+      );
     } catch (error: any) {
       Toast(
-        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        error.response?.data?.message ||
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -150,11 +183,11 @@ const AdminStudents = () => {
   const handleSendBulkIncompleteReminder = async () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
-      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n" +
-      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
-      "Batal/kosongkan untuk membatalkan.",
-      defaultVal
+      'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n' +
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
+      defaultVal,
     );
 
     if (inputYear === null) {
@@ -170,17 +203,29 @@ const AdminStudents = () => {
     const payload: any = { type: 'incomplete' };
 
     if (trimmedInput === 'semua') {
-      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke SELURUH ANGKATAN siswa yang datanya belum lengkap?')) {
+      if (
+        !window.confirm(
+          'Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke SELURUH ANGKATAN siswa yang datanya belum lengkap?',
+        )
+      ) {
         return;
       }
       payload.sendToAll = true;
     } else {
       const graduationYear = parseInt(trimmedInput);
-      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+      if (
+        isNaN(graduationYear) ||
+        graduationYear < 1900 ||
+        graduationYear > 2100
+      ) {
         Toast('Tahun kelulusan tidak valid!', 'error');
         return;
       }
-      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke siswa angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`)) {
+      if (
+        !window.confirm(
+          `Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke siswa angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`,
+        )
+      ) {
         return;
       }
       payload.graduationYear = graduationYear;
@@ -188,11 +233,19 @@ const AdminStudents = () => {
 
     setSendingBulk(true);
     try {
-      const response = await axios.post('/api/admin/students/send-reminder', payload);
-      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+      const response = await axios.post(
+        '/api/admin/students/send-reminder',
+        payload,
+      );
+      Toast(
+        response.data.message ||
+          'Proses pengiriman email massal telah dimulai!',
+        'success',
+      );
     } catch (error: any) {
       Toast(
-        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        error.response?.data?.message ||
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -207,7 +260,9 @@ const AdminStudents = () => {
         limit: pagination.limit.toString(),
         ...(filters.search && { search: filters.search }),
         ...(filters.entryYear && { entryYear: filters.entryYear }),
-        ...(filters.graduationYear && { graduationYear: filters.graduationYear }),
+        ...(filters.graduationYear && {
+          graduationYear: filters.graduationYear,
+        }),
         ...(filters.status && { status: filters.status }),
       });
 
@@ -221,7 +276,9 @@ const AdminStudents = () => {
     }
   };
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
     setPagination({ ...pagination, page: 1 });
@@ -328,7 +385,8 @@ const AdminStudents = () => {
             className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
             title='Kirim pengingat email upgrade status alumni ke semua siswa yang datanya lengkap'
           >
-            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Upgrade'}
+            <FaEnvelope />{' '}
+            {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Upgrade'}
           </button>
           <button
             onClick={handleSendBulkIncompleteReminder}
@@ -336,7 +394,8 @@ const AdminStudents = () => {
             className='flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50'
             title='Kirim pengingat email kelengkapan data ke semua siswa yang profilnya belum lengkap'
           >
-            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Kelengkapan'}
+            <FaEnvelope />{' '}
+            {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Kelengkapan'}
           </button>
           {!showForm && (
             <button
@@ -454,7 +513,11 @@ const AdminStudents = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
                   >
-                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                    {showPassword ? (
+                      <FaEyeSlash size={14} />
+                    ) : (
+                      <FaEye size={14} />
+                    )}
                   </button>
                 </div>
               </div>
@@ -476,10 +539,8 @@ const AdminStudents = () => {
               </button>
             </div>
           </form>
-
         </Card>
-      )
-      }
+      )}
 
       <Card className='mb-6'>
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
@@ -545,9 +606,9 @@ const AdminStudents = () => {
           <TableHeadCell>Nama Lengkap</TableHeadCell>
           <TableHeadCell>Tahun Masuk</TableHeadCell>
           <TableHeadCell>Tahun Lulus</TableHeadCell>
-          <TableHeadCell>Status</TableHeadCell>
-          <TableHeadCell>Email</TableHeadCell>
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
+          <TableHeadCell>Email</TableHeadCell>
+          <TableHeadCell>Status</TableHeadCell>
           <TableHeadCell className='text-center'>Aksi</TableHeadCell>
         </TableHeader>
         <TableBody>
@@ -562,9 +623,7 @@ const AdminStudents = () => {
             </TableRow>
           ) : (
             students.map((student) => (
-              <TableRow
-                key={student._id}
-              >
+              <TableRow key={student._id}>
                 <TableCell>
                   <div className='flex items-center gap-3'>
                     <div className='h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
@@ -586,8 +645,20 @@ const AdminStudents = () => {
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {student.profile?.graduationYear || '-'}
                 </TableCell>
+                <TableCell className='text-[color:var(--text-secondary)]'>
+                  {new Date(student.createdAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </TableCell>
+                <TableCell className='text-[color:var(--text-secondary)]'>
+                  {student.email}
+                </TableCell>
                 <TableCell>
-                  {student.profile?.fullName && student.profile?.entryYear && student.profile?.graduationYear ? (
+                  {student.profile?.fullName &&
+                  student.profile?.entryYear &&
+                  student.profile?.graduationYear ? (
                     <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'>
                       Lengkap
                     </span>
@@ -597,35 +668,51 @@ const AdminStudents = () => {
                     </span>
                   )}
                 </TableCell>
-                <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.email}
-                </TableCell>
-                <TableCell className='text-[color:var(--text-secondary)]'>
-                  {new Date(student.createdAt).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </TableCell>
                 <TableCell>
                   <div className='flex items-center justify-center gap-2'>
-                    {student.profile?.fullName && student.profile?.entryYear && student.profile?.graduationYear ? (
+                    {student.profile?.fullName &&
+                    student.profile?.entryYear &&
+                    student.profile?.graduationYear ? (
                       <button
-                        onClick={() => handleSendReminder(student._id, student.email, 'upgrade')}
+                        onClick={() =>
+                          handleSendReminder(
+                            student._id,
+                            student.email,
+                            'upgrade',
+                          )
+                        }
                         disabled={sendingEmailId !== null}
                         className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
                         title='Kirim Pengingat Upgrade Akun'
                       >
-                        <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
+                        <FaEnvelope
+                          className={
+                            sendingEmailId === student._id
+                              ? 'animate-pulse'
+                              : ''
+                          }
+                        />
                       </button>
                     ) : (
                       <button
-                        onClick={() => handleSendReminder(student._id, student.email, 'incomplete')}
+                        onClick={() =>
+                          handleSendReminder(
+                            student._id,
+                            student.email,
+                            'incomplete',
+                          )
+                        }
                         disabled={sendingEmailId !== null}
                         className='rounded p-2 text-teal-600 hover:bg-teal-50 hover:text-teal-700 transition-colors dark:text-teal-400 dark:hover:bg-teal-900/20 disabled:opacity-50'
                         title='Kirim Pengingat Kelengkapan Data'
                       >
-                        <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
+                        <FaEnvelope
+                          className={
+                            sendingEmailId === student._id
+                              ? 'animate-pulse'
+                              : ''
+                          }
+                        />
                       </button>
                     )}
                     <button
@@ -663,7 +750,7 @@ const AdminStudents = () => {
           })
         }
       />
-    </div >
+    </div>
   );
 };
 

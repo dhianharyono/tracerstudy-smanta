@@ -1645,7 +1645,7 @@ router.delete('/college-plans/:id', async (req: Request, res: Response) => {
 // Send email reminder to students to upgrade status or complete profile
 router.post('/students/send-reminder', async (req: Request, res: Response) => {
   try {
-    const { studentId, graduationYear, sendToAll, type } = req.body;
+    const { studentId, graduationYear, type } = req.body;
     const isUpgrade = type === 'upgrade' || !type;
 
     let targetStudents: any[] = [];
