@@ -72,13 +72,17 @@ const AdminStudents = () => {
     return () => clearTimeout(timer);
   }, [filters.search]);
 
-  const handleSendReminder = async (studentId: string, email: string) => {
-    if (!window.confirm(`Kirim email pengingat Tracer Study ke siswa ${email}?`)) {
+  const handleSendReminder = async (studentId: string, email: string, type: 'upgrade' | 'incomplete') => {
+    const confirmMessage = type === 'upgrade'
+      ? `Kirim email pengingat upgrade status alumni ke siswa ${email}?`
+      : `Kirim email pengingat kelengkapan data ke siswa ${email}?`;
+
+    if (!window.confirm(confirmMessage)) {
       return;
     }
     setSendingEmailId(studentId);
     try {
-      await axios.post('/api/admin/students/send-reminder', { studentId });
+      await axios.post('/api/admin/students/send-reminder', { studentId, type });
       Toast('Email pengingat berhasil dikirim!', 'success');
     } catch (error: any) {
       Toast(
@@ -90,10 +94,10 @@ const AdminStudents = () => {
     }
   };
 
-  const handleSendBulkReminder = async () => {
+  const handleSendBulkUpgradeReminder = async () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
-      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat.\n\n" +
+      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n" +
       "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
       "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
       "Batal/kosongkan untuk membatalkan.",
@@ -110,10 +114,10 @@ const AdminStudents = () => {
       return;
     }
 
-    const payload: any = {};
+    const payload: any = { type: 'upgrade' };
 
     if (trimmedInput === 'semua') {
-      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke SELURUH ANGKATAN siswa?')) {
+      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke SELURUH ANGKATAN siswa?')) {
         return;
       }
       payload.sendToAll = true;
@@ -123,7 +127,60 @@ const AdminStudents = () => {
         Toast('Tahun kelulusan tidak valid!', 'error');
         return;
       }
-      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke siswa angkatan lulus tahun ${graduationYear}?`)) {
+      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat upgrade status alumni ke siswa angkatan lulus tahun ${graduationYear}?`)) {
+        return;
+      }
+      payload.graduationYear = graduationYear;
+    }
+
+    setSendingBulk(true);
+    try {
+      const response = await axios.post('/api/admin/students/send-reminder', payload);
+      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        'error',
+      );
+    } finally {
+      setSendingBulk(false);
+    }
+  };
+
+  const handleSendBulkIncompleteReminder = async () => {
+    const defaultVal = filters.graduationYear || '';
+    const inputYear = window.prompt(
+      "Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n" +
+      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
+      "Batal/kosongkan untuk membatalkan.",
+      defaultVal
+    );
+
+    if (inputYear === null) {
+      return; // Batal
+    }
+
+    const trimmedInput = inputYear.trim().toLowerCase();
+    if (trimmedInput === '') {
+      Toast('Pengiriman dibatalkan. Tahun tidak boleh kosong.', 'error');
+      return;
+    }
+
+    const payload: any = { type: 'incomplete' };
+
+    if (trimmedInput === 'semua') {
+      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke SELURUH ANGKATAN siswa yang datanya belum lengkap?')) {
+        return;
+      }
+      payload.sendToAll = true;
+    } else {
+      const graduationYear = parseInt(trimmedInput);
+      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+        Toast('Tahun kelulusan tidak valid!', 'error');
+        return;
+      }
+      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat kelengkapan data ke siswa angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`)) {
         return;
       }
       payload.graduationYear = graduationYear;
@@ -266,12 +323,20 @@ const AdminStudents = () => {
       >
         <div className='flex gap-2 flex-wrap'>
           <button
-            onClick={handleSendBulkReminder}
+            onClick={handleSendBulkUpgradeReminder}
             disabled={sendingBulk}
             className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
-            title='Kirim pengingat email ke semua siswa sesuai filter tahun lulus'
+            title='Kirim pengingat email upgrade status alumni ke semua siswa yang datanya lengkap'
           >
-            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Kirim Pengingat Massal'}
+            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Upgrade'}
+          </button>
+          <button
+            onClick={handleSendBulkIncompleteReminder}
+            disabled={sendingBulk}
+            className='flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50'
+            title='Kirim pengingat email kelengkapan data ke semua siswa yang profilnya belum lengkap'
+          >
+            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Blast Pengingat Kelengkapan'}
           </button>
           {!showForm && (
             <button
@@ -544,14 +609,25 @@ const AdminStudents = () => {
                 </TableCell>
                 <TableCell>
                   <div className='flex items-center justify-center gap-2'>
-                    <button
-                      onClick={() => handleSendReminder(student._id, student.email)}
-                      disabled={sendingEmailId !== null}
-                      className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
-                      title='Kirim Email Pengingat'
-                    >
-                      <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
-                    </button>
+                    {student.profile?.fullName && student.profile?.entryYear && student.profile?.graduationYear ? (
+                      <button
+                        onClick={() => handleSendReminder(student._id, student.email, 'upgrade')}
+                        disabled={sendingEmailId !== null}
+                        className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
+                        title='Kirim Pengingat Upgrade Akun'
+                      >
+                        <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleSendReminder(student._id, student.email, 'incomplete')}
+                        disabled={sendingEmailId !== null}
+                        className='rounded p-2 text-teal-600 hover:bg-teal-50 hover:text-teal-700 transition-colors dark:text-teal-400 dark:hover:bg-teal-900/20 disabled:opacity-50'
+                        title='Kirim Pengingat Kelengkapan Data'
+                      >
+                        <FaEnvelope className={sendingEmailId === student._id ? 'animate-pulse' : ''} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleEdit(student)}
                       className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'

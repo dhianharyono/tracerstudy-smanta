@@ -79,6 +79,109 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
     ? Number(stats.incompleteCount)
     : Math.max(0, totalAlumni - completed);
 
+  if (isAdmin) {
+    const mainStats = [
+      {
+        title: 'Total Alumni',
+        value: stats?.totalAlumni,
+        icon: FaUsers,
+        colorClass: 'text-blue-600 dark:text-blue-400',
+        bgClass: 'bg-blue-100 dark:bg-blue-900/50',
+      },
+      {
+        title: 'Total Siswa',
+        value: stats?.totalStudents,
+        icon: FaUserGraduate,
+        colorClass: 'text-cyan-600 dark:text-cyan-400',
+        bgClass: 'bg-cyan-100 dark:bg-cyan-900/50',
+      },
+      {
+        title: 'Online Users',
+        value: stats?.onlineUsers || 0,
+        icon: FaUserTimes,
+        colorClass: 'text-green-600 dark:text-green-400',
+        bgClass: 'bg-green-100 dark:bg-green-900/50',
+      },
+    ];
+
+    const incompleteStats = [
+      {
+        title: 'Data Alumni Belum Lengkap',
+        value: incompleteAlumni,
+        icon: FaUserTimes,
+        colorClass: 'text-red-600 dark:text-red-400',
+        bgClass: 'bg-red-100 dark:bg-red-900/50',
+      },
+      {
+        title: 'Data Siswa Belum Lengkap',
+        value: stats?.incompleteStudentsCount,
+        icon: FaUserTimes,
+        colorClass: 'text-rose-600 dark:text-rose-400',
+        bgClass: 'bg-rose-100 dark:bg-rose-900/50',
+      },
+    ];
+
+    const alumniDetails = [
+      {
+        title: 'Alumni Bekerja',
+        value: stats?.workingAlumni,
+        icon: FaBriefcase,
+        colorClass: 'text-amber-600 dark:text-amber-400',
+        bgClass: 'bg-amber-100 dark:bg-amber-900/50',
+      },
+      {
+        title: 'Alumni Kuliah',
+        value: stats?.studyingAlumni,
+        icon: FaGraduationCap,
+        colorClass: 'text-green-600 dark:text-green-400',
+        bgClass: 'bg-green-100 dark:bg-green-900/50',
+      },
+      {
+        title: 'PTN',
+        value: stats?.universityTypes?.negeri,
+        icon: FaUniversity,
+        colorClass: 'text-purple-600 dark:text-purple-400',
+        bgClass: 'bg-purple-100 dark:bg-purple-900/50',
+      },
+      {
+        title: 'PTS',
+        value: stats?.universityTypes?.swasta,
+        icon: FaUniversity,
+        colorClass: 'text-pink-600 dark:text-pink-400',
+        bgClass: 'bg-pink-100 dark:bg-pink-900/50',
+      },
+      {
+        title: 'Kedinasan',
+        value: stats?.universityTypes?.kedinasan,
+        icon: FaUniversity,
+        colorClass: 'text-indigo-600 dark:text-indigo-400',
+        bgClass: 'bg-indigo-100 dark:bg-indigo-900/50',
+      },
+    ];
+
+    return (
+      <div className='space-y-6 mb-8'>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+          {mainStats.map((item, index) => (
+            <StatCard key={index} {...item} />
+          ))}
+        </div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+          {incompleteStats.map((item, index) => (
+            <StatCard key={index} {...item} />
+          ))}
+        </div>
+
+        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
+          {alumniDetails.map((item, index) => (
+            <StatCard key={index} {...item} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   const statItems = [
     {
       title: 'Total Alumni',
@@ -87,7 +190,7 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       colorClass: 'text-blue-600 dark:text-blue-400',
       bgClass: 'bg-blue-100 dark:bg-blue-900/50',
     },
-    ...(isAdmin || isAlumni
+    ...(isAlumni
       ? [
         {
           title: 'Total Siswa',
@@ -98,47 +201,14 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
         },
       ]
       : []),
-    ...(isAdmin
-      ? [
-        {
-          title: 'Data Alumni Belum Lengkap',
-          value: incompleteAlumni,
-          icon: FaUserTimes,
-          colorClass: 'text-red-600 dark:text-red-400',
-          bgClass: 'bg-red-100 dark:bg-red-900/50',
-        },
-      ]
-      : []),
     ...(isAlumni
       ? [
         {
-          title: isAdmin ? 'Total Mentor' : 'Mentor Aktif',
-          value: isAdmin ? stats?.totalMentors : stats?.activeMentors,
+          title: 'Mentor Aktif',
+          value: stats?.activeMentors,
           icon: FaCrown,
           colorClass: 'text-yellow-600 dark:text-yellow-400',
           bgClass: 'bg-yellow-100 dark:bg-yellow-900/50',
-        },
-      ]
-      : []),
-    ...(isAdmin
-      ? [
-        {
-          title: 'Data Siswa Belum Lengkap',
-          value: stats?.incompleteStudentsCount,
-          icon: FaUserTimes,
-          colorClass: 'text-rose-600 dark:text-rose-400',
-          bgClass: 'bg-rose-100 dark:bg-rose-900/50',
-        },
-      ]
-      : []),
-    ...(isAdmin
-      ? [
-        {
-          title: 'Online Users',
-          value: stats?.onlineUsers || 0,
-          icon: FaUserTimes,
-          colorClass: 'text-green-600 dark:text-green-400',
-          bgClass: 'bg-green-100 dark:bg-green-900/50',
         },
       ]
       : []),
@@ -181,11 +251,9 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   return (
     <div
-      className={`grid grid-cols-2 ${isAdmin
-        ? 'lg:grid-cols-3 xl:grid-cols-5'
-        : isStudent
-          ? 'lg:grid-cols-3'
-          : 'lg:grid-cols-4'
+      className={`grid grid-cols-2 ${isStudent
+        ? 'lg:grid-cols-3'
+        : 'lg:grid-cols-4'
         } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (

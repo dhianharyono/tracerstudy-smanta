@@ -10,7 +10,7 @@ import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import { ensureUniversityExists } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
-import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder } from '../utils/mailer';
+import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder, sendStudentIncompleteReminder } from '../utils/mailer';
 
 interface AuthenticatedRequest extends Request {
   user?: {
@@ -1642,10 +1642,11 @@ router.delete('/college-plans/:id', async (req: Request, res: Response) => {
   }
 });
 
-// Send email reminder to students to upgrade status and fill questionnaire
+// Send email reminder to students to upgrade status or complete profile
 router.post('/students/send-reminder', async (req: Request, res: Response) => {
   try {
-    const { studentId, graduationYear, sendToAll } = req.body;
+    const { studentId, graduationYear, sendToAll, type } = req.body;
+    const isUpgrade = type === 'upgrade' || !type;
 
     let targetStudents: any[] = [];
 
@@ -1656,17 +1657,27 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
         return res.status(404).json({ message: 'Siswa tidak ditemukan' });
       }
       targetStudents = [student];
-    } else if (graduationYear) {
-      // Send to all students in a graduation year
-      targetStudents = await User.find({
-        role: 'student',
-        'profile.graduationYear': parseInt(graduationYear),
-      });
-    } else if (sendToAll) {
-      // Send to all students
-      targetStudents = await User.find({ role: 'student' });
     } else {
-      return res.status(400).json({ message: 'Parameter tidak valid. Masukkan studentId, graduationYear, atau sendToAll.' });
+      const query: any = { role: 'student' };
+
+      if (!isUpgrade) {
+        // We only want students whose data is incomplete
+        query.$or = [
+          { 'profile': { $exists: false } },
+          { 'profile.fullName': { $exists: false } },
+          { 'profile.fullName': { $in: [null, ''] } },
+          { 'profile.entryYear': { $exists: false } },
+          { 'profile.entryYear': null },
+          { 'profile.graduationYear': { $exists: false } },
+          { 'profile.graduationYear': null }
+        ];
+      }
+
+      if (graduationYear) {
+        query['profile.graduationYear'] = parseInt(graduationYear);
+      }
+
+      targetStudents = await User.find(query);
     }
 
     if (targetStudents.length === 0) {
@@ -1690,7 +1701,9 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
         continue;
       }
       const name = student.profile?.fullName || student.username;
-      const result = await sendAlumniUpgradeReminder(student.email, name);
+      const result = isUpgrade
+        ? await sendAlumniUpgradeReminder(student.email, name)
+        : await sendStudentIncompleteReminder(student.email, name);
       if (result.success) {
         successCount++;
       } else {
@@ -1705,7 +1718,7 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
     // Log to AuditLog
     try {
       await AuditLog.create({
-        action: 'SEND_EMAIL_REMINDER',
+        action: isUpgrade ? 'SEND_EMAIL_REMINDER' : 'SEND_STUDENT_INCOMPLETE_REMINDER',
         actor: {
           userId: (req as any).user?._id || null,
           username: (req as any).user?.username || 'system',
@@ -1717,14 +1730,18 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
             ? (targetStudents[0].profile?.fullName || targetStudents[0].username)
             : `Bulk (${targetStudents.length} siswa)`,
         },
-        details: `Mengirim email pengingat tracer study ke ${successCount} siswa (gagal: ${failCount})`,
+        details: isUpgrade
+          ? `Mengirim email pengingat upgrade alumni ke ${successCount} siswa (gagal: ${failCount})`
+          : `Mengirim email pengingat kelengkapan data ke ${successCount} siswa (gagal: ${failCount})`,
       });
     } catch (err) {
       console.error('Failed to write AuditLog for email reminders:', err);
     }
 
     res.json({
-      message: `Email pengingat berhasil dikirim ke ${successCount} siswa${failCount > 0 ? `, gagal: ${failCount}` : ''}.`,
+      message: isUpgrade
+        ? `Email pengingat upgrade alumni berhasil dikirim ke ${successCount} siswa${failCount > 0 ? `, gagal: ${failCount}` : ''}.`
+        : `Email pengingat kelengkapan data berhasil dikirim ke ${successCount} siswa${failCount > 0 ? `, gagal: ${failCount}` : ''}.`,
       count: targetStudents.length,
       successCount,
       failCount,
