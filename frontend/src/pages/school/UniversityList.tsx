@@ -40,11 +40,11 @@ const SchoolUniversityList = () => {
 
   return (
     <div className='p-6 page-fade-in bg-[color:var(--bg-secondary)] min-h-screen'>
-      <div className='mb-8'>
-        <div className='text-3xl font-bold text-[color:var(--text-primary)]'>
+      <div className='mb-6'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
           Perguruan Tinggi
-        </div>
-        <p className='text-[color:var(--text-secondary)]'>
+        </h1>
+        <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
           Daftar perguruan tinggi tempat alumni melanjutkan studi dan statistiknya.
         </p>
       </div>

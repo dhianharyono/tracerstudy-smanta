@@ -93,18 +93,18 @@ const SchoolAlumniList = () => {
 
   return (
     <div className='p-6 page-fade-in bg-[color:var(--bg-secondary)] min-h-screen'>
-      <div className='mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4'>
-        <div>
-          <div className='text-3xl font-bold text-[color:var(--text-primary)]'>
+      <div className='mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+        <div className='mb-2 md:mb-0'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
             Data Alumni SMANTA
-          </div>
-          <p className='text-[color:var(--text-secondary)]'>
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
             Manajemen dan rekap data keterserapan alumni secara real-time.
           </p>
         </div>
         <button
           onClick={downloadCSV}
-          className='flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20'
+          className='flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20 self-start md:self-auto'
         >
           <FaDownload /> Download CSV
         </button>

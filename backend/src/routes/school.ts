@@ -41,10 +41,17 @@ router.get('/stats', async (req: Request, res: Response) => {
         const totalAlumni = await User.countDocuments({ role: 'alumni' });
         const totalStudents = await User.countDocuments({ role: 'student' });
         
-        const completedAlumni = await User.countDocuments({ 
+                const completedAlumni = await User.countDocuments({ 
             role: 'alumni', 
             questionnaireCompleted: true,
             'university.name': { $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] }
+        });
+
+        const completedStudents = await User.countDocuments({
+            role: 'student',
+            'profile.fullName': { $exists: true, $nin: [null, ''] },
+            'profile.entryYear': { $exists: true, $ne: null },
+            'profile.graduationYear': { $exists: true, $ne: null }
         });
 
         const verifiedAlumni = await User.countDocuments({ 
@@ -72,21 +79,105 @@ router.get('/stats', async (req: Request, res: Response) => {
         // Alumni by Graduation Year
         const alumniByYear = await User.aggregate([
             { $match: { role: 'alumni', 'profile.graduationYear': { $exists: true, $ne: null } } },
-            { $group: { _id: '$profile.graduationYear', count: { $sum: 1 } } },
+            { 
+                $group: { 
+                    _id: '$profile.graduationYear', 
+                    count: { $sum: 1 },
+                    completedCount: {
+                        $sum: {
+                            $cond: [
+                                {
+                                    $and: [
+                                        { $eq: ['$questionnaireCompleted', true] },
+                                        { $ne: ['$university.name', null] },
+                                        { $ne: ['$university.name', ''] },
+                                        { $ne: ['$university.name', '-'] },
+                                        { $ne: ['$university.name', 'null'] },
+                                        { $ne: ['$university.name', 'undefined'] },
+                                        { $ne: ['$university.name', 'belum ada'] },
+                                        { $ne: ['$university.name', 'tidak ada'] },
+                                        { $ne: ['$university.name', '.'] }
+                                    ]
+                                },
+                                1,
+                                0
+                            ]
+                        }
+                    }
+                } 
+            },
+            {
+                $project: {
+                    _id: 1,
+                    count: 1,
+                    completedCount: 1,
+                    incompleteCount: { $subtract: ['$count', '$completedCount'] }
+                }
+            },
             { $sort: { _id: 1 } }
         ]);
 
         // Students by Expected Graduation Year
         const studentsByYear = await User.aggregate([
             { $match: { role: 'student', 'profile.graduationYear': { $exists: true, $ne: null } } },
-            { $group: { _id: '$profile.graduationYear', count: { $sum: 1 } } },
+            { 
+                $group: { 
+                    _id: '$profile.graduationYear', 
+                    count: { $sum: 1 },
+                    completedCount: {
+                        $sum: {
+                            $cond: [
+                                {
+                                    $and: [
+                                        { $ne: ['$profile.fullName', null] },
+                                        { $ne: ['$profile.fullName', ''] },
+                                        { $ne: ['$profile.entryYear', null] },
+                                        { $ne: ['$profile.graduationYear', null] }
+                                    ]
+                                },
+                                1,
+                                0
+                            ]
+                        }
+                    }
+                } 
+            },
+            {
+                $project: {
+                    _id: 1,
+                    count: 1,
+                    completedCount: 1,
+                    incompleteCount: { $subtract: ['$count', '$completedCount'] }
+                }
+            },
             { $sort: { _id: 1 } }
         ]);
+
+        // Alumni with no graduation year
+        const alumniWithoutYear = await User.countDocuments({
+            role: 'alumni',
+            $or: [
+                { 'profile.graduationYear': { $exists: false } },
+                { 'profile.graduationYear': null }
+            ]
+        });
+
+        // Students with no graduation year
+        const studentsWithoutYear = await User.countDocuments({
+            role: 'student',
+            $or: [
+                { 'profile.graduationYear': { $exists: false } },
+                { 'profile.graduationYear': null }
+            ]
+        });
 
         res.json({
             totalAlumni,
             totalStudents,
             completedAlumni,
+            incompleteAlumni: totalAlumni - completedAlumni,
+            completedStudents,
+            incompleteStudents: totalStudents - completedStudents,
             verifiedAlumni,
             workingAlumni,
             studyingAlumni,
@@ -94,6 +185,8 @@ router.get('/stats', async (req: Request, res: Response) => {
             topMajors,
             alumniByYear,
             studentsByYear,
+            alumniWithoutYear,
+            studentsWithoutYear,
             employmentChart: [
                 { name: 'Bekerja', value: workingAlumni - bothAlumni },
                 { name: 'Kuliah', value: studyingAlumni - bothAlumni },
@@ -153,18 +246,13 @@ router.get('/alumni', async (req: Request, res: Response) => {
 
         if (surveyStatus === 'completed') {
             andConditions.push({
-                'profile.fullName': { $exists: true, $nin: [null, '', '-'] },
-                'email': { $exists: true, $nin: [null, '', '-'] },
-                'profile.graduationYear': { $exists: true, $ne: null },
+                questionnaireCompleted: true,
                 'university.name': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] }
             });
         } else if (surveyStatus === 'not_completed') {
             andConditions.push({
                 $or: [
-                    { 'profile.fullName': { $in: [null, '', '-'] } },
-                    { 'email': { $in: [null, '', '-'] } },
-                    { 'profile.graduationYear': { $exists: false } },
-                    { 'profile.graduationYear': null },
+                    { questionnaireCompleted: { $ne: true } },
                     { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
                 ]
             });
@@ -177,7 +265,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
         const skip = (parseInt(page as string) - 1) * parseInt(limit as string);
         
         const alumni = await User.find(query)
-            .select('profile university job questionnaireCompleted email')
+            .select('profile university job questionnaireCompleted email isVerifiedBySchool verifiedAt')
             .sort({ 'profile.graduationYear': -1, 'profile.fullName': 1 })
             .limit(parseInt(limit as string))
             .skip(skip);

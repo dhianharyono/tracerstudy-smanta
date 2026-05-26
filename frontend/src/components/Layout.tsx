@@ -169,14 +169,14 @@ const Layout = () => {
       <Link
         to={to}
         className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-            ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
           }`}
       >
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-              ? 'bg-white/20'
-              : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+            ? 'bg-white/20'
+            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
             }`}
         >
           <Icon className='text-lg' />
@@ -305,16 +305,15 @@ const Layout = () => {
           <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
           <NavLink
-            to='/school/verification'
-            icon={FaSync}
-            label='Verifikasi Data'
-          />
-          <NavLink
             to='/school/universities'
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
-
+          <NavLink
+            to='/school/verification'
+            icon={FaSync}
+            label={user?.schoolRole === 'bk' ? 'Verifikasi Data' : 'Monitoring Sync Data'}
+          />
           <SectionLabel label='Lainnya' />
           <NavLink
             to='/school/feedback'
