@@ -382,7 +382,7 @@ const AdminStudents = () => {
           <button
             onClick={handleSendBulkUpgradeReminder}
             disabled={sendingBulk}
-            className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
             title='Kirim pengingat email upgrade status alumni ke semua siswa yang datanya lengkap'
           >
             <FaEnvelope />{' '}
@@ -391,7 +391,7 @@ const AdminStudents = () => {
           <button
             onClick={handleSendBulkIncompleteReminder}
             disabled={sendingBulk}
-            className='flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50'
+            className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50'
             title='Kirim pengingat email kelengkapan data ke semua siswa yang profilnya belum lengkap'
           >
             <FaEnvelope />{' '}
@@ -400,7 +400,7 @@ const AdminStudents = () => {
           {!showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className='flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
+              className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
             >
               <FaUserPlus /> Tambah Student
             </button>

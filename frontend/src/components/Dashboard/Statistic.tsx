@@ -75,9 +75,10 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   const totalAlumni = Number(stats?.totalAlumni || 0);
   const completed = Number(stats?.completedQuestionnaire || 0);
-  const incompleteAlumni = stats?.incompleteCount !== undefined
-    ? Number(stats.incompleteCount)
-    : Math.max(0, totalAlumni - completed);
+  const incompleteAlumni =
+    stats?.incompleteCount !== undefined
+      ? Number(stats.incompleteCount)
+      : Math.max(0, totalAlumni - completed);
 
   if (isAdmin) {
     const mainStats = [
@@ -161,13 +162,13 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
     return (
       <div className='space-y-6 mb-8'>
-        <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
           {mainStats.map((item, index) => (
             <StatCard key={index} {...item} />
           ))}
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+        <div className='grid grid-cols-2 md:grid-cols-2 gap-4'>
           {incompleteStats.map((item, index) => (
             <StatCard key={index} {...item} />
           ))}
@@ -192,25 +193,25 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
     },
     ...(isAlumni
       ? [
-        {
-          title: 'Total Siswa',
-          value: stats?.totalStudents,
-          icon: FaUserGraduate,
-          colorClass: 'text-cyan-600 dark:text-cyan-400',
-          bgClass: 'bg-cyan-100 dark:bg-cyan-900/50',
-        },
-      ]
+          {
+            title: 'Total Siswa',
+            value: stats?.totalStudents,
+            icon: FaUserGraduate,
+            colorClass: 'text-cyan-600 dark:text-cyan-400',
+            bgClass: 'bg-cyan-100 dark:bg-cyan-900/50',
+          },
+        ]
       : []),
     ...(isAlumni
       ? [
-        {
-          title: 'Mentor Aktif',
-          value: stats?.activeMentors,
-          icon: FaCrown,
-          colorClass: 'text-yellow-600 dark:text-yellow-400',
-          bgClass: 'bg-yellow-100 dark:bg-yellow-900/50',
-        },
-      ]
+          {
+            title: 'Mentor Aktif',
+            value: stats?.activeMentors,
+            icon: FaCrown,
+            colorClass: 'text-yellow-600 dark:text-yellow-400',
+            bgClass: 'bg-yellow-100 dark:bg-yellow-900/50',
+          },
+        ]
       : []),
     {
       title: 'Alumni Bekerja',
@@ -251,10 +252,9 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   return (
     <div
-      className={`grid grid-cols-2 ${isStudent
-        ? 'lg:grid-cols-3'
-        : 'lg:grid-cols-4'
-        } gap-4 mb-8`}
+      className={`grid grid-cols-2 ${
+        isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+      } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (
         <StatCard key={index} {...item} />

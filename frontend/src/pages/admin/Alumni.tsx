@@ -90,7 +90,11 @@ const AdminAlumni = () => {
   };
 
   const handleSendReminder = async (alumniId: string, email: string) => {
-    if (!window.confirm(`Kirim email pengingat pengisian data Tracer Study ke alumni ${email}?`)) {
+    if (
+      !window.confirm(
+        `Kirim email pengingat pengisian data Tracer Study ke alumni ${email}?`,
+      )
+    ) {
       return;
     }
     setSendingEmailId(alumniId);
@@ -110,11 +114,11 @@ const AdminAlumni = () => {
   const handleSendBulkReminder = async () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
-      "Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n" +
-      "- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n" +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
-      "Batal/kosongkan untuk membatalkan.",
-      defaultVal
+      'Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n' +
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
+      defaultVal,
     );
 
     if (inputYear === null) {
@@ -130,17 +134,29 @@ const AdminAlumni = () => {
     const payload: any = {};
 
     if (trimmedInput === 'semua') {
-      if (!window.confirm('Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke SELURUH ANGKATAN alumni yang datanya belum lengkap?')) {
+      if (
+        !window.confirm(
+          'Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke SELURUH ANGKATAN alumni yang datanya belum lengkap?',
+        )
+      ) {
         return;
       }
       payload.sendToAll = true;
     } else {
       const graduationYear = parseInt(trimmedInput);
-      if (isNaN(graduationYear) || graduationYear < 1900 || graduationYear > 2100) {
+      if (
+        isNaN(graduationYear) ||
+        graduationYear < 1900 ||
+        graduationYear > 2100
+      ) {
         Toast('Tahun kelulusan tidak valid!', 'error');
         return;
       }
-      if (!window.confirm(`Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke alumni angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`)) {
+      if (
+        !window.confirm(
+          `Apakah Anda yakin ingin mengirim email pengingat Tracer Study ke alumni angkatan lulus tahun ${graduationYear} yang datanya belum lengkap?`,
+        )
+      ) {
         return;
       }
       payload.graduationYear = graduationYear;
@@ -148,11 +164,19 @@ const AdminAlumni = () => {
 
     setSendingBulk(true);
     try {
-      const response = await axios.post('/api/admin/alumni/send-reminder', payload);
-      Toast(response.data.message || 'Proses pengiriman email massal telah dimulai!', 'success');
+      const response = await axios.post(
+        '/api/admin/alumni/send-reminder',
+        payload,
+      );
+      Toast(
+        response.data.message ||
+          'Proses pengiriman email massal telah dimulai!',
+        'success',
+      );
     } catch (error: any) {
       Toast(
-        error.response?.data?.message || 'Gagal mengirim email pengingat massal',
+        error.response?.data?.message ||
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -167,12 +191,19 @@ const AdminAlumni = () => {
           axios.get('/api/universities'),
           axios.get('/api/majors'),
         ]);
-        
-        const univs = [...new Set(univRes.data.map((u: any) => u.name))].sort() as string[];
-        const majors = [...new Set(majorRes.data.map((m: any) => m.name))].sort() as string[];
-        
+
+        const univs = [
+          ...new Set(univRes.data.map((u: any) => u.name)),
+        ].sort() as string[];
+        const majors = [
+          ...new Set(majorRes.data.map((m: any) => m.name)),
+        ].sort() as string[];
+
         const currentYear = new Date().getFullYear();
-        const years = Array.from({ length: currentYear + 1 - 2000 }, (_, i) => currentYear - i);
+        const years = Array.from(
+          { length: currentYear + 1 - 2000 },
+          (_, i) => currentYear - i,
+        );
 
         setUnivList(univs);
         setMajorList(majors);
@@ -327,14 +358,15 @@ const AdminAlumni = () => {
           <button
             onClick={handleSendBulkReminder}
             disabled={sendingBulk}
-            className='flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            className='w-full flex text-sm items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
             title='Kirim pengingat email ke semua alumni yang belum melengkapi data sesuai filter'
           >
-            <FaEnvelope /> {sendingBulk ? 'Mengirim...' : 'Kirim Pengingat Massal'}
+            <FaEnvelope />{' '}
+            {sendingBulk ? 'Mengirim...' : 'Kirim Pengingat Massal'}
           </button>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className='max-w-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
+            className='w-full max-w-sm text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
           >
             <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Data'}
           </button>
@@ -343,8 +375,9 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <Card
-        className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-6 transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
           <div className='relative'>
@@ -625,7 +658,12 @@ const AdminAlumni = () => {
                         className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
                         title='Kirim Email Pengingat'
                       >
-                        <FaEnvelope className={sendingEmailId === alum._id ? 'animate-pulse' : ''} size={14} />
+                        <FaEnvelope
+                          className={
+                            sendingEmailId === alum._id ? 'animate-pulse' : ''
+                          }
+                          size={14}
+                        />
                       </button>
                     )}
                     <button
@@ -638,14 +676,14 @@ const AdminAlumni = () => {
                     {(alum.profile?.graduationYear >=
                       new Date().getFullYear() ||
                       !alum.profile?.graduationYear) && (
-                        <button
-                          onClick={() => setDemotingAlumni(alum)}
-                          className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
-                          title='Ubah ke Student'
-                        >
-                          <FaUndo size={14} />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setDemotingAlumni(alum)}
+                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                        title='Ubah ke Student'
+                      >
+                        <FaUndo size={14} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'

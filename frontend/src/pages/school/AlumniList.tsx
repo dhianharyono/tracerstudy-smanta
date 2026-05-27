@@ -66,25 +66,44 @@ const SchoolAlumniList = () => {
   };
 
   const downloadCSV = () => {
-    const headers = ['Nama Lengkap', 'Angkatan', 'Email', 'Status Survei', 'Status Alumni', 'Universitas', 'Jurusan', 'Instansi Kerja', 'Posisi'];
+    const headers = [
+      'Nama Lengkap',
+      'Angkatan',
+      'Email',
+      'Status Survei',
+      'Status Alumni',
+      'Universitas',
+      'Jurusan',
+      'Instansi Kerja',
+      'Posisi',
+    ];
     const csvData = alumni.map((person) => [
       person.profile?.fullName || 'Anonim',
       person.profile?.graduationYear || '-',
       person.email || '-',
       !isUniversityIncomplete(person) ? 'Lengkap' : 'Belum Lengkap',
-      person.profile?.isStudying && person.profile?.isWorking ? 'Kuliah & Kerja' : person.profile?.isStudying ? 'Kuliah' : person.profile?.isWorking ? 'Bekerja' : 'Belum Terdata',
+      person.profile?.isStudying && person.profile?.isWorking
+        ? 'Kuliah & Kerja'
+        : person.profile?.isStudying
+          ? 'Kuliah'
+          : person.profile?.isWorking
+            ? 'Bekerja'
+            : 'Belum Terdata',
       person.university?.name || '-',
       person.university?.major || '-',
       person.job?.institution || '-',
-      person.job?.position || '-'
+      person.job?.position || '-',
     ]);
 
-    const csvContent = [headers, ...csvData].map(e => e.join(',')).join('\n');
+    const csvContent = [headers, ...csvData].map((e) => e.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `data_alumni_smanta_${new Date().toLocaleDateString()}.csv`);
+    link.setAttribute(
+      'download',
+      `data_alumni_smanta_${new Date().toLocaleDateString()}.csv`,
+    );
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -104,7 +123,7 @@ const SchoolAlumniList = () => {
         </div>
         <button
           onClick={downloadCSV}
-          className='flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20 self-start md:self-auto'
+          className='w-full text-sm flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20 self-start md:self-auto'
         >
           <FaDownload /> Download CSV
         </button>
@@ -136,14 +155,29 @@ const SchoolAlumniList = () => {
               className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
             >
               <option value=''>Semua Angkatan</option>
-              {Array.from({ length: 15 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+              {Array.from(
+                { length: 15 },
+                (_, i) => new Date().getFullYear() - i,
+              ).map((year) => (
                 <option key={year} value={year}>
                   {year}
                 </option>
               ))}
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -164,7 +198,19 @@ const SchoolAlumniList = () => {
               <option value='none'>Belum Terdata</option>
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -183,7 +229,19 @@ const SchoolAlumniList = () => {
               <option value='not_completed'>Belum Lengkap</option>
             </select>
             <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'><path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' /></svg>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
             </div>
           </div>
 
@@ -202,11 +260,21 @@ const SchoolAlumniList = () => {
           <table className='w-full text-left text-sm'>
             <thead className='bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] border-b border-[color:var(--border-color)]'>
               <tr>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Nama & Email</th>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Angkatan</th>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Perguruan Tinggi</th>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Pekerjaan</th>
-                <th className='px-6 py-4 font-bold uppercase tracking-wider'>Kelengkapan Data</th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>
+                  Nama & Email
+                </th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>
+                  Angkatan
+                </th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>
+                  Perguruan Tinggi
+                </th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>
+                  Pekerjaan
+                </th>
+                <th className='px-6 py-4 font-bold uppercase tracking-wider'>
+                  Kelengkapan Data
+                </th>
               </tr>
             </thead>
             <tbody className='divide-y divide-[color:var(--border-color)]'>
@@ -221,23 +289,33 @@ const SchoolAlumniList = () => {
                 </tr>
               ) : alumni.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className='p-12 text-center text-[color:var(--text-tertiary)]'>
+                  <td
+                    colSpan={5}
+                    className='p-12 text-center text-[color:var(--text-tertiary)]'
+                  >
                     Tidak ada data alumni ditemukan untuk filter ini.
                   </td>
                 </tr>
               ) : (
                 alumni.map((person) => (
-                  <tr key={person._id} className='hover:bg-[color:var(--bg-tertiary)]/30 transition-colors'>
+                  <tr
+                    key={person._id}
+                    className='hover:bg-[color:var(--bg-tertiary)]/30 transition-colors'
+                  >
                     <td className='px-6 py-4'>
                       <div className='flex items-center gap-3'>
                         <div className='w-9 h-9 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full flex items-center justify-center font-bold'>
-                          {person.profile?.fullName?.charAt(0) || <FaUser size={12} />}
+                          {person.profile?.fullName?.charAt(0) || (
+                            <FaUser size={12} />
+                          )}
                         </div>
                         <div>
                           <p className='font-bold text-[color:var(--text-primary)]'>
                             {person.profile?.fullName || 'Anonim'}
                           </p>
-                          <p className='text-xs text-[color:var(--text-secondary)] mt-0.5'>{person.email || '-'}</p>
+                          <p className='text-xs text-[color:var(--text-secondary)] mt-0.5'>
+                            {person.email || '-'}
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -249,21 +327,33 @@ const SchoolAlumniList = () => {
                     <td className='px-6 py-4'>
                       {person.profile?.isStudying ? (
                         <div>
-                          <p className='font-bold text-[color:var(--text-primary)] max-w-[200px] whitespace-normal break-words leading-tight'>{person.university?.name}</p>
-                          <p className='text-xs text-[color:var(--text-secondary)] max-w-[200px] whitespace-normal w-full break-words leading-tight mt-1'>{person.university?.major}</p>
+                          <p className='font-bold text-[color:var(--text-primary)] max-w-[200px] whitespace-normal break-words leading-tight'>
+                            {person.university?.name}
+                          </p>
+                          <p className='text-xs text-[color:var(--text-secondary)] max-w-[200px] whitespace-normal w-full break-words leading-tight mt-1'>
+                            {person.university?.major}
+                          </p>
                         </div>
                       ) : (
-                        <span className='text-[color:var(--text-tertiary)] italic'>-</span>
+                        <span className='text-[color:var(--text-tertiary)] italic'>
+                          -
+                        </span>
                       )}
                     </td>
                     <td className='px-6 py-4'>
                       {person.profile?.isWorking ? (
                         <div>
-                          <p className='font-bold text-[color:var(--text-primary)] max-w-[200px] whitespace-normal break-words leading-tight'>{person.job?.institution}</p>
-                          <p className='text-xs text-[color:var(--text-secondary)] max-w-[200px] whitespace-normal w-full break-words leading-tight mt-1'>{person.job?.position}</p>
+                          <p className='font-bold text-[color:var(--text-primary)] max-w-[200px] whitespace-normal break-words leading-tight'>
+                            {person.job?.institution}
+                          </p>
+                          <p className='text-xs text-[color:var(--text-secondary)] max-w-[200px] whitespace-normal w-full break-words leading-tight mt-1'>
+                            {person.job?.position}
+                          </p>
                         </div>
                       ) : (
-                        <span className='text-[color:var(--text-tertiary)] italic'>-</span>
+                        <span className='text-[color:var(--text-tertiary)] italic'>
+                          -
+                        </span>
                       )}
                     </td>
                     <td className='px-6 py-4'>
@@ -290,11 +380,24 @@ const SchoolAlumniList = () => {
       {/* Pagination Container */}
       <div className='mt-8 flex items-center justify-between'>
         <p className='text-sm text-[color:var(--text-tertiary)]'>
-          Menampilkan <span className='font-bold text-[color:var(--text-primary)]'>{alumni.length}</span> dari <span className='font-bold text-[color:var(--text-primary)]'>{pagination.total}</span> alumni
+          Menampilkan{' '}
+          <span className='font-bold text-[color:var(--text-primary)]'>
+            {alumni.length}
+          </span>{' '}
+          dari{' '}
+          <span className='font-bold text-[color:var(--text-primary)]'>
+            {pagination.total}
+          </span>{' '}
+          alumni
         </p>
         <div className='flex gap-2'>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.max(1, pagination.page - 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.max(1, pagination.page - 1),
+              })
+            }
             disabled={pagination.page === 1}
             className='p-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] disabled:opacity-50 text-[color:var(--text-primary)]'
           >
@@ -304,7 +407,12 @@ const SchoolAlumniList = () => {
             {pagination.page} / {pagination.pages || 1}
           </div>
           <button
-            onClick={() => setPagination({ ...pagination, page: Math.min(pagination.pages, pagination.page + 1) })}
+            onClick={() =>
+              setPagination({
+                ...pagination,
+                page: Math.min(pagination.pages, pagination.page + 1),
+              })
+            }
             disabled={pagination.page >= pagination.pages}
             className='p-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] disabled:opacity-50 text-[color:var(--text-primary)]'
           >
@@ -312,7 +420,6 @@ const SchoolAlumniList = () => {
           </button>
         </div>
       </div>
-
     </div>
   );
 };

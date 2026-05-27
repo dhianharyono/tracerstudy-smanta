@@ -1,6 +1,13 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUniversity, FaSearch, FaTrophy, FaBuilding, FaMapMarkedAlt, FaGraduationCap } from 'react-icons/fa';
+import {
+  FaUniversity,
+  FaSearch,
+  FaTrophy,
+  FaBuilding,
+  FaMapMarkedAlt,
+  FaGraduationCap,
+} from 'react-icons/fa';
 import Card from '@/components/common/Card';
 
 interface UnivStat {
@@ -30,13 +37,15 @@ const SchoolUniversityList = () => {
     }
   };
 
-  const filteredUniversities = universities.filter(u => {
+  const filteredUniversities = universities.filter((u) => {
     const matchesSearch = u._id.toLowerCase().includes(search.toLowerCase());
-    const matchesType = filterType === 'all' || (u.type || 'swasta') === filterType;
+    const matchesType =
+      filterType === 'all' || (u.type || 'swasta') === filterType;
     return matchesSearch && matchesType;
   });
 
-  const topUniversity = filteredUniversities.length > 0 ? filteredUniversities[0] : null;
+  const topUniversity =
+    filteredUniversities.length > 0 ? filteredUniversities[0] : null;
 
   return (
     <div className='p-6 page-fade-in bg-[color:var(--bg-secondary)] min-h-screen'>
@@ -45,7 +54,8 @@ const SchoolUniversityList = () => {
           Perguruan Tinggi
         </h1>
         <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
-          Daftar perguruan tinggi tempat alumni melanjutkan studi dan statistiknya.
+          Daftar perguruan tinggi tempat alumni melanjutkan studi dan
+          statistiknya.
         </p>
       </div>
 
@@ -57,7 +67,9 @@ const SchoolUniversityList = () => {
               <FaUniversity size={20} />
             </div>
             <div>
-              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>Total PT Terdata</p>
+              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
+                Total PT Terdata
+              </p>
               <h3 className='text-2xl font-black'>{universities.length}</h3>
             </div>
           </div>
@@ -69,9 +81,11 @@ const SchoolUniversityList = () => {
               <FaBuilding size={20} />
             </div>
             <div>
-              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>PT Negeri (PTN)</p>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                PT Negeri (PTN)
+              </p>
               <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
-                {universities.filter(u => u.type === 'negeri').length}
+                {universities.filter((u) => u.type === 'negeri').length}
               </h3>
             </div>
           </div>
@@ -83,9 +97,14 @@ const SchoolUniversityList = () => {
               <FaBuilding size={20} />
             </div>
             <div>
-              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>PT Swasta (PTS)</p>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                PT Swasta (PTS)
+              </p>
               <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
-                {universities.filter(u => !u.type || u.type === 'swasta').length}
+                {
+                  universities.filter((u) => !u.type || u.type === 'swasta')
+                    .length
+                }
               </h3>
             </div>
           </div>
@@ -97,9 +116,11 @@ const SchoolUniversityList = () => {
               <FaGraduationCap size={20} />
             </div>
             <div>
-              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>Kedinasan</p>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Kedinasan
+              </p>
               <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
-                {universities.filter(u => u.type === 'kedinasan').length}
+                {universities.filter((u) => u.type === 'kedinasan').length}
               </h3>
             </div>
           </div>
@@ -115,20 +136,32 @@ const SchoolUniversityList = () => {
             <div className='flex-1 min-w-0'>
               <div className='flex items-center gap-2 mb-1'>
                 <FaTrophy className='text-amber-500 sm:hidden' />
-                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>Kampus Terfavorit Alumni</p>
+                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
+                  Kampus Terfavorit Alumni
+                </p>
               </div>
-              <h3 className='text-xl md:text-2xl font-black text-[color:var(--text-primary)] truncate' title={topUniversity._id}>
+              <h3
+                className='text-xl md:text-2xl font-black text-[color:var(--text-primary)] truncate'
+                title={topUniversity._id}
+              >
                 {topUniversity._id}
               </h3>
               <div className='flex items-center gap-3 mt-2'>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-black uppercase
-                  ${topUniversity.type === 'negeri' ? 'bg-amber-100 text-amber-700'
-                    : topUniversity.type === 'kedinasan' ? 'bg-emerald-100 text-emerald-700'
-                      : 'bg-pink-100 text-pink-700'}`}>
+                <span
+                  className={`px-2 py-0.5 rounded text-[10px] font-black uppercase
+                  ${
+                    topUniversity.type === 'negeri'
+                      ? 'bg-amber-100 text-amber-700'
+                      : topUniversity.type === 'kedinasan'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-pink-100 text-pink-700'
+                  }`}
+                >
                   {topUniversity.type || 'Swasta'}
                 </span>
                 <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
-                  <span className='text-amber-500'>{topUniversity.count}</span> Alumni Bergabung
+                  <span className='text-amber-500'>{topUniversity.count}</span>{' '}
+                  Alumni Bergabung
                 </span>
               </div>
             </div>
@@ -140,7 +173,9 @@ const SchoolUniversityList = () => {
       <Card className='min-h-[500px]'>
         <div className='flex flex-col gap-4 mb-6'>
           <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
-            <h2 className='text-xl font-bold text-[color:var(--text-primary)]'>Peringkat Universitas</h2>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)]'>
+              Peringkat Universitas
+            </h2>
 
             <div className='relative w-full md:w-72 shrink-0'>
               <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]' />
@@ -199,13 +234,21 @@ const SchoolUniversityList = () => {
                       #{idx + 1}
                     </div>
                     <div className='min-w-0'>
-                      <h4 className='font-bold text-[color:var(--text-primary)] text-sm md:text-base leading-tight truncate' title={univ._id}>
+                      <h4
+                        className='font-bold text-[color:var(--text-primary)] text-sm md:text-base leading-tight truncate'
+                        title={univ._id}
+                      >
                         {univ._id}
                       </h4>
-                      <span className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider
-                        ${univ.type === 'negeri' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
-                          : univ.type === 'kedinasan' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                            : 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'}`}
+                      <span
+                        className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider
+                        ${
+                          univ.type === 'negeri'
+                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                            : univ.type === 'kedinasan'
+                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                              : 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'
+                        }`}
                       >
                         {univ.type || 'Swasta'}
                       </span>
