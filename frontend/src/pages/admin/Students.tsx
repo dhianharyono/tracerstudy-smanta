@@ -378,7 +378,7 @@ const AdminStudents = () => {
         title='Kelola Data Student'
         description='Manajemen akun Siswa'
       >
-        <div className='flex gap-2 flex-wrap'>
+        <div className='flex gap-2 flex-wrap md:flex-nowrap'>
           <button
             onClick={handleSendBulkUpgradeReminder}
             disabled={sendingBulk}
