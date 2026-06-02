@@ -4,13 +4,9 @@ import FeedbackForm from '@/components/FeedbackForm';
 import FeedbackStats from '@/components/FeedbackStats';
 import FeedbackList from '@/components/FeedbackList';
 import PageHeader from '@/components/common/PageHeader';
-import { useAuth } from '@/contexts/AuthContext';
-import RestrictedAccess from '@/components/RestrictedAccess';
-import { isStudentProfileComplete } from '@/utils/helpers';
 import SmartLoader from '@/components/SmartLoader';
 
 const StudentFeedback = () => {
-  const { user } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [feedbacks, setFeedbacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,10 +29,6 @@ const StudentFeedback = () => {
       setLoading(false);
     }
   };
-
-  if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type="profile_incomplete" role="student" />;
-  }
 
   if (loading) return <SmartLoader />;
 

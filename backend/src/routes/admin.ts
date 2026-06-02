@@ -1440,6 +1440,21 @@ router.delete('/feedback/:id', async (req: Request, res: Response) => {
   }
 });
 
+// Toggle feedback landing page visibility
+router.put('/feedback/:id/toggle-landing', async (req: Request, res: Response) => {
+  try {
+    const feedback = await Feedback.findById(req.params.id).populate('user', 'username role');
+    if (!feedback) {
+      return res.status(404).json({ message: 'Feedback not found' });
+    }
+    feedback.showOnLandingPage = !feedback.showOnLandingPage;
+    await feedback.save();
+    res.json(feedback);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Settings routes
 // Update feedback visibility setting (admin only)
 router.put(

@@ -10,6 +10,8 @@ import {
   FaReply,
   FaPaperPlane,
   FaEdit,
+  FaEye,
+  FaEyeSlash,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 
@@ -21,6 +23,22 @@ const AdminFeedbackDetail = () => {
   const [replyContent, setReplyContent] = useState('');
   const [sendingReply, setSendingReply] = useState(false);
   const [isEditingReply, setIsEditingReply] = useState(false);
+
+  const handleToggleLandingPage = async () => {
+    try {
+      const response = await axios.put(`/api/admin/feedback/${id}/toggle-landing`);
+      setFeedback(response.data);
+      Toast(
+        `Feedback berhasil ${!feedback.showOnLandingPage ? 'ditampilkan di' : 'disembunyikan dari'} landing page`,
+        'success'
+      );
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengubah visibilitas landing page',
+        'error'
+      );
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -160,11 +178,30 @@ const AdminFeedbackDetail = () => {
               </div>
             </div>
 
-            <div className='flex flex-col items-start md:items-end bg-[color:var(--bg-card)] p-3 rounded-lg border border-[color:var(--border-color)]'>
-              <span className='text-xs text-[color:var(--text-secondary)] uppercase tracking-wider font-semibold mb-1'>
-                Rating Diberikan
-              </span>
-              {renderStarRating(feedback.rating)}
+            <div className='flex flex-wrap items-center gap-3 bg-[color:var(--bg-card)] p-3 rounded-lg border border-[color:var(--border-color)]'>
+              <div className='flex flex-col items-start'>
+                <span className='text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-semibold mb-1'>
+                  Rating Diberikan
+                </span>
+                {renderStarRating(feedback.rating)}
+              </div>
+              <div className='h-8 w-px bg-[color:var(--border-color)] self-center mx-1'></div>
+              <div className='flex flex-col items-start'>
+                <span className='text-[10px] text-[color:var(--text-secondary)] uppercase tracking-wider font-semibold mb-1'>
+                  Tampil di Landing Page
+                </span>
+                <button
+                  type='button'
+                  onClick={handleToggleLandingPage}
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
+                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                    }`}
+                >
+                  {feedback.showOnLandingPage ? <FaEye size={12} /> : <FaEyeSlash size={12} />}
+                  <span>{feedback.showOnLandingPage ? 'Ya, Tampil' : 'Tidak'}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

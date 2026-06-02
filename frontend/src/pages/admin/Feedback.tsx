@@ -93,6 +93,22 @@ const AdminFeedback = () => {
     }
   };
 
+  const handleToggleLandingPage = async (id: string, currentStatus: boolean) => {
+    try {
+      await axios.put(`/api/admin/feedback/${id}/toggle-landing`);
+      Toast(
+        `Feedback berhasil ${!currentStatus ? 'ditampilkan di' : 'disembunyikan dari'} landing page`,
+        'success'
+      );
+      fetchFeedbacks();
+    } catch (error: any) {
+      Toast(
+        error.response?.data?.message || 'Gagal mengubah visibilitas landing page',
+        'error'
+      );
+    }
+  };
+
   const renderStarRating = (rating: number) => {
     return (
       <div className='flex items-center gap-1'>
@@ -276,6 +292,7 @@ const AdminFeedback = () => {
                 <th className='px-6 py-4'>Rating</th>
                 <th className='px-6 py-4'>Kritik & Saran</th>
                 <th className='px-6 py-4'>Tanggal</th>
+                <th className='px-6 py-4 text-center'>Tampil Landing</th>
                 <th className='px-6 py-4 text-center'>Aksi</th>
               </tr>
             </thead>
@@ -283,7 +300,7 @@ const AdminFeedback = () => {
               {feedbacks.length === 0 ? (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className='p-8 text-center text-[color:var(--text-secondary)]'
                   >
                     Belum ada kritik dan saran yang masuk.
@@ -341,6 +358,19 @@ const AdminFeedback = () => {
                         'id-ID',
                         { day: 'numeric', month: 'short', year: 'numeric' },
                       )}
+                    </td>
+                    <td className='px-6 py-4 text-center'>
+                      <button
+                        onClick={() => handleToggleLandingPage(feedback._id, feedback.showOnLandingPage)}
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
+                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                          : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                          }`}
+                        title={feedback.showOnLandingPage ? 'Sembunyikan dari Landing Page' : 'Tampilkan di Landing Page'}
+                      >
+                        {feedback.showOnLandingPage ? <FaEye size={13} /> : <FaEyeSlash size={13} />}
+                        <span>{feedback.showOnLandingPage ? 'Ya' : 'Tidak'}</span>
+                      </button>
                     </td>
                     <td className='px-6 py-4'>
                       <div className='flex items-center justify-center gap-2'>

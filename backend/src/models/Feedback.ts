@@ -6,6 +6,7 @@ export interface IFeedback extends Document {
   rating: number;
   kritik?: string;
   saran?: string;
+  showOnLandingPage: boolean;
   reply?: {
     content: string;
     adminId: mongoose.Types.ObjectId;
@@ -40,6 +41,10 @@ const FeedbackSchema = new Schema<IFeedback>(
     saran: {
       type: String,
       trim: true,
+    },
+    showOnLandingPage: {
+      type: Boolean,
+      default: false,
     },
     reply: {
       content: { type: String, trim: true },

@@ -4,13 +4,9 @@ import FeedbackForm from '@/components/FeedbackForm';
 import FeedbackStats from '@/components/FeedbackStats';
 import FeedbackList from '@/components/FeedbackList';
 import PageHeader from '@/components/common/PageHeader';
-import { useAuth } from '@/contexts/AuthContext';
-import RestrictedAccess from '@/components/RestrictedAccess';
 import SmartLoader from '@/components/SmartLoader';
-import { isUniversityIncomplete } from '@/utils/validation';
 
 const AlumniFeedback = () => {
-  const { user } = useAuth();
   const [stats, setStats] = useState<any>(null);
   const [feedbacks, setFeedbacks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,15 +29,6 @@ const AlumniFeedback = () => {
       setLoading(false);
     }
   };
-
-  const hasUniversityData = !!(user?.university?.name);
-  if (user?.questionnaireCompleted === false && !hasUniversityData) {
-    return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
-  }
-
-  if (user && isUniversityIncomplete(user)) {
-    return <RestrictedAccess type='university_incomplete' role='alumni' />;
-  }
 
   if (loading) return <SmartLoader />;
 

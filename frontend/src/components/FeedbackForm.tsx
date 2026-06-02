@@ -7,6 +7,7 @@ import {
   FaStar,
   FaSpinner,
   FaCommentDots,
+  FaInfoCircle,
 } from 'react-icons/fa';
 import SmartLoader from './SmartLoader';
 
@@ -149,6 +150,19 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
           <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
             Formulir Masukan
           </h2>
+        </div>
+
+        {/* Info & Bug Report Notice Box */}
+        <div className='mb-6 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-xs md:text-sm text-blue-700 dark:border-blue-900/30 dark:bg-blue-900/10 dark:text-blue-300'>
+          <FaInfoCircle className='mt-0.5 text-base shrink-0 text-blue-500 dark:text-blue-400' />
+          <div className='space-y-1.5 text-left'>
+            <p className='font-semibold text-blue-800 dark:text-blue-200'>
+              Informasi Pengelolaan & Laporan Kendala
+            </p>
+            <p className='leading-relaxed text-[11px] md:text-xs text-blue-700/90 dark:text-blue-300/90'>
+              Setiap kritik dan saran dikelola dan ditinjau langsung oleh Admin demi peningkatan layanan website secara berkala. <br /><br /> Apabila Anda mengalami kendala teknis atau menemukan bug selama menggunakan website ini, silakan sampaikan keluhan Anda secara mendetail melalui formulir ini.
+            </p>
+          </div>
         </div>
 
         <div className='mb-8 text-center'>

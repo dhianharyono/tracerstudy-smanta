@@ -116,10 +116,10 @@ router.get('/news', async (req: Request, res: Response) => {
     }
 });
 
-// Get testimonials (feedback with high rating)
+// Get testimonials (feedback that is set to be shown on landing page by admin)
 router.get('/testimonials', async (req: Request, res: Response) => {
     try {
-        const testimonials = await Feedback.find({ rating: { $gte: 4 } })
+        const testimonials = await Feedback.find({ showOnLandingPage: true })
             .populate('user', 'profile.fullName role')
             .sort({ createdAt: -1 })
             .limit(5);
