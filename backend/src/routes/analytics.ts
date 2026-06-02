@@ -138,12 +138,26 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
 
         // 4. Online Users (Active in last 5 mins - leveraging PageVisits for recent activity too)
         const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000);
-        // We need to query this carefully. PageVisit doesn't join with User automatically for the distinct query.
-        // But since we store role in PageVisit, we can filter by role here too.
-        const activeUsersCount = await PageVisit.distinct('userId', {
+        
+        const activeStudentCount = await PageVisit.distinct('userId', {
             timestamp: { $gte: fiveMinsAgo },
-            role: { $ne: 'admin' }
+            role: 'student',
+            userId: { $exists: true, $ne: null }
         });
+
+        const activeAlumniCount = await PageVisit.distinct('userId', {
+            timestamp: { $gte: fiveMinsAgo },
+            role: 'alumni',
+            userId: { $exists: true, $ne: null }
+        });
+
+        const activeSchoolCount = await PageVisit.distinct('userId', {
+            timestamp: { $gte: fiveMinsAgo },
+            role: 'school',
+            userId: { $exists: true, $ne: null }
+        });
+
+        const totalActiveUsers = activeStudentCount.length + activeAlumniCount.length + activeSchoolCount.length;
 
         // 5. Landing Page specific stats
         const landingPageVisits = await PageVisit.countDocuments({
@@ -160,7 +174,12 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
             visitsByDate,
             popularPages,
             visitsByRole,
-            activeUsers: activeUsersCount.length,
+            activeUsers: totalActiveUsers,
+            activeUsersDetail: {
+                student: activeStudentCount.length,
+                alumni: activeAlumniCount.length,
+                school: activeSchoolCount.length
+            },
             landingPageVisits,
             totalLandingPageVisits
         });

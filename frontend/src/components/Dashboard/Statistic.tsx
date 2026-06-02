@@ -27,6 +27,11 @@ interface StatsObject {
     kedinasan: number | string;
   };
   onlineUsers?: number;
+  onlineUsersDetail?: {
+    alumni: number;
+    student: number;
+    school: number;
+  };
 }
 
 interface StatCardProps {
@@ -35,6 +40,7 @@ interface StatCardProps {
   icon: any;
   colorClass: string;
   bgClass: string;
+  description?: React.ReactNode;
 }
 
 const StatCard = ({
@@ -43,6 +49,7 @@ const StatCard = ({
   icon: Icon,
   colorClass,
   bgClass,
+  description,
 }: StatCardProps) => (
   <div className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
     <div
@@ -57,6 +64,11 @@ const StatCard = ({
         <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
           {value || 0}
         </h3>
+        {description && (
+          <div className='mt-2'>
+            {description}
+          </div>
+        )}
       </div>
       <div
         className={`hidden md:flex h-12 w-12 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}
@@ -102,6 +114,11 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
         icon: FaUserTimes,
         colorClass: 'text-green-600 dark:text-green-400',
         bgClass: 'bg-green-100 dark:bg-green-900/50',
+        description: stats?.onlineUsersDetail ? (
+          <p className='text-[10px] text-[color:var(--text-secondary)] font-semibold'>
+            {stats.onlineUsersDetail.student} Siswa, {stats.onlineUsersDetail.alumni} Alumni, {stats.onlineUsersDetail.school} Sekolah
+          </p>
+        ) : undefined,
       },
     ];
 

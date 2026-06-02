@@ -314,10 +314,22 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       },
     ]);
 
-    const onlineUsers = await User.countDocuments({
+    const activeAlumni = await User.countDocuments({
       lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
-      role: { $in: ['student', 'alumni'] },
+      role: 'alumni',
     });
+
+    const activeStudents = await User.countDocuments({
+      lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+      role: 'student',
+    });
+
+    const activeSchool = await User.countDocuments({
+      lastActiveAt: { $gte: new Date(Date.now() - 5 * 60 * 1000) },
+      role: 'school',
+    });
+
+    const onlineUsers = activeAlumni + activeStudents + activeSchool;
 
     const getCount = (arr: any[]) => (arr && arr.length > 0 ? arr[0].count : 0);
     const getMap = (arr: any[]) =>
@@ -353,6 +365,11 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       universityStats: stats.universityStats,
       statusStats,
       onlineUsers,
+      onlineUsersDetail: {
+        alumni: activeAlumni,
+        student: activeStudents,
+        school: activeSchool,
+      },
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });

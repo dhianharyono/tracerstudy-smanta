@@ -229,9 +229,14 @@ const WebsiteStatistics = () => {
             <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
               {stats?.activeUsers || 0}
             </h3>
-            <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
-              Aktif (5 Menit)
-            </p>
+            <div className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold flex flex-col gap-0.5'>
+              <span>Aktif (5 Menit)</span>
+              {stats?.activeUsersDetail && (
+                <span className='text-[10px] text-[color:var(--text-secondary)] font-medium normal-case'>
+                  {stats.activeUsersDetail.student} Siswa, {stats.activeUsersDetail.alumni} Alumni, {stats.activeUsersDetail.school} Sekolah
+                </span>
+              )}
+            </div>
           </div>
         </div>
         <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-purple-500 transition-all'>
