@@ -111,9 +111,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -166,13 +166,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -184,9 +184,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -239,13 +239,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -378,11 +378,11 @@ const AdminStudents = () => {
         title='Kelola Data Student'
         description='Manajemen akun Siswa'
       >
-        <div className='flex gap-2 flex-wrap md:flex-nowrap'>
+        <div className='flex flex-col sm:flex-row gap-2 flex-wrap w-full sm:w-auto justify-end'>
           <button
             onClick={handleSendBulkUpgradeReminder}
             disabled={sendingBulk}
-            className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            className='w-full sm:w-auto text-sm flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50 whitespace-nowrap'
             title='Kirim pengingat email upgrade status alumni ke semua siswa yang datanya lengkap'
           >
             <FaEnvelope />{' '}
@@ -391,7 +391,7 @@ const AdminStudents = () => {
           <button
             onClick={handleSendBulkIncompleteReminder}
             disabled={sendingBulk}
-            className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50'
+            className='w-full sm:w-auto text-sm flex items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 py-2 text-white transition-colors hover:bg-teal-700 disabled:opacity-50 whitespace-nowrap'
             title='Kirim pengingat email kelengkapan data ke semua siswa yang profilnya belum lengkap'
           >
             <FaEnvelope />{' '}
@@ -400,7 +400,7 @@ const AdminStudents = () => {
           {!showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className='w-full text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)]'
+              className='w-full sm:w-auto text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white transition-colors hover:bg-[var(--primary-dark)] whitespace-nowrap'
             >
               <FaUserPlus /> Tambah Student
             </button>
@@ -602,12 +602,9 @@ const AdminStudents = () => {
 
       <TableContainer>
         <TableHeader>
-          <TableHeadCell>Username</TableHeadCell>
-          <TableHeadCell>Nama Lengkap</TableHeadCell>
-          <TableHeadCell>Tahun Masuk</TableHeadCell>
-          <TableHeadCell>Tahun Lulus</TableHeadCell>
-          <TableHeadCell>Tanggal Dibuat</TableHeadCell>
+          <TableHeadCell>Nama Lengkap & Tahun Masuk / Lulus</TableHeadCell>
           <TableHeadCell>Email</TableHeadCell>
+          <TableHeadCell>Tanggal Dibuat</TableHeadCell>
           <TableHeadCell>Status</TableHeadCell>
           <TableHeadCell className='text-center'>Aksi</TableHeadCell>
         </TableHeader>
@@ -625,25 +622,25 @@ const AdminStudents = () => {
             students.map((student) => (
               <TableRow key={student._id}>
                 <TableCell>
-                  <div className='flex items-center gap-3'>
-                    <div className='h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
-                      <FaUser size={12} />
+                  <div className='max-w-[200px]'>
+                    <div
+                      className='font-medium text-[color:var(--text-primary)] truncate'
+                      title={student.profile?.fullName}
+                    >
+                      {student.profile?.fullName || '-'}
                     </div>
-                    <span className='font-medium text-[color:var(--text-primary)]'>
-                      {student.username}
-                    </span>
+                    {student.profile?.entryYear && student.profile?.graduationYear && <div
+                      className='text-xs text-[color:var(--text-secondary)] truncate'
+                      title={student.profile?.major}
+                    >
+                      {student.profile?.entryYear || '-'}
+                      <span className='mx-1'>•</span>{' '}
+                      {student.profile?.graduationYear || '-'}{' '}
+                    </div>}
                   </div>
                 </TableCell>
-                <TableCell>
-                  <span className='font-medium text-[color:var(--text-primary)]'>
-                    {student.profile?.fullName || '-'}
-                  </span>
-                </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.profile?.entryYear || '-'}
-                </TableCell>
-                <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.profile?.graduationYear || '-'}
+                  {student.email}
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {new Date(student.createdAt).toLocaleDateString('id-ID', {
@@ -652,13 +649,10 @@ const AdminStudents = () => {
                     year: 'numeric',
                   })}
                 </TableCell>
-                <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.email}
-                </TableCell>
                 <TableCell>
                   {student.profile?.fullName &&
-                  student.profile?.entryYear &&
-                  student.profile?.graduationYear ? (
+                    student.profile?.entryYear &&
+                    student.profile?.graduationYear ? (
                     <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'>
                       Lengkap
                     </span>
@@ -671,8 +665,8 @@ const AdminStudents = () => {
                 <TableCell>
                   <div className='flex items-center justify-center gap-2'>
                     {student.profile?.fullName &&
-                    student.profile?.entryYear &&
-                    student.profile?.graduationYear ? (
+                      student.profile?.entryYear &&
+                      student.profile?.graduationYear ? (
                       <button
                         onClick={() =>
                           handleSendReminder(

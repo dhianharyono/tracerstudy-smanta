@@ -131,9 +131,8 @@ const AdminMentors = () => {
 
       {/* Filters */}
       <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           <div className='relative'>
@@ -243,9 +242,9 @@ const AdminMentors = () => {
                           className='text-xs text-[color:var(--text-secondary)] truncate'
                           title={mentor.university?.major}
                         >
-                          {mentor.university?.major || '-'}{' '}
-                          <span className='mx-1'>•</span>{' '}
                           {mentor.profile?.graduationYear}
+                          <span className='mx-1'>•</span>{' '}
+                          {mentor.university?.major || '-'}{' '}
                         </div>
                       </div>
                     </td>

@@ -115,9 +115,9 @@ const AdminAlumni = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -170,13 +170,13 @@ const AdminAlumni = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -254,11 +254,7 @@ const AdminAlumni = () => {
         `/api/admin/alumni?${params.toString()}`,
       );
       setAlumni(response.data.alumni);
-      setPagination((prev) => ({
-        ...prev,
-        total: response.data.total,
-        pages: response.data.pages,
-      }));
+      setPagination(response.data.pagination);
     } catch (error) {
       Toast('Gagal memuat data alumni', 'error');
     } finally {
@@ -354,11 +350,11 @@ const AdminAlumni = () => {
         title='Kelola Data Alumni'
         description='Memantau dan mengelola data alumni terdaftar'
       >
-        <div className='flex gap-2 flex-wrap'>
+        <div className='flex flex-col sm:flex-row gap-2 flex-wrap w-full sm:w-auto justify-end'>
           <button
             onClick={handleSendBulkReminder}
             disabled={sendingBulk}
-            className='w-full flex text-sm items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50'
+            className='w-full sm:w-auto text-sm flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:opacity-50 whitespace-nowrap'
             title='Kirim pengingat email ke semua alumni yang belum melengkapi data sesuai filter'
           >
             <FaEnvelope />{' '}
@@ -366,7 +362,7 @@ const AdminAlumni = () => {
           </button>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className='w-full max-w-sm text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden'
+            className='w-full sm:w-auto text-sm flex items-center justify-center gap-2 rounded-lg bg-[var(--primary)] px-4 py-2 text-white hover:bg-[var(--primary-dark)] md:hidden whitespace-nowrap'
           >
             <FaFilter /> {showFilters ? 'Tutup Filter' : 'Filter Data'}
           </button>
@@ -375,9 +371,8 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <Card
-        className={`mb-6 transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
           <div className='relative'>
@@ -572,9 +567,9 @@ const AdminAlumni = () => {
                       className='text-xs text-[color:var(--text-secondary)] truncate'
                       title={alum.university?.major}
                     >
-                      {alum.university?.major || '-'}{' '}
-                      <span className='mx-1'>•</span>{' '}
                       {alum.profile?.graduationYear}
+                      <span className='mx-1'>•</span>{' '}
+                      {alum.university?.major || '-'}{' '}
                     </div>
                   </div>
                 </TableCell>
@@ -676,14 +671,14 @@ const AdminAlumni = () => {
                     {(alum.profile?.graduationYear >=
                       new Date().getFullYear() ||
                       !alum.profile?.graduationYear) && (
-                      <button
-                        onClick={() => setDemotingAlumni(alum)}
-                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
-                        title='Ubah ke Student'
-                      >
-                        <FaUndo size={14} />
-                      </button>
-                    )}
+                        <button
+                          onClick={() => setDemotingAlumni(alum)}
+                          className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                          title='Ubah ke Student'
+                        >
+                          <FaUndo size={14} />
+                        </button>
+                      )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
