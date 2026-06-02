@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import {
   FaUser,
@@ -538,7 +539,7 @@ const Profile = () => {
       </form>
 
       {/* Graduation Confirmation Modal */}
-      {showGraduationModal && (
+      {showGraduationModal && createPortal(
         <div className='fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4'>
           <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] max-w-md w-full shadow-2xl animate-fade-in'>
             <div className='p-6 border-b border-[color:var(--border-color)]'>
@@ -594,7 +595,8 @@ const Profile = () => {
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

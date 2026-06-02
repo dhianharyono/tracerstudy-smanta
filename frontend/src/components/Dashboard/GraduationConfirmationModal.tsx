@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import { FaGraduationCap, FaCheckCircle, FaTimes } from 'react-icons/fa';
 import Toast from '@/components/toast';
@@ -26,7 +27,7 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
     }
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
@@ -112,7 +113,8 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 
 };
