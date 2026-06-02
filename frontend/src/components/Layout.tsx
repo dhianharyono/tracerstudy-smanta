@@ -81,6 +81,9 @@ const Layout = () => {
       '/alumni/feedback': 'Kritik & Saran',
       '/alumni/claim-badge': 'Claim Badge',
       '/alumni/profile': 'Profil Alumni',
+      '/alumni/universities': 'Perguruan Tinggi',
+      '/alumni/majors': 'Jurusan',
+      '/alumni/alumni': 'Alumni',
 
       // Admin
       '/admin': 'Dashboard Admin',
@@ -112,6 +115,7 @@ const Layout = () => {
       '/school': 'Dashboard Sekolah',
       '/school/alumni': 'Data Alumni Sekolah',
       '/school/universities': 'Perguruan Tinggi Sekolah',
+      '/school/majors': 'Jurusan Sekolah',
       '/school/feedback': 'Kritik & Saran Sekolah',
       '/school/profile': 'Profil Monitoring',
       '/jobs': 'Bursa Kerja',
@@ -203,13 +207,22 @@ const Layout = () => {
           <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
           <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
 
-          <SectionLabel label='Sosial & Berita' />
-          <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
+          <SectionLabel label='Eksplorasi' />
+          <NavLink
+            to='/alumni/universities'
+            icon={FaUniversity}
+            label='Perguruan Tinggi'
+          />
+          <NavLink to='/alumni/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/alumni/alumni' icon={FaUsers} label='Alumni' />
           <NavLink
             to='/alumni/mutual-alumni'
             icon={FaUsers}
             label='Rekan Seangkatan'
           />
+
+          <SectionLabel label='Sosial & Berita' />
+          <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
           <NavLink
             to='/alumni/news'
             icon={FaNewspaper}
@@ -309,6 +322,7 @@ const Layout = () => {
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
+          <NavLink to='/school/majors' icon={FaBook} label='Jurusan' />
           <NavLink
             to='/school/verification'
             icon={FaSync}

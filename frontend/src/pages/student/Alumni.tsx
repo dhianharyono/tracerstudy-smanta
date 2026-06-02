@@ -24,6 +24,7 @@ import {
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import { isUniversityIncomplete, isNameIncomplete } from '@/utils/validation';
 
 const StudentAlumni = () => {
   const { user } = useAuth();
@@ -134,16 +135,29 @@ const StudentAlumni = () => {
     setSearchParams({});
   };
 
-  if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type='profile_incomplete' role='student' />;
+  if (user?.role === 'alumni') {
+    const hasUniversityData = !!(user?.university?.name);
+    if (user?.questionnaireCompleted === false && !hasUniversityData) {
+      return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+    }
+    if (isNameIncomplete(user?.profile)) {
+      return <RestrictedAccess type='name_incomplete' role='alumni' />;
+    }
+    if (isUniversityIncomplete(user)) {
+      return <RestrictedAccess type='university_incomplete' role='alumni' />;
+    }
+  } else {
+    if (!isStudentProfileComplete(user)) {
+      return <RestrictedAccess type='profile_incomplete' role='student' />;
+    }
   }
 
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in'>
       {/* Header Section */}
       <PageHeader
-        title='Data Alumni'
-        description='Temukan informasi Alumni'
+        title='Data Lengkap Alumni'
+        description='Temukan informasi lengkap tentang Alumni disini'
       >
         <button
           onClick={() => setShowFilters(!showFilters)}

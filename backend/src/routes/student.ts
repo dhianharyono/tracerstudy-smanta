@@ -20,6 +20,211 @@ interface AuthenticatedRequest extends Request {
 const router = express.Router();
 
 router.use(authenticate);
+
+// Public / Shared routes for student and alumni
+router.get(
+  '/universities',
+  authorize('student', 'alumni', 'school'),
+  async (req: Request, res: Response) => {
+    try {
+      const type = req.query.type as string;
+
+      const matchQuery: any = {
+        role: 'alumni',
+        'university.name': { $exists: true, $ne: null },
+      };
+
+      if (type && ['negeri', 'swasta', 'kedinasan'].includes(type)) {
+        matchQuery['university.type'] = type;
+      }
+
+      const universities = await User.aggregate([
+        { $match: matchQuery },
+        {
+          $group: {
+            _id: '$university.name',
+            types: { $addToSet: '$university.type' },
+            count: { $sum: 1 },
+            alumni: {
+              $push: {
+                id: '$_id',
+                name: '$profile.fullName',
+                graduationYear: '$profile.graduationYear',
+                major: '$university.major',
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            // Find the first valid type (non-null, non-empty)
+            validType: {
+              $first: {
+                $filter: {
+                  input: '$types',
+                  as: 't',
+                  cond: { $and: [{ $ne: ['$$t', null] }, { $ne: ['$$t', ''] }] },
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: {
+              name: '$_id',
+              type: { $ifNull: ['$validType', 'Umum'] },
+            },
+            count: 1,
+            alumni: 1,
+          },
+        },
+        { $sort: { count: -1 } },
+      ]);
+
+      res.json(universities);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+router.get(
+  '/majors',
+  authorize('student', 'alumni', 'school'),
+  async (req: Request, res: Response) => {
+    try {
+      const majors = await User.aggregate([
+        {
+          $match: {
+            role: 'alumni',
+            'university.major': { $exists: true, $ne: null },
+          },
+        },
+        {
+          $group: {
+            _id: '$university.major',
+            count: { $sum: 1 },
+            alumni: {
+              $push: {
+                id: '$_id',
+                name: '$profile.fullName',
+                university: '$university.name',
+                universityType: '$university.type',
+                graduationYear: '$profile.graduationYear',
+              },
+            },
+          },
+        },
+        { $sort: { count: -1 } },
+      ]);
+
+      res.json(majors);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+router.get(
+  '/alumni',
+  authorize('student', 'alumni'),
+  async (req: Request, res: Response) => {
+    try {
+      const page = parseInt(req.query.page as string) || 1;
+      const limit = parseInt(req.query.limit as string) || 10;
+      const skip = (page - 1) * limit;
+      const university = req.query.university as string;
+      const graduationYear = req.query.graduationYear as string;
+      const major = req.query.major as string;
+      const name = req.query.name as string;
+      const badgeId = req.query.badgeId as string;
+
+      const filter: any = {
+        role: 'alumni',
+        'profile.fullName': { $exists: true, $nin: [null, ''] },
+        'university.name': { $exists: true, $nin: [null, ''] },
+      };
+
+      if (university) {
+        filter['university.name'] = university;
+      }
+
+      if (graduationYear) {
+        filter['profile.graduationYear'] = parseInt(graduationYear);
+      }
+
+      if (major) {
+        filter['university.major'] = major;
+      }
+
+      if (name) {
+        filter['profile.fullName'] = { $regex: name, $options: 'i' };
+      }
+
+      if (badgeId) {
+        filter['badges'] = { $in: [badgeId] };
+      }
+
+      if (req.query.isMentor === 'true') {
+        filter['isMentor'] = true;
+      }
+
+      const alumni = await User.find(filter)
+        .select('-password')
+        .select(
+          'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor',
+        )
+        .populate('badges')
+        .skip(skip)
+        .limit(limit)
+        .sort({ 'profile.graduationYear': -1, createdAt: -1 });
+
+      const total = await User.countDocuments(filter);
+
+      const universitiesQuery = User.distinct('university.name', {
+        role: 'alumni',
+        'university.name': { $exists: true, $nin: [null, ''] },
+      });
+
+      const graduationYearsQuery = User.distinct('profile.graduationYear', {
+        role: 'alumni',
+        'profile.graduationYear': { $exists: true, $ne: null },
+      }).sort();
+
+      const majorsQuery = User.distinct('university.major', {
+        role: 'alumni',
+        'university.major': { $exists: true, $nin: [null, ''] },
+      });
+
+      const [universities, graduationYearsData, majors] = await Promise.all([
+        universitiesQuery,
+        graduationYearsQuery,
+        majorsQuery,
+      ]);
+
+      const graduationYears = graduationYearsData.reverse();
+
+      res.json({
+        alumni,
+        pagination: {
+          page,
+          limit,
+          total,
+          pages: Math.ceil(total / limit),
+        },
+        filters: {
+          universities,
+          graduationYears,
+          majors,
+        },
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
 router.use(authorize('student'));
 
 // Get all badges for filter
@@ -259,197 +464,6 @@ router.get('/dashboard', async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 });
-
-router.get('/universities', async (req: Request, res: Response) => {
-  try {
-    const type = req.query.type as string;
-
-    const matchQuery: any = {
-      role: 'alumni',
-      'university.name': { $exists: true, $ne: null },
-    };
-
-    if (type && ['negeri', 'swasta', 'kedinasan'].includes(type)) {
-      matchQuery['university.type'] = type;
-    }
-
-    const universities = await User.aggregate([
-      { $match: matchQuery },
-      {
-        $group: {
-          _id: '$university.name',
-          types: { $addToSet: '$university.type' },
-          count: { $sum: 1 },
-          alumni: {
-            $push: {
-              id: '$_id',
-              name: '$profile.fullName',
-              graduationYear: '$profile.graduationYear',
-              major: '$university.major',
-            },
-          },
-        },
-      },
-      {
-        $addFields: {
-          // Find the first valid type (non-null, non-empty)
-          validType: {
-            $first: {
-              $filter: {
-                input: '$types',
-                as: 't',
-                cond: { $and: [{ $ne: ['$$t', null] }, { $ne: ['$$t', ''] }] },
-              },
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: {
-            name: '$_id',
-            type: { $ifNull: ['$validType', 'Umum'] },
-          },
-          count: 1,
-          alumni: 1,
-        },
-      },
-      { $sort: { count: -1 } },
-    ]);
-
-    res.json(universities);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-router.get('/majors', async (req: Request, res: Response) => {
-  try {
-    const majors = await User.aggregate([
-      {
-        $match: {
-          role: 'alumni',
-          'university.major': { $exists: true, $ne: null },
-        },
-      },
-      {
-        $group: {
-          _id: '$university.major',
-          count: { $sum: 1 },
-          alumni: {
-            $push: {
-              id: '$_id',
-              name: '$profile.fullName',
-              university: '$university.name',
-              graduationYear: '$profile.graduationYear',
-            },
-          },
-        },
-      },
-      { $sort: { count: -1 } },
-    ]);
-
-    res.json(majors);
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-router.get('/alumni', async (req: Request, res: Response) => {
-  try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const skip = (page - 1) * limit;
-    const university = req.query.university as string;
-    const graduationYear = req.query.graduationYear as string;
-    const major = req.query.major as string;
-    const name = req.query.name as string;
-    const badgeId = req.query.badgeId as string;
-
-    const filter: any = {
-      role: 'alumni',
-      'profile.fullName': { $exists: true, $nin: [null, ''] },
-      'university.name': { $exists: true, $nin: [null, ''] },
-    };
-
-    if (university) {
-      filter['university.name'] = university;
-    }
-
-    if (graduationYear) {
-      filter['profile.graduationYear'] = parseInt(graduationYear);
-    }
-
-    if (major) {
-      filter['university.major'] = major;
-    }
-
-    if (name) {
-      filter['profile.fullName'] = { $regex: name, $options: 'i' };
-    }
-
-    if (badgeId) {
-      filter['badges'] = { $in: [badgeId] };
-    }
-
-    if (req.query.isMentor === 'true') {
-      filter['isMentor'] = true;
-    }
-
-    const alumni = await User.find(filter)
-      .select('-password')
-      .select(
-        'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor',
-      )
-      .populate('badges')
-      .skip(skip)
-      .limit(limit)
-      .sort({ 'profile.graduationYear': -1, createdAt: -1 });
-
-    const total = await User.countDocuments(filter);
-
-    const universitiesQuery = User.distinct('university.name', {
-      role: 'alumni',
-      'university.name': { $exists: true, $nin: [null, ''] },
-    });
-
-    const graduationYearsQuery = User.distinct('profile.graduationYear', {
-      role: 'alumni',
-      'profile.graduationYear': { $exists: true, $ne: null },
-    }).sort();
-
-    const majorsQuery = User.distinct('university.major', {
-      role: 'alumni',
-      'university.major': { $exists: true, $nin: [null, ''] },
-    });
-
-    const [universities, graduationYearsData, majors] = await Promise.all([
-      universitiesQuery,
-      graduationYearsQuery,
-      majorsQuery,
-    ]);
-
-    const graduationYears = graduationYearsData.reverse();
-
-    res.json({
-      alumni,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
-      filters: {
-        universities,
-        graduationYears,
-        majors,
-      },
-    });
-  } catch (error: any) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
 // Get all news
 router.get('/news', async (req: AuthenticatedRequest, res: Response) => {
   try {

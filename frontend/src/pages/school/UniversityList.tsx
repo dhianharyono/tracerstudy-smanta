@@ -8,6 +8,7 @@ import {
   FaMapMarkedAlt,
   FaGraduationCap,
 } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 import Card from '@/components/common/Card';
 
 interface UnivStat {
@@ -17,6 +18,7 @@ interface UnivStat {
 }
 
 const SchoolUniversityList = () => {
+  const navigate = useNavigate();
   const [universities, setUniversities] = useState<UnivStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -226,7 +228,8 @@ const SchoolUniversityList = () => {
             {filteredUniversities.map((univ, idx) => (
               <div
                 key={idx}
-                className='flex flex-col justify-between p-5 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] hover:border-[var(--primary)] hover:shadow-md transition-all group'
+                onClick={() => navigate(`/school/alumni?university=${encodeURIComponent(univ._id)}`)}
+                className='flex flex-col justify-between p-5 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] hover:border-[var(--primary)] hover:shadow-md transition-all group cursor-pointer hover:scale-[1.01]'
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3 w-full pr-2'>
@@ -265,6 +268,9 @@ const SchoolUniversityList = () => {
                       Alumni
                     </span>
                   </div>
+                  <span className='text-[10px] font-bold text-[var(--primary)] uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity'>
+                    Lihat Detail &rarr;
+                  </span>
                 </div>
               </div>
             ))}

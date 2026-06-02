@@ -202,7 +202,7 @@ router.get('/stats', async (req: Request, res: Response) => {
 // Get alumni list for school monitoring
 router.get('/alumni', async (req: Request, res: Response) => {
     try {
-        const { search, graduationYear, status, surveyStatus, limit = 50, page = 1 } = req.query;
+        const { search, graduationYear, status, surveyStatus, limit = 50, page = 1, university, major } = req.query;
         
         const query: any = { role: 'alumni' };
         const andConditions: any[] = [];
@@ -220,6 +220,14 @@ router.get('/alumni', async (req: Request, res: Response) => {
         
         if (graduationYear) {
             query['profile.graduationYear'] = parseInt(graduationYear as string);
+        }
+
+        if (university) {
+            query['university.name'] = university;
+        }
+
+        if (major) {
+            query['university.major'] = major;
         }
 
         const jobExistsQuery = {

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import Toast from '@/components/toast';
 import {
@@ -35,6 +36,10 @@ import SmartLoader from '@/components/SmartLoader';
 import SearchableSelect from '@/components/SearchableSelect';
 
 const AdminAlumni = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const universityParam = searchParams.get('university') || '';
+  const majorParam = searchParams.get('major') || '';
+
   const [alumni, setAlumni] = useState<any[]>([]);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -48,12 +53,23 @@ const AdminAlumni = () => {
   const [debouncedName, setDebouncedName] = useState('');
 
   const [filters, setFilters] = useState({
-    university: '',
+    university: universityParam,
     graduationYear: '',
-    major: '',
+    major: majorParam,
     questionnaireStatus: 'completed',
     name: '',
   });
+
+  useEffect(() => {
+    if (filters.university !== universityParam || filters.major !== majorParam) {
+      setFilters((prev) => ({
+        ...prev,
+        university: universityParam,
+        major: majorParam,
+      }));
+      setPagination((prev) => ({ ...prev, page: 1 }));
+    }
+  }, [universityParam, majorParam]);
   const [filterOptions, setFilterOptions] = useState({
     universities: [] as string[],
     graduationYears: [] as number[],
@@ -269,6 +285,15 @@ const AdminAlumni = () => {
   const handleFilterChange = (key: string, value: string) => {
     setFilters({ ...filters, [key]: value });
     setPagination({ ...pagination, page: 1 });
+    if (key === 'university' || key === 'major') {
+      const newParams = new URLSearchParams(searchParams);
+      if (value) {
+        newParams.set(key, value);
+      } else {
+        newParams.delete(key);
+      }
+      setSearchParams(newParams);
+    }
   };
 
   const handleClearFilters = () => {
@@ -281,6 +306,7 @@ const AdminAlumni = () => {
     });
     setSearchTerm('');
     setPagination({ ...pagination, page: 1 });
+    setSearchParams({});
   };
 
   const handleDelete = async (id: string) => {
@@ -514,6 +540,24 @@ const AdminAlumni = () => {
           </button>
         </div>
       </Card>
+
+      {/* Active URL Filters Banner */}
+      {(universityParam || majorParam) && (
+        <div className='mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl flex items-center justify-between text-sm border border-blue-100 dark:border-blue-900/30'>
+          <div className='flex items-center gap-2'>
+            <span className='font-bold'>Penyaringan Aktif:</span>
+            {universityParam && <span>Universitas: <strong>{universityParam}</strong></span>}
+            {universityParam && majorParam && <span>•</span>}
+            {majorParam && <span>Jurusan: <strong>{majorParam}</strong></span>}
+          </div>
+          <button
+            onClick={() => setSearchParams({})}
+            className='text-xs font-bold bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-50 transition-all text-blue-600 dark:text-blue-400'
+          >
+            Hapus Filter
+          </button>
+        </div>
+      )}
 
       {/* Table Content */}
       <TableContainer>

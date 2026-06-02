@@ -51,7 +51,6 @@ const AdminJobManagement = lazy(() => import('./pages/admin/AdminOpportunityMana
 
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
-const SchoolUniversityList = lazy(() => import('./pages/school/UniversityList'));
 const SchoolFeedback = lazy(() => import('./pages/school/Feedback'));
 const SchoolVerification = lazy(() => import('./pages/school/DataVerification'));
 
@@ -160,6 +159,9 @@ function App() {
               <Route path='jobs' element={<ManageMyJobs />} />
               <Route path='jobs/new' element={<PostOpportunity />} />
               <Route path='jobs/edit/:id' element={<PostOpportunity />} />
+              <Route path='universities' element={<StudentUniversities />} />
+              <Route path='majors' element={<StudentMajors />} />
+              <Route path='alumni' element={<StudentAlumni />} />
             </Route>
 
             {/* Admin Routes */}
@@ -201,7 +203,8 @@ function App() {
             >
               <Route index element={<SchoolDashboard />} />
               <Route path='alumni' element={<SchoolAlumniList />} />
-              <Route path='universities' element={<SchoolUniversityList />} />
+              <Route path='universities' element={<StudentUniversities />} />
+              <Route path='majors' element={<StudentMajors />} />
               <Route path='feedback' element={<SchoolFeedback />} />
               <Route path='verification' element={<SchoolVerification />} />
               <Route path='profile' element={<Profile />} />

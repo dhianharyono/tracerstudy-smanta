@@ -10,10 +10,15 @@ import {
   FaCheckCircle,
   FaClock,
 } from 'react-icons/fa';
+import { useSearchParams } from 'react-router-dom';
 import Card from '@/components/common/Card';
 import { isUniversityIncomplete } from '@/utils/validation';
 
 const SchoolAlumniList = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const universityParam = searchParams.get('university') || '';
+  const majorParam = searchParams.get('major') || '';
+
   const [alumni, setAlumni] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -33,11 +38,12 @@ const SchoolAlumniList = () => {
     setStatusFilter('');
     setSurveyFilter('completed');
     setPagination({ ...pagination, page: 1 });
+    setSearchParams({});
   };
 
   useEffect(() => {
     fetchAlumni();
-  }, [pagination.page, graduationYear, statusFilter, surveyFilter, search]);
+  }, [pagination.page, graduationYear, statusFilter, surveyFilter, search, searchParams]);
 
   const fetchAlumni = async () => {
     setLoading(true);
@@ -50,6 +56,8 @@ const SchoolAlumniList = () => {
           surveyStatus: surveyFilter,
           page: pagination.page,
           limit: pagination.limit,
+          university: universityParam,
+          major: majorParam,
         },
       });
       setAlumni(response.data.alumni);
@@ -123,7 +131,7 @@ const SchoolAlumniList = () => {
         </div>
         <button
           onClick={downloadCSV}
-          className='w-full text-sm flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20 self-start md:self-auto'
+          className='w-fit text-sm flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition-all shadow-lg shadow-emerald-600/20 self-start md:self-auto'
         >
           <FaDownload /> Download CSV
         </button>
@@ -253,6 +261,24 @@ const SchoolAlumniList = () => {
           </button>
         </div>
       </Card>
+
+      {/* Active URL Filters Banner */}
+      {(universityParam || majorParam) && (
+        <div className='mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl flex items-center justify-between text-sm border border-blue-100 dark:border-blue-900/30'>
+          <div className='flex items-center gap-2'>
+            <span className='font-bold'>Penyaringan Aktif:</span>
+            {universityParam && <span>Universitas: <strong>{universityParam}</strong></span>}
+            {universityParam && majorParam && <span>•</span>}
+            {majorParam && <span>Jurusan: <strong>{majorParam}</strong></span>}
+          </div>
+          <button
+            onClick={() => setSearchParams({})}
+            className='text-xs font-bold bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-50 transition-all text-blue-600 dark:text-blue-400'
+          >
+            Hapus Filter
+          </button>
+        </div>
+      )}
 
       {/* Table Content */}
       <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] shadow-sm overflow-hidden'>

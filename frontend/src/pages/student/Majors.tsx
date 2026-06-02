@@ -10,12 +10,16 @@ import {
   FaTimes,
   FaArrowRight,
   FaChartPie,
+  FaTrophy,
+  FaBuilding,
 } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
 import { isStudentProfileComplete } from '@/utils/helpers';
+import { isUniversityIncomplete, isNameIncomplete } from '@/utils/validation';
 import SmartLoader from '@/components/SmartLoader';
+import Card from '@/components/common/Card';
 
 interface MajorData {
   _id: string;
@@ -24,6 +28,7 @@ interface MajorData {
     id: string;
     name: string;
     university: string;
+    universityType?: string;
     graduationYear: number;
   }[];
 }
@@ -114,7 +119,7 @@ const MajorDetailModal = ({
                       </div>
                       <div className='relative z-10'>
                         <div className='text-2xl font-bold text-[var(--primary)] mb-1'>{count}</div>
-                        <div className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-2 h-8 leading-tight' title={univ}>
+                        <div className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-4 h-8 leading-tight' title={univ}>
                           {univ}
                         </div>
                         <div className='mt-2 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
@@ -209,6 +214,18 @@ const StudentMajors = () => {
   const [selectedMajor, setSelectedMajor] = useState<MajorData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const topMajor = filteredMajors.length > 0 ? filteredMajors[0] : null;
+
+  const ptnMajorsCount = majors.filter((m) =>
+    m.alumni.some((a) => a.universityType === 'negeri'),
+  ).length;
+  const ptsMajorsCount = majors.filter((m) =>
+    m.alumni.some((a) => !a.universityType || a.universityType === 'swasta' || a.universityType === ''),
+  ).length;
+  const kedinasanMajorsCount = majors.filter((m) =>
+    m.alumni.some((a) => a.universityType === 'kedinasan'),
+  ).length;
+
   useEffect(() => {
     const fetchMajors = async () => {
       try {
@@ -239,7 +256,7 @@ const StudentMajors = () => {
   };
 
   const handleViewAllAlumni = (majorName: string) => {
-    navigate(`/student/alumni?major=${encodeURIComponent(majorName)}`);
+    navigate(`/${user?.role}/alumni?major=${encodeURIComponent(majorName)}`);
   };
 
 
@@ -247,104 +264,224 @@ const StudentMajors = () => {
     return <SmartLoader />;
   }
 
-  if (!isStudentProfileComplete(user)) {
-    return <RestrictedAccess type='profile_incomplete' role='student' />;
+  if (user?.role === 'school') {
+    // School monitoring user does not need to complete profile or questionnaire
+  } else if (user?.role === 'alumni') {
+    const hasUniversityData = !!(user?.university?.name);
+    if (user?.questionnaireCompleted === false && !hasUniversityData) {
+      return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+    }
+    if (isNameIncomplete(user?.profile)) {
+      return <RestrictedAccess type='name_incomplete' role='alumni' />;
+    }
+    if (isUniversityIncomplete(user)) {
+      return <RestrictedAccess type='university_incomplete' role='alumni' />;
+    }
+  } else {
+    if (!isStudentProfileComplete(user)) {
+      return <RestrictedAccess type='profile_incomplete' role='student' />;
+    }
   }
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in relative'>
+    <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in relative space-y-6'>
       {/* Header Section */}
-      <div className='mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
-        <div className='text-center md:text-left mb-2'>
-          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-            Jurusan & Program Studi
-          </h1>
-          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-            Persebaran Alumni berdasarkan jurusan
-          </p>
-        </div>
-
-        {/* Search Control */}
-        <div className='flex items-center bg-[color:var(--bg-card)] p-2 rounded-xl shadow-sm border border-[color:var(--border-color)]'>
-          <div className='relative w-full md:w-auto'>
-            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
-            <input
-              type='text'
-              placeholder='Cari Jurusan...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full sm:w-64 rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-4 text-sm outline-none ring-1 ring-transparent focus:ring-[var(--primary)] transition-all'
-            />
-          </div>
-        </div>
+      <div className='mb-6'>
+        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+          Jurusan & Program Studi
+        </h1>
+        <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
+          Persebaran Alumni berdasarkan jurusan dan statistikanya.
+        </p>
       </div>
 
-      {/* Content Grid */}
-      {filteredMajors.length === 0 ? (
-        <div className='flex flex-col items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-[color:var(--bg-card)] p-12 text-center dark:border-gray-700'>
-          <div className='mb-4 rounded-full bg-gray-100 p-4 dark:bg-gray-800'>
-            <FaBook className='text-lg md:text-4xl text-gray-400' />
+      {/* Stats Cards */}
+      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
+        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-white/20 rounded-xl backdrop-blur-sm'>
+              <FaBook size={20} />
+            </div>
+            <div>
+              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
+                Total Jurusan Terdata
+              </p>
+              <h3 className='text-2xl font-black'>{majors.length}</h3>
+            </div>
           </div>
-          <h3 className='text-lg font-medium text-[color:var(--text-primary)]'>
-            Tidak ditemukan
-          </h3>
-          <p className='text-gray-500'>
-            Belum ada data jurusan yang sesuai dengan pencarian Anda.
-          </p>
-        </div>
-      ) : (
-        <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {filteredMajors.map((major, index) => (
-            <div
-              key={index}
-              onClick={() => handleMajorClick(major)}
-              className='group relative cursor-pointer overflow-hidden rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:border-[var(--primary-light)]'
-            >
-              <div className='mb-4 min-h-[8rem]'>
-                <h3 className='line-clamp-4 text-xs md:text-lg font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors !mb-2'>
-                  {major._id}
-                </h3>
+        </Card>
 
-                {/* Universities List */}
-                <div className='flex flex-wrap gap-1.5 mt-2'>
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-amber-500/10 text-amber-500 rounded-xl'>
+              <FaBuilding size={20} />
+            </div>
+            <div>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Jurusan di PTN
+              </p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+                {ptnMajorsCount}
+              </h3>
+            </div>
+          </div>
+        </Card>
+
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-pink-500/10 text-pink-500 rounded-xl'>
+              <FaBuilding size={20} />
+            </div>
+            <div>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Jurusan di PTS
+              </p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+                {ptsMajorsCount}
+              </h3>
+            </div>
+          </div>
+        </Card>
+
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
+          <div className='flex items-center gap-4'>
+            <div className='p-3 bg-emerald-500/10 text-emerald-500 rounded-xl'>
+              <FaGraduationCap size={20} />
+            </div>
+            <div>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Jurusan Kedinasan
+              </p>
+              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+                {kedinasanMajorsCount}
+              </h3>
+            </div>
+          </div>
+        </Card>
+      </div>
+
+      {topMajor && (
+        <Card className='bg-gradient-to-r from-amber-500/5 to-transparent border-l-4 border-l-amber-500 mb-8'>
+          <div className='flex items-center gap-6'>
+            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+              <FaTrophy size={28} />
+            </div>
+            <div className='flex-1 min-w-0'>
+              <div className='flex items-center gap-2 mb-1'>
+                <FaTrophy className='text-amber-500 sm:hidden' />
+                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
+                  Jurusan Terfavorit Alumni
+                </p>
+              </div>
+              <h3
+                className='text-xl md:text-2xl font-black text-[color:var(--text-primary)] truncate'
+                title={topMajor._id}
+              >
+                {topMajor._id}
+              </h3>
+              <div className='flex items-center gap-3 mt-2'>
+                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
+                  <span className='text-amber-500'>{topMajor.count}</span>{' '}
+                  Alumni Bergabung
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
+
+      {/* Search and List */}
+      <Card className='min-h-[500px]'>
+        <div className='flex flex-col gap-4 mb-6'>
+          <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)]'>
+              Peringkat Jurusan & Program Studi
+            </h2>
+
+            <div className='relative w-full md:w-72 shrink-0'>
+              <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]' />
+              <input
+                type='text'
+                placeholder='Cari Jurusan...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)] transition-colors'
+              />
+            </div>
+          </div>
+        </div>
+
+        {filteredMajors.length === 0 ? (
+          <div className='text-center py-16 px-4 bg-[color:var(--bg-tertiary)] rounded-2xl border-2 border-dashed border-[color:var(--border-color)] text-[color:var(--text-tertiary)]'>
+            <FaBook size={48} className='mx-auto mb-4 opacity-20' />
+            <p>Tidak ada jurusan yang ditemukan.</p>
+          </div>
+        ) : (
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
+            {filteredMajors.map((major, idx) => (
+              <div
+                key={idx}
+                onClick={() => handleMajorClick(major)}
+                className='flex flex-col justify-between p-5 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] hover:border-[var(--primary)] hover:shadow-md transition-all group cursor-pointer'
+              >
+                <div className='flex items-start justify-between mb-4'>
+                  <div className='flex items-center gap-3 w-full pr-2'>
+                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-600 font-bold text-sm shrink-0 uppercase'>
+                      #{idx + 1}
+                    </div>
+                    <div className='min-w-0 flex-1'>
+                      <h4
+                        className='font-bold text-[color:var(--text-primary)] text-sm md:text-base leading-tight line-clamp-2'
+                        title={major._id}
+                      >
+                        {major._id}
+                      </h4>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Universities list summary */}
+                <div className='flex flex-wrap gap-1.5 mb-4'>
                   {(() => {
                     const uniqueUnivs = Array.from(
                       new Set(major.alumni?.map((a) => a.university)),
                     ).filter(Boolean);
                     return (
                       <>
-                        {uniqueUnivs.slice(0, 3).map((univ, i) => (
+                        {uniqueUnivs.slice(0, 2).map((univ, i) => (
                           <span
                             key={i}
-                            className='text-[7px] md:text-xs px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400'
+                            className='text-[10px] px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400 truncate max-w-[150px]'
+                            title={univ}
                           >
                             {univ}
                           </span>
                         ))}
-                        {uniqueUnivs.length > 3 && (
-                          <span className='text-[6px] md:text-[10px] text-[color:var(--text-tertiary)] flex items-center ml-0.5'>
-                            +{uniqueUnivs.length - 3} lainnya
+                        {uniqueUnivs.length > 2 && (
+                          <span className='text-[10px] text-[color:var(--text-tertiary)] flex items-center ml-0.5'>
+                            +{uniqueUnivs.length - 2} kampus
                           </span>
                         )}
                       </>
                     );
                   })()}
                 </div>
-              </div>
 
-              <div className='flex items-center justify-between border-t border-[color:var(--border-color)] pt-4'>
-                <div className='flex items-center gap-2 text-xs md:text-sm font-medium text-[color:var(--text-secondary)]'>
-                  <FaUsers className='text-gray-400 group-hover:text-[var(--primary-light)] transition-colors' />
-                  <span>Total Alumni</span>
+                <div className='pt-4 border-t border-[color:var(--border-color)] flex justify-between items-end'>
+                  <div>
+                    <span className='text-2xl font-black text-[var(--primary)] group-hover:scale-110 transition-transform inline-block'>
+                      {major.count}
+                    </span>
+                    <span className='text-xs font-bold text-[color:var(--text-secondary)] uppercase tracking-wider ml-2'>
+                      Alumni
+                    </span>
+                  </div>
                 </div>
-                <span className='text-sm md:text-lg font-bold text-[var(--primary)]'>
-                  {major.count}
-                </span>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </Card>
 
       {/* Major Detail Modal */}
       <MajorDetailModal
