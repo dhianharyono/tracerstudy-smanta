@@ -256,6 +256,11 @@ const AlumniQuestionnaire = () => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
+  const [initialProfileData, setInitialProfileData] = useState({
+    fullName: '',
+    entryYear: '',
+    graduationYear: '',
+  });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitLoading, setSubmitLoading] = useState(false);
@@ -292,6 +297,12 @@ const AlumniQuestionnaire = () => {
 
         if (profileRes.data) {
           const profile = profileRes.data;
+
+          setInitialProfileData({
+            fullName: profile.profile?.fullName || '',
+            entryYear: profile.profile?.entryYear?.toString() || '',
+            graduationYear: profile.profile?.graduationYear?.toString() || '',
+          });
 
           if (profile.questionnaireCompleted) {
             setIsEditMode(true);
@@ -698,7 +709,7 @@ const AlumniQuestionnaire = () => {
               required
               placeholder='Masukkan nama lengkap'
               validationErrors={validationErrors}
-              disabled={isReadOnly || !!formData.profile.fullName}
+              disabled={isReadOnly || !!initialProfileData.fullName}
             />
 
             <SelectField
@@ -726,7 +737,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2018'
               validationErrors={validationErrors}
-              disabled={isReadOnly || !!formData.profile.entryYear}
+              disabled={isReadOnly || !!initialProfileData.entryYear}
             />
 
             <InputField
@@ -740,7 +751,7 @@ const AlumniQuestionnaire = () => {
               max={new Date().getFullYear()}
               placeholder='Ex: 2021'
               validationErrors={validationErrors}
-              disabled={isReadOnly || !!formData.profile.graduationYear}
+              disabled={isReadOnly || !!initialProfileData.graduationYear}
             />
 
             <SelectField
