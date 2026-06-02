@@ -69,7 +69,7 @@ router.post(
     body('password')
       .isLength({ min: 8 })
       .withMessage('Password minimal harus 8 karakter')
-      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/)
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
       .withMessage('Password harus mengandung huruf besar, huruf kecil, angka, dan simbol'),
     body('role')
       .isIn(['alumni', 'admin', 'student'])
@@ -138,7 +138,11 @@ router.post(
           username: user.username,
           email: user.email,
           role: user.role,
+          schoolRole: user.schoolRole,
+          questionnaireCompleted: user.questionnaireCompleted,
           profile: user.profile,
+          university: user.university,
+          job: user.job,
           badges: user.badges,
         },
       });

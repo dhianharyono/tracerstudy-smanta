@@ -54,7 +54,7 @@ const Register = () => {
     }
 
     // Match backend complexity requirement
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/;
     if (formData.password.length < 8) {
       setError('Password minimal harus 8 karakter');
       return;
