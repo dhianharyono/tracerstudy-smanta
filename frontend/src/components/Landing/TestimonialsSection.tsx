@@ -81,7 +81,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
                         Anonymous
                       </h6>
                       <p className='text-[10px] md:text-xs font-bold text-indigo-500 uppercase tracking-widest'>
-                        {item.user?.role || 'Alumni'}
+                        {item.user?.role === 'student' ? 'Siswa' : item.user?.role === 'school' ? 'Sekolah' : 'Alumni'}
                       </p>
                     </div>
                   </div>

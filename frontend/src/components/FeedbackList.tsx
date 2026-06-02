@@ -61,7 +61,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbacks }) => {
                                     </div>
                                     <div>
                                         <div className='font-semibold text-[color:var(--text-primary)] text-sm'>
-                                            Anonymous {item.role === 'student' ? 'Siswa' : 'Alumni'}
+                                            Anonymous {item.role === 'student' ? 'Siswa' : item.role === 'alumni' ? 'Alumni' : 'Pihak Sekolah'}
                                         </div>
                                         <div className='text-xs text-[color:var(--text-secondary)]'>
                                             {new Date(item.createdAt).toLocaleDateString('id-ID', {
@@ -130,7 +130,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbacks }) => {
                                     </div>
                                     <div>
                                         <div className="font-bold text-[color:var(--text-primary)]">
-                                            Anonymous {selectedFeedback.role === 'student' ? 'Siswa' : 'Alumni'}
+                                            Anonymous {selectedFeedback.role === 'student' ? 'Siswa' : selectedFeedback.role === 'alumni' ? 'Alumni' : 'Pihak Sekolah'}
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs text-[color:var(--text-secondary)]">

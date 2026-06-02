@@ -40,6 +40,12 @@ const WebsiteStatistics = () => {
   if (loading && !stats) return <SmartLoader />;
 
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+  const ROLE_COLORS: { [key: string]: string } = {
+    alumni: '#0088FE',   // Blue
+    student: '#00C49F',  // Teal
+    public: '#FFBB28',   // Yellow
+    school: '#FF8042',   // Orange
+  };
 
   const renderMenuName = (menuName: string, path: string) => {
     if (!menuName || menuName === 'Unknown') {
@@ -314,21 +320,22 @@ const WebsiteStatistics = () => {
                   paddingAngle={5}
                   dataKey='count'
                   nameKey='_id'
-                  label={({ name, percent }) =>
-                    `${name === 'student' ? 'Siswa' : name === 'alumni' ? 'Alumni' : 'Publik'} ${(percent * 100).toFixed(0)}%`
-                  }
+                  label={({ name, percent }) => {
+                    const labelName = name === 'student' ? 'Siswa' : name === 'alumni' ? 'Alumni' : name === 'school' ? 'Sekolah' : 'Publik';
+                    return `${labelName} ${(percent * 100).toFixed(0)}%`;
+                  }}
                 >
-                  {stats?.visitsByRole?.map((_entry: any, index: number) => (
+                  {stats?.visitsByRole?.map((entry: any, index: number) => (
                     <Cell
                       key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
+                      fill={ROLE_COLORS[entry._id] || COLORS[index % COLORS.length]}
                     />
                   ))}
                 </Pie>
                 <Tooltip />
                 <Legend
                   formatter={(value) =>
-                    value === 'student' ? 'Siswa' : value === 'alumni' ? 'Alumni' : 'Publik'
+                    value === 'student' ? 'Siswa' : value === 'alumni' ? 'Alumni' : value === 'school' ? 'Sekolah' : 'Publik'
                   }
                 />
               </PieChart>
@@ -385,13 +392,23 @@ const WebsiteStatistics = () => {
                     {renderMenuName(page.menuName, page.path)}
                   </td>
                   <td
-                    className={`px-6 py-4 font-medium text-[color:var(--text-tertiary)] ${page.path.includes('/student') ? 'text-blue-300' : page.path.includes('/alumni') ? 'text-green-300' : 'text-amber-300'}`}
+                    className={`px-6 py-4 font-medium text-[color:var(--text-tertiary)] ${
+                      page.path.includes('/student')
+                        ? 'text-blue-300'
+                        : page.path.includes('/alumni')
+                          ? 'text-green-300'
+                          : page.path.includes('/school')
+                            ? 'text-purple-300'
+                            : 'text-amber-300'
+                    }`}
                   >
                     {page.path.includes('/student')
                       ? 'Siswa'
                       : page.path.includes('/alumni')
                         ? 'Alumni'
-                        : 'Publik'}
+                        : page.path.includes('/school')
+                          ? 'Sekolah'
+                          : 'Publik'}
                   </td>
                   <td className='px-6 py-4 font-medium text-[color:var(--text-tertiary)] italic'>
                     {page.path}
