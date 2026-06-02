@@ -7,7 +7,6 @@ import {
   FaTrash,
   FaTimes,
   FaSave,
-  FaUser,
   FaSearch,
   FaSync,
   FaEye,

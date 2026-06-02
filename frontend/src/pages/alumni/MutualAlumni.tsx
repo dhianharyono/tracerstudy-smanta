@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Toast from '@/components/toast';
 import {
   FaUserGraduate,
   FaUniversity,
@@ -9,6 +10,8 @@ import {
   FaInstagram,
   FaCrown,
   FaMedal,
+  FaUserPlus,
+  FaShareAlt,
 } from 'react-icons/fa';
 
 interface AlumniData {
@@ -43,6 +46,29 @@ const MutualAlumni = () => {
   const { user } = useAuth();
   const [alumni, setAlumni] = useState<AlumniData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const handleShareLink = async () => {
+    const inviteText = `Halo rekan seangkatan SMANTA! 👋\n\nYuk bergabung di Tracer Study SMANTA (SMA Negeri 1 Talun) untuk saling terhubung, berjejaring, dan membantu sekolah melacak sebaran alumni. Daftar sekarang melalui tautan berikut:\n👉 ${window.location.origin}/register\n\nTerima kasih!`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Tracer Study SMANTA',
+          text: inviteText,
+          url: `${window.location.origin}/register`
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(inviteText);
+        Toast('Pesan ajakan berhasil disalin ke clipboard! Bagikan sekarang ke rekan Anda.', 'success');
+      } catch (err) {
+        Toast('Gagal menyalin teks.', 'error');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchMutualAlumni = async () => {
@@ -90,6 +116,27 @@ const MutualAlumni = () => {
         <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
           Alumni yang lulus pada tahun yang sama dengan Anda
         </p>
+      </div>
+
+      {/* Invitation Share Banner */}
+      <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
+        <div className='flex items-center gap-4 text-center md:text-left flex-col md:flex-row'>
+          <div className='p-3 bg-white/10 rounded-xl shrink-0'>
+            <FaUserPlus className='text-2xl text-white' />
+          </div>
+          <div>
+            <h2 className='text-base md:text-lg font-extrabold mb-1'>Ajak Teman Seangkatan Bergabung!</h2>
+            <p className='text-xs md:text-sm text-blue-100 max-w-xl'>
+              Bantu sekolah melacak sebaran alumni dan perkuat jejaring alumni dengan membagikan link pendaftaran Tracer Study Smanta kepada rekan seangkatan Anda.
+            </p>
+          </div>
+        </div>
+        <button
+          onClick={handleShareLink}
+          className='w-full md:w-auto shrink-0 px-6 py-3 bg-white text-blue-600 hover:bg-blue-50 font-bold rounded-xl shadow-md transition-all flex items-center justify-center gap-2 text-sm'
+        >
+          <FaShareAlt /> Bagikan Link Pendaftaran
+        </button>
       </div>
 
       {alumni.length === 0 ? (
