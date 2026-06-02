@@ -68,7 +68,7 @@ const StudentDashboard = () => {
       const timer = setTimeout(() => {
         setIsGraduationModalOpen(true);
         sessionStorage.setItem('graduation_modal_shown', 'true');
-      }, 2000);
+      }, 500);
       return () => clearTimeout(timer);
     }
   }, [loading, user]);
