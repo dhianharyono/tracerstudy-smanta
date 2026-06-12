@@ -68,7 +68,7 @@ const FeaturesSection = () => {
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-blue-600 transition-colors'>
                         {f.title}
                       </p>
-                      <p className='text-xs text-slate-550 leading-relaxed font-medium'>
+                      <p className='text-xs text-slate-500 leading-relaxed font-medium'>
                         {f.desc}
                       </p>
                     </div>
@@ -125,7 +125,7 @@ const FeaturesSection = () => {
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-indigo-600 transition-colors'>
                         {f.title}
                       </p>
-                      <p className='text-xs text-slate-550 leading-relaxed font-medium'>
+                      <p className='text-xs text-slate-500 leading-relaxed font-medium'>
                         {f.desc}
                       </p>
                     </div>
@@ -182,7 +182,7 @@ const FeaturesSection = () => {
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-emerald-600 transition-colors'>
                         {f.title}
                       </p>
-                      <p className='text-xs text-slate-550 leading-relaxed font-medium'>
+                      <p className='text-xs text-slate-500 leading-relaxed font-medium'>
                         {f.desc}
                       </p>
                     </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaArrowUp } from 'react-icons/fa';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'react-toastify';
 import ConfirmationModal from '@/components/ConfirmationModal';
@@ -18,6 +19,7 @@ const LandingPage = () => {
   const { stats, testimonials, loading } = useLandingPageData();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -36,6 +38,7 @@ const LandingPage = () => {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      setShowScrollTop(window.scrollY > 300);
     };
     handleScroll(); // Initial check
     window.addEventListener('scroll', handleScroll);
@@ -61,12 +64,16 @@ const LandingPage = () => {
               className='h-8 w-8 md:h-12 md:w-12 filter drop-shadow-sm'
             />
             <div className='block'>
-              <div className={`text-xs md:text-lg font-black leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
-                }`}>
+              <div
+                className={`text-xs md:text-lg font-black leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
+                  }`}
+              >
                 TRACER STUDY
               </div>
-              <p className={`text-[7px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
-                }`}>
+              <p
+                className={`text-[7px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
+                  }`}
+              >
                 SMAN 1 Tawangsari
               </p>
             </div>
@@ -91,7 +98,9 @@ const LandingPage = () => {
                 </Link>
                 <button
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className={`text-[10px] md:text-sm font-semibold transition-colors px-1 md:px-4 py-2 ${isScrolled ? 'text-red-500 hover:text-red-650' : 'text-red-200 hover:text-red-100'
+                  className={`text-[10px] md:text-sm font-semibold transition-colors px-1 md:px-4 py-2 ${isScrolled
+                    ? 'text-red-500 hover:text-red-650'
+                    : 'text-red-200 hover:text-red-100'
                     }`}
                 >
                   Keluar
@@ -101,7 +110,9 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/login'
-                  className={`flex items-center gap-1 text-[10px] md:text-sm font-semibold transition-colors px-2 md:px-4 py-2 ${isScrolled ? 'text-slate-650 hover:text-blue-600' : 'text-white/90 hover:text-white'
+                  className={`flex items-center gap-1 text-[10px] md:text-sm font-semibold transition-colors px-2 md:px-4 py-2 ${isScrolled
+                    ? 'text-slate-650 hover:text-blue-600'
+                    : 'text-white/90 hover:text-slate-300'
                     }`}
                 >
                   <span>Login</span>
@@ -109,7 +120,7 @@ const LandingPage = () => {
                 <Link
                   to='/register'
                   className={`flex items-center gap-1 text-[10px] md:text-sm font-extrabold px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-605 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
                     : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
                     }`}
                 >
@@ -208,7 +219,11 @@ const LandingPage = () => {
             {/* Branding Column */}
             <div className='md:col-span-6 space-y-4 text-center md:text-left'>
               <div className='flex items-center justify-center md:justify-start gap-3'>
-                <img src='/logo.png' alt='Logo' className='h-12 w-12 filter drop-shadow-sm' />
+                <img
+                  src='/logo.png'
+                  alt='Logo'
+                  className='h-12 w-12 filter drop-shadow-sm'
+                />
                 <div>
                   <h5 className='text-base font-extrabold text-slate-900 tracking-tight leading-none'>
                     TRACER STUDY SMANTA
@@ -219,7 +234,8 @@ const LandingPage = () => {
                 </div>
               </div>
               <p className='text-sm text-slate-500 font-medium leading-relaxed max-w-sm mx-auto md:mx-0'>
-                Platform pemetaan studi lanjut alumni untuk mewujudkan kolaborasi nyata antara sekolah, siswa, dan alumni.
+                Platform pemetaan studi lanjut alumni untuk mewujudkan
+                kolaborasi nyata antara sekolah, siswa, dan alumni.
               </p>
             </div>
 
@@ -232,7 +248,8 @@ const LandingPage = () => {
                 Pengembang
               </h6>
               <p className='text-sm text-slate-500 font-medium leading-relaxed'>
-                Aplikasi ini dikembangkan untuk mendukung digitalisasi data alumni SMANTA.
+                Aplikasi ini dikembangkan untuk mendukung digitalisasi data
+                alumni SMANTA.
               </p>
               <div className='inline-flex items-center justify-center md:justify-start gap-1 text-xs font-bold text-slate-400'>
                 <span>Developed by</span>
@@ -251,7 +268,8 @@ const LandingPage = () => {
           {/* Bottom Copyright Row */}
           <div className='pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400 text-center md:text-left'>
             <div>
-              &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
+              &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights
+              reserved.
             </div>
             <div className='flex gap-6'>
               <span className='hover:text-slate-600 transition-colors cursor-pointer'>
@@ -278,7 +296,26 @@ const LandingPage = () => {
         confirmText='Ya, Keluar'
         cancelText='Batal'
         variant='danger'
+        theme='light'
       />
+
+      {/* Scroll to Top Button */}
+      <AnimatePresence>
+        {showScrollTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 20 }}
+            whileHover={{ scale: 1.1, y: -2 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className='fixed bottom-6 right-6 z-50 p-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all border border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/30 flex items-center justify-center'
+            aria-label='Scroll to top'
+          >
+            <FaArrowUp className='text-lg' />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

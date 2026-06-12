@@ -109,11 +109,13 @@ const Register = () => {
   }
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-[color:var(--bg-primary)] p-4 relative overflow-hidden'>
-      {/* Background decoration */}
+    <div className='flex min-h-screen items-center justify-center bg-slate-50 p-4 relative overflow-hidden font-sans selection:bg-blue-600 selection:text-white'>
+      {/* Background decoration (Matching landing page concentric theme) */}
       <div className='absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none'>
-        <div className='absolute top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-[var(--primary)] opacity-10 blur-3xl'></div>
-        <div className='absolute -bottom-[20%] -right-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl'></div>
+        <div className='absolute -top-[10%] -left-[10%] w-[500px] h-[500px] rounded-full border border-blue-500/5 animate-[spin_180s_linear_infinite]'></div>
+        <div className='absolute bottom-[10%] -right-[10%] w-[350px] h-[350px] rounded-full border border-indigo-500/5'></div>
+        <div className='absolute -bottom-[10%] left-[10%] w-[400px] h-[400px] rounded-full bg-blue-400/5 blur-3xl'></div>
+        <div className='absolute top-[10%] left-[30%] w-[300px] h-[300px] rounded-full bg-indigo-400/5 blur-3xl'></div>
       </div>
 
       <div className='w-full max-w-md z-10 animate-fade-in space-y-6'>
@@ -121,35 +123,35 @@ const Register = () => {
         <div className='flex justify-start'>
           <Link
             to="/"
-            className='inline-flex items-center gap-2 text-sm font-bold text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-all group'
+            className='inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-650 transition-all group'
           >
-            <div className='p-2 rounded-full bg-[color:var(--bg-card)] border border-[color:var(--border-color)] group-hover:border-[var(--primary)] group-hover:scale-110 transition-all shadow-sm'>
+            <div className='p-2.5 rounded-full bg-white border border-slate-200 group-hover:border-blue-500 group-hover:scale-110 transition-all shadow-sm'>
               <FaArrowLeft />
             </div>
             Kembali ke Beranda
           </Link>
         </div>
 
-        <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
+        <div className='overflow-hidden rounded-[2.5rem] border border-slate-200/80 bg-white shadow-2xl'>
           {/* Header */}
-          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)] relative overflow-hidden'>
+          <div className='bg-slate-50 p-8 text-center border-b border-slate-100 relative overflow-hidden'>
             <div className='absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full -z-0'></div>
-            <div className='flex items-center justify-center'>
-              <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
+            <div className='flex items-center justify-center mb-3'>
+              <img src='/logo.png' alt='Logo' className='h-14 w-14 filter drop-shadow-sm' />
             </div>
-            <div className='text-lg md:text-xl font-bold text-[color:var(--text-primary)]'>
+            <div className='text-lg md:text-xl font-black text-slate-900 tracking-tight'>
               Buat Akun Baru
             </div>
-            <p className='mt-1 text-xs text-[color:var(--text-secondary)]'>
+            <p className='mt-1 text-xs text-slate-500 font-bold'>
               Bergabung dan mulai berkontribusi untuk Tracer Study SMANTA
             </p>
           </div>
 
           <div className='p-8'>
             {error && (
-              <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+              <div className='mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-700 font-semibold shadow-sm'>
                 <svg
-                  className='h-5 w-5 shrink-0'
+                  className='h-5 w-5 shrink-0 text-red-500'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -163,28 +165,31 @@ const Register = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className='space-y-4'>
-              <div className='space-y-3'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
-                  Pilih Role
+            <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
+              <div className='flex flex-col gap-2'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                  Pilih Peran
                 </label>
                 <div className='grid grid-cols-2 gap-4'>
                   {/* Alumni Option */}
                   <button
                     type='button'
                     onClick={() => setFormData({ ...formData, role: 'alumni' })}
-                    className={`relative overflow-hidden rounded-xl border-2 p-2 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${formData.role === 'alumni'
-                      ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
-                      : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
-                      }`}
+                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${
+                      formData.role === 'alumni'
+                        ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-500'
+                        : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100/30'
+                    }`}
                   >
                     <div>
                       <div
-                        className={`font-bold ${formData.role === 'alumni' ? 'text-[var(--primary)]' : 'text-[color:var(--text-primary)]'}`}
+                        className={`font-extrabold text-sm ${
+                          formData.role === 'alumni' ? 'text-blue-600' : 'text-slate-800'
+                        }`}
                       >
                         Alumni
                       </div>
-                      <div className='text-[10px] sm:text-xs text-[color:var(--text-tertiary)] leading-tight'>
+                      <div className='text-[10px] text-slate-400 font-bold leading-tight mt-0.5'>
                         Sudah lulus sekolah
                       </div>
                     </div>
@@ -193,21 +198,22 @@ const Register = () => {
                   {/* Student Option */}
                   <button
                     type='button'
-                    onClick={() =>
-                      setFormData({ ...formData, role: 'student' })
-                    }
-                    className={`relative overflow-hidden rounded-xl border-2 p-4 transition-all duration-200 flex flex-col items-center justify-center gap-2 text-center h-full ${formData.role === 'student'
-                      ? 'border-[var(--primary)] bg-[var(--primary)]/5 ring-1 ring-[var(--primary)]'
-                      : 'border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] hover:border-gray-300 dark:hover:border-gray-600'
-                      }`}
+                    onClick={() => setFormData({ ...formData, role: 'student' })}
+                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${
+                      formData.role === 'student'
+                        ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-500'
+                        : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100/30'
+                    }`}
                   >
                     <div>
                       <div
-                        className={`font-bold ${formData.role === 'student' ? 'text-[var(--primary)]' : 'text-[color:var(--text-primary)]'}`}
+                        className={`font-extrabold text-sm ${
+                          formData.role === 'student' ? 'text-blue-600' : 'text-slate-800'
+                        }`}
                       >
-                        Student
+                        Siswa aktif
                       </div>
-                      <div className='text-[10px] sm:text-xs text-[color:var(--text-tertiary)] leading-tight'>
+                      <div className='text-[10px] text-slate-400 font-bold leading-tight mt-0.5'>
                         Masih aktif belajar
                       </div>
                     </div>
@@ -215,12 +221,12 @@ const Register = () => {
                 </div>
               </div>
 
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex flex-col gap-1.5'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Username
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaUser />
                   </div>
                   <input
@@ -230,17 +236,17 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder='Buat username unik'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                 </div>
               </div>
 
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex flex-col gap-1.5'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Email
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaEnvelope />
                   </div>
                   <input
@@ -250,17 +256,17 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder='alamat@email.com'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                 </div>
               </div>
 
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex flex-col gap-1.5'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Password
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaLock />
                   </div>
                   <input
@@ -270,29 +276,33 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder='Buat password kuat'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-12 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                   <button
                     type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-0 top-0 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                    className='absolute right-0 top-0 h-full px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                   </button>
                 </div>
                 
                 {/* Real-time Validation Checklist */}
                 {formData.password.length > 0 && (
-                  <div className='mt-2 grid grid-cols-2 gap-x-2 gap-y-1 p-3 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] animate-slide-up'>
+                  <div className='mt-2.5 grid grid-cols-2 gap-x-2 gap-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 animate-slide-up'>
                     {[
                       { label: 'Min. 8 Karakter', met: formData.password.length >= 8 },
                       { label: 'Huruf Besar & Kecil', met: /[a-z]/.test(formData.password) && /[A-Z]/.test(formData.password) },
                       { label: 'Angka', met: /\d/.test(formData.password) },
                       { label: 'Simbol (@$!%*?&)', met: /[@$!%*?&]/.test(formData.password) }
                     ].map((req, i) => (
-                      <div key={i} className={`flex items-center gap-1.5 text-[10px] font-bold ${req.met ? 'text-green-500' : 'text-[color:var(--text-tertiary)]'}`}>
-                        <div className={`w-3 h-3 rounded-full flex items-center justify-center ${req.met ? 'bg-green-500 text-white' : 'bg-gray-200 dark:bg-gray-700'}`}>
-                          {req.met && <svg className="w-2 h-2" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>}
+                      <div key={i} className={`flex items-center gap-1.5 text-[10px] font-bold ${req.met ? 'text-green-600' : 'text-slate-400'}`}>
+                        <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${req.met ? 'bg-green-500 text-white' : 'bg-slate-200'}`}>
+                          {req.met && (
+                            <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
+                              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                            </svg>
+                          )}
                         </div>
                         {req.label}
                       </div>
@@ -301,12 +311,12 @@ const Register = () => {
                 )}
               </div>
 
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex flex-col gap-1.5'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Konfirmasi Password
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaLock />
                   </div>
                   <input
@@ -316,24 +326,26 @@ const Register = () => {
                     onChange={handleChange}
                     required
                     placeholder='Ulangi password'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-12 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                   <button
                     type='button'
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className='absolute right-0 top-0 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                    className='absolute right-0 top-0 h-full px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
                   >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showConfirmPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                   </button>
                 </div>
                 {formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword && (
-                  <p className='text-[10px] font-bold text-red-500 mt-1 animate-pulse'>
+                  <p className='text-[10px] font-black text-red-500 mt-1.5 animate-pulse'>
                     Password tidak cocok!
                   </p>
                 )}
                 {formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword && (
-                  <p className='text-[10px] font-bold text-green-500 mt-1 flex items-center gap-1'>
-                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/></svg>
+                  <p className='text-[10px] font-black text-green-650 mt-1.5 flex items-center gap-1'>
+                    <svg className="w-3.5 h-3.5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                    </svg>
                     Password cocok
                   </p>
                 )}
@@ -352,7 +364,7 @@ const Register = () => {
               <button
                 type='submit'
                 disabled={loading}
-                className='w-full transform rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-4'
+                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-black text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-3'
               >
                 {loading ? (
                   <span className='flex items-center justify-center gap-2'>
@@ -366,11 +378,11 @@ const Register = () => {
             </form>
 
             <div className='mt-8 text-center'>
-              <p className='text-sm text-[color:var(--text-tertiary)]'>
+              <p className='text-sm text-slate-500 font-semibold'>
                 Sudah punya akun?{' '}
                 <Link
                   to='/login'
-                  className='font-semibold text-[color:var(--primary)] transition-colors hover:text-blue-400'
+                  className='font-bold text-blue-650 transition-colors hover:text-blue-700 hover:underline'
                 >
                   Login di sini
                 </Link>
@@ -378,6 +390,10 @@ const Register = () => {
             </div>
           </div>
         </div>
+
+        <p className='mt-8 text-center text-xs text-slate-400 font-bold'>
+          &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
+        </p>
       </div>
     </div>
   );

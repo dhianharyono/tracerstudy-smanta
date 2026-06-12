@@ -151,9 +151,9 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
                 {[
-                  { label: 'PTN (Negeri)', val: stats?.ptnCount, color: 'text-blue-600', bg: 'bg-blue-550/5', border: 'border-blue-105' },
-                  { label: 'PTS (Swasta)', val: stats?.ptsCount, color: 'text-indigo-650', bg: 'bg-blue-550/5', border: 'border-blue-105' },
-                  { label: 'Kedinasan', val: stats?.kedinasanCount, color: 'text-amber-605', bg: 'bg-blue-550/5', border: 'border-blue-105' },
+                  { label: 'PTN (Negeri)', val: stats?.ptnCount, color: 'text-blue-600', bg: 'bg-blue-50/50', border: 'border-blue-100' },
+                  { label: 'PTS (Swasta)', val: stats?.ptsCount, color: 'text-indigo-600', bg: 'bg-indigo-50/50', border: 'border-indigo-100' },
+                  { label: 'Kedinasan', val: stats?.kedinasanCount, color: 'text-amber-600', bg: 'bg-amber-50/50', border: 'border-amber-100' },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -225,7 +225,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                   <h5 className='text-lg md:text-xl font-black text-slate-900 tracking-tight'>
                     Jurusan Populer
                   </h5>
-                  <div className='p-2 bg-indigo-550/10 rounded-full text-indigo-600 shadow-inner'>
+                  <div className='p-2 bg-indigo-50 rounded-full text-indigo-600 shadow-inner'>
                     <FaGraduationCap className='w-4.5 h-4.5 md:w-5 md:h-5' />
                   </div>
                 </div>
@@ -256,7 +256,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                             {major.universities.slice(0, 3).map((uni: string, i: number) => (
                               <div key={i} className='flex items-center gap-1.5 min-w-0'>
                                 <div className='w-1.5 h-1.5 rounded-full bg-blue-500/50 shrink-0 shadow-sm'></div>
-                                <span className='text-[10px] md:text-[11px] font-semibold text-slate-505 truncate leading-none'>
+                                <span className='text-[10px] md:text-[11px] font-semibold text-slate-500 truncate leading-none'>
                                   {uni}
                                 </span>
                               </div>

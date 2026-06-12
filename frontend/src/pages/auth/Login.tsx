@@ -56,44 +56,46 @@ const Login = () => {
   };
 
   return (
-    <div className='flex min-h-screen items-center justify-center bg-[color:var(--bg-primary)] p-4 relative overflow-hidden'>
-      {/* Background decoration */}
+    <div className='flex min-h-screen items-center justify-center bg-slate-50 p-4 relative overflow-hidden font-sans selection:bg-blue-600 selection:text-white'>
+      {/* Background decoration (Matching landing page concentric theme) */}
       <div className='absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none'>
-        <div className='absolute -top-[20%] -right-[10%] w-[50%] h-[50%] rounded-full bg-[var(--primary)] opacity-10 blur-3xl'></div>
-        <div className='absolute top-[20%] -left-[10%] w-[30%] h-[30%] rounded-full bg-blue-400 opacity-10 blur-3xl'></div>
+        <div className='absolute -top-[10%] -right-[10%] w-[500px] h-[500px] rounded-full border border-blue-500/5 animate-[spin_180s_linear_infinite]'></div>
+        <div className='absolute top-[20%] -left-[10%] w-[350px] h-[350px] rounded-full border border-indigo-500/5'></div>
+        <div className='absolute -bottom-[10%] left-[20%] w-[400px] h-[400px] rounded-full bg-blue-400/5 blur-3xl'></div>
+        <div className='absolute top-[10%] right-[30%] w-[300px] h-[300px] rounded-full bg-indigo-400/5 blur-3xl'></div>
       </div>
 
       <div className='w-full max-w-md z-10 animate-fade-in space-y-6'>
         {/* Back to Landing */}
         <Link 
           to="/" 
-          className='inline-flex items-center gap-2 text-sm font-bold text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-all group'
+          className='inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-650 transition-all group'
         >
-          <div className='p-2 rounded-full bg-[color:var(--bg-card)] border border-[color:var(--border-color)] group-hover:border-[var(--primary)] group-hover:scale-110 transition-all shadow-sm'>
+          <div className='p-2.5 rounded-full bg-white border border-slate-200 group-hover:border-blue-500 group-hover:scale-110 transition-all shadow-sm'>
             <FaArrowLeft />
           </div>
           Kembali ke Beranda
         </Link>
-        <div className='overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl backdrop-blur-sm'>
+        <div className='overflow-hidden rounded-[2.5rem] border border-slate-200/80 bg-white shadow-2xl'>
           {/* Header */}
-          <div className='bg-[color:var(--bg-tertiary)]/30 p-8 text-center border-b border-[color:var(--border-color)] relative overflow-hidden'>
+          <div className='bg-slate-50 p-8 text-center border-b border-slate-100 relative overflow-hidden'>
             <div className='absolute top-0 right-0 w-24 h-24 bg-blue-500/5 rounded-bl-full -z-0'></div>
-            <div className='flex items-center justify-center'>
-              <img src='/logo.png' alt='Logo' className='h-14 w-1h-14' />
+            <div className='flex items-center justify-center mb-3'>
+              <img src='/logo.png' alt='Logo' className='h-14 w-14 filter drop-shadow-sm' />
             </div>
-            <div className='text-xl font-bold text-[color:var(--text-primary)]'>
+            <div className='text-xl font-black text-slate-900 tracking-tight'>
               Selamat Datang
             </div>
-            <p className='mt-1 text-xs text-[color:var(--text-secondary)]'>
+            <p className='mt-1 text-xs text-slate-500 font-bold'>
               Masuk ke akun Tracer Study SMANTA
             </p>
           </div>
 
           <div className='p-8'>
             {error && (
-              <div className='mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-xs text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+              <div className='mb-6 flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-700 font-semibold shadow-sm'>
                 <svg
-                  className='h-5 w-5 shrink-0'
+                  className='h-5 w-5 shrink-0 text-red-500'
                   fill='currentColor'
                   viewBox='0 0 20 20'
                 >
@@ -107,13 +109,13 @@ const Login = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className='space-y-5'>
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
+              <div className='flex flex-col gap-2'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Username
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaUser />
                   </div>
                   <input
@@ -122,17 +124,17 @@ const Login = () => {
                     onChange={(e) => setUsername(e.target.value)}
                     required
                     placeholder='Masukkan username'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-4 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                 </div>
               </div>
 
-              <div className='space-y-1.5'>
-                <label className='block text-sm font-medium text-[color:var(--text-secondary)]'>
+              <div className='flex flex-col gap-2'>
+                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
                   Password
                 </label>
                 <div className='relative'>
-                  <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
+                  <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
                     <FaLock />
                   </div>
                   <input
@@ -141,14 +143,14 @@ const Login = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                     placeholder='Masukkan password'
-                    className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-sm text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
+                    className='w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3 pl-10 pr-12 text-sm text-slate-800 placeholder-slate-400 shadow-inner transition-all focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white'
                   />
                   <button
                     type='button'
                     onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-0 top-0 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
+                    className='absolute right-0 top-0 h-full px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
                   >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                   </button>
                 </div>
               </div>
@@ -156,7 +158,7 @@ const Login = () => {
               <button
                 type='submit'
                 disabled={loading}
-                className='w-full transform rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
+                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-black text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-2'
               >
                 {loading ? (
                   <span className='flex items-center justify-center gap-2'>
@@ -188,11 +190,11 @@ const Login = () => {
             </form>
 
             <div className='mt-8 text-center'>
-              <p className='text-sm text-[color:var(--text-tertiary)]'>
+              <p className='text-sm text-slate-500 font-semibold'>
                 Belum punya akun?{' '}
                 <Link
                   to='/register'
-                  className='font-semibold text-[color:var(--primary)] transition-colors hover:text-blue-400'
+                  className='font-bold text-blue-650 transition-colors hover:text-blue-700 hover:underline'
                 >
                   Daftar di sini
                 </Link>
@@ -201,8 +203,8 @@ const Login = () => {
           </div>
         </div>
 
-        <p className='mt-8 text-center text-xs text-[color:var(--text-tertiary)]'>
-          &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
+        <p className='mt-8 text-center text-xs text-slate-400 font-bold'>
+          &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
         </p>
       </div>
     </div>
