@@ -61,7 +61,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
           </div>
           <span>Jalur Studi Alumni</span>
         </div>
-        <div className='flex items-center gap-1.5 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full border border-gray-700'>
+        <div className='flex items-center gap-1.5 px-3 py-1 bg-[color:var(--bg-tertiary)] rounded-full border border-[color:var(--border-color)]'>
           <div className='w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse'></div>
           <span className='text-[10px] font-bold text-text-secondary uppercase tracking-wider'>
             Live Stats
@@ -158,7 +158,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
               return (
                 <div
                   key={index}
-                  className='p-4 rounded-2xl bg-gray-50/50 dark:bg-gray-800/40 border border-transparent hover:border-blue-500/30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 group/item relative overflow-hidden shadow-sm'
+                  className='p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-500/30 hover:bg-blue-50/30 transition-all duration-300 group/item relative overflow-hidden shadow-sm'
                 >
                   <div 
                     className={`absolute left-0 top-0 bottom-0 w-1 ${config.bgColor.replace('/10', '')} opacity-40`}
@@ -198,7 +198,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
       </div>
 
       {/* Footer / CTA */}
-      <div className='mt-8 pt-4 border-t border-gray-700 flex items-center justify-between'>
+      <div className='mt-8 pt-4 border-t border-[color:var(--border-color)] flex items-center justify-between'>
         <div className='flex items-center gap-2 text-[10px] text-text-tertiary italic'>
           <FaInfoCircle />
           <span>

@@ -8,7 +8,7 @@ const MutualSection = ({ mutualAlumni }: { mutualAlumni: string[] }) => {
     <div className='card flex flex-col h-full'>
       <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 border border-purple-100'>
             <FaUsers className='text-lg' />
           </div>
           <div>
@@ -33,7 +33,7 @@ const MutualSection = ({ mutualAlumni }: { mutualAlumni: string[] }) => {
         ) : (
           mutualAlumni.slice(0, 5).map((person: any) => (
             <div key={person._id} className='flex items-center gap-3 group'>
-              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gray-100 text-gray-400 dark:bg-gray-800 group-hover:bg-[var(--primary-light)]/20 group-hover:text-[var(--primary)] transition-colors'>
+              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-50 border border-slate-100 text-slate-400 group-hover:bg-[var(--primary-light)]/20 group-hover:text-[var(--primary)] transition-colors'>
                 <FaUserCircle className='text-2xl' />
               </div>
               <div className='flex-1 min-w-0'>

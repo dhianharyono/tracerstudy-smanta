@@ -122,7 +122,7 @@ const MajorDetailModal = ({
                         <div className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-4 h-8 leading-tight' title={univ}>
                           {univ}
                         </div>
-                        <div className='mt-2 h-1.5 w-full bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden'>
+                        <div className='mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden'>
                           <div
                             className='h-full bg-[var(--primary)] rounded-full'
                             style={{ width: `${(count / major.count) * 100}%` }}
@@ -135,14 +135,14 @@ const MajorDetailModal = ({
                     </div>
                   ))}
                 </div>
-
+ 
                 {/* List of others */}
                 {otherUniversities.length > 0 && (
                   <div className='space-y-3'>
                     <h4 className='text-sm font-medium text-[color:var(--text-secondary)]'>Universitas Lainnya</h4>
                     <div className='max-h-[200px] overflow-y-auto pr-2 space-y-2'>
                       {otherUniversities.map(([univ, count]: any, idx) => (
-                        <div key={idx} className='flex items-center justify-between p-3 bg-[color:var(--bg-tertiary)]/30 rounded-lg text-sm'>
+                        <div key={idx} className='flex items-center justify-between p-3 bg-slate-50/50 border border-slate-100 rounded-lg text-sm'>
                           <span className='truncate flex-1 pr-4' title={univ}>{univ}</span>
                           <span className='font-semibold text-[color:var(--text-primary)]'>{count}</span>
                         </div>
@@ -306,7 +306,7 @@ const StudentMajors = () => {
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                 Total Jurusan Terdata
               </p>
-              <h3 className='text-2xl font-black'>{majors.length}</h3>
+              <h3 className='text-2xl font-black !text-white'>{majors.length}</h3>
             </div>
           </div>
         </Card>
@@ -426,7 +426,7 @@ const StudentMajors = () => {
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3 w-full pr-2'>
-                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-600 font-bold text-sm shrink-0 uppercase'>
+                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-700 border border-blue-200/50 font-bold text-sm shrink-0 uppercase'>
                       #{idx + 1}
                     </div>
                     <div className='min-w-0 flex-1'>
@@ -451,7 +451,7 @@ const StudentMajors = () => {
                         {uniqueUnivs.slice(0, 2).map((univ, i) => (
                           <span
                             key={i}
-                            className='text-[10px] px-2 py-0.5 rounded-full bg-blue-50/50 border border-blue-100/50 text-blue-600 dark:bg-blue-900/20 dark:border-blue-800/30 dark:text-blue-400 truncate max-w-[150px]'
+                            className='text-[10px] px-2.5 py-0.5 rounded bg-blue-50/70 border border-blue-200/60 text-blue-700 font-medium truncate max-w-[150px]'
                             title={univ}
                           >
                             {univ}

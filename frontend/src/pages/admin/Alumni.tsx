@@ -534,7 +534,7 @@ const AdminAlumni = () => {
 
           <button
             onClick={handleClearFilters}
-            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
+            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100'
           >
             <FaTimes className='text-xs' /> Reset
           </button>
@@ -543,7 +543,7 @@ const AdminAlumni = () => {
 
       {/* Active URL Filters Banner */}
       {(universityParam || majorParam) && (
-        <div className='mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl flex items-center justify-between text-sm border border-blue-100 dark:border-blue-900/30'>
+        <div className='mb-6 p-4 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-between text-sm border border-blue-100'>
           <div className='flex items-center gap-2'>
             <span className='font-bold'>Penyaringan Aktif:</span>
             {universityParam && <span>Universitas: <strong>{universityParam}</strong></span>}
@@ -552,7 +552,7 @@ const AdminAlumni = () => {
           </div>
           <button
             onClick={() => setSearchParams({})}
-            className='text-xs font-bold bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-50 transition-all text-blue-600 dark:text-blue-400'
+            className='text-xs font-bold bg-white px-3 py-1.5 rounded-lg border border-blue-200 shadow-sm hover:bg-blue-50 transition-all text-blue-600'
           >
             Hapus Filter
           </button>
@@ -897,7 +897,7 @@ const AdminAlumni = () => {
                   <button
                     type='button'
                     onClick={() => setEditingAlumni(null)}
-                    className='flex-1 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:opacity-90 transition-opacity'
+                    className='flex-1 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors'
                   >
                     Batal
                   </button>

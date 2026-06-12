@@ -14,10 +14,10 @@ html {
 }
 
 :root {
-  /* Dark Theme Colors */
+  /* Core Theme Colors (Matching landing page) */
   --primary: #2563eb;
-  --primary-dark: #3b82f6;
-  --primary-light: #6b98fa;
+  --primary-dark: #1d4ed8;
+  --primary-light: #60a5fa;
   --secondary: #10b981;
   --accent: #f59e0b;
   --danger: #ef4444;
@@ -25,43 +25,40 @@ html {
   --warning: #f59e0b;
   --info: #3b82f6;
 
-  /* Dark Background Colors */
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-tertiary: #334155;
-  --bg-card: #1e293b;
-  --bg-card-hover: #334155;
+  /* Premium Light Background Colors */
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
 
-  /* Text Colors for Dark Theme */
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-tertiary: #94a3b8;
-  --text-muted: #64748b;
+  /* High-Contrast Light Theme Text Colors */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --text-muted: #94a3b8;
 
-  /* Border Colors */
-  --border-color: rgba(148, 163, 184, 0.2);
-  --border-hover: rgba(148, 163, 184, 0.3);
+  /* Modern Separation Borders */
+  --border-color: rgba(226, 232, 240, 0.8);
+  --border-hover: rgba(203, 213, 225, 0.9);
 
-  /* Legacy Gray Scale (kept for compatibility) */
-  --gray-100: #1e293b;
-  --gray-200: #334155;
-  --gray-300: #475569;
-  --gray-400: #64748b;
+  /* Light Theme Gray Scale */
+  --gray-100: #f8fafc;
+  --gray-200: #f1f5f9;
+  --gray-300: #e2e8f0;
+  --gray-400: #cbd5e1;
   --gray-500: #94a3b8;
-  --gray-600: #cbd5e1;
-  --gray-700: #e2e8f0;
-  --gray-800: #f1f5f9;
-  --gray-900: #ffffff;
+  --gray-600: #64748b;
+  --gray-700: #475569;
+  --gray-800: #334155;
+  --gray-900: #0f172a;
 
-  /* Shadows for Dark Theme */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4),
-    0 2px 4px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4),
-    0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5),
-    0 10px 10px -5px rgba(0, 0, 0, 0.3);
+  /* Premium Soft Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
 }
 
 body {
@@ -322,10 +319,8 @@ table td {
 }
 
 table th {
-  background: linear-gradient(135deg,
-      var(--primary) 0%,
-      var(--primary-dark) 100%);
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
   font-weight: 600;
   text-transform: uppercase;
   font-size: 12px;
@@ -664,7 +659,7 @@ h3 {
   background: var(--bg-tertiary) !important;
   color: var(--text-primary) !important;
   border-radius: 12px !important;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+  box-shadow: var(--shadow-lg) !important;
   border: 1px solid var(--border-color);
 }
 

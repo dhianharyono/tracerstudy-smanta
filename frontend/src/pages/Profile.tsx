@@ -219,13 +219,11 @@ const Profile = () => {
                       Status Mentorship
                     </div>
                   </div>
-                  <p className='text-indigo-100/80 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
-                    <p className='text-[10px] md:text-sm text-[color:var(--text-secondary)]'>
-                      {isMentor
-                        ? 'Profil Anda akan tampil sebagai Mentor dan akan ditampilkan kepada siswa bahwa Anda bersedia membantu mereka.'
-                        : 'Dengan menjadi mentor, Anda dapat membimbing siswa dalam memilih jurusan dan memberikan wawasan berharga tentang pengalaman kuliah Anda'}
-                    </p>
-                  </p>
+                  <div className='text-indigo-100/90 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
+                    {isMentor
+                      ? 'Profil Anda akan tampil sebagai Mentor dan akan ditampilkan kepada siswa bahwa Anda bersedia membantu mereka.'
+                      : 'Dengan menjadi mentor, Anda dapat membimbing siswa dalam memilih jurusan dan memberikan wawasan berharga tentang pengalaman kuliah Anda.'}
+                  </div>
                 </div>
               </div>
 

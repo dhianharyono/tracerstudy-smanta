@@ -146,7 +146,7 @@ const AdminFeedback = () => {
           <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-6'>
             <div>
               <div className='flex items-center gap-2 mb-2'>
-                <div className='p-2 rounded-lg bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'>
+                <div className='p-2 rounded-lg bg-yellow-50 text-yellow-600 border border-yellow-200/30 shrink-0'>
                   <FaChartBar />
                 </div>
                 <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>
@@ -195,7 +195,7 @@ const AdminFeedback = () => {
       {stats && (
         <div className='card mb-8 max-w-sm md:max-w-md lg:max-w-full'>
           <div className='mb-6 flex items-center gap-2'>
-            <div className='p-2 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'>
+            <div className='p-2 rounded-lg bg-blue-50 text-blue-600 border border-blue-200/30 shrink-0'>
               <FaChartLine />
             </div>
             <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>
@@ -362,9 +362,9 @@ const AdminFeedback = () => {
                     <td className='px-6 py-4 text-center'>
                       <button
                         onClick={() => handleToggleLandingPage(feedback._id, feedback.showOnLandingPage)}
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
-                          ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                          : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold border transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
+                          ? 'bg-green-50 text-green-705 border-green-200/50'
+                          : 'bg-slate-100 text-slate-755 border-slate-200/50'
                           }`}
                         title={feedback.showOnLandingPage ? 'Sembunyikan dari Landing Page' : 'Tampilkan di Landing Page'}
                       >
@@ -378,7 +378,7 @@ const AdminFeedback = () => {
                           onClick={() =>
                             navigate(`/admin/feedback/${feedback._id}`)
                           }
-                          className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20'
+                          className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors'
                           title='Lihat & Balas'
                         >
                           <FaEye />
@@ -387,14 +387,14 @@ const AdminFeedback = () => {
                           onClick={() =>
                             navigate(`/admin/feedback/${feedback._id}`)
                           }
-                          className='rounded p-2 text-green-600 hover:bg-green-50 hover:text-green-700 transition-colors dark:text-green-400 dark:hover:bg-green-900/20'
+                          className='rounded p-2 text-green-600 hover:bg-green-50 hover:text-green-700 transition-colors'
                           title='Balas Feedback'
                         >
                           <FaReply />
                         </button>
                         <button
                           onClick={() => handleDelete(feedback._id)}
-                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
+                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-750 transition-colors'
                           title='Hapus'
                         >
                           <FaTrash />

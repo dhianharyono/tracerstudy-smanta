@@ -95,7 +95,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
               <div key={index} className='space-y-2'>
                 <div className='flex justify-between items-center'>
                   <div className='flex items-center gap-3 font-bold text-text-secondary text-sm'>
-                    <div className='p-1.5 rounded-lg bg-gray-50 dark:bg-gray-800/50'>
+                    <div className='p-1.5 rounded-lg bg-slate-100/85 border border-slate-200/50'>
                       {item.icon}
                     </div>
                     <span>{item.label}</span>
@@ -134,7 +134,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
               sortedStudentYears.map((item, index) => (
                 <div
                   key={index}
-                  className='flex items-center justify-between p-4 rounded-2xl bg-gray-50/50 dark:bg-gray-800/40 border border-transparent hover:border-indigo-500/30 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all duration-300 shadow-sm'
+                  className='flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-indigo-500/30 hover:bg-indigo-50/30 transition-all duration-300 shadow-sm'
                 >
                   <div className='flex items-center gap-4'>
                     <div className='w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center shadow-inner'>

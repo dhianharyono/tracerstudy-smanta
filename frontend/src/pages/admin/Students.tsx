@@ -652,11 +652,11 @@ const AdminStudents = () => {
                   {student.profile?.fullName &&
                     student.profile?.entryYear &&
                     student.profile?.graduationYear ? (
-                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'>
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
                       Lengkap
                     </span>
                   ) : (
-                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'>
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-red-50 text-red-700 border-red-200/50'>
                       Kurang Lengkap
                     </span>
                   )}
@@ -675,7 +675,7 @@ const AdminStudents = () => {
                           )
                         }
                         disabled={sendingEmailId !== null}
-                        className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:bg-blue-900/20 disabled:opacity-50'
+                        className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors disabled:opacity-50'
                         title='Kirim Pengingat Upgrade Akun'
                       >
                         <FaEnvelope
@@ -696,7 +696,7 @@ const AdminStudents = () => {
                           )
                         }
                         disabled={sendingEmailId !== null}
-                        className='rounded p-2 text-teal-600 hover:bg-teal-50 hover:text-teal-700 transition-colors dark:text-teal-400 dark:hover:bg-teal-900/20 disabled:opacity-50'
+                        className='rounded p-2 text-teal-600 hover:bg-teal-50 hover:text-teal-700 transition-colors disabled:opacity-50'
                         title='Kirim Pengingat Kelengkapan Data'
                       >
                         <FaEnvelope
@@ -710,14 +710,14 @@ const AdminStudents = () => {
                     )}
                     <button
                       onClick={() => handleEdit(student)}
-                      className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
+                      className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-750 transition-colors'
                       title='Edit'
                     >
                       <FaEdit />
                     </button>
                     <button
                       onClick={() => handleDelete(student._id)}
-                      className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
+                      className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-750 transition-colors'
                       title='Hapus'
                     >
                       <FaTrash />

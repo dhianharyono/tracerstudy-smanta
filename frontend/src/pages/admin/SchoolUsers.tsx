@@ -290,7 +290,7 @@ const AdminSchoolUsers = () => {
                   >
                     <td className='px-6 py-4'>
                       <div className='flex items-center gap-3'>
-                        <div className='h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
+                        <div className='h-8 w-8 rounded-full bg-blue-50 border border-blue-200/40 flex items-center justify-center text-blue-600 shrink-0'>
                           <FaUniversity size={12} />
                         </div>
                         <span className='font-medium text-[color:var(--text-primary)]'>
@@ -302,10 +302,10 @@ const AdminSchoolUsers = () => {
                       {user.profile?.fullName || '-'}
                     </td>
                     <td className='px-6 py-4'>
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
                         user.schoolRole === 'bk' 
-                          ? 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
-                          : 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
+                          ? 'bg-purple-50 text-purple-750 border-purple-200/50'
+                          : 'bg-blue-50 text-blue-750 border-blue-200/50'
                       }`}>
                         {user.schoolRole === 'bk' ? <><FaUserCog size={10} /> Guru BK</> : 'Guru Umum'}
                       </span>

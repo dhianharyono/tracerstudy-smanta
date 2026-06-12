@@ -259,7 +259,7 @@ const AdminAdmins = () => {
                   >
                     <td className='px-6 py-4'>
                       <div className='flex items-center gap-3'>
-                        <div className='h-8 w-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 dark:bg-purple-900/30 dark:text-purple-300'>
+                        <div className='h-8 w-8 rounded-full bg-purple-50 border border-purple-200/40 flex items-center justify-center text-purple-600 shrink-0'>
                           <FaUserShield size={12} />
                         </div>
                         <span className='font-medium text-[color:var(--text-primary)]'>
@@ -286,14 +286,14 @@ const AdminAdmins = () => {
                       <div className='flex items-center justify-center gap-2'>
                         <button
                           onClick={() => handleEdit(admin)}
-                          className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 transition-colors dark:text-yellow-500 dark:hover:bg-yellow-900/20'
+                          className='rounded p-2 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-750 transition-colors'
                           title='Edit'
                         >
                           <FaEdit />
                         </button>
                         <button
                           onClick={() => handleDelete(admin._id)}
-                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:text-red-400 dark:hover:bg-red-900/20'
+                          className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-755 transition-colors'
                           title='Hapus'
                         >
                           <FaTrash />

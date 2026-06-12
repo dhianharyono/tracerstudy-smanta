@@ -162,7 +162,7 @@ const UniversityDetailModal = ({
                            </h3>
                            <div className='space-y-2'>
                               {topMajors.map(([major, count]: any, idx) => (
-                                 <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-700/50 hover:${brandBorder} transition-colors`}>
+                                 <div key={idx} className={`flex items-center justify-between p-3 rounded-2xl bg-slate-50/50 border border-slate-200/60 hover:${brandBorder} transition-colors`}>
                                     <span className='text-[11px] font-bold text-text-secondary truncate pr-2'>{major}</span>
                                     <span className={`text-[10px] font-black ${brandColor} whitespace-nowrap ${brandBg} px-2 py-0.5 rounded-lg`}>{count} Siswa</span>
                                  </div>
@@ -170,7 +170,7 @@ const UniversityDetailModal = ({
                            </div>
                         </div>
                      </div>
-
+ 
                      {/* Right List */}
                      <div>
                         <h3 className='text-xs font-black text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
@@ -178,7 +178,7 @@ const UniversityDetailModal = ({
                         </h3>
                         <div className='space-y-3'>
                            {university.alumni.slice(0, 4).map((alum, idx) => (
-                              <div key={idx} className={`flex items-center gap-3 p-3 rounded-2xl border border-gray-700/50 bg-gray-50 dark:bg-gray-800/30 hover:${brandBorder} transition-colors`}>
+                              <div key={idx} className={`flex items-center gap-3 p-3 rounded-2xl border border-slate-200/60 bg-slate-50/50 hover:${brandBorder} transition-colors`}>
                                  <div className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white font-black text-xs shadow-lg`}>
                                     {alum.name.charAt(0)}
                                  </div>
@@ -193,8 +193,8 @@ const UniversityDetailModal = ({
                      </div>
                   </div>
                </div>
-
-               <div className='p-6 bg-gray-50 dark:bg-gray-900 border-t border-gray-700/50'>
+ 
+               <div className='p-6 bg-slate-50/50 border-t border-slate-200/60'>
                   <button
                      onClick={() => onViewAll(university._id.name)}
                      className={`w-full py-4 ${buttonBg} text-white rounded-2xl font-black shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]`}
@@ -293,7 +293,7 @@ const StudentUniversities = () => {
                      <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                         Total PT Terdata
                      </p>
-                     <h3 className='text-2xl font-black'>{universities.length}</h3>
+                     <h3 className='text-2xl font-black !text-white'>{universities.length}</h3>
                   </div>
                </div>
             </Card>
@@ -368,13 +368,13 @@ const StudentUniversities = () => {
                      </h3>
                      <div className='flex items-center gap-3 mt-2'>
                         <span
-                           className={`px-2 py-0.5 rounded text-[10px] font-black uppercase
+                           className={`px-2 py-0.5 rounded text-[10px] font-black uppercase border
                            ${
                               topUniversity._id.type === 'negeri'
-                                 ? 'bg-amber-100 text-amber-700'
+                                 ? 'bg-amber-50 text-amber-700 border-amber-200/50'
                                  : topUniversity._id.type === 'kedinasan'
-                                    ? 'bg-emerald-100 text-emerald-700'
-                                    : 'bg-pink-100 text-pink-700'
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                                    : 'bg-pink-50 text-pink-700 border-pink-200/50'
                            }`}
                         >
                            {topUniversity._id.type || 'Swasta'}
@@ -450,24 +450,24 @@ const StudentUniversities = () => {
                      >
                         <div className='flex items-start justify-between mb-4'>
                            <div className='flex items-center gap-3 w-full pr-2'>
-                              <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-600 font-bold text-sm shrink-0 uppercase'>
+                              <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-700 border border-blue-200/50 font-bold text-sm shrink-0 uppercase'>
                                  #{idx + 1}
                               </div>
                               <div className='min-w-0'>
                                  <h4
                                     className='font-bold text-[color:var(--text-primary)] text-sm md:text-base leading-tight truncate'
                                     title={univ._id.name}
-                                 >
+                                  >
                                     {univ._id.name}
                                  </h4>
                                  <span
-                                    className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider
+                                    className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
                                     ${
                                        univ._id.type === 'negeri'
-                                          ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                                          ? 'bg-amber-50 text-amber-700 border-amber-200/50'
                                           : univ._id.type === 'kedinasan'
-                                             ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                             : 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'
+                                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                                             : 'bg-pink-50 text-pink-700 border-pink-200/50'
                                     }`}
                                  >
                                     {univ._id.type || 'Swasta'}

@@ -13,7 +13,7 @@ const FeedbackStats: React.FC<FeedbackStatsAndProps> = ({ stats }) => {
     return (
         <Card className='mb-8'>
             <div className='flex items-center gap-2 mb-6'>
-                <div className='p-2 rounded-lg bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400'>
+                <div className='p-2 rounded-lg bg-yellow-50 text-yellow-600 border border-yellow-200/30'>
                     <FaChartBar />
                 </div>
                 <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>

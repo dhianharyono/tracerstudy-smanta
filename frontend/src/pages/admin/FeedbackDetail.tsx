@@ -193,9 +193,9 @@ const AdminFeedbackDetail = () => {
                 <button
                   type='button'
                   onClick={handleToggleLandingPage}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
-                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
-                    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400'
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold border transition-all hover:scale-105 active:scale-95 ${feedback.showOnLandingPage
+                    ? 'bg-green-50 text-green-705 border-green-200/50'
+                    : 'bg-slate-100 text-slate-705 border-slate-200/50'
                     }`}
                 >
                   {feedback.showOnLandingPage ? <FaEye size={12} /> : <FaEyeSlash size={12} />}
@@ -214,7 +214,7 @@ const AdminFeedbackDetail = () => {
             <h3 className='relative z-10 text-lg font-semibold text-red-500 mb-3 ml-2'>
               Kritik & Masuhan
             </h3>
-            <div className='relative z-10 rounded-xl bg-red-50 dark:bg-red-900/10 p-5 text-[color:var(--text-primary)] border border-red-100 dark:border-red-900/30'>
+            <div className='relative z-10 rounded-xl bg-red-50 p-5 text-[color:var(--text-primary)] border border-red-100'>
               <p className='whitespace-pre-wrap leading-relaxed'>
                 {feedback.kritik || 'Tidak ada kritik yang disampaikan.'}
               </p>
@@ -226,7 +226,7 @@ const AdminFeedbackDetail = () => {
             <h3 className='relative z-10 text-lg font-semibold text-green-500 mb-3 ml-2'>
               Saran Perbaikan
             </h3>
-            <div className='relative z-10 rounded-xl bg-green-50 dark:bg-green-900/10 p-5 text-[color:var(--text-primary)] border border-green-100 dark:border-green-900/30'>
+            <div className='relative z-10 rounded-xl bg-green-50 p-5 text-[color:var(--text-primary)] border border-green-100'>
               <p className='whitespace-pre-wrap leading-relaxed'>
                 {feedback.saran || 'Tidak ada saran yang disampaikan.'}
               </p>
@@ -240,9 +240,9 @@ const AdminFeedbackDetail = () => {
             </h3>
 
             {feedback.reply && !isEditingReply ? (
-              <div className='rounded-xl bg-blue-50 dark:bg-blue-900/10 p-5 border border-blue-100 dark:border-blue-900/30 relative group'>
+              <div className='rounded-xl bg-blue-50 p-5 border border-blue-100 relative group'>
                 <div className='flex items-center gap-2 mb-2'>
-                  <span className='font-bold text-blue-600 dark:text-blue-400'>
+                  <span className='font-bold text-blue-600'>
                     Admin
                   </span>
                   <span className='text-xs text-[color:var(--text-secondary)]'>

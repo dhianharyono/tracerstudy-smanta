@@ -670,16 +670,16 @@ const AlumniQuestionnaire = () => {
         </div>
       ) : (
         isEditMode && (
-          <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50 p-4 dark:border-blue-900/30 dark:bg-blue-900/10'>
+          <div className='mb-8 rounded-xl border border-blue-200 bg-blue-50/50 p-4'>
             <div className='flex items-center gap-3'>
-              <div className='flex h-7 w-7 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'>
+              <div className='flex h-7 w-7 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 border border-blue-200/50'>
                 <FaEdit />
               </div>
               <div>
-                <h3 className='font-semibold text-blue-900 dark:text-blue-100 !mb-0 text-sm md:text-base'>
+                <h3 className='font-semibold text-blue-900 !mb-0 text-sm md:text-base'>
                   Mode Edit
                 </h3>
-                <p className='text-[10px] md:text-sm text-blue-700 dark:text-blue-300'>
+                <p className='text-[10px] md:text-sm text-blue-700'>
                   Anda sedang memperbarui data kuesioner yang sudah ada.
                 </p>
               </div>
@@ -692,7 +692,7 @@ const AlumniQuestionnaire = () => {
         {/* Personal Information Card */}
         <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100'>
               <FaUser className='text-sm md:text-xl' />
             </div>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -777,7 +777,7 @@ const AlumniQuestionnaire = () => {
         {/* University Section */}
         <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100'>
               <FaGraduationCap className='text-sm md:text-xl' />
             </div>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -858,7 +858,7 @@ const AlumniQuestionnaire = () => {
         {['s2', 's3'].includes(formData.profile.lastEducation) && (
           <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100'>
                 <FaGraduationCap className='text-sm md:text-xl' />
               </div>
               <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -895,7 +895,7 @@ const AlumniQuestionnaire = () => {
         {formData.profile.lastEducation === 's3' && (
           <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
             <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600 border border-purple-100'>
                 <FaGraduationCap className='text-sm md:text-xl' />
               </div>
               <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -931,7 +931,7 @@ const AlumniQuestionnaire = () => {
         {/* Job Section */}
         <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600 border border-amber-100'>
               <FaBriefcase className='text-sm md:text-xl' />
             </div>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -973,7 +973,7 @@ const AlumniQuestionnaire = () => {
         {/* Social Media Section */}
         <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
           <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400'>
+            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-rose-50 text-rose-600 border border-rose-100'>
               <FaShareAlt className='text-sm md:text-xl' />
             </div>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -1014,7 +1014,7 @@ const AlumniQuestionnaire = () => {
         </div>
 
         {error && (
-          <div className='rounded-xl border border-red-200 bg-red-50 p-4 text-center text-red-600 dark:border-red-900/30 dark:bg-red-900/10 dark:text-red-400'>
+          <div className='rounded-xl border border-red-200 bg-red-50/50 p-4 text-center text-red-700'>
             <p className='font-semibold'>{error}</p>
           </div>
         )}

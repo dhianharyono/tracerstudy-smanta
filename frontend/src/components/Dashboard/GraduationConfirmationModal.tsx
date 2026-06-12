@@ -77,13 +77,13 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
                 Bulan Mei adalah momen spesial bagi siswa kelas 12. Jika kamu sudah resmi lulus, mari bergabung sebagai bagian dari Keluarga Besar Alumni SMANTA.
               </p>
 
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-2xl border border-blue-100 dark:border-blue-900/30 mb-8 flex items-start gap-3 text-left">
+              <div className="bg-blue-50 p-4 rounded-2xl border border-blue-200 mb-8 flex items-start gap-3 text-left">
                 <FaCheckCircle className="text-blue-500 mt-1 shrink-0" />
                 <div>
-                  <p className="text-xs font-bold text-blue-800 dark:text-blue-300 uppercase tracking-tighter mb-1">
+                  <p className="text-xs font-bold !text-blue-900 uppercase tracking-tighter mb-1">
                     Apa yang berubah?
                   </p>
-                  <p className="text-[11px] text-blue-700 dark:text-blue-200 leading-normal font-medium">
+                  <p className="text-[11px] !text-blue-700 leading-normal font-medium">
                     Role Anda akan berubah menjadi <span className="font-bold underline decoration-blue-500/50 underline-offset-2">Alumni</span>. Anda akan memiliki akses ke fitur Alumni, mengisi kuesioner tracer study, dan tetap terhubung dengan sekolah.
                   </p>
                 </div>

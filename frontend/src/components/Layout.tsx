@@ -396,7 +396,7 @@ const Layout = () => {
   };
 
   return (
-    <div className='flex h-dvh overflow-hidden bg-[color:var(--bg-secondary)]'>
+    <div className='flex h-dvh overflow-hidden bg-[color:var(--bg-primary)]'>
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
@@ -491,11 +491,11 @@ const Layout = () => {
           ref={mainRef}
           className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
         >
-          <div className='mx-auto max-w-7xl w-full flex-grow animate-fade-in pb-8'>
+          <div className='w-full flex-grow animate-fade-in pb-8'>
             <Outlet />
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
-            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
+            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All right reserved.
           </div>
         </main>
       </div>
@@ -507,6 +507,7 @@ const Layout = () => {
         message='Apakah Anda yakin ingin keluar dari aplikasi?'
         confirmText='Ya, Keluar'
         cancelText='Batal'
+        theme='light'
       />
     </div>
   );

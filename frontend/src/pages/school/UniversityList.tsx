@@ -72,7 +72,7 @@ const SchoolUniversityList = () => {
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                 Total PT Terdata
               </p>
-              <h3 className='text-2xl font-black'>{universities.length}</h3>
+              <h3 className='text-2xl font-black !text-white'>{universities.length}</h3>
             </div>
           </div>
         </Card>
@@ -150,13 +150,13 @@ const SchoolUniversityList = () => {
               </h3>
               <div className='flex items-center gap-3 mt-2'>
                 <span
-                  className={`px-2 py-0.5 rounded text-[10px] font-black uppercase
+                  className={`px-2 py-0.5 rounded text-[10px] font-black uppercase border
                   ${
                     topUniversity.type === 'negeri'
-                      ? 'bg-amber-100 text-amber-700'
+                      ? 'bg-amber-50 text-amber-700 border-amber-200/50'
                       : topUniversity.type === 'kedinasan'
-                        ? 'bg-emerald-100 text-emerald-700'
-                        : 'bg-pink-100 text-pink-700'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                        : 'bg-pink-50 text-pink-700 border-pink-200/50'
                   }`}
                 >
                   {topUniversity.type || 'Swasta'}
@@ -233,7 +233,7 @@ const SchoolUniversityList = () => {
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3 w-full pr-2'>
-                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-500/10 text-blue-600 font-bold text-sm shrink-0 uppercase'>
+                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-700 border border-blue-200/50 font-bold text-sm shrink-0 uppercase'>
                       #{idx + 1}
                     </div>
                     <div className='min-w-0'>
@@ -244,13 +244,13 @@ const SchoolUniversityList = () => {
                         {univ._id}
                       </h4>
                       <span
-                        className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider
+                        className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
                         ${
                           univ.type === 'negeri'
-                            ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200/50'
                             : univ.type === 'kedinasan'
-                              ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                              : 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                              : 'bg-pink-50 text-pink-700 border-pink-200/50'
                         }`}
                       >
                         {univ.type || 'Swasta'}

@@ -47,7 +47,7 @@ const ClaimBadge = () => {
           <div className='w-20 h-20 mx-auto bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mb-4'>
             <FaMedal className='text-4xl' />
           </div>
-          <h1 className='text-lg md:text-xl font-bold mb-2'>
+          <h1 className='text-lg text-white md:text-xl font-bold mb-2'>
             Klaim Badge Prestasi
           </h1>
           <p className='text-white/80 text-xs md:text-sm'>

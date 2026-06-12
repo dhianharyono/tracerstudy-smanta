@@ -144,7 +144,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
 
       <div className='rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
         <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600 border border-blue-100'>
             <FaCommentDots className='text-lg md:text-xl' />
           </div>
           <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
@@ -153,13 +153,13 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
         </div>
 
         {/* Info & Bug Report Notice Box */}
-        <div className='mb-6 flex items-start gap-3 rounded-xl border border-blue-100 bg-blue-50/50 p-4 text-xs md:text-sm text-blue-700 dark:border-blue-900/30 dark:bg-blue-900/10 dark:text-blue-300'>
-          <FaInfoCircle className='mt-0.5 text-base shrink-0 text-blue-500 dark:text-blue-400' />
+        <div className='mb-6 flex items-start gap-3 rounded-xl border border-blue-200 bg-blue-50/50 p-4 text-xs md:text-sm text-blue-700'>
+          <FaInfoCircle className='mt-0.5 text-base shrink-0 text-blue-600' />
           <div className='space-y-1.5 text-left'>
-            <p className='font-semibold text-blue-800 dark:text-blue-200'>
+            <p className='font-semibold !text-blue-900'>
               Informasi Pengelolaan & Laporan Kendala
             </p>
-            <p className='leading-relaxed text-[11px] md:text-xs text-blue-700/90 dark:text-blue-300/90'>
+            <p className='leading-relaxed text-[11px] md:text-xs !text-blue-700'>
               Setiap kritik dan saran dikelola dan ditinjau langsung oleh Admin demi peningkatan layanan website secara berkala. <br /><br /> Apabila Anda mengalami kendala teknis atau menemukan bug selama menggunakan website ini, silakan sampaikan keluhan Anda secara mendetail melalui formulir ini.
             </p>
           </div>
@@ -178,7 +178,7 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
           </div>
 
           {feedback.rating > 0 && (
-            <div className='inline-block rounded-full bg-blue-50 px-4 py-1 text-xs md:text-sm font-medium text-blue-700 dark:bg-blue-900/20 dark:text-blue-300'>
+            <div className='inline-block rounded-full bg-blue-50 text-blue-750 border border-blue-200/50 px-4 py-1 text-xs md:text-sm font-semibold'>
               Anda memberikan rating {feedback.rating}/5
             </div>
           )}

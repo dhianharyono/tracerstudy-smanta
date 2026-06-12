@@ -100,9 +100,9 @@ const News = ({ data }: NewsProps) => {
                 key={newsItem._id}
                 whileHover={{ x: 4 }}
                 onClick={() => navigate(getPath(newsItem._id))}
-                className='flex gap-4 cursor-pointer py-3.5 border-b border-gray-700 last:border-0 group/item'
+                className='flex gap-4 cursor-pointer py-3.5 border-b border-[color:var(--border-color)] last:border-0 group/item'
               >
-                <div className='w-12 h-12 rounded-xl bg-gray-50 dark:bg-gray-800 flex flex-col items-center justify-center shrink-0 border border-gray-700 group-hover/item:bg-blue-500/10 group-hover/item:border-blue-500/20 transition-all'>
+                <div className='w-12 h-12 rounded-xl bg-[color:var(--bg-tertiary)] flex flex-col items-center justify-center shrink-0 border border-[color:var(--border-color)] group-hover/item:bg-blue-500/10 group-hover/item:border-blue-500/20 transition-all'>
                   <span className='text-[10px] font-black text-text-tertiary group-hover/item:text-blue-500 uppercase'>{new Date(newsItem.createdAt).getDate()}</span>
                   <span className='text-[8px] font-black text-text-tertiary uppercase opacity-50'>{new Date(newsItem.createdAt).toLocaleDateString('id-ID', { month: 'short' })}</span>
                 </div>
@@ -131,7 +131,7 @@ const News = ({ data }: NewsProps) => {
         </div>
       ) : (
         <div className='flex-1 flex flex-col items-center justify-center min-h-[250px] text-[color:var(--text-tertiary)]'>
-          <div className='w-16 h-16 rounded-3xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110'>
+          <div className='w-16 h-16 rounded-3xl bg-[color:var(--bg-tertiary)] flex items-center justify-center mb-4 transition-transform duration-500 group-hover:scale-110'>
             <FaNewspaper className='text-3xl opacity-20' />
           </div>
           <p className='text-xs font-bold uppercase tracking-widest'>Belum ada warta terbaru</p>

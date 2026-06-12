@@ -40,7 +40,7 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
           <span>Statistik Data Tahun Lulus Alumni</span>
         </div>
         {hasData && (
-          <span className='px-3 py-1 bg-indigo-100 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full'>
+          <span className='px-3 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-full border border-indigo-200/50'>
             {sortedData.length} Tahun Terdata
           </span>
         )}

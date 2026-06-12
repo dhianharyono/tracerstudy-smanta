@@ -114,46 +114,46 @@ const AdminVerificationLogs = () => {
 
       {/* Stats Summary */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        <Card className='!bg-blue-50 dark:!bg-blue-900/10 border-blue-100 dark:border-blue-900/30'>
+        <Card className='!bg-blue-50 border-blue-100'>
           <div className='flex items-center gap-4'>
             <div className='p-3 bg-blue-500 rounded-xl text-white'>
               <FaCheckCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-blue-600 dark:text-blue-400 font-medium'>
+              <p className='text-sm text-blue-600 font-medium'>
                 Total Alumni Terdaftar
               </p>
-              <h3 className='text-2xl font-bold text-blue-900 dark:text-blue-100'>
+              <h3 className='text-2xl font-bold text-blue-900'>
                 {stats?.totalAlumni || 0}
               </h3>
             </div>
           </div>
         </Card>
-        <Card className='!bg-green-50 dark:!bg-green-900/10 border-green-100 dark:border-green-900/30'>
+        <Card className='!bg-green-50 border-green-100'>
           <div className='flex items-center gap-4'>
             <div className='p-3 bg-green-500 rounded-xl text-white'>
               <FaCheckCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-green-600 dark:text-green-400 font-medium'>
+              <p className='text-sm text-green-600 font-medium'>
                 Sudah Mengisi Kuesioner
               </p>
-              <h3 className='text-2xl font-bold text-green-900 dark:text-green-100'>
+              <h3 className='text-2xl font-bold text-green-900'>
                 {stats?.completedAlumni || 0}
               </h3>
             </div>
           </div>
         </Card>
-        <Card className='!bg-purple-50 dark:!bg-purple-900/10 border-purple-100 dark:border-purple-900/30'>
+        <Card className='!bg-purple-50 border-purple-100'>
           <div className='flex items-center gap-4'>
             <div className='p-3 bg-purple-500 rounded-xl text-white'>
               <FaInfoCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-purple-600 dark:text-purple-400 font-medium'>
+              <p className='text-sm text-purple-600 font-medium'>
                 Progress Sinkronisasi
               </p>
-              <h3 className='text-2xl font-bold text-purple-900 dark:text-purple-100'>
+              <h3 className='text-2xl font-bold text-purple-900'>
                 {stats?.totalAlumni
                   ? Math.round(
                     ((stats?.verifiedAlumni || 0) / stats.totalAlumni) * 100,

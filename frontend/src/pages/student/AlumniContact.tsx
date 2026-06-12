@@ -291,7 +291,7 @@ const AlumniContact = () => {
 
           {/* Mentor Toggle */}
           <div className='space-y-2 flex flex-col justify-end pb-1'>
-            <div className='flex items-center justify-between p-2.5 bg-amber-50 dark:bg-amber-500/10 rounded-xl border border-amber-100 dark:border-amber-500/20'>
+            <div className='flex items-center justify-between p-2.5 bg-amber-50 rounded-xl border border-amber-100/70'>
               <div className='flex items-center gap-2'>
                 <FaCrown className='text-amber-500 text-sm' />
                 <span className='text-xs font-bold text-[color:var(--text-primary)]'>
@@ -305,7 +305,7 @@ const AlumniContact = () => {
                   checked={isMentorFilter}
                   onChange={(e) => setIsMentorFilter(e.target.checked)}
                 />
-                <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all dark:border-gray-600 peer-checked:bg-amber-500"></div>
+                <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-amber-500"></div>
               </label>
             </div>
           </div>
@@ -414,7 +414,7 @@ const AlumniContact = () => {
                               )}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='p-2 text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all'
+                              className='p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-all'
                               title='LinkedIn'
                             >
                               <FaLinkedin />
@@ -428,7 +428,7 @@ const AlumniContact = () => {
                               )}
                               target='_blank'
                               rel='noopener noreferrer'
-                              className='p-2 text-pink-600 hover:bg-pink-50 dark:hover:bg-pink-900/20 rounded-lg transition-all'
+                              className='p-2 text-pink-600 hover:bg-pink-50 rounded-lg transition-all'
                               title='Instagram'
                             >
                               <FaInstagram />
@@ -439,7 +439,7 @@ const AlumniContact = () => {
                             !alumni.socialMedia?.instagram && (
                               <a
                                 href={`mailto:${alumni.socialMedia?.email}`}
-                                className='p-2 text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-900/20 rounded-lg transition-all'
+                                className='p-2 text-gray-400 hover:bg-gray-50 rounded-lg transition-all'
                                 title='Email Mentor'
                               >
                                 <FaEnvelope />

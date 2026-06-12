@@ -76,7 +76,7 @@ const AdminReports = () => {
 
       <div className='card mb-8 max-w-sm md:max-w-md lg:max-w-full'>
         <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-blue-600 border border-blue-200/30 shrink-0'>
             <FaChartBar className='text-lg' />
           </div>
           <div>
@@ -152,7 +152,7 @@ const AdminReports = () => {
         <div className='card animate-fade-in max-w-sm md:max-w-md lg:max-w-full'>
           <div className='mb-6 flex items-center justify-between border-b border-[color:var(--border-color)] pb-4'>
             <div className='flex items-center gap-3'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-200/30 shrink-0'>
                 <FaFileAlt className='text-lg' />
               </div>
               <div>

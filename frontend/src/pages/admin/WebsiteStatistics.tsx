@@ -176,12 +176,13 @@ const WebsiteStatistics = () => {
       </div>
 
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-blue-500 transition-all'>
-          <div className='p-4 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-300'>
-            <FaEye size={24} />
+        {/* PENGUNJUNG LANDING */}
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-blue-500 hover:shadow-md transition-all duration-200'>
+          <div className='p-3.5 rounded-xl bg-blue-50 text-blue-600 border border-blue-200/30 flex items-center justify-center shrink-0'>
+            <FaEye size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>PENGUNJUNG LANDING</p>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>PENGUNJUNG LANDING</p>
             <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
               {stats?.landingPageVisits || 0}
             </h3>
@@ -190,20 +191,22 @@ const WebsiteStatistics = () => {
             </p>
           </div>
         </div>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-[var(--primary)] transition-all'>
-          <div className='p-4 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300'>
-            <FaGlobe size={24} />
+
+        {/* TOTAL KUNJUNGAN */}
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-indigo-500 hover:shadow-md transition-all duration-200'>
+          <div className='p-3.5 rounded-xl bg-indigo-50 text-indigo-600 border border-indigo-200/30 flex items-center justify-center shrink-0'>
+            <FaGlobe size={22} />
           </div>
           <div>
-            <div className='flex items-center gap-2 mb-1'>
-              <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest'>
+            <div className='flex items-center gap-1.5 mb-1'>
+              <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider'>
                 TOTAL KUNJUNGAN
               </p>
               <div className='group/tip relative'>
-                <FaInfoCircle className='cursor-help text-[color:var(--text-tertiary)] hover:text-[color:var(--primary)] transition-colors text-xs' />
-                <div className='pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 rounded bg-gray-800 p-2 text-center text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100 z-50'>
+                <FaInfoCircle className='cursor-help text-[color:var(--text-tertiary)] hover:text-indigo-600 transition-colors text-xs' />
+                <div className='pointer-events-none absolute bottom-full left-1/2 mb-2 w-48 -translate-x-1/2 rounded bg-slate-800 p-2 text-center text-[10px] text-white opacity-0 shadow-lg transition-opacity group-hover/tip:opacity-100 z-50'>
                   Total Page Views (termasuk refresh) selama periode {period}.
-                  <div className='absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-gray-800'></div>
+                  <div className='absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-slate-800'></div>
                 </div>
               </div>
             </div>
@@ -218,12 +221,14 @@ const WebsiteStatistics = () => {
             </p>
           </div>
         </div>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-green-500 transition-all'>
-          <div className='p-4 rounded-full bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'>
-            <FaWifi size={24} />
+
+        {/* PENGGUNA ONLINE */}
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-green-500 hover:shadow-md transition-all duration-200'>
+          <div className='p-3.5 rounded-xl bg-green-50 text-green-600 border border-green-200/30 flex items-center justify-center shrink-0'>
+            <FaWifi size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>
               PENGGUNA ONLINE
             </p>
             <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
@@ -239,12 +244,14 @@ const WebsiteStatistics = () => {
             </div>
           </div>
         </div>
-        <div className='bg-[color:var(--bg-card)] p-6 rounded-xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-purple-500 transition-all'>
-          <div className='p-4 rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-300'>
-            <FaChartLine size={24} />
+
+        {/* TOP HALAMAN */}
+        <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm flex items-center gap-4 group hover:border-purple-500 hover:shadow-md transition-all duration-200'>
+          <div className='p-3.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-200/30 flex items-center justify-center shrink-0'>
+            <FaChartLine size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-tertiary)] uppercase font-black tracking-widest mb-1'>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>
               TOP HALAMAN
             </p>
             <h3 className='text-lg font-black text-[color:var(--text-primary)] truncate max-w-[200px]'>
@@ -396,24 +403,24 @@ const WebsiteStatistics = () => {
                   <td className='px-6 py-4 font-medium text-[color:var(--text-primary)]'>
                     {renderMenuName(page.menuName, page.path)}
                   </td>
-                  <td
-                    className={`px-6 py-4 font-medium text-[color:var(--text-tertiary)] ${
+                  <td className='px-6 py-4'>
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold border ${
                       page.path.includes('/student')
-                        ? 'text-blue-300'
+                        ? 'bg-blue-50 text-blue-700 border-blue-200/50'
                         : page.path.includes('/alumni')
-                          ? 'text-green-300'
+                          ? 'bg-green-50 text-green-700 border-green-200/50'
                           : page.path.includes('/school')
-                            ? 'text-purple-300'
-                            : 'text-amber-300'
-                    }`}
-                  >
-                    {page.path.includes('/student')
-                      ? 'Siswa'
-                      : page.path.includes('/alumni')
-                        ? 'Alumni'
-                        : page.path.includes('/school')
-                          ? 'Sekolah'
-                          : 'Publik'}
+                            ? 'bg-purple-50 text-purple-700 border-purple-200/50'
+                            : 'bg-amber-50 text-amber-700 border-amber-200/50'
+                    }`}>
+                      {page.path.includes('/student')
+                        ? 'Siswa'
+                        : page.path.includes('/alumni')
+                          ? 'Alumni'
+                          : page.path.includes('/school')
+                            ? 'Sekolah'
+                            : 'Publik'}
+                    </span>
                   </td>
                   <td className='px-6 py-4 font-medium text-[color:var(--text-tertiary)] italic'>
                     {page.path}

@@ -138,7 +138,7 @@ const AlumniDashboard = () => {
             Dashboard Alumni
             <div className='flex flex-wrap items-center gap-2 justify-center md:justify-start mt-2 mb-1'>
               {profile?.isMentor && (
-                <span className='ml-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
+                <span className='ml-2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200/50'>
                   <FaCrown className='text-[10px]' /> Mentor
                 </span>
               )}
@@ -146,7 +146,7 @@ const AlumniDashboard = () => {
                 profile.badges.map((badge: any) => (
                   <span
                     key={badge._id}
-                    className='inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold border border-blue-200 dark:border-blue-500/20'
+                    className='inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/50'
                     title={badge.description}
                   >
                     <FaCrown className='text-[10px]' /> {badge.name}

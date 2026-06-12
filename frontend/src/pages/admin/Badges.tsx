@@ -210,7 +210,7 @@ const AdminBadges = () => {
                   <button
                     type='button'
                     onClick={handleCancelEdit}
-                    className='px-4 py-2.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold rounded-xl hover:opacity-90 transition-opacity'
+                    className='px-4 py-2.5 bg-slate-100 text-slate-700 font-bold rounded-xl hover:bg-slate-200 transition-colors'
                   >
                     Batal
                   </button>
@@ -251,10 +251,10 @@ const AdminBadges = () => {
                           {badge.description}
                         </p>
                         <div className='flex flex-wrap gap-2 text-xs font-mono'>
-                          <span className='px-2 py-1 bg-blue-100 text-blue-700 rounded-md dark:bg-blue-900/30 dark:text-blue-300'>
+                          <span className='px-2 py-1 bg-blue-50 text-blue-700 border border-blue-200/50 rounded-md'>
                             Code: {badge.code}
                           </span>
-                          <span className='px-2 py-1 bg-red-100 text-red-700 rounded-md dark:bg-red-900/30 dark:text-red-300'>
+                          <span className='px-2 py-1 bg-red-50 text-red-700 border border-red-200/50 rounded-md'>
                             Exp:{' '}
                             {new Date(badge.expiredDate).toLocaleDateString(
                               'id-ID',
@@ -266,19 +266,19 @@ const AdminBadges = () => {
                     <div className='flex items-center gap-2 self-end md:self-center'>
                       <button
                         onClick={() => handleView(badge)}
-                        className='px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 rounded-lg transition-colors'
+                        className='px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 hover:bg-blue-100 border border-blue-200/50 rounded-lg transition-colors'
                       >
                         Lihat Alumni
                       </button>
                       <button
                         onClick={() => handleEdit(badge)}
-                        className='px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 dark:bg-amber-900/20 hover:bg-amber-100 dark:hover:bg-amber-900/40 rounded-lg transition-colors'
+                        className='px-3 py-1.5 text-xs font-bold text-amber-600 bg-amber-50 hover:bg-amber-100 border border-amber-200/50 rounded-lg transition-colors'
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => handleDelete(badge._id, badge.name)}
-                        className='p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                        className='p-2 text-red-500 hover:bg-red-50 hover:text-red-750 rounded-lg transition-colors'
                         title='Hapus Badge'
                       >
                         <FaTrash />
@@ -287,8 +287,8 @@ const AdminBadges = () => {
                   </div>
                 ))}
               </div>
-            )}
-          </div>
+            )
+          }</div>
         </div>
       </div>
 
@@ -354,7 +354,7 @@ const AdminBadges = () => {
                               alumni.profile?.fullName || alumni.username,
                             )
                           }
-                          className='p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors'
+                          className='p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors'
                           title='Hapus Badge dari Alumni'
                         >
                           <FaTrash />

@@ -369,7 +369,7 @@ const AdminEventManagement = () => {
                   </td>
                   <td className='px-6 py-4'>
                     {event.badgeId ? (
-                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'>
+                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-blue-50 text-blue-700 border-blue-200/50'>
                         {event.badgeId.name || 'Badge Linked'}
                       </span>
                     ) : (
@@ -379,16 +379,16 @@ const AdminEventManagement = () => {
                     )}
                   </td>
                   <td className='px-6 py-4'>
-                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'>
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-purple-50 text-purple-700 border-purple-200/50'>
                       {(event as any).registrantCount || 0} Orang
                     </span>
                   </td>
                   <td className='px-6 py-4'>
                     <button
                       onClick={() => toggleStatus(event)}
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium cursor-pointer transition-colors ${event.isActive
-                        ? 'bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300'
-                        : 'bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300'
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border cursor-pointer transition-all ${event.isActive
+                        ? 'bg-green-50 text-green-750 border-green-200/50 hover:bg-green-100 hover:border-green-300'
+                        : 'bg-slate-100 text-slate-750 border-slate-200/50 hover:bg-slate-200 hover:border-slate-300'
                         }`}
                     >
                       {event.isActive ? 'Aktif' : 'Nonaktif'}

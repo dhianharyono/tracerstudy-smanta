@@ -113,7 +113,7 @@ const AdminMentors = () => {
         <div className='mb-2 text-center md:text-left'>
           <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0 flex items-center justify-center md:justify-start gap-3'>
             Daftar Mentor Alumni
-            <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-200 dark:border-amber-500/20'>
+            <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-bold border border-amber-200/50'>
               <FaCrown className='text-[10px]' /> {pagination.total} Aktif
             </span>
           </h1>
@@ -184,7 +184,7 @@ const AdminMentors = () => {
 
           <button
             onClick={handleClearFilters}
-            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
+            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100'
           >
             <FaTimes className='text-xs' /> Reset Filter
           </button>
@@ -291,7 +291,7 @@ const AdminMentors = () => {
                         {mentor.socialMedia?.email && (
                           <a
                             href={`mailto:${mentor.socialMedia.email}`}
-                            className='text-gray-600 hover:text-gray-800 dark:text-gray-400'
+                            className='text-gray-600 hover:text-gray-800'
                           >
                             <FaEnvelope size={16} />
                           </a>

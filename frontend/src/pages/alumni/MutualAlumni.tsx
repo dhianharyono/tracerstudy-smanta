@@ -49,7 +49,7 @@ const MutualAlumni = () => {
 
   const handleShareLink = async () => {
     const inviteText = `Halo rekan seangkatan SMANTA! 👋\n\nYuk bergabung di Tracer Study SMANTA (SMA Negeri 1 Talun) untuk saling terhubung, berjejaring, dan membantu sekolah melacak sebaran alumni. Daftar sekarang melalui tautan berikut:\n👉 ${window.location.origin}/register\n\nTerima kasih!`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -125,8 +125,8 @@ const MutualAlumni = () => {
             <FaUserPlus className='text-2xl text-white' />
           </div>
           <div>
-            <h2 className='text-base md:text-lg font-extrabold mb-1'>Ajak Teman Seangkatan Bergabung!</h2>
-            <p className='text-xs md:text-sm text-blue-100 max-w-xl'>
+            <h2 className='text-base text-white md:text-lg font-extrabold mb-1'>Ajak Teman Seangkatan Bergabung!</h2>
+            <p className='text-xs md:text-sm !text-blue-100 max-w-xl'>
               Bantu sekolah melacak sebaran alumni dan perkuat jejaring alumni dengan membagikan link pendaftaran Tracer Study Smanta kepada rekan seangkatan Anda.
             </p>
           </div>
@@ -163,7 +163,7 @@ const MutualAlumni = () => {
                   <FaUserCircle className='text-2xl md:text-3xl' />
                   {person.isMentor && (
                     <div
-                      className='absolute -top-1 -right-1 bg-amber-500 rounded-full p-1 border-2 border-white dark:border-gray-800'
+                      className='absolute -top-1 -right-1 bg-amber-500 rounded-full p-1 border-2 border-white'
                       title='Mentor'
                     >
                       <FaCrown className='text-[8px] md:text-[10px] text-white' />
@@ -185,7 +185,7 @@ const MutualAlumni = () => {
               <div className='flex flex-wrap justify-center sm:justify-start gap-1 mt-0 mb-3 md:my-3'>
                 {person.isMentor && (
                   <span
-                    className='inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] md:text-xs font-bold border border-amber-200 dark:border-amber-500/20'
+                    className='inline-flex items-center gap-1 px-2 py-0.5 md:px-3 md:py-1 rounded-full bg-amber-50 text-amber-700 text-[9px] md:text-xs font-bold border border-amber-200/50'
                     title='Mentor'
                   >
                     <FaCrown className='text-[8px] md:text-[10px]' />
@@ -198,7 +198,7 @@ const MutualAlumni = () => {
                     {person.badges.map((badge: any, idx: number) => (
                       <span
                         key={idx}
-                        className='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] md:text-[10px] font-medium bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border border-blue-200 dark:border-blue-800'
+                        className='inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] md:text-[10px] font-bold bg-blue-50 text-blue-700 border border-blue-200/50'
                         title={badge.name}
                       >
                         <FaMedal className='text-[9px] md:text-[10px]' />
@@ -265,7 +265,7 @@ const MutualAlumni = () => {
                         }
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#0077b5] transition-colors bg-gray-50 dark:bg-gray-800/50 px-2 py-1.5 md:px-3 rounded-lg md:rounded-full border border-gray-100 dark:border-gray-700'
+                        className='flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-700 hover:text-[#0077b5] transition-colors bg-slate-50 hover:bg-slate-100 px-3.5 py-1.5 rounded-lg border border-slate-200'
                       >
                         <FaLinkedin className='text-xs md:text-sm' />
                         <span className='sm:inline'>LinkedIn</span>
@@ -283,7 +283,7 @@ const MutualAlumni = () => {
                         }
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-[10px] md:text-xs font-medium text-[color:var(--text-secondary)] hover:text-[#e1306c] transition-colors bg-gray-50 dark:bg-gray-800/50 px-2 py-1.5 md:px-3 rounded-lg md:rounded-full border border-gray-100 dark:border-gray-700'
+                        className='flex-1 sm:flex-none flex items-center justify-center gap-1.5 text-[10px] md:text-xs font-semibold text-slate-700 hover:text-[#e1306c] transition-colors bg-slate-50 hover:bg-slate-100 px-3.5 py-1.5 rounded-lg border border-slate-200'
                       >
                         <FaInstagram className='text-xs md:text-sm' />
                         <span className='sm:inline'>Instagram</span>

@@ -310,7 +310,7 @@ const AlumniEventHub = () => {
               </div>
               <div className='mt-2'>
                 {!hasAccess(event) && (
-                  <span className='inline-block px-2 py-0.5 rounded-full bg-amber-400 text-gray-700 text-[10px] md:text-xs font-medium'>
+                  <span className='inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200/50 text-[10px] md:text-xs font-bold'>
                     Requires Badge
                   </span>
                 )}
