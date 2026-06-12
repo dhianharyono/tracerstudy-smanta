@@ -43,26 +43,30 @@ const LandingPage = () => {
   }, []);
 
   return (
-    <div className='bg-[color:var(--bg-primary)] min-h-screen font-sans selection:bg-[var(--primary)] selection:text-white'>
-      {/* Navigation Overlay */}
+    <div className='bg-slate-50 text-slate-900 min-h-screen font-sans selection:bg-blue-600 selection:text-white'>
       <motion.nav
-        initial={{ opacity: 0, y: 0 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className={`top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-[color:var(--bg-card)]/80 backdrop-blur-md shadow-lg py-2' : 'bg-transparent py-4'}`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+          ? 'bg-white/80 backdrop-blur-md shadow-md border-b border-slate-200/50 py-2.5'
+          : 'bg-transparent py-4'
+          }`}
       >
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 flex justify-between items-center'>
+        <div className='w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center transition-all duration-300'>
           <div className='flex items-center gap-2 md:gap-3'>
             <img
               src='/logo.png'
               alt='Smanta Logo'
-              className='h-8 w-8 md:h-12 md:w-12'
+              className='h-8 w-8 md:h-12 md:w-12 filter drop-shadow-sm'
             />
             <div className='block'>
-              <div className='text-xs md:text-lg font-bold text-[color:var(--text-primary)] leading-none tracking-tight'>
+              <div className={`text-xs md:text-lg font-black leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
+                }`}>
                 TRACER STUDY
               </div>
-              <p className='text-[7px] md:text-[10px] text-[color:var(--text-secondary)] uppercase font-semibold'>
+              <p className={`text-[7px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
+                }`}>
                 SMAN 1 Tawangsari
               </p>
             </div>
@@ -78,13 +82,17 @@ const LandingPage = () => {
                         ? '/student'
                         : '/alumni'
                   }
-                  className='flex items-center gap-1.5 text-[10px] md:text-sm font-bold bg-gradient-to-r from-[var(--primary)] to-blue-600 text-white px-3 md:px-6 py-1.5 md:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all'
+                  className={`flex items-center gap-1.5 text-[10px] md:text-sm font-bold px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
+                    : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
+                    }`}
                 >
                   <span className='whitespace-nowrap'>Dashboard</span>
                 </Link>
                 <button
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className='text-[10px] md:text-sm font-medium text-red-500 hover:text-red-600 transition-colors px-1 md:px-4 py-2'
+                  className={`text-[10px] md:text-sm font-semibold transition-colors px-1 md:px-4 py-2 ${isScrolled ? 'text-red-500 hover:text-red-650' : 'text-red-200 hover:text-red-100'
+                    }`}
                 >
                   Keluar
                 </button>
@@ -93,13 +101,17 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/login'
-                  className='flex items-center gap-1 text-[10px] md:text-sm font-medium text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors px-1 md:px-4 py-2'
+                  className={`flex items-center gap-1 text-[10px] md:text-sm font-semibold transition-colors px-2 md:px-4 py-2 ${isScrolled ? 'text-slate-650 hover:text-blue-600' : 'text-white/90 hover:text-white'
+                    }`}
                 >
-                  <span className='sm:inline'>Login</span>
+                  <span>Login</span>
                 </Link>
                 <Link
                   to='/register'
-                  className='flex items-center gap-1 text-[10px] md:text-sm font-bold bg-gradient-to-r from-[var(--primary)] to-blue-600 text-white px-3 md:px-6 py-1.5 md:py-2.5 rounded-full shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 hover:scale-105 transition-all'
+                  className={`flex items-center gap-1 text-[10px] md:text-sm font-extrabold px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-605 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
+                    : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
+                    }`}
                 >
                   <span className='whitespace-nowrap sm:inline hidden'>
                     Kontribusi Sekarang
@@ -122,26 +134,30 @@ const LandingPage = () => {
 
       {/* CTA Section */}
       <motion.section
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className='py-20 px-4 sm:px-6 bg-[var(--primary)] relative overflow-hidden'
+        className='py-24 px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden'
       >
-        <div className='absolute top-0 right-0 w-[400px] md:w-[600px] h-full bg-blue-400 skew-x-[-20deg] translate-x-1/2 opacity-20 hidden md:block'></div>
+        {/* Modern decorative rings */}
+        <div className='absolute top-[-50px] left-[-50px] w-96 h-96 border-4 border-white/5 rounded-full pointer-events-none'></div>
+        <div className='absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] border-8 border-white/5 rounded-full pointer-events-none'></div>
+        <div className='absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none'></div>
+
         <div className='max-w-4xl mx-auto text-center relative z-10 space-y-8 md:space-y-10'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className='text-2xl md:text-4xl font-black text-white leading-tight'
+            className='text-2xl md:text-5xl font-black text-white leading-tight tracking-tight'
           >
             Siap Menjadi Bagian Dari Perubahan Besar?
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className='text-base md:text-xl text-blue-50/80 max-w-2xl mx-auto px-4 md:px-0'
+            transition={{ delay: 0.1 }}
+            className='text-sm md:text-xl text-blue-100/90 max-w-2xl mx-auto px-4 md:px-0 font-medium leading-relaxed'
           >
             Mari berkontribusi untuk SMANTA, almamater kita tercinta. Daftar dan
             berikan kontribusi Anda sekarang juga, hanya butuh waktu 2 menit!
@@ -149,8 +165,8 @@ const LandingPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className='flex flex-col-2 sm:flex-row gap-4 md:gap-6 justify-center px-6 md:px-0'
+            transition={{ delay: 0.2 }}
+            className='flex flex-row gap-4 justify-center px-4 md:px-0'
           >
             {user ? (
               <Link
@@ -161,7 +177,7 @@ const LandingPage = () => {
                       ? '/student'
                       : '/alumni'
                 }
-                className='bg-white text-[var(--primary)] px-6 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-sm md:text-lg shadow-2xl hover:scale-105 transition-all'
+                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4.5 rounded-full font-black text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
               >
                 Kembali ke Dashboard
               </Link>
@@ -169,13 +185,13 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/register'
-                  className='text-xs md:text-sm bg-white text-[var(--primary)] px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl shadow-2xl hover:scale-105 transition-all'
+                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4.5 rounded-full font-black text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
                 >
                   Kontribusi Sekarang
                 </Link>
                 <Link
                   to='/login'
-                  className='text-xs md:text-sm bg-blue-700/30 backdrop-blur-md text-white border-2 border-white/30 px-3 py-3 md:px-10 md:py-5 rounded-xl md:rounded-3xl font-black text-lg md:text-xl hover:bg-blue-700/50 transition-all'
+                  className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-xs md:text-base hover:bg-blue-800/60 hover:scale-105 active:scale-95 transition-all duration-200'
                 >
                   Masuk Kembali
                 </Link>
@@ -185,28 +201,66 @@ const LandingPage = () => {
         </div>
       </motion.section>
 
-      {/* Simple Footer */}
-      <footer className='py-10 md:py-12 border-t border-[color:var(--border-color)] px-4 sm:px-6'>
-        <div className='max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 md:gap-8'>
-          <div className='flex flex-col md:flex-row items-center gap-4 md:gap-4'>
-            <div className='flex items-center gap-3'>
-              <img src='/logo.png' alt='Logo' className='h-14 w-14' />
+      {/* Premium Footer */}
+      <footer className='bg-white border-t border-slate-200/80 pt-16 pb-12 px-4 sm:px-6 relative z-10'>
+        <div className='max-w-7xl mx-auto'>
+          <div className='grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-100'>
+            {/* Branding Column */}
+            <div className='md:col-span-6 space-y-4 text-center md:text-left'>
+              <div className='flex items-center justify-center md:justify-start gap-3'>
+                <img src='/logo.png' alt='Logo' className='h-12 w-12 filter drop-shadow-sm' />
+                <div>
+                  <h5 className='text-base font-extrabold text-slate-900 tracking-tight leading-none'>
+                    TRACER STUDY SMANTA
+                  </h5>
+                  <p className='text-[10px] text-slate-400 font-black tracking-wider mt-1.5 uppercase'>
+                    SMAN 1 Tawangsari
+                  </p>
+                </div>
+              </div>
+              <p className='text-sm text-slate-500 font-medium leading-relaxed max-w-sm mx-auto md:mx-0'>
+                Platform pemetaan studi lanjut alumni untuk mewujudkan kolaborasi nyata antara sekolah, siswa, dan alumni.
+              </p>
             </div>
-            <div className='text-xs text-[color:var(--text-tertiary)] font-bold text-center md:text-left'>
-              &copy; {new Date().getFullYear()} SMAN 1 Tawangsari
+
+            {/* Quick Links Column */}
+            <div className='md:col-span-3 text-center md:text-left' />
+
+            {/* Developed By Column */}
+            <div className='md:col-span-3 text-center md:text-left space-y-3'>
+              <h6 className='text-xs font-black text-slate-400 uppercase tracking-widest mb-4'>
+                Pengembang
+              </h6>
+              <p className='text-sm text-slate-500 font-medium leading-relaxed'>
+                Aplikasi ini dikembangkan untuk mendukung digitalisasi data alumni SMANTA.
+              </p>
+              <div className='inline-flex items-center justify-center md:justify-start gap-1 text-xs font-bold text-slate-400'>
+                <span>Developed by</span>
+                <a
+                  href='https://cetha-tech.vercel.app/'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  className='text-slate-600 hover:text-blue-600 transition-colors border-b border-dashed border-slate-300 hover:border-blue-600 font-extrabold pb-0.5'
+                >
+                  Cetha Technologies
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className='flex items-center gap-1 text-[10px] md:text-xs font-bold text-[color:var(--text-tertiary)] opacity-60 hover:opacity-100 transition-opacity'>
-            <span>Developed by</span>
-            <a
-              href='https://cetha-tech.vercel.app/'
-              target='_blank'
-              rel='noopener noreferrer'
-              className='text-[color:var(--text-secondary)] hover:text-[var(--primary)] transition-colors'
-            >
-              Cetha Technologies
-            </a>
+          {/* Bottom Copyright Row */}
+          <div className='pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400 text-center md:text-left'>
+            <div>
+              &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
+            </div>
+            <div className='flex gap-6'>
+              <span className='hover:text-slate-600 transition-colors cursor-pointer'>
+                Syarat & Ketentuan
+              </span>
+              <span className='hover:text-slate-600 transition-colors cursor-pointer'>
+                Kebijakan Privasi
+              </span>
+            </div>
           </div>
         </div>
       </footer>
