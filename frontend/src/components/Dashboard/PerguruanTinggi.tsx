@@ -158,7 +158,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
               return (
                 <div
                   key={index}
-                  className='p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-blue-500/30 hover:bg-blue-50/30 transition-all duration-300 group/item relative overflow-hidden shadow-sm'
+                  className='p-4 rounded-2xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 transition-all duration-300 group/item relative overflow-hidden shadow-sm'
                 >
                   <div 
                     className={`absolute left-0 top-0 bottom-0 w-1 ${config.bgColor.replace('/10', '')} opacity-40`}

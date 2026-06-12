@@ -66,7 +66,7 @@ const MajorDetailModal = ({
   return createPortal(
     <div className='fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200'>
       <div
-        className='relative w-full max-w-3xl bg-[color:var(--bg-card)] rounded-2xl shadow-xl border border-[color:var(--border-color)] overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]'
+        className='relative w-full max-w-3xl bg-[color:var(--bg-card)] rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]'
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with background pattern/color */}
@@ -135,7 +135,7 @@ const MajorDetailModal = ({
                     </div>
                   ))}
                 </div>
- 
+
                 {/* List of others */}
                 {otherUniversities.length > 0 && (
                   <div className='space-y-3'>
@@ -426,7 +426,7 @@ const StudentMajors = () => {
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3 w-full pr-2'>
-                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-700 border border-blue-200/50 font-bold text-sm shrink-0 uppercase'>
+                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 font-bold text-sm shrink-0 uppercase'>
                       #{idx + 1}
                     </div>
                     <div className='min-w-0 flex-1'>
@@ -451,7 +451,7 @@ const StudentMajors = () => {
                         {uniqueUnivs.slice(0, 2).map((univ, i) => (
                           <span
                             key={i}
-                            className='text-[10px] px-2.5 py-0.5 rounded bg-blue-50/70 border border-blue-200/60 text-blue-700 font-medium truncate max-w-[150px]'
+                            className='text-[10px] px-2.5 py-0.5 rounded bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] text-[color:var(--text-secondary)] font-medium truncate max-w-[150px]'
                             title={univ}
                           >
                             {univ}

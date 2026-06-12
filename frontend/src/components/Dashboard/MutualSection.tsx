@@ -8,7 +8,7 @@ const MutualSection = ({ mutualAlumni }: { mutualAlumni: string[] }) => {
     <div className='card flex flex-col h-full'>
       <div className='mb-4 flex items-center justify-between'>
         <div className='flex items-center gap-3'>
-          <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600 border border-purple-100'>
+          <div className='flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20'>
             <FaUsers className='text-lg' />
           </div>
           <div>

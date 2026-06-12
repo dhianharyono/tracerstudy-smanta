@@ -406,23 +406,23 @@ const Profile = () => {
 
         {/* Password Section */}
         {(user?.role as string) === 'school' ? (
-          <div className='bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-200 dark:border-blue-800/50 overflow-hidden shadow-sm'>
+          <div className='bg-[var(--primary)]/5 rounded-2xl border border-[var(--primary)]/20 overflow-hidden shadow-sm'>
             <div className='p-6'>
               <div className='flex items-start gap-4'>
-                <div className='p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400'>
+                <div className='p-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl shrink-0'>
                   <FaLock className='text-xl' />
                 </div>
                 <div>
-                  <h2 className='text-sm md:text-lg font-bold text-blue-900 dark:text-blue-100 mb-1'>
+                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] mb-1'>
                     Keamanan Password
                   </h2>
-                  <p className='text-xs md:text-sm text-blue-800 dark:text-blue-300/80 leading-relaxed'>
+                  <p className='text-xs md:text-sm text-[color:var(--text-secondary)] leading-relaxed'>
                     Jika Anda perlu mengganti password, silakan hubungi kami melalui Instagram:{' '}
                     <a
                       href='https://www.instagram.com/tracerstudysmanta/'
                       target='_blank'
                       rel='noopener noreferrer'
-                      className='inline-block font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors mt-1'
+                      className='inline-block font-bold text-[var(--primary)] hover:opacity-80 underline underline-offset-2 transition-colors mt-1'
                     >
                       @tracerstudysmanta
                     </a>

@@ -139,46 +139,46 @@ const SchoolDataVerification = () => {
 
       {/* Stats Summary */}
       <div className='grid grid-cols-1 md:grid-cols-3 gap-6 mb-8'>
-        <Card className='!bg-blue-50 dark:!bg-blue-900/10 border-blue-100 dark:border-blue-900/30'>
+        <Card className='border border-[color:var(--border-color)]'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-blue-500 rounded-xl text-white'>
+            <div className='p-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl'>
               <FaCheckCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-blue-600 dark:text-blue-400 font-medium'>
+              <p className='text-sm text-[color:var(--text-secondary)] font-medium'>
                 Total Alumni Terdaftar
               </p>
-              <h3 className='text-2xl font-bold text-blue-900 dark:text-blue-100'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.totalAlumni || 0}
               </h3>
             </div>
           </div>
         </Card>
-        <Card className='!bg-green-50 dark:!bg-green-900/10 border-green-100 dark:border-green-900/30'>
+        <Card className='border border-[color:var(--border-color)]'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-green-500 rounded-xl text-white'>
+            <div className='p-3 bg-emerald-500/10 text-emerald-500 rounded-xl'>
               <FaCheckCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-green-600 dark:text-green-400 font-medium'>
+              <p className='text-sm text-[color:var(--text-secondary)] font-medium'>
                 Sudah Mengisi Kuesioner
               </p>
-              <h3 className='text-2xl font-bold text-green-900 dark:text-green-100'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.completedAlumni || 0}
               </h3>
             </div>
           </div>
         </Card>
-        <Card className='!bg-purple-50 dark:!bg-purple-900/10 border-purple-100 dark:border-purple-900/30'>
+        <Card className='border border-[color:var(--border-color)]'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-purple-500 rounded-xl text-white'>
+            <div className='p-3 bg-violet-500/10 text-violet-500 rounded-xl'>
               <FaInfoCircle className='text-2xl' />
             </div>
             <div>
-              <p className='text-sm text-purple-600 dark:text-purple-400 font-medium'>
+              <p className='text-sm text-[color:var(--text-secondary)] font-medium'>
                 Progress Sinkronisasi
               </p>
-              <h3 className='text-2xl font-bold text-purple-900 dark:text-purple-100'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.totalAlumni
                   ? Math.round(
                     ((stats?.verifiedAlumni || 0) / stats.totalAlumni) * 100,
@@ -303,7 +303,7 @@ const SchoolDataVerification = () => {
                       </h4>
                       <div className='overflow-x-auto'>
                         <table className='w-full text-sm text-left'>
-                          <thead className='text-xs bg-gray-50 dark:bg-gray-800 uppercase'>
+                          <thead className='text-xs bg-[color:var(--bg-tertiary)] uppercase text-[color:var(--text-secondary)]'>
                             <tr>
                               <th className='px-4 py-2 text-gray-500'>Nama</th>
                               <th className='px-4 py-2 text-gray-500'>Lulus</th>
@@ -328,7 +328,7 @@ const SchoolDataVerification = () => {
                                   {m.gradYear}
                                 </td>
                                 <td className='px-4 py-3'>
-                                  <span className='text-xs py-0.5 px-2 bg-blue-100 text-blue-700 rounded-full'>
+                                  <span className='text-xs py-0.5 px-2 bg-[var(--primary)]/10 text-[var(--primary)] rounded-full font-bold'>
                                     {m.dbData.status}
                                   </span>
                                   <p className='text-[10px] mt-1 truncate max-w-[150px]'>
@@ -336,7 +336,7 @@ const SchoolDataVerification = () => {
                                   </p>
                                 </td>
                                 <td className='px-4 py-3'>
-                                  <span className='text-xs py-0.5 px-2 bg-orange-100 text-orange-700 rounded-full font-bold'>
+                                  <span className='text-xs py-0.5 px-2 bg-amber-500/10 text-amber-600 rounded-full font-bold'>
                                     {m.excelData.status}
                                   </span>
                                   <p className='text-[10px] mt-1 truncate max-w-[150px]'>
@@ -367,7 +367,7 @@ const SchoolDataVerification = () => {
                         {results.details.notFound.map((n: any, i: number) => (
                           <div
                             key={i}
-                            className='flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700'
+                            className='flex items-center justify-between p-3 bg-[color:var(--bg-tertiary)] rounded-xl border border-[color:var(--border-color)]'
                           >
                             <div>
                               <p className='text-sm font-bold'>{n.name}</p>

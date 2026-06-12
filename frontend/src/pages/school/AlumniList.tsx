@@ -255,7 +255,7 @@ const SchoolAlumniList = () => {
 
           <button
             onClick={handleClearFilters}
-            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100 dark:border-red-900/30 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
+            className='flex items-center justify-center gap-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-3 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:text-red-500 hover:border-red-300'
           >
             <FaTimes className='text-xs' /> Reset
           </button>
@@ -264,7 +264,7 @@ const SchoolAlumniList = () => {
 
       {/* Active URL Filters Banner */}
       {(universityParam || majorParam) && (
-        <div className='mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl flex items-center justify-between text-sm border border-blue-100 dark:border-blue-900/30'>
+        <div className='mb-6 p-4 bg-[var(--primary)]/5 text-[color:var(--text-primary)] rounded-xl flex items-center justify-between text-sm border border-[var(--primary)]/20'>
           <div className='flex items-center gap-2'>
             <span className='font-bold'>Penyaringan Aktif:</span>
             {universityParam && <span>Universitas: <strong>{universityParam}</strong></span>}
@@ -273,7 +273,7 @@ const SchoolAlumniList = () => {
           </div>
           <button
             onClick={() => setSearchParams({})}
-            className='text-xs font-bold bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 shadow-sm hover:bg-blue-50 transition-all text-blue-600 dark:text-blue-400'
+            className='text-xs font-bold bg-[color:var(--bg-card)] px-3 py-1.5 rounded-lg border border-[color:var(--border-color)] shadow-sm hover:bg-[color:var(--bg-tertiary)] transition-all text-[color:var(--text-secondary)]'
           >
             Hapus Filter
           </button>
@@ -346,7 +346,7 @@ const SchoolAlumniList = () => {
                       </div>
                     </td>
                     <td className='px-6 py-4'>
-                      <span className='px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-xs font-bold text-[color:var(--text-secondary)]'>
+                      <span className='px-3 py-1 bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] rounded-full text-xs font-bold text-[color:var(--text-secondary)]'>
                         {person.profile?.graduationYear || '-'}
                       </span>
                     </td>

@@ -44,7 +44,7 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 20 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            className="relative w-full max-w-md overflow-hidden rounded-3xl bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-2xl"
+            className="relative w-full max-w-md overflow-hidden rounded-3xl bg-[color:var(--bg-card)] shadow-2xl"
           >
             {/* Header Illustration */}
             <div className="h-32 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center relative overflow-hidden">

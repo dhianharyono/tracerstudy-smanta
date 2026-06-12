@@ -129,7 +129,7 @@ const SchoolDashboard = () => {
           {/* Total Alumni */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl flex items-center justify-center'>
                 <FaUsers size={20} />
               </div>
               <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
@@ -144,7 +144,7 @@ const SchoolDashboard = () => {
           {/* Alumni Lengkap */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center'>
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
@@ -170,7 +170,7 @@ const SchoolDashboard = () => {
           {/* Alumni Belum Lengkap */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center'>
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
@@ -206,7 +206,7 @@ const SchoolDashboard = () => {
           {/* Bekerja */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center'>
                 <FaBriefcase size={20} />
               </div>
               <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
@@ -221,7 +221,7 @@ const SchoolDashboard = () => {
           {/* Kuliah */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center'>
                 <FaUniversity size={20} />
               </div>
               <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
@@ -245,7 +245,7 @@ const SchoolDashboard = () => {
           {/* Total Siswa */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center'>
                 <FaGraduationCap size={20} />
               </div>
               <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
@@ -260,7 +260,7 @@ const SchoolDashboard = () => {
           {/* Siswa Lengkap */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center'>
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
@@ -286,7 +286,7 @@ const SchoolDashboard = () => {
           {/* Siswa Belum Lengkap */}
           <div className='bg-[color:var(--bg-card)] p-5 rounded-2xl border border-[color:var(--border-color)] shadow-sm hover:-translate-y-1 transition-transform duration-300'>
             <div className='flex flex-col'>
-              <div className='w-10 h-10 mb-3 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-xl flex items-center justify-center'>
+              <div className='w-10 h-10 mb-3 bg-red-500/10 text-red-500 rounded-xl flex items-center justify-center'>
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
@@ -770,16 +770,16 @@ const SchoolDashboard = () => {
       </div>
 
       {/* Information Box */}
-      <div className='mb-8 p-6 bg-blue-50 dark:bg-blue-900/10 border border-blue-200 dark:border-blue-800 rounded-2xl'>
+      <div className='mb-8 p-6 bg-[var(--primary)]/5 border border-[var(--primary)]/20 rounded-2xl'>
         <div className='flex gap-4'>
-          <div className='text-blue-500 mt-1'>
+          <div className='text-[var(--primary)] mt-1 shrink-0'>
             <FaUniversity size={24} />
           </div>
           <div>
-            <h4 className='font-bold text-blue-900 dark:text-blue-300'>
+            <h4 className='font-bold text-[color:var(--text-primary)]'>
               Catatan Monitoring
             </h4>
-            <p className='text-xs md:text-sm text-blue-800 dark:text-blue-400 mt-1'>
+            <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mt-1'>
               Data yang disajikan adalah data real-time berdasarkan pengisian
               kuesioner oleh alumni dan siswa. <br />
               Sekolah dapat menyarankan siswa dan alumni untuk memperbarui data

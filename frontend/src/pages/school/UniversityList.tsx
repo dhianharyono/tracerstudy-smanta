@@ -153,10 +153,10 @@ const SchoolUniversityList = () => {
                   className={`px-2 py-0.5 rounded text-[10px] font-black uppercase border
                   ${
                     topUniversity.type === 'negeri'
-                      ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                      ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                       : topUniversity.type === 'kedinasan'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                        : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                        ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                        : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
                   }`}
                 >
                   {topUniversity.type || 'Swasta'}
@@ -233,7 +233,7 @@ const SchoolUniversityList = () => {
               >
                 <div className='flex items-start justify-between mb-4'>
                   <div className='flex items-center gap-3 w-full pr-2'>
-                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-blue-50 text-blue-700 border border-blue-200/50 font-bold text-sm shrink-0 uppercase'>
+                    <div className='flex items-center justify-center w-10 h-10 rounded-full bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 font-bold text-sm shrink-0 uppercase'>
                       #{idx + 1}
                     </div>
                     <div className='min-w-0'>
@@ -247,10 +247,10 @@ const SchoolUniversityList = () => {
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
                         ${
                           univ.type === 'negeri'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                            ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                             : univ.type === 'kedinasan'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                              : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                              ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
+                              : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
                         }`}
                       >
                         {univ.type || 'Swasta'}
