@@ -506,7 +506,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ updatedAt: -1 });
 
     const total = await User.countDocuments(filter);
 
@@ -834,7 +834,7 @@ router.get('/students', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ updatedAt: -1 });
 
     const total = await User.countDocuments(query);
 

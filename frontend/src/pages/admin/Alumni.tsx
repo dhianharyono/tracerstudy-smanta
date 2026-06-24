@@ -567,6 +567,7 @@ const AdminAlumni = () => {
           <TableHeadCell>Pekerjaan</TableHeadCell>
           <TableHeadCell>Media Sosial</TableHeadCell>
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
+          <TableHeadCell>Tanggal Update</TableHeadCell>
           <TableHeadCell>Survei</TableHeadCell>
           <TableHeadCell>Aksi</TableHeadCell>
         </TableHeader>
@@ -574,7 +575,7 @@ const AdminAlumni = () => {
           {alumni.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={6}
+                colSpan={8}
                 className='p-8 text-center text-[color:var(--text-secondary)]'
               >
                 Tidak ada data alumni yang ditemukan.
@@ -676,6 +677,13 @@ const AdminAlumni = () => {
                     month: 'short',
                     year: 'numeric',
                   })}
+                </TableCell>
+                <TableCell>
+                  {alum.updatedAt ? new Date(alum.updatedAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  }) : '-'}
                 </TableCell>
                 <TableCell>
                   {!isUniversityIncomplete(alum) ? (

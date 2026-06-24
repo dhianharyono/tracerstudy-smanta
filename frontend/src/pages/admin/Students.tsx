@@ -604,6 +604,7 @@ const AdminStudents = () => {
           <TableHeadCell>Nama Lengkap & Tahun Masuk / Lulus</TableHeadCell>
           <TableHeadCell>Email</TableHeadCell>
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
+          <TableHeadCell>Tanggal Update</TableHeadCell>
           <TableHeadCell>Status</TableHeadCell>
           <TableHeadCell className='text-center'>Aksi</TableHeadCell>
         </TableHeader>
@@ -611,7 +612,7 @@ const AdminStudents = () => {
           {students.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={8}
+                colSpan={6}
                 className='p-8 text-center text-[color:var(--text-secondary)]'
               >
                 Tidak ada data student.
@@ -641,12 +642,19 @@ const AdminStudents = () => {
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {student.email}
                 </TableCell>
-                <TableCell className='text-[color:var(--text-secondary)]'>
+                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {new Date(student.createdAt).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
                   })}
+                </TableCell>
+                <TableCell className='text-[color:var(--text-secondary)]'>
+                  {student.updatedAt ? new Date(student.updatedAt).toLocaleDateString('id-ID', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  }) : '-'}
                 </TableCell>
                 <TableCell>
                   {student.profile?.fullName &&
