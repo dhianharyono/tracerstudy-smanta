@@ -84,7 +84,7 @@ router.get('/stats', authorize('admin'), async (req: Request, res: Response) => 
                 $match: {
                     timestamp: dateFilter,
                     role: { $ne: 'admin' },
-                    path: { $nin: ['/student', '/alumni'] } // Exclude dashboard home pages
+                    path: { $nin: ['/', '/student', '/alumni'] } // Exclude landing page and dashboard home pages
                 }
             },
             {
