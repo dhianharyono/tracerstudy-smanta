@@ -63,10 +63,75 @@ const AlumniYearTooltip = ({ active, payload, label }: any) => {
   return null;
 };
 
+const UniversityTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const name = data?._id || 'Unknown';
+    const count = data?.count || 0;
+    const type = data?.type || '';
+
+    const formattedType =
+      type === 'negeri'
+        ? 'Negeri'
+        : type === 'swasta'
+          ? 'Swasta'
+          : type === 'kedinasan'
+            ? 'Kedinasan'
+            : '-';
+
+    return (
+      <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] p-4 rounded-xl shadow-lg text-sm max-w-xs'>
+        <p className='font-bold text-[color:var(--text-primary)] mb-2 flex items-center gap-1.5'>
+          <span className='w-2 h-2 rounded-full bg-blue-500'></span>
+          {name}
+        </p>
+        <div className='space-y-1.5'>
+          <div className='flex justify-between gap-8 text-[color:var(--text-secondary)]'>
+            <span>Tipe Perguruan Tinggi:</span>
+            <span className='font-bold text-[color:var(--text-primary)]'>
+              {formattedType}
+            </span>
+          </div>
+          <div className='flex justify-between gap-8 text-blue-500 border-t border-[color:var(--border-color)] pt-1.5 mt-1'>
+            <span>Total Alumni:</span>
+            <span className='font-bold'>{count} orang</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+const MajorTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload;
+    const name = data?._id || 'Unknown';
+    const count = data?.count || 0;
+
+    return (
+      <div className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] p-4 rounded-xl shadow-lg text-sm max-w-xs'>
+        <p className='font-bold text-[color:var(--text-primary)] mb-2 flex items-center gap-1.5'>
+          <span className='w-2 h-2 rounded-full bg-purple-500'></span>
+          {name}
+        </p>
+        <div className='space-y-1.5'>
+          <div className='flex justify-between gap-8 text-purple-500 border-t border-[color:var(--border-color)] pt-1.5 mt-1'>
+            <span>Total Alumni:</span>
+            <span className='font-bold'>{count} orang</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 const SchoolDashboard = () => {
   const [stats, setStats] = useState<any>(null);
   const [univStats, setUnivStats] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [angkatanTab, setAngkatanTab] = useState<'alumni' | 'student'>('alumni');
 
   useEffect(() => {
     fetchStats();
@@ -400,6 +465,7 @@ const SchoolDashboard = () => {
               <BarChart
                 data={stats?.alumniByYear}
                 margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
+                barCategoryGap='25%'
               >
                 <CartesianGrid
                   strokeDasharray='3 3'
@@ -422,7 +488,7 @@ const SchoolDashboard = () => {
                 <Bar
                   dataKey='count'
                   radius={[4, 4, 0, 0]}
-                  barSize={24}
+                  maxBarSize={36}
                   label={{
                     position: 'top',
                     fill: 'var(--text-secondary)',
@@ -458,6 +524,7 @@ const SchoolDashboard = () => {
                 data={univStats.slice(0, 10)}
                 layout='vertical'
                 margin={{ left: 20 }}
+                barCategoryGap='20%'
               >
                 <CartesianGrid
                   strokeDasharray='3 3'
@@ -479,20 +546,12 @@ const SchoolDashboard = () => {
                   stroke='var(--text-secondary)'
                   tick={{ fill: 'var(--text-secondary)' }}
                 />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-color)',
-                    backgroundColor: 'var(--bg-card)',
-                    color: 'var(--text-primary)',
-                  }}
-                  itemStyle={{ color: 'var(--text-primary)' }}
-                />
+                <Tooltip content={<UniversityTooltip />} />
                 <Bar
                   dataKey='count'
                   fill='#3b82f6'
                   radius={[0, 4, 4, 0]}
-                  barSize={20}
+                  maxBarSize={28}
                   name='Jumlah Alumni'
                 />
               </BarChart>
@@ -514,6 +573,7 @@ const SchoolDashboard = () => {
                 data={stats?.topMajors}
                 layout='vertical'
                 margin={{ left: 20 }}
+                barCategoryGap='20%'
               >
                 <CartesianGrid
                   strokeDasharray='3 3'
@@ -535,20 +595,12 @@ const SchoolDashboard = () => {
                   stroke='var(--text-secondary)'
                   tick={{ fill: 'var(--text-secondary)' }}
                 />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: '12px',
-                    border: '1px solid var(--border-color)',
-                    backgroundColor: 'var(--bg-card)',
-                    color: 'var(--text-primary)',
-                  }}
-                  itemStyle={{ color: 'var(--text-primary)' }}
-                />
+                <Tooltip content={<MajorTooltip />} />
                 <Bar
                   dataKey='count'
                   fill='#8b5cf6'
                   radius={[0, 4, 4, 0]}
-                  barSize={20}
+                  maxBarSize={28}
                   name='Jumlah'
                 />
               </BarChart>
@@ -557,215 +609,193 @@ const SchoolDashboard = () => {
         </div>
       </div>
 
-      {/* Grad Year Distribution (Alumni & Students) - Styled like AlumniDataProgress */}
+      {/* Statistik Per Angkatan Section */}
       <div className='bg-[color:var(--bg-card)] p-8 rounded-2xl border border-[color:var(--border-color)] shadow-md flex flex-col mb-8'>
-        <div className='flex items-center gap-3 mb-8'>
-          <div className='w-1.5 h-6 bg-amber-500 rounded-full'></div>
-          <h2 className='text-xl font-bold text-[color:var(--text-primary)]'>
-            Statistik Per Angkatan
-          </h2>
+        <div className='flex items-center justify-between mb-6 flex-col sm:flex-row gap-4'>
+          <div className='flex items-center gap-3'>
+            <div className='w-1.5 h-6 bg-amber-500 rounded-full'></div>
+            <h2 className='text-xl font-bold text-[color:var(--text-primary)]'>
+              Statistik Per Angkatan
+            </h2>
+          </div>
+          <div className='flex p-1 bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] rounded-xl shrink-0'>
+            <button
+              onClick={() => setAngkatanTab('alumni')}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${angkatanTab === 'alumni'
+                ? 'bg-[var(--primary)] text-white shadow-md'
+                : 'text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]'
+                }`}
+            >
+              Alumni Terdata
+            </button>
+            <button
+              onClick={() => setAngkatanTab('student')}
+              className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${angkatanTab === 'student'
+                ? 'bg-[var(--primary)] text-white shadow-md'
+                : 'text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)]'
+                }`}
+            >
+              Siswa Aktif
+            </button>
+          </div>
         </div>
 
-        <div className='flex-grow overflow-y-auto pr-2 custom-scrollbar space-y-6 max-h-[450px]'>
-          {/* Students Sections */}
-          <div className='pt-2'>
-            <div className='flex items-center gap-2 mb-4'>
-              <span className='px-3 py-1 rounded-md bg-indigo-500/10 text-indigo-600 font-bold text-xs uppercase tracking-widest'>
-                Siswa Aktif
-              </span>
-              <div className='h-[1px] flex-grow bg-[color:var(--border-color)]'></div>
-            </div>
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-              {stats?.studentsByYear
-                ?.slice()
-                .sort((a: any, b: any) => a._id - b._id)
-                .map((item: any) => {
-                  const maxStudents = Math.max(
-                    ...(stats.studentsByYear.map((s: any) => s.count) || [1]),
-                  );
-                  const width = `${(item.count / maxStudents) * 100}%`;
+        <div className='overflow-x-auto max-h-[500px] overflow-y-auto rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] custom-scrollbar'>
+          <table className='w-full text-left border-collapse text-sm'>
+            <thead>
+              <tr className='bg-[color:var(--bg-card)] border-b border-[color:var(--border-color)] text-[color:var(--text-secondary)] font-bold sticky top-0 z-10'>
+                <th className='px-6 py-4 bg-[color:var(--bg-card)]'>
+                  {angkatanTab === 'alumni' ? 'Tahun Lulus' : 'Angkatan'}
+                </th>
+                <th className='px-6 py-4 text-center bg-[color:var(--bg-card)]'>Total Terdaftar</th>
+                <th className='px-6 py-4 text-center bg-[color:var(--bg-card)]'>Data Lengkap</th>
+                <th className='px-6 py-4 text-center bg-[color:var(--bg-card)]'>Belum Lengkap</th>
+                <th className='px-6 py-4 bg-[color:var(--bg-card)]'>Rasio Kelengkapan</th>
+              </tr>
+            </thead>
+            <tbody className='divide-y divide-[color:var(--border-color)] text-[color:var(--text-primary)]'>
+              {angkatanTab === 'alumni' ? (
+                stats?.alumniByYear
+                  ?.slice()
+                  .sort((a: any, b: any) => b._id - a._id)
+                  .map((item: any) => {
+                    const percentage = item.count > 0 ? Math.round((item.completedCount / item.count) * 100) : 0;
+                    const barColor = percentage >= 75 ? 'bg-emerald-500' : percentage >= 40 ? 'bg-amber-500' : 'bg-red-500';
+                    const textColor = percentage >= 75 ? 'text-emerald-500' : percentage >= 40 ? 'text-amber-500' : 'text-red-500';
 
-                  return (
-                    <div
-                      key={item._id}
-                      className='relative p-5 rounded-2xl bg-[color:var(--bg-tertiary)] hover:bg-[color:var(--bg-card)] transition-all duration-300 group overflow-hidden border border-[color:var(--border-color)] flex flex-col justify-between min-h-[120px] shadow-sm hover:shadow-md'
-                    >
-                      <div
-                        className='absolute left-0 top-0 bottom-0 bg-indigo-500/5 transition-all group-hover:bg-indigo-500/10'
-                        style={{ width }}
-                      ></div>
-                      <div className='relative z-10 flex flex-col h-full justify-between gap-3'>
-                        <div className='flex justify-between items-start'>
-                          <div>
-                            <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider mb-0.5'>
-                              Angkatan
-                            </p>
-                            <p className='text-2xl font-black text-[color:var(--text-primary)]'>
-                              {item._id}
-                            </p>
+                    return (
+                      <tr key={item._id} className='hover:bg-[color:var(--bg-card)] transition-colors duration-150'>
+                        <td className='px-6 py-4 font-bold'>
+                          Tahun Lulus {item._id}
+                        </td>
+                        <td className='px-6 py-4 text-center font-bold'>
+                          {item.count} orang
+                        </td>
+                        <td className='px-6 py-4 text-center text-emerald-500 font-bold'>
+                          {item.completedCount} orang
+                        </td>
+                        <td className='px-6 py-4 text-center text-red-500 font-semibold'>
+                          {item.incompleteCount} orang
+                        </td>
+                        <td className='px-6 py-4'>
+                          <div className='flex items-center gap-3'>
+                            <div className='w-24 bg-gray-200 dark:bg-gray-800 h-2 rounded-full overflow-hidden shrink-0'>
+                              <div
+                                className={`${barColor} h-full rounded-full transition-all duration-500`}
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                            <span className={`font-bold text-xs ${textColor}`}>
+                              {percentage}%
+                            </span>
                           </div>
-                          <div className='text-right bg-indigo-500/10 px-2.5 py-1 rounded-lg border border-indigo-500/20'>
-                            <p className='text-base font-black text-indigo-500'>
-                              {item.count}
-                            </p>
-                            <p className='text-[9px] text-indigo-400 font-bold uppercase tracking-wider'>
-                              Siswa
-                            </p>
+                        </td>
+                      </tr>
+                    );
+                  })
+              ) : (
+                stats?.studentsByYear
+                  ?.slice()
+                  .sort((a: any, b: any) => a._id - b._id)
+                  .map((item: any) => {
+                    const percentage = item.count > 0 ? Math.round((item.completedCount / item.count) * 100) : 0;
+                    const barColor = percentage >= 75 ? 'bg-indigo-500' : percentage >= 40 ? 'bg-amber-500' : 'bg-red-500';
+                    const textColor = percentage >= 75 ? 'text-indigo-500' : percentage >= 40 ? 'text-amber-500' : 'text-red-500';
+
+                    return (
+                      <tr key={item._id} className='hover:bg-[color:var(--bg-card)] transition-colors duration-150'>
+                        <td className='px-6 py-4 font-bold'>
+                          Angkatan {item._id}
+                        </td>
+                        <td className='px-6 py-4 text-center font-bold'>
+                          {item.count} orang
+                        </td>
+                        <td className='px-6 py-4 text-center text-emerald-500 font-bold'>
+                          {item.completedCount} orang
+                        </td>
+                        <td className='px-6 py-4 text-center text-red-500 font-semibold'>
+                          {item.incompleteCount} orang
+                        </td>
+                        <td className='px-6 py-4'>
+                          <div className='flex items-center gap-3'>
+                            <div className='w-24 bg-gray-200 dark:bg-gray-800 h-2 rounded-full overflow-hidden shrink-0'>
+                              <div
+                                className={`${barColor} h-full rounded-full transition-all duration-500`}
+                                style={{ width: `${percentage}%` }}
+                              ></div>
+                            </div>
+                            <span className={`font-bold text-xs ${textColor}`}>
+                              {percentage}%
+                            </span>
                           </div>
-                        </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+              )}
 
-                        {(item.completedCount > 0 ||
-                          item.incompleteCount > 0) && (
-                          <div className='flex flex-wrap gap-1.5 pt-2 border-t border-[color:var(--border-color)]/60'>
-                            {item.completedCount > 0 && (
-                              <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'>
-                                Lengkap: {item.completedCount}
-                              </span>
-                            )}
-                            {item.incompleteCount > 0 && (
-                              <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20'>
-                                Belum Lengkap: {item.incompleteCount}
-                              </span>
-                            )}
-                          </div>
-                        )}
+              {/* Unknown Year Handlers */}
+              {angkatanTab === 'alumni' && stats?.alumniWithoutYear > 0 && (
+                <tr className='bg-red-500/5 hover:bg-red-500/10 italic transition-colors duration-150'>
+                  <td className='px-6 py-4 font-bold text-red-500 dark:text-red-400'>
+                    Tahun Lulus Tidak Diketahui
+                  </td>
+                  <td className='px-6 py-4 text-center font-bold text-red-500 dark:text-red-400'>
+                    {stats.alumniWithoutYear} orang
+                  </td>
+                  <td className='px-6 py-4 text-center text-emerald-500 font-bold'>
+                    0 orang
+                  </td>
+                  <td className='px-6 py-4 text-center text-red-500 font-bold'>
+                    {stats.alumniWithoutYear} orang
+                  </td>
+                  <td className='px-6 py-4'>
+                    <div className='flex items-center gap-3'>
+                      <div className='w-24 bg-gray-200 dark:bg-gray-800 h-2 rounded-full overflow-hidden shrink-0'>
+                        <div
+                          className='bg-red-500 h-full rounded-full'
+                          style={{ width: '0%' }}
+                        ></div>
                       </div>
-                    </div>
-                  );
-                })}
-
-              {stats?.studentsWithoutYear > 0 && (
-                <div className='relative p-5 rounded-2xl bg-red-500/5 hover:bg-red-500/10 transition-all duration-300 group overflow-hidden border border-dashed border-red-500/30 flex flex-col justify-between min-h-[120px] shadow-sm'>
-                  <div className='relative z-10 flex flex-col h-full justify-between gap-3'>
-                    <div className='flex justify-between items-start'>
-                      <div>
-                        <p className='text-[10px] text-red-400 font-bold uppercase tracking-wider mb-0.5'>
-                          Tahun Masuk/Lulus
-                        </p>
-                        <p className='text-lg font-black text-red-500 dark:text-red-400'>
-                          Tidak Diketahui
-                        </p>
-                      </div>
-                      <div className='text-right bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-500/20'>
-                        <p className='text-base font-black text-red-500'>
-                          {stats.studentsWithoutYear}
-                        </p>
-                        <p className='text-[9px] text-red-400 font-bold uppercase tracking-wider'>
-                          Siswa
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className='flex flex-wrap gap-1.5 pt-2 border-t border-red-500/20'>
-                      <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20'>
-                        Belum Lengkap: {stats.studentsWithoutYear}
+                      <span className='font-bold text-xs text-red-500'>
+                        0%
                       </span>
                     </div>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               )}
-            </div>
-          </div>
 
-          {/* Alumni Sections */}
-          <div>
-            <div className='flex items-center gap-2 mb-4 mt-2'>
-              <span className='px-3 py-1 rounded-md bg-blue-500/10 text-blue-600 font-bold text-xs uppercase tracking-widest'>
-                Alumni Terdata
-              </span>
-              <div className='h-[1px] flex-grow bg-[color:var(--border-color)]'></div>
-            </div>
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'>
-              {stats?.alumniByYear
-                ?.slice()
-                .sort((a: any, b: any) => b._id - a._id)
-                .map((item: any) => {
-                  const maxAlumni = Math.max(
-                    ...(stats.alumniByYear.map((s: any) => s.count) || [1]),
-                  );
-                  const width = `${(item.count / maxAlumni) * 100}%`;
-
-                  return (
-                    <div
-                      key={item._id}
-                      className='relative p-5 rounded-2xl bg-[color:var(--bg-tertiary)] hover:bg-[color:var(--bg-card)] transition-all duration-300 group overflow-hidden border border-[color:var(--border-color)] flex flex-col justify-between min-h-[120px] shadow-sm hover:shadow-md'
-                    >
-                      <div
-                        className='absolute left-0 top-0 bottom-0 bg-blue-500/5 transition-all group-hover:bg-blue-500/10'
-                        style={{ width }}
-                      ></div>
-                      <div className='relative z-10 flex flex-col h-full justify-between gap-3'>
-                        <div className='flex justify-between items-start'>
-                          <div>
-                            <p className='text-[10px] text-[color:var(--text-tertiary)] font-bold uppercase tracking-wider mb-0.5'>
-                              Lulus Tahun
-                            </p>
-                            <p className='text-2xl font-black text-[color:var(--text-primary)]'>
-                              {item._id}
-                            </p>
-                          </div>
-                          <div className='text-right bg-blue-500/10 px-2.5 py-1 rounded-lg border border-blue-500/20'>
-                            <p className='text-base font-black text-blue-500'>
-                              {item.count}
-                            </p>
-                            <p className='text-[9px] text-blue-400 font-bold uppercase tracking-wider'>
-                              Alumni
-                            </p>
-                          </div>
-                        </div>
-
-                        {(item.completedCount > 0 ||
-                          item.incompleteCount > 0) && (
-                          <div className='flex flex-wrap gap-1.5 pt-2 border-t border-[color:var(--border-color)]/60'>
-                            {item.completedCount > 0 && (
-                              <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'>
-                                Lengkap: {item.completedCount}
-                              </span>
-                            )}
-                            {item.incompleteCount > 0 && (
-                              <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20'>
-                                Belum Lengkap: {item.incompleteCount}
-                              </span>
-                            )}
-                          </div>
-                        )}
+              {angkatanTab === 'student' && stats?.studentsWithoutYear > 0 && (
+                <tr className='bg-red-500/5 hover:bg-red-500/10 italic transition-colors duration-150'>
+                  <td className='px-6 py-4 font-bold text-red-500 dark:text-red-400'>
+                    Angkatan Tidak Diketahui
+                  </td>
+                  <td className='px-6 py-4 text-center font-bold text-red-500 dark:text-red-400'>
+                    {stats.studentsWithoutYear} orang
+                  </td>
+                  <td className='px-6 py-4 text-center text-emerald-500 font-bold'>
+                    0 orang
+                  </td>
+                  <td className='px-6 py-4 text-center text-red-500 font-bold'>
+                    {stats.studentsWithoutYear} orang
+                  </td>
+                  <td className='px-6 py-4'>
+                    <div className='flex items-center gap-3'>
+                      <div className='w-24 bg-gray-200 dark:bg-gray-800 h-2 rounded-full overflow-hidden shrink-0'>
+                        <div
+                          className='bg-red-500 h-full rounded-full'
+                          style={{ width: '0%' }}
+                        ></div>
                       </div>
-                    </div>
-                  );
-                })}
-
-              {stats?.alumniWithoutYear > 0 && (
-                <div className='relative p-5 rounded-2xl bg-red-500/5 hover:bg-red-500/10 transition-all duration-300 group overflow-hidden border border-dashed border-red-500/30 flex flex-col justify-between min-h-[120px] shadow-sm'>
-                  <div className='relative z-10 flex flex-col h-full justify-between gap-3'>
-                    <div className='flex justify-between items-start'>
-                      <div>
-                        <p className='text-[10px] text-red-400 font-bold uppercase tracking-wider mb-0.5'>
-                          Tahun Masuk/Lulus
-                        </p>
-                        <p className='text-lg font-black text-red-500 dark:text-red-400'>
-                          Tidak Diketahui
-                        </p>
-                      </div>
-                      <div className='text-right bg-red-500/10 px-2.5 py-1 rounded-lg border border-red-500/20'>
-                        <p className='text-base font-black text-red-500'>
-                          {stats.alumniWithoutYear}
-                        </p>
-                        <p className='text-[9px] text-red-400 font-bold uppercase tracking-wider'>
-                          Alumni
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className='flex flex-wrap gap-1.5 pt-2 border-t border-red-500/20'>
-                      <span className='inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/10 text-red-500 border border-red-500/20'>
-                        Belum Lengkap: {stats.alumniWithoutYear}
+                      <span className='font-bold text-xs text-red-500'>
+                        0%
                       </span>
                     </div>
-                  </div>
-                </div>
+                  </td>
+                </tr>
               )}
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
 
