@@ -466,6 +466,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const questionnaireStatus = req.query.questionnaireStatus as string;
     const badgeId = req.query.badgeId as string;
     const name = (req.query.name || req.query.search) as string;
+    const duplicate = req.query.duplicate as string;
 
     const filter: any = { role: 'alumni' };
 
@@ -501,14 +502,87 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['badges'] = badgeId;
     }
 
-    const alumni = await User.find(filter)
+    if (duplicate) {
+      if (duplicate === 'name') {
+        const duplicateNames = await User.aggregate([
+          { $match: { role: 'alumni', 'profile.fullName': { $exists: true, $ne: '' } } },
+          { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+          { $match: { count: { $gt: 1 } } }
+        ]);
+        const nameList = duplicateNames.map(d => d._id);
+        filter['$expr'] = { $in: [ { $toLower: '$profile.fullName' }, nameList ] };
+      } else if (duplicate === 'email') {
+        const duplicateEmails = await User.aggregate([
+          { $match: { role: 'alumni', email: { $exists: true, $ne: '' } } },
+          { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+          { $match: { count: { $gt: 1 } } }
+        ]);
+        const emailList = duplicateEmails.map(d => d._id);
+        filter['$expr'] = { $in: [ { $toLower: '$email' }, emailList ] };
+      } else if (duplicate === 'all' || duplicate === 'any') {
+        const [duplicateNames, duplicateEmails] = await Promise.all([
+          User.aggregate([
+            { $match: { role: 'alumni', 'profile.fullName': { $exists: true, $ne: '' } } },
+            { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+            { $match: { count: { $gt: 1 } } }
+          ]),
+          User.aggregate([
+            { $match: { role: 'alumni', email: { $exists: true, $ne: '' } } },
+            { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+            { $match: { count: { $gt: 1 } } }
+          ])
+        ]);
+        const nameList = duplicateNames.map(d => d._id);
+        const emailList = duplicateEmails.map(d => d._id);
+        const duplicateConditions = [
+          { $expr: { $in: [ { $toLower: '$profile.fullName' }, nameList ] } },
+          { $expr: { $in: [ { $toLower: '$email' }, emailList ] } }
+        ];
 
+        if (filter['$or']) {
+          const existingOr = filter['$or'];
+          delete filter['$or'];
+          filter['$and'] = [
+            { $or: existingOr },
+            { $or: duplicateConditions }
+          ];
+        } else {
+          filter['$or'] = duplicateConditions;
+        }
+      }
+    }
+
+    const alumni = await User.find(filter)
       .select('-password')
       .skip(skip)
       .limit(limit)
       .sort({ updatedAt: -1 });
 
     const total = await User.countDocuments(filter);
+
+    // Flag duplicates for the returned items
+    const [dupNames, dupEmails] = await Promise.all([
+      User.aggregate([
+        { $match: { role: 'alumni', 'profile.fullName': { $exists: true, $ne: '' } } },
+        { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } }
+      ]),
+      User.aggregate([
+        { $match: { role: 'alumni', email: { $exists: true, $ne: '' } } },
+        { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } }
+      ])
+    ]);
+
+    const dupNameSet = new Set(dupNames.map(d => d._id));
+    const dupEmailSet = new Set(dupEmails.map(d => d._id));
+
+    const alumniWithDupFlags = alumni.map(a => {
+      const u = a.toObject() as any;
+      u.isDuplicateName = u.profile?.fullName ? dupNameSet.has(u.profile.fullName.toLowerCase()) : false;
+      u.isDuplicateEmail = u.email ? dupEmailSet.has(u.email.toLowerCase()) : false;
+      return u;
+    });
 
     // Get filter options
     const universitiesQuery = User.distinct('university.name', {
@@ -535,7 +609,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const graduationYears = graduationYearsData.reverse();
 
     res.json({
-      alumni,
+      alumni: alumniWithDupFlags,
       pagination: {
         page,
         limit,
@@ -792,42 +866,92 @@ router.get('/students', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
-    const { search, entryYear, graduationYear, status } = req.query;
+    const { search, entryYear, graduationYear, status, duplicate } = req.query;
 
     const query: any = { role: 'student' };
+    const andConditions: any[] = [];
 
     if (search) {
-      query.$or = [
-        { username: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { 'profile.fullName': { $regex: search, $options: 'i' } },
-      ];
+      andConditions.push({
+        $or: [
+          { username: { $regex: search, $options: 'i' } },
+          { email: { $regex: search, $options: 'i' } },
+          { 'profile.fullName': { $regex: search, $options: 'i' } },
+        ]
+      });
     }
 
     if (entryYear) {
-      query['profile.entryYear'] = parseInt(entryYear as string);
+      andConditions.push({ 'profile.entryYear': parseInt(entryYear as string) });
     }
 
     if (graduationYear) {
-      query['profile.graduationYear'] = parseInt(graduationYear as string);
+      andConditions.push({ 'profile.graduationYear': parseInt(graduationYear as string) });
     }
 
     if (status) {
       if (status === 'complete') {
-        query['profile.fullName'] = { $exists: true, $nin: [null, ''] };
-        query['profile.entryYear'] = { $exists: true, $ne: null };
-        query['profile.graduationYear'] = { $exists: true, $ne: null };
+        andConditions.push({ 'profile.fullName': { $exists: true, $nin: [null, ''] } });
+        andConditions.push({ 'profile.entryYear': { $exists: true, $ne: null } });
+        andConditions.push({ 'profile.graduationYear': { $exists: true, $ne: null } });
       } else if (status === 'incomplete') {
-        query.$or = [
-          { 'profile': { $exists: false } },
-          { 'profile.fullName': { $exists: false } },
-          { 'profile.fullName': { $in: [null, ''] } },
-          { 'profile.entryYear': { $exists: false } },
-          { 'profile.entryYear': null },
-          { 'profile.graduationYear': { $exists: false } },
-          { 'profile.graduationYear': null }
-        ];
+        andConditions.push({
+          $or: [
+            { 'profile': { $exists: false } },
+            { 'profile.fullName': { $exists: false } },
+            { 'profile.fullName': { $in: [null, ''] } },
+            { 'profile.entryYear': { $exists: false } },
+            { 'profile.entryYear': null },
+            { 'profile.graduationYear': { $exists: false } },
+            { 'profile.graduationYear': null }
+          ]
+        });
       }
+    }
+
+    if (duplicate) {
+      if (duplicate === 'name') {
+        const duplicateNames = await User.aggregate([
+          { $match: { role: 'student', 'profile.fullName': { $exists: true, $ne: '' } } },
+          { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+          { $match: { count: { $gt: 1 } } }
+        ]);
+        const nameList = duplicateNames.map(d => d._id);
+        andConditions.push({ $expr: { $in: [ { $toLower: '$profile.fullName' }, nameList ] } });
+      } else if (duplicate === 'email') {
+        const duplicateEmails = await User.aggregate([
+          { $match: { role: 'student', email: { $exists: true, $ne: '' } } },
+          { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+          { $match: { count: { $gt: 1 } } }
+        ]);
+        const emailList = duplicateEmails.map(d => d._id);
+        andConditions.push({ $expr: { $in: [ { $toLower: '$email' }, emailList ] } });
+      } else if (duplicate === 'all' || duplicate === 'any') {
+        const [duplicateNames, duplicateEmails] = await Promise.all([
+          User.aggregate([
+            { $match: { role: 'student', 'profile.fullName': { $exists: true, $ne: '' } } },
+            { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+            { $match: { count: { $gt: 1 } } }
+          ]),
+          User.aggregate([
+            { $match: { role: 'student', email: { $exists: true, $ne: '' } } },
+            { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+            { $match: { count: { $gt: 1 } } }
+          ])
+        ]);
+        const nameList = duplicateNames.map(d => d._id);
+        const emailList = duplicateEmails.map(d => d._id);
+        andConditions.push({
+          $or: [
+            { $expr: { $in: [ { $toLower: '$profile.fullName' }, nameList ] } },
+            { $expr: { $in: [ { $toLower: '$email' }, emailList ] } }
+          ]
+        });
+      }
+    }
+
+    if (andConditions.length > 0) {
+      query['$and'] = andConditions;
     }
 
     const students = await User.find(query)
@@ -838,8 +962,32 @@ router.get('/students', async (req: Request, res: Response) => {
 
     const total = await User.countDocuments(query);
 
+    // Flag duplicates for the returned items
+    const [dupNames, dupEmails] = await Promise.all([
+      User.aggregate([
+        { $match: { role: 'student', 'profile.fullName': { $exists: true, $ne: '' } } },
+        { $group: { _id: { $toLower: '$profile.fullName' }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } }
+      ]),
+      User.aggregate([
+        { $match: { role: 'student', email: { $exists: true, $ne: '' } } },
+        { $group: { _id: { $toLower: '$email' }, count: { $sum: 1 } } },
+        { $match: { count: { $gt: 1 } } }
+      ])
+    ]);
+
+    const dupNameSet = new Set(dupNames.map(d => d._id));
+    const dupEmailSet = new Set(dupEmails.map(d => d._id));
+
+    const studentsWithDupFlags = students.map(s => {
+      const u = s.toObject() as any;
+      u.isDuplicateName = u.profile?.fullName ? dupNameSet.has(u.profile.fullName.toLowerCase()) : false;
+      u.isDuplicateEmail = u.email ? dupEmailSet.has(u.email.toLowerCase()) : false;
+      return u;
+    });
+
     res.json({
-      students,
+      students: studentsWithDupFlags,
       pagination: {
         page,
         limit,

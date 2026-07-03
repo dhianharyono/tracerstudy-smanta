@@ -58,6 +58,7 @@ const AdminAlumni = () => {
     major: majorParam,
     questionnaireStatus: 'completed',
     name: '',
+    duplicate: '',
   });
 
   useEffect(() => {
@@ -265,6 +266,7 @@ const AdminAlumni = () => {
       if (filters.questionnaireStatus)
         params.append('questionnaireStatus', filters.questionnaireStatus);
       if (filters.name) params.append('name', filters.name);
+      if (filters.duplicate) params.append('duplicate', filters.duplicate);
 
       const response = await axios.get(
         `/api/admin/alumni?${params.toString()}`,
@@ -303,6 +305,7 @@ const AdminAlumni = () => {
       major: '',
       questionnaireStatus: '',
       name: '',
+      duplicate: '',
     });
     setSearchTerm('');
     setPagination({ ...pagination, page: 1 });
@@ -400,144 +403,178 @@ const AdminAlumni = () => {
         className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
           }`}
       >
-        <div className='grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-4'>
-          <div className='relative'>
-            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
-            <input
-              type='text'
-              placeholder='Cari Nama...'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-9 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            />
-          </div>
-          <div className='relative'>
-            <select
-              value={filters.university}
-              onChange={(e) => handleFilterChange('university', e.target.value)}
-              className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            >
-              <option value=''>Semua Universitas</option>
-              {filterOptions.universities.map((univ: string) => (
-                <option key={univ} value={univ}>
-                  {univ}
-                </option>
-              ))}
-            </select>
-            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg
-                className='h-4 w-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
+        <div className='flex flex-col gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4'>
+            <div className='relative'>
+              <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
+              <input
+                type='text'
+                placeholder='Cari Nama...'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-9 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              />
+            </div>
+            <div className='relative'>
+              <select
+                value={filters.university}
+                onChange={(e) => handleFilterChange('university', e.target.value)}
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
-                />
-              </svg>
+                <option value=''>Semua Universitas</option>
+                {filterOptions.universities.map((univ: string) => (
+                  <option key={univ} value={univ}>
+                    {univ}
+                  </option>
+                ))}
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className='relative'>
+              <select
+                value={filters.graduationYear}
+                onChange={(e) =>
+                  handleFilterChange('graduationYear', e.target.value)
+                }
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Semua Tahun</option>
+                {filterOptions.graduationYears.map((year: number) => (
+                  <option key={year} value={year.toString()}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className='relative'>
+              <select
+                value={filters.major}
+                onChange={(e) => handleFilterChange('major', e.target.value)}
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Semua Jurusan</option>
+                {filterOptions.majors.map((major: string) => (
+                  <option key={major} value={major}>
+                    {major}
+                  </option>
+                ))}
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className='relative'>
+              <select
+                value={filters.questionnaireStatus}
+                onChange={(e) =>
+                  handleFilterChange('questionnaireStatus', e.target.value)
+                }
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Status Survei</option>
+                <option value='completed'>Lengkap</option>
+                <option value='incomplete'>Belum Lengkap</option>
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <div className='relative'>
+              <select
+                value={filters.duplicate}
+                onChange={(e) =>
+                  handleFilterChange('duplicate', e.target.value)
+                }
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Tanpa Filter Duplikat</option>
+                <option value='name'>Duplikasi Nama</option>
+                <option value='email'>Duplikasi Email</option>
+                <option value='all'>Duplikasi Nama/Email</option>
+              </select>
+              <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <div className='relative'>
-            <select
-              value={filters.graduationYear}
-              onChange={(e) =>
-                handleFilterChange('graduationYear', e.target.value)
-              }
-              className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+          <div className='flex justify-end border-t border-[color:var(--border-color)] pt-3 mt-1'>
+            <button
+              onClick={handleClearFilters}
+              className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100'
             >
-              <option value=''>Semua Tahun</option>
-              {filterOptions.graduationYears.map((year: number) => (
-                <option key={year} value={year.toString()}>
-                  {year}
-                </option>
-              ))}
-            </select>
-            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg
-                className='h-4 w-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
-                />
-              </svg>
-            </div>
+              <FaTimes className='text-xs' /> Reset Filter
+            </button>
           </div>
-
-          <div className='relative'>
-            <select
-              value={filters.major}
-              onChange={(e) => handleFilterChange('major', e.target.value)}
-              className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            >
-              <option value=''>Semua Jurusan</option>
-              {filterOptions.majors.map((major: string) => (
-                <option key={major} value={major}>
-                  {major}
-                </option>
-              ))}
-            </select>
-            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg
-                className='h-4 w-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
-                />
-              </svg>
-            </div>
-          </div>
-
-          <div className='relative'>
-            <select
-              value={filters.questionnaireStatus}
-              onChange={(e) =>
-                handleFilterChange('questionnaireStatus', e.target.value)
-              }
-              className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            >
-              <option value=''>Status Survei</option>
-              <option value='completed'>Lengkap</option>
-              <option value='incomplete'>Belum Lengkap</option>
-            </select>
-            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
-              <svg
-                className='h-4 w-4'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth='2'
-                  d='M19 9l-7 7-7-7'
-                />
-              </svg>
-            </div>
-          </div>
-
-          <button
-            onClick={handleClearFilters}
-            className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100'
-          >
-            <FaTimes className='text-xs' /> Reset
-          </button>
         </div>
       </Card>
 
@@ -586,17 +623,27 @@ const AdminAlumni = () => {
               <TableRow key={alum._id}>
                 <TableCell>
                   <div>
-                    <div className='font-semibold text-[color:var(--text-primary)] flex items-center gap-1.5'>
-                      {alum.profile?.fullName || '-'}
+                    <div className='font-semibold text-[color:var(--text-primary)] flex flex-wrap items-center gap-1.5'>
+                      <span>{alum.profile?.fullName || '-'}</span>
                       {alum.isMentor && (
                         <FaCrown
                           className='text-amber-500 text-[10px]'
                           title='Mentor Aktif'
                         />
                       )}
+                      {alum.isDuplicateName && (
+                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Nama terdeteksi ganda (duplikat)'>
+                          Ganda (Nama)
+                        </span>
+                      )}
                     </div>
-                    <div className='text-xs text-[color:var(--text-secondary)]'>
-                      {alum.email}
+                    <div className='text-xs text-[color:var(--text-secondary)] flex flex-wrap items-center gap-1.5 mt-0.5'>
+                      <span>{alum.email}</span>
+                      {alum.isDuplicateEmail && (
+                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Email terdeteksi ganda (duplikat)'>
+                          Ganda (Email)
+                        </span>
+                      )}
                     </div>
                   </div>
                 </TableCell>

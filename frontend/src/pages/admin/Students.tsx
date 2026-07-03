@@ -42,6 +42,7 @@ const AdminStudents = () => {
     entryYear: '',
     graduationYear: '',
     status: '',
+    duplicate: '',
   });
   const [formData, setFormData] = useState({
     username: '',
@@ -62,6 +63,7 @@ const AdminStudents = () => {
     filters.entryYear,
     filters.graduationYear,
     filters.status,
+    filters.duplicate,
   ]);
 
   // Debounced search
@@ -263,6 +265,7 @@ const AdminStudents = () => {
           graduationYear: filters.graduationYear,
         }),
         ...(filters.status && { status: filters.status }),
+        ...(filters.duplicate && { duplicate: filters.duplicate }),
       });
 
       const response = await axios.get(`/api/admin/students?${params}`);
@@ -289,6 +292,7 @@ const AdminStudents = () => {
       entryYear: '',
       graduationYear: '',
       status: '',
+      duplicate: '',
     });
     setPagination({ ...pagination, page: 1 });
   };
@@ -542,58 +546,74 @@ const AdminStudents = () => {
       )}
 
       <Card className='mb-6'>
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
-          <div className='relative'>
-            <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
-              <FaSearch size={14} />
-            </span>
-            <input
-              type='text'
-              name='search'
-              value={filters.search}
-              onChange={handleFilterChange}
-              placeholder='Cari Nama/Username/Email...'
-              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            />
+        <div className='flex flex-col gap-4'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
+            <div className='relative'>
+              <span className='absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400'>
+                <FaSearch size={14} />
+              </span>
+              <input
+                type='text'
+                name='search'
+                value={filters.search}
+                onChange={handleFilterChange}
+                placeholder='Cari Nama/Username/Email...'
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-10 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              />
+            </div>
+            <div>
+              <input
+                type='number'
+                name='entryYear'
+                value={filters.entryYear}
+                onChange={handleFilterChange}
+                placeholder='Tahun Masuk'
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              />
+            </div>
+            <div>
+              <input
+                type='number'
+                name='graduationYear'
+                value={filters.graduationYear}
+                onChange={handleFilterChange}
+                placeholder='Tahun Lulus'
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              />
+            </div>
+            <div>
+              <select
+                name='status'
+                value={filters.status}
+                onChange={handleFilterChange}
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Semua Status</option>
+                <option value='complete'>Lengkap</option>
+                <option value='incomplete'>Kurang Lengkap</option>
+              </select>
+            </div>
+            <div>
+              <select
+                name='duplicate'
+                value={filters.duplicate}
+                onChange={handleFilterChange}
+                className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Tanpa Filter Duplikat</option>
+                <option value='name'>Duplikasi Nama</option>
+                <option value='email'>Duplikasi Email</option>
+                <option value='all'>Duplikasi Nama/Email</option>
+              </select>
+            </div>
           </div>
-          <div>
-            <input
-              type='number'
-              name='entryYear'
-              value={filters.entryYear}
-              onChange={handleFilterChange}
-              placeholder='Tahun Masuk'
-              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            />
-          </div>
-          <div>
-            <input
-              type='number'
-              name='graduationYear'
-              value={filters.graduationYear}
-              onChange={handleFilterChange}
-              placeholder='Tahun Lulus'
-              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            />
-          </div>
-          <div>
-            <select
-              name='status'
-              value={filters.status}
-              onChange={handleFilterChange}
-              className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
-            >
-              <option value=''>Semua Status</option>
-              <option value='complete'>Lengkap</option>
-              <option value='incomplete'>Kurang Lengkap</option>
-            </select>
-          </div>
-          <div className='flex gap-2'>
+
+          <div className='flex justify-end border-t border-[color:var(--border-color)] pt-3 mt-1'>
             <button
               onClick={clearFilters}
-              className='flex flex-1 items-center justify-center gap-2 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] px-4 py-2 text-sm font-medium text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] transition-colors'
+              className='flex items-center justify-center gap-2 rounded-lg border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition-colors hover:bg-red-100'
             >
-              <FaSync size={12} /> Reset
+              <FaSync size={12} /> Reset Filter
             </button>
           </div>
         </div>
@@ -623,11 +643,18 @@ const AdminStudents = () => {
               <TableRow key={student._id}>
                 <TableCell>
                   <div className='max-w-[200px]'>
-                    <div
-                      className='font-medium text-[color:var(--text-primary)] truncate'
-                      title={student.profile?.fullName}
-                    >
-                      {student.profile?.fullName || '-'}
+                    <div className='flex flex-wrap items-center gap-1.5'>
+                      <span
+                        className='font-medium text-[color:var(--text-primary)] truncate'
+                        title={student.profile?.fullName}
+                      >
+                        {student.profile?.fullName || '-'}
+                      </span>
+                      {student.isDuplicateName && (
+                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Nama terdeteksi ganda (duplikat)'>
+                          Ganda (Nama)
+                        </span>
+                      )}
                     </div>
                     {student.profile?.entryYear && student.profile?.graduationYear && <div
                       className='text-xs text-[color:var(--text-secondary)] truncate'
@@ -640,7 +667,14 @@ const AdminStudents = () => {
                   </div>
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.email}
+                  <div className='flex flex-wrap items-center gap-1.5'>
+                    <span>{student.email}</span>
+                    {student.isDuplicateEmail && (
+                      <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Email terdeteksi ganda (duplikat)'>
+                        Ganda (Email)
+                      </span>
+                    )}
+                  </div>
                 </TableCell>
                  <TableCell className='text-[color:var(--text-secondary)]'>
                   {new Date(student.createdAt).toLocaleDateString('id-ID', {
