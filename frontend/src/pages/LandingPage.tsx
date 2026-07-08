@@ -189,7 +189,7 @@ const LandingPage = () => {
                       ? '/student'
                       : '/alumni'
                 }
-                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4.5 rounded-full font-black text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
               >
                 Kembali ke Dashboard
               </Link>
@@ -197,7 +197,7 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/register'
-                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4.5 rounded-full font-black text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-black text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
                 >
                   Kontribusi Sekarang
                 </Link>

@@ -16,13 +16,49 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
 
       {/* Geometric Hexagon Outlines (Inspired by tracerstudy.co.id) */}
       <div className='absolute inset-y-0 right-0 w-1/2 overflow-hidden pointer-events-none opacity-20 lg:opacity-25 hidden lg:block z-0'>
-        <svg className='absolute right-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] text-white' fill='none' stroke='currentColor' strokeWidth='1' viewBox='0 0 100 100'>
-          <polygon points='50,5 90,25 90,75 50,95 10,75 10,25' className='stroke-white/10' />
-          <polygon points='50,15 80,30 80,70 50,85 20,70 20,30' className='stroke-white/15' />
-          <polygon points='50,25 70,35 70,65 50,75 30,65 30,35' className='stroke-white/20' />
-          <line x1='50' y1='5' x2='50' y2='95' className='stroke-white/5' strokeDasharray='2 2' />
-          <line x1='10' y1='25' x2='90' y2='75' className='stroke-white/5' strokeDasharray='2 2' />
-          <line x1='10' y1='75' x2='90' y2='25' className='stroke-white/5' strokeDasharray='2 2' />
+        <svg
+          className='absolute right-[-10%] top-1/2 -translate-y-1/2 w-[800px] h-[800px] text-white'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='1'
+          viewBox='0 0 100 100'
+        >
+          <polygon
+            points='50,5 90,25 90,75 50,95 10,75 10,25'
+            className='stroke-white/10'
+          />
+          <polygon
+            points='50,15 80,30 80,70 50,85 20,70 20,30'
+            className='stroke-white/15'
+          />
+          <polygon
+            points='50,25 70,35 70,65 50,75 30,65 30,35'
+            className='stroke-white/20'
+          />
+          <line
+            x1='50'
+            y1='5'
+            x2='50'
+            y2='95'
+            className='stroke-white/5'
+            strokeDasharray='2 2'
+          />
+          <line
+            x1='10'
+            y1='25'
+            x2='90'
+            y2='75'
+            className='stroke-white/5'
+            strokeDasharray='2 2'
+          />
+          <line
+            x1='10'
+            y1='75'
+            x2='90'
+            y2='25'
+            className='stroke-white/5'
+            strokeDasharray='2 2'
+          />
         </svg>
       </div>
 
@@ -62,19 +98,21 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
           </h1>
 
           <p className='text-sm sm:text-base md:text-lg text-blue-50/90 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium'>
-            Bukan sekadar database alumni, tapi jembatan komunikasi dan kolaborasi yang nyata antara siswa, alumni, dan sekolah SMAN 1 Tawangsari.
+            Bukan sekadar database alumni, tapi jembatan komunikasi dan
+            kolaborasi yang nyata antara siswa, alumni, dan sekolah SMAN 1
+            Tawangsari.
           </p>
 
-          <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0 pt-2 h-14'>
+          <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0 pt-2 h-auto sm:h-14'>
             <Link
               to='/register'
-              className='text-xs md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-10 py-4.5 rounded-full font-black shadow-xl shadow-blue-950/20 hover:scale-105 active:scale-95 transition-all duration-200 group'
+              className='text-xs md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black shadow-xl shadow-blue-950/20 hover:scale-105 active:scale-95 transition-all duration-200 group'
             >
               Mulai Kontribusi
             </Link>
             <a
               href='#stats'
-              className='text-xs md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-10 py-4.5 rounded-full font-black hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-200'
+              className='text-xs md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-200'
             >
               Lihat Statistik
             </a>
@@ -124,27 +162,47 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
                 ))}
               </div>
               <div className='text-left'>
-                <p className='text-[8px] font-extrabold uppercase tracking-wider text-blue-600'>Total Alumni</p>
-                <p className='text-[10px] font-black text-slate-800'>+{loading ? '...' : (stats?.totalAlumni || 0)} Alumni</p>
+                <p className='text-[8px] font-extrabold uppercase tracking-wider text-blue-600'>
+                  Total Alumni
+                </p>
+                <p className='text-[10px] font-black text-slate-800'>
+                  +{loading ? '...' : stats?.totalAlumni || 0} Alumni
+                </p>
               </div>
             </div>
 
             {/* Floating glass badge: Data Accuracy */}
             <div className='absolute bottom-[10%] right-[-4%] z-20 py-2.5 px-4 rounded-2xl bg-white/90 backdrop-blur-md border border-white/20 text-slate-800 shadow-xl flex items-center gap-2 animate-bounce [animation-duration:5s] [animation-delay:1.5s]'>
               <div className='p-1 bg-green-50 text-green-600 rounded-lg flex items-center justify-center shrink-0 border border-green-100'>
-                <svg className='w-4 h-4' fill='none' stroke='currentColor' strokeWidth='3' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' d='M5 13l4 4L19 7' />
+                <svg
+                  className='w-4 h-4'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='3'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M5 13l4 4L19 7'
+                  />
                 </svg>
               </div>
               <div className='text-left'>
-                <p className='text-[8px] font-extrabold uppercase tracking-wider text-green-600'>Status Data</p>
-                <p className='text-[10px] font-black text-slate-800'>100% Terverifikasi</p>
+                <p className='text-[8px] font-extrabold uppercase tracking-wider text-green-600'>
+                  Status Data
+                </p>
+                <p className='text-[10px] font-black text-slate-800'>
+                  100% Terverifikasi
+                </p>
               </div>
             </div>
 
             {/* Floating text badge: SMANTA Juara */}
             <div className='absolute top-[16%] right-[0%] z-20 py-1.5 px-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-lg flex items-center gap-1 animate-pulse [animation-duration:4s]'>
-              <span className='text-[9px] font-black tracking-widest uppercase'>SMANTA Juara!</span>
+              <span className='text-[9px] font-black tracking-widest uppercase'>
+                SMANTA Juara!
+              </span>
             </div>
           </div>
         </motion.div>
