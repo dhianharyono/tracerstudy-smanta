@@ -15,15 +15,15 @@ html {
 
 :root {
   /* Core Theme Colors (Matching landing page) */
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
-  --primary-light: #60a5fa;
+  --primary: #3b6ebb;
+  --primary-dark: #2b4e8c;
+  --primary-light: #98c4eb;
   --secondary: #10b981;
   --accent: #f59e0b;
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
-  --info: #3b82f6;
+  --info: #4688cd;
 
   /* Premium Light Background Colors */
   --bg-primary: #f8fafc;

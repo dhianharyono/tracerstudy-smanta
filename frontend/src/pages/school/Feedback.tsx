@@ -33,7 +33,7 @@ const SchoolFeedback = () => {
   if (loading) return <SmartLoader />;
 
   return (
-    <div className='p-4 sm:p-6 lg:p-8 page-fade-in'>
+    <div className='p-4 sm:p-6 lg:p-8 page-fade-in space-y-8'>
       <PageHeader
         title='Kritik & Saran'
         description='Bantu kami meningkatkan kualitas layanan dengan memberikan masukan Anda'
@@ -42,19 +42,11 @@ const SchoolFeedback = () => {
       {/* Stats Section */}
       {stats && <FeedbackStats stats={stats} />}
 
-      <div className='grid lg:grid-cols-3 gap-8'>
-        {/* Form Section - Sticky on Desktop */}
-        <div className='lg:col-span-1'>
-          <div className='lg:sticky lg:top-8'>
-            <FeedbackForm role='school' showHeader={false} onSuccess={fetchData} />
-          </div>
-        </div>
+      {/* Form Section */}
+      <FeedbackForm role='school' showHeader={false} onSuccess={fetchData} />
 
-        {/* List Section */}
-        <div className='lg:col-span-2'>
-          <FeedbackList feedbacks={feedbacks} />
-        </div>
-      </div>
+      {/* List Section */}
+      <FeedbackList feedbacks={feedbacks} />
     </div>
   );
 };

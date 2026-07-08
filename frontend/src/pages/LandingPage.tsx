@@ -162,7 +162,7 @@ const LandingPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className='text-2xl md:text-5xl font-black text-white leading-tight tracking-tight'
           >
-            Siap Menjadi Bagian Dari Perubahan Besar?
+            Siap Menjadi Bagian Dari Perubahan ?
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -170,8 +170,9 @@ const LandingPage = () => {
             transition={{ delay: 0.1 }}
             className='text-sm md:text-xl text-blue-100/90 max-w-2xl mx-auto px-4 md:px-0 font-medium leading-relaxed'
           >
-            Mari berkontribusi untuk SMANTA, almamater kita tercinta. Daftar dan
-            berikan kontribusi Anda sekarang juga, hanya butuh waktu 2 menit!
+            Mari berkontribusi untuk SMANTA, almamater kita tercinta. <br />
+            Daftar dan berikan kontribusi Anda sekarang juga, <br />
+            hanya butuh waktu 2 menit!
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -234,8 +235,7 @@ const LandingPage = () => {
                 </div>
               </div>
               <p className='text-sm text-slate-500 font-medium leading-relaxed max-w-sm mx-auto md:mx-0'>
-                Platform pemetaan studi lanjut alumni untuk mewujudkan
-                kolaborasi nyata antara sekolah, siswa, dan alumni.
+                Platform Tracer Study ini dibuat untuk memudahkan pemetaan lulusan SMA Negeri 1 Tawangsari dan dapat digunakan sebagai referensi para siswa dalam menentukan arah studi lanjut.
               </p>
             </div>
 
@@ -268,7 +268,7 @@ const LandingPage = () => {
           {/* Bottom Copyright Row */}
           <div className='pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400 text-center md:text-left'>
             <div>
-              &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights
+              &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All rights
               reserved.
             </div>
             <div className='flex gap-6'>

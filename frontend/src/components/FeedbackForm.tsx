@@ -160,32 +160,34 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
               Informasi Pengelolaan & Laporan Kendala
             </p>
             <p className='leading-relaxed text-[11px] md:text-xs !text-blue-700'>
-              Setiap kritik dan saran dikelola dan ditinjau langsung oleh Admin demi peningkatan layanan website secara berkala. <br /><br /> Apabila Anda mengalami kendala teknis atau menemukan bug selama menggunakan website ini, silakan sampaikan keluhan Anda secara mendetail melalui formulir ini.
+              Setiap kritik dan saran dikelola dan ditinjau langsung oleh Admin demi peningkatan layanan website secara berkala. Apabila Anda mengalami kendala teknis atau menemukan bug selama menggunakan website ini, silakan sampaikan keluhan Anda secara mendetail melalui formulir ini.
             </p>
           </div>
         </div>
 
-        <div className='mb-8 text-center'>
-          <h3 className='mb-2 text-xs md:text-sm font-semibold text-[color:var(--text-primary)]'>
-            Seberapa puas Anda dengan aplikasi ini?
-          </h3>
-          <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)] mb-6'>
-            Klik bintang untuk memberikan rating (1-5)
-          </p>
+        <form onSubmit={handleSubmit} className='grid grid-cols-1 lg:grid-cols-3 gap-6 items-stretch'>
+          {/* Rating Section Column */}
+          <div className='flex flex-col items-center justify-center p-6 bg-slate-50/50 border border-slate-200/50 rounded-2xl text-center h-full min-h-[220px]'>
+            <h3 className='mb-2 text-xs md:text-sm font-semibold text-[color:var(--text-primary)]'>
+              Seberapa puas Anda dengan aplikasi ini?
+            </h3>
+            <p className='text-[10px] md:text-xs text-[color:var(--text-secondary)] mb-4'>
+              Klik bintang untuk memberikan rating (1-5)
+            </p>
 
-          <div className='flex items-center justify-center gap-2 mb-4'>
-            {[1, 2, 3, 4, 5].map((index) => renderStar(index))}
+            <div className='flex items-center justify-center gap-1.5 mb-4'>
+              {[1, 2, 3, 4, 5].map((index) => renderStar(index))}
+            </div>
+
+            {feedback.rating > 0 && (
+              <div className='inline-block rounded-full bg-blue-50 text-blue-750 border border-blue-200/50 px-4 py-1 text-xs font-semibold animate-fade-in'>
+                Anda memberikan rating {feedback.rating}/5
+              </div>
+            )}
           </div>
 
-          {feedback.rating > 0 && (
-            <div className='inline-block rounded-full bg-blue-50 text-blue-750 border border-blue-200/50 px-4 py-1 text-xs md:text-sm font-semibold'>
-              Anda memberikan rating {feedback.rating}/5
-            </div>
-          )}
-        </div>
-
-        <form onSubmit={handleSubmit} className='space-y-6'>
-          <div className='form-group'>
+          {/* Kritik Column */}
+          <div className='form-group !mb-0 flex flex-col h-full min-h-[220px]'>
             <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
               Kritik
             </label>
@@ -195,54 +197,54 @@ const FeedbackForm: React.FC<FeedbackFormProps> = ({ role, showHeader = true, on
               onChange={(e) =>
                 setFeedback({ ...feedback, kritik: e.target.value })
               }
-              rows={4}
-              className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] resize-none'
+              className='w-full flex-1 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] resize-none text-sm min-h-[160px]'
               placeholder='Apa yang kurang dari aplikasi ini? Silakan tulis keluhan Anda...'
             />
           </div>
 
-          <div className='form-group'>
-            <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-              Saran
-            </label>
-            <textarea
-              name='saran'
-              value={feedback.saran}
-              onChange={(e) =>
-                setFeedback({ ...feedback, saran: e.target.value })
-              }
-              rows={4}
-              className='w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] resize-none'
-              placeholder='Apa yang bisa kami tingkatkan? Silakan tulis saran Anda...'
-            />
-          </div>
-
-          <div className='flex justify-end pt-4'>
-            <button
-              type='submit'
-              className={`flex w-full md:w-fit items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${loadingSubmit || feedback.rating === 0
-                ? 'cursor-not-allowed opacity-70 grayscale'
-                : ''
-                }`}
-              disabled={loadingSubmit || feedback.rating === 0}
-            >
-              {loadingSubmit ? (
-                <>
-                  <FaSpinner className='animate-spin' />
-                  <span>Mengirim...</span>
-                </>
-              ) : submitted ? (
-                <>
-                  <FaSave />
-                  <span>Perbarui Masukan</span>
-                </>
-              ) : (
-                <>
-                  <FaPaperPlane />
-                  <span>Kirim Masukan</span>
-                </>
-              )}
-            </button>
+          {/* Saran & Action Column */}
+          <div className='form-group !mb-0 flex flex-col h-full justify-between gap-4 min-h-[220px]'>
+            <div className='w-full flex flex-col flex-1'>
+              <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+                Saran
+              </label>
+              <textarea
+                name='saran'
+                value={feedback.saran}
+                onChange={(e) =>
+                  setFeedback({ ...feedback, saran: e.target.value })
+                }
+                className='w-full flex-1 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] resize-none text-sm min-h-[120px]'
+                placeholder='Apa yang bisa kami tingkatkan? Silakan tulis saran Anda...'
+              />
+            </div>
+            <div className='flex justify-end'>
+              <button
+                type='submit'
+                className={`flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-8 py-3 font-bold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] ${loadingSubmit || feedback.rating === 0
+                  ? 'cursor-not-allowed opacity-70 grayscale'
+                  : ''
+                  }`}
+                disabled={loadingSubmit || feedback.rating === 0}
+              >
+                {loadingSubmit ? (
+                  <>
+                    <FaSpinner className='animate-spin' />
+                    <span>Mengirim...</span>
+                  </>
+                ) : submitted ? (
+                  <>
+                    <FaSave />
+                    <span>Perbarui Masukan</span>
+                  </>
+                ) : (
+                  <>
+                    <FaPaperPlane />
+                    <span>Kirim Masukan</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </form>
       </div>

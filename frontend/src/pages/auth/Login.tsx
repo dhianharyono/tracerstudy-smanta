@@ -19,7 +19,7 @@ const Login = () => {
     if (location.state?.successMessage && !toastShown.current) {
       toastShown.current = true;
       Toast(location.state.successMessage, 'success');
-      
+
       // Clear the state after a short delay to ensure the toast registers
       const timer = setTimeout(() => {
         navigate(location.pathname, { replace: true, state: {} });
@@ -67,8 +67,8 @@ const Login = () => {
 
       <div className='w-full max-w-md z-10 animate-fade-in space-y-6'>
         {/* Back to Landing */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className='inline-flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-650 transition-all group'
         >
           <div className='p-2.5 rounded-full bg-white border border-slate-200 group-hover:border-blue-500 group-hover:scale-110 transition-all shadow-sm'>
@@ -204,7 +204,7 @@ const Login = () => {
         </div>
 
         <p className='mt-8 text-center text-xs text-slate-400 font-bold'>
-          &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
+          &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All rights reserved.
         </p>
       </div>
     </div>

@@ -59,7 +59,7 @@ const Register = () => {
       setError('Password minimal harus 8 karakter');
       return;
     }
-    
+
     if (!passwordRegex.test(formData.password)) {
       setError('Password harus mengandung huruf besar, huruf kecil, angka, dan simbol');
       return;
@@ -175,17 +175,15 @@ const Register = () => {
                   <button
                     type='button'
                     onClick={() => setFormData({ ...formData, role: 'alumni' })}
-                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${
-                      formData.role === 'alumni'
+                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${formData.role === 'alumni'
                         ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-500'
                         : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100/30'
-                    }`}
+                      }`}
                   >
                     <div>
                       <div
-                        className={`font-extrabold text-sm ${
-                          formData.role === 'alumni' ? 'text-blue-600' : 'text-slate-800'
-                        }`}
+                        className={`font-extrabold text-sm ${formData.role === 'alumni' ? 'text-blue-600' : 'text-slate-800'
+                          }`}
                       >
                         Alumni
                       </div>
@@ -199,17 +197,15 @@ const Register = () => {
                   <button
                     type='button'
                     onClick={() => setFormData({ ...formData, role: 'student' })}
-                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${
-                      formData.role === 'student'
+                    className={`relative overflow-hidden rounded-xl border-2 p-3.5 transition-all duration-200 flex flex-col items-center justify-center gap-1.5 text-center h-full ${formData.role === 'student'
                         ? 'border-blue-600 bg-blue-50/50 ring-1 ring-blue-500'
                         : 'border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-slate-100/30'
-                    }`}
+                      }`}
                   >
                     <div>
                       <div
-                        className={`font-extrabold text-sm ${
-                          formData.role === 'student' ? 'text-blue-600' : 'text-slate-800'
-                        }`}
+                        className={`font-extrabold text-sm ${formData.role === 'student' ? 'text-blue-600' : 'text-slate-800'
+                          }`}
                       >
                         Siswa aktif
                       </div>
@@ -286,7 +282,7 @@ const Register = () => {
                     {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
                   </button>
                 </div>
-                
+
                 {/* Real-time Validation Checklist */}
                 {formData.password.length > 0 && (
                   <div className='mt-2.5 grid grid-cols-2 gap-x-2 gap-y-1.5 p-3 rounded-xl bg-slate-50 border border-slate-200/80 animate-slide-up'>
@@ -300,7 +296,7 @@ const Register = () => {
                         <div className={`w-3.5 h-3.5 rounded-full flex items-center justify-center shrink-0 ${req.met ? 'bg-green-500 text-white' : 'bg-slate-200'}`}>
                           {req.met && (
                             <svg className="w-2.5 h-2.5" fill="currentColor" viewBox="0 0 20 20">
-                              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                              <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
                             </svg>
                           )}
                         </div>
@@ -344,7 +340,7 @@ const Register = () => {
                 {formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword && (
                   <p className='text-[10px] font-black text-green-650 mt-1.5 flex items-center gap-1'>
                     <svg className="w-3.5 h-3.5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"/>
+                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                     </svg>
                     Password cocok
                   </p>
@@ -392,7 +388,7 @@ const Register = () => {
         </div>
 
         <p className='mt-8 text-center text-xs text-slate-400 font-bold'>
-          &copy; {new Date().getFullYear()} SMAN 1 Tawangsari. All rights reserved.
+          &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All rights reserved.
         </p>
       </div>
     </div>
