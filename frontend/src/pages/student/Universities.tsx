@@ -61,8 +61,6 @@ const UniversityDetailModal = ({
     .sort(([, a]: any, [, b]: any) => b - a)
     .slice(0, 4);
 
-  const type = university._id.type?.toLowerCase();
-
   const brandColor = 'text-blue-600';
   const brandBg = 'bg-blue-50';
   const brandBorder = 'border-blue-200/60';
