@@ -1,12 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { LandingPageStats, Testimonial } from '../types';
 
+const fetchLandingStats = async () => {
+  const res = await axios.get('/api/public/stats');
+  return res.data;
+};
+
+const fetchLandingTestimonials = async () => {
+  const res = await axios.get('/api/public/testimonials');
+  return res.data;
+};
+
 export const useLandingPageData = () => {
-  const [stats, setStats] = useState<LandingPageStats | null>(null);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: stats, isLoading: statsLoading, error: statsError } = useQuery<LandingPageStats>({
+    queryKey: ['landingStats'],
+    queryFn: fetchLandingStats,
+    staleTime: 5 * 60 * 1000, // Keep fresh for 5 minutes
+  });
+
+  const { data: testimonials = [], isLoading: testimonialsLoading, error: testimonialsError } = useQuery<Testimonial[]>({
+    queryKey: ['landingTestimonials'],
+    queryFn: fetchLandingTestimonials,
+    staleTime: 5 * 60 * 1000, // Keep fresh for 5 minutes
+  });
 
   useEffect(() => {
     const logVisit = async () => {
@@ -16,27 +34,11 @@ export const useLandingPageData = () => {
         console.error('Error logging visit:', error);
       }
     };
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [statsRes, testimonialsRes] = await Promise.all([
-          axios.get('/api/public/stats'),
-          axios.get('/api/public/testimonials'),
-          logVisit(),
-        ]);
-        setStats(statsRes.data);
-        setTestimonials(testimonialsRes.data);
-      } catch (err: any) {
-        console.error('Error fetching landing page data:', err);
-        setError(err.message || 'Failed to fetch data');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+    logVisit();
   }, []);
 
-  return { stats, testimonials, loading, error };
+  const loading = statsLoading || testimonialsLoading;
+  const error = (statsError || testimonialsError) ? 'Failed to fetch landing page data' : null;
+
+  return { stats: stats || null, testimonials, loading, error };
 };

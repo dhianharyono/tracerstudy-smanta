@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import SmartLoader from '@/components/SmartLoader';
 import { useAuth } from '../../contexts/AuthContext';
@@ -19,37 +20,43 @@ import GraduationConfirmationModal from '@/components/Dashboard/GraduationConfir
 
 const StudentDashboard = () => {
   const { user } = useAuth();
-  const [stats, setStats] = useState<any>(null);
-  const [news, setNews] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
   const [chartWidth, setChartWidth] = useState(900);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [events, setEvents] = useState<any[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isGraduationModalOpen, setIsGraduationModalOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
-  console.log(stats);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [statsRes, newsRes, eventsRes] = await Promise.all([
-          axios.get('/api/student/dashboard'),
-          axios.get('/api/student/news?limit=3'),
-          axios.get('/api/events?limit=1'),
-        ]);
-        setStats(statsRes.data);
-        setNews(newsRes.data);
-        setEvents(eventsRes.data);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, []);
+  const { data: stats, isLoading: statsLoading } = useQuery({
+    queryKey: ['studentDashboardStats'],
+    queryFn: async () => {
+      const res = await axios.get('/api/student/dashboard');
+      return res.data;
+    },
+    staleTime: 2 * 60 * 1000, // Keep fresh for 2 minutes
+  });
+
+  const { data: news = [], isLoading: newsLoading } = useQuery({
+    queryKey: ['studentDashboardNews'],
+    queryFn: async () => {
+      const res = await axios.get('/api/student/news?limit=3');
+      return res.data;
+    },
+    staleTime: 5 * 60 * 1000, // Keep fresh for 5 minutes
+  });
+
+  const { data: events = [], isLoading: eventsLoading } = useQuery({
+    queryKey: ['studentDashboardEvents'],
+    queryFn: async () => {
+      const res = await axios.get('/api/events?limit=1');
+      return res.data;
+    },
+    staleTime: 5 * 60 * 1000, // Keep fresh for 5 minutes
+  });
+
+  const loading = statsLoading || newsLoading || eventsLoading;
+
+  console.log(stats);
 
   useEffect(() => {
     // Show graduation confirmation modal if it's past May 4th of their graduation year
