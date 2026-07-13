@@ -16,7 +16,7 @@ const DEFAULT_MESSAGES = [
 const SmartLoader = ({
   messages = DEFAULT_MESSAGES,
   interval = 2000,
-  fullScreen = true,
+  fullScreen,
 }: SmartLoaderProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -28,9 +28,15 @@ const SmartLoader = ({
     return () => clearInterval(timer);
   }, [messages, interval]);
 
-  const containerClasses = fullScreen
-    ? 'fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-sm'
-    : 'flex flex-col items-center justify-center py-12';
+  let containerClasses = '';
+  if (fullScreen === true) {
+    containerClasses = 'fixed inset-0 z-50 flex flex-col items-center justify-center backdrop-blur-sm';
+  } else if (fullScreen === false) {
+    containerClasses = 'flex flex-col items-center justify-center py-12';
+  } else {
+    // Default (undefined): page-level loader centered in content pane
+    containerClasses = 'flex-1 flex flex-col items-center justify-center min-h-[70vh] w-full';
+  }
 
   return (
     <div className={`${containerClasses} animate-fade-in`}>

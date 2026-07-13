@@ -492,19 +492,16 @@ const Layout = () => {
           ref={mainRef}
           className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
         >
-          <div className='w-full flex-grow animate-fade-in pb-8'>
+          <div className='w-full flex-grow flex flex-col animate-fade-in pb-8'>
             <Suspense
               fallback={
-                <div className='flex flex-col items-center justify-center min-h-[60vh] w-full'>
-                  <SmartLoader
-                    fullScreen={false}
-                    messages={[
-                      'Memuat halaman...',
-                      'Menyiapkan data...',
-                      'Mohon tunggu sebentar...',
-                    ]}
-                  />
-                </div>
+                <SmartLoader
+                  messages={[
+                    'Memuat halaman...',
+                    'Menyiapkan data...',
+                    'Mohon tunggu sebentar...',
+                  ]}
+                />
               }
             >
               <Outlet />
