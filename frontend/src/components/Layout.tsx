@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import ConfirmationModal from './ConfirmationModal';
+import SmartLoader from './SmartLoader';
 import {
   FaChartBar,
   FaEdit,
@@ -492,7 +493,20 @@ const Layout = () => {
           className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
         >
           <div className='w-full flex-grow animate-fade-in pb-8'>
-            <Outlet />
+            <Suspense
+              fallback={
+                <SmartLoader
+                  fullScreen={false}
+                  messages={[
+                    'Memuat halaman...',
+                    'Menyiapkan data...',
+                    'Mohon tunggu sebentar...',
+                  ]}
+                />
+              }
+            >
+              <Outlet />
+            </Suspense>
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
             &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All right reserved.
