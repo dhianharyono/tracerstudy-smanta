@@ -46,11 +46,10 @@ const SmartLoader = ({
         {messages.map((msg, idx) => (
           <p
             key={idx}
-            className={`absolute text-[10px] md:text-sm w-full left-0 transition-all duration-500 transform font-medium text-[color:var(--text-secondary)] ${
-              idx === currentIndex
+            className={`absolute text-[10px] md:text-sm w-full left-0 transition-all duration-500 transform font-medium text-[color:var(--text-secondary)] ${idx === currentIndex
                 ? 'top-0 opacity-100 translate-y-0'
                 : 'top-8 opacity-0 translate-y-4'
-            }`}
+              }`}
           >
             {msg}
           </p>

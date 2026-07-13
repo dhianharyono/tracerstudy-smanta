@@ -495,14 +495,16 @@ const Layout = () => {
           <div className='w-full flex-grow animate-fade-in pb-8'>
             <Suspense
               fallback={
-                <SmartLoader
-                  fullScreen={false}
-                  messages={[
-                    'Memuat halaman...',
-                    'Menyiapkan data...',
-                    'Mohon tunggu sebentar...',
-                  ]}
-                />
+                <div className='flex flex-col items-center justify-center min-h-[60vh] w-full'>
+                  <SmartLoader
+                    fullScreen={false}
+                    messages={[
+                      'Memuat halaman...',
+                      'Menyiapkan data...',
+                      'Mohon tunggu sebentar...',
+                    ]}
+                  />
+                </div>
               }
             >
               <Outlet />
