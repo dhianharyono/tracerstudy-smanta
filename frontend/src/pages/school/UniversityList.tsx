@@ -7,6 +7,7 @@ import {
   FaBuilding,
   FaMapMarkedAlt,
   FaGraduationCap,
+  FaCalendarAlt,
 } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Card from '@/components/common/Card';
@@ -23,15 +24,26 @@ const SchoolUniversityList = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState('all');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
 
   useEffect(() => {
     fetchUniversities();
-  }, []);
+  }, [selectedYear]);
 
   const fetchUniversities = async () => {
     try {
-      const response = await axios.get('/api/school/analytics/universities');
+      const params: any = {};
+      if (selectedYear) {
+        params.graduationYear = selectedYear;
+      }
+      const response = await axios.get('/api/school/analytics/universities', { params });
       setUniversities(response.data);
+
+      if (availableYears.length === 0) {
+        const currentYear = new Date().getFullYear();
+        setAvailableYears(Array.from({ length: 15 }, (_, i) => currentYear - i));
+      }
     } catch (error) {
       console.error('Error fetching university distribution:', error);
     } finally {
@@ -51,14 +63,44 @@ const SchoolUniversityList = () => {
 
   return (
     <div className='p-6 page-fade-in bg-[color:var(--bg-secondary)] min-h-screen'>
-      <div className='mb-6'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Perguruan Tinggi
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
-          Daftar perguruan tinggi tempat alumni melanjutkan studi dan
-          statistiknya.
-        </p>
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
+        <div>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Perguruan Tinggi
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
+            Daftar perguruan tinggi tempat alumni melanjutkan studi dan
+            statistikanya.
+          </p>
+        </div>
+
+        {/* Filter Tahun */}
+        <div className='flex items-center gap-2.5 self-start sm:self-auto shrink-0 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] px-3.5 py-2 rounded-2xl shadow-sm'>
+          <FaCalendarAlt className='text-blue-500 text-sm' />
+          <span className='text-xs sm:text-sm font-semibold text-[color:var(--text-secondary)] whitespace-nowrap'>
+            Tahun:
+          </span>
+          <select
+            id='school-year-filter'
+            aria-label='Filter Berdasarkan Tahun'
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
+          >
+            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+              Semua Tahun
+            </option>
+            {availableYears.map((year) => (
+              <option
+                key={year}
+                value={year}
+                className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+              >
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Stats Cards */}

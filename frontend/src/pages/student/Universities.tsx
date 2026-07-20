@@ -13,6 +13,7 @@ import {
   FaTrophy,
   FaBuilding,
   FaMapMarkedAlt,
+  FaCalendarAlt,
 } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -218,6 +219,8 @@ const StudentUniversities = () => {
   const [universities, setUniversities] = useState<UniversityAggregate[]>([]);
   const [filterType, setFilterType] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedUni, setSelectedUni] = useState<UniversityAggregate | null>(
     null,
@@ -226,15 +229,35 @@ const StudentUniversities = () => {
 
   useEffect(() => {
     fetchUniversities();
-  }, []);
+  }, [selectedYear]);
 
   const fetchUniversities = async () => {
     setLoading(true);
     try {
+      const params: any = {};
+      if (selectedYear) {
+        params.graduationYear = selectedYear;
+      }
       const response = await axios.get<UniversityAggregate[]>(
         '/api/student/universities',
+        { params },
       );
       setUniversities(response.data);
+
+      if (availableYears.length === 0) {
+        const currentYear = new Date().getFullYear();
+        const defaultYears = Array.from({ length: 15 }, (_, i) => currentYear - i);
+        const extractedYears = new Set<number>();
+        response.data.forEach((uni) => {
+          uni.alumni?.forEach((alum) => {
+            if (alum.graduationYear) extractedYears.add(Number(alum.graduationYear));
+          });
+        });
+        const combined = Array.from(new Set([...extractedYears, ...defaultYears])).sort(
+          (a, b) => b - a,
+        );
+        setAvailableYears(combined);
+      }
     } catch (error) {
       console.error('Error fetching universities:', error);
     } finally {
@@ -285,14 +308,44 @@ const StudentUniversities = () => {
 
   return (
     <div className='p-4 md:p-8 page-fade-in space-y-6'>
-      <div className='mb-6'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Perguruan Tinggi
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
-          Daftar perguruan tinggi tempat alumni melanjutkan studi dan
-          statistikanya.
-        </p>
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
+        <div>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Perguruan Tinggi
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
+            Daftar perguruan tinggi tempat alumni melanjutkan studi dan
+            statistikanya.
+          </p>
+        </div>
+
+        {/* Filter Tahun */}
+        <div className='flex items-center gap-2.5 self-start sm:self-auto shrink-0 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] px-3.5 py-2 rounded-2xl shadow-sm'>
+          <FaCalendarAlt className='text-blue-500 text-sm' />
+          <span className='text-xs sm:text-sm font-semibold text-[color:var(--text-secondary)] whitespace-nowrap'>
+            Tahun:
+          </span>
+          <select
+            id='year-filter'
+            aria-label='Filter Berdasarkan Tahun'
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
+          >
+            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+              Semua Tahun
+            </option>
+            {availableYears.map((year) => (
+              <option
+                key={year}
+                value={year}
+                className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+              >
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Stats Cards */}

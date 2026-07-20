@@ -28,6 +28,7 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const type = req.query.type as string;
+      const graduationYear = (req.query.graduationYear || req.query.year) as string;
 
       const matchQuery: any = {
         role: 'alumni',
@@ -36,6 +37,13 @@ router.get(
 
       if (type && ['negeri', 'swasta', 'kedinasan'].includes(type)) {
         matchQuery['university.type'] = type;
+      }
+
+      if (graduationYear) {
+        const parsedYear = parseInt(graduationYear, 10);
+        if (!isNaN(parsedYear)) {
+          matchQuery['profile.graduationYear'] = parsedYear;
+        }
       }
 
       const universities = await User.aggregate([
@@ -94,13 +102,22 @@ router.get(
   authorize('student', 'alumni', 'school'),
   async (req: Request, res: Response) => {
     try {
+      const graduationYear = (req.query.graduationYear || req.query.year) as string;
+
+      const matchQuery: any = {
+        role: 'alumni',
+        'university.major': { $exists: true, $ne: null },
+      };
+
+      if (graduationYear) {
+        const parsedYear = parseInt(graduationYear, 10);
+        if (!isNaN(parsedYear)) {
+          matchQuery['profile.graduationYear'] = parsedYear;
+        }
+      }
+
       const majors = await User.aggregate([
-        {
-          $match: {
-            role: 'alumni',
-            'university.major': { $exists: true, $ne: null },
-          },
-        },
+        { $match: matchQuery },
         {
           $group: {
             _id: '$university.major',

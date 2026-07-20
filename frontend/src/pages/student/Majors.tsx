@@ -12,6 +12,7 @@ import {
   FaChartPie,
   FaTrophy,
   FaBuilding,
+  FaCalendarAlt,
 } from 'react-icons/fa';
 
 import { useAuth } from '../../contexts/AuthContext';
@@ -208,6 +209,8 @@ const StudentMajors = () => {
   const [majors, setMajors] = useState<MajorData[]>([]);
   const [filteredMajors, setFilteredMajors] = useState<MajorData[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [availableYears, setAvailableYears] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Modal State
@@ -227,20 +230,40 @@ const StudentMajors = () => {
   ).length;
 
   useEffect(() => {
-    const fetchMajors = async () => {
-      try {
-        const response = await axios.get<MajorData[]>('/api/student/majors');
-        setMajors(response.data);
-        setFilteredMajors(response.data);
-      } catch (error) {
-        console.error('Error fetching majors:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchMajors();
-  }, []);
+  }, [selectedYear]);
+
+  const fetchMajors = async () => {
+    setLoading(true);
+    try {
+      const params: any = {};
+      if (selectedYear) {
+        params.graduationYear = selectedYear;
+      }
+      const response = await axios.get<MajorData[]>('/api/student/majors', { params });
+      setMajors(response.data);
+      setFilteredMajors(response.data);
+
+      if (availableYears.length === 0) {
+        const currentYear = new Date().getFullYear();
+        const defaultYears = Array.from({ length: 15 }, (_, i) => currentYear - i);
+        const extractedYears = new Set<number>();
+        response.data.forEach((m) => {
+          m.alumni?.forEach((alum) => {
+            if (alum.graduationYear) extractedYears.add(Number(alum.graduationYear));
+          });
+        });
+        const combined = Array.from(new Set([...extractedYears, ...defaultYears])).sort(
+          (a, b) => b - a,
+        );
+        setAvailableYears(combined);
+      }
+    } catch (error) {
+      console.error('Error fetching majors:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const lowerTerm = searchTerm.toLowerCase();
@@ -286,13 +309,43 @@ const StudentMajors = () => {
   return (
     <div className='p-4 sm:p-6 lg:p-8 min-h-screen page-fade-in relative space-y-6'>
       {/* Header Section */}
-      <div className='mb-6'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Jurusan & Program Studi
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
-          Persebaran Alumni berdasarkan jurusan dan statistikanya.
-        </p>
+      <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6'>
+        <div>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Jurusan & Program Studi
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
+            Persebaran Alumni berdasarkan jurusan dan statistikanya.
+          </p>
+        </div>
+
+        {/* Filter Tahun */}
+        <div className='flex items-center gap-2.5 self-start sm:self-auto shrink-0 bg-[color:var(--bg-card)] border border-[color:var(--border-color)] px-3.5 py-2 rounded-2xl shadow-sm'>
+          <FaCalendarAlt className='text-blue-500 text-sm' />
+          <span className='text-xs sm:text-sm font-semibold text-[color:var(--text-secondary)] whitespace-nowrap'>
+            Tahun:
+          </span>
+          <select
+            id='major-year-filter'
+            aria-label='Filter Berdasarkan Tahun'
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
+          >
+            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+              Semua Tahun
+            </option>
+            {availableYears.map((year) => (
+              <option
+                key={year}
+                value={year}
+                className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+              >
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Stats Cards */}

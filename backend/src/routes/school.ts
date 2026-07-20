@@ -293,8 +293,19 @@ router.get('/alumni', async (req: Request, res: Response) => {
 // Get university distribution analytics
 router.get('/analytics/universities', async (req: Request, res: Response) => {
     try {
+        const { graduationYear, year } = req.query;
+        const selectedYear = (graduationYear || year) as string;
+        const matchQuery: any = { role: 'alumni', 'university.name': { $exists: true, $ne: '' } };
+
+        if (selectedYear) {
+            const parsedYear = parseInt(selectedYear, 10);
+            if (!isNaN(parsedYear)) {
+                matchQuery['profile.graduationYear'] = parsedYear;
+            }
+        }
+
         const stats = await User.aggregate([
-            { $match: { role: 'alumni', 'university.name': { $exists: true, $ne: '' } } },
+            { $match: matchQuery },
             {
                 $group: {
                     _id: '$university.name',
