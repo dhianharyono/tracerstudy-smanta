@@ -39,6 +39,10 @@ const Layout = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [feedbackMenuVisible, setFeedbackMenuVisible] = useState(true);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [sidebarCounts, setSidebarCounts] = useState<{
+    unrepliedFeedback: number;
+    pendingJobs: number;
+  }>({ unrepliedFeedback: 0, pendingJobs: 0 });
   const mainRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -55,6 +59,26 @@ const Layout = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      fetchSidebarCounts();
+      const interval = setInterval(fetchSidebarCounts, 30000);
+      return () => clearInterval(interval);
+    }
+  }, [location.pathname, user]);
+
+  const fetchSidebarCounts = async () => {
+    try {
+      const response = await axios.get('/api/admin/sidebar-counts');
+      setSidebarCounts({
+        unrepliedFeedback: response.data.unrepliedFeedback || 0,
+        pendingJobs: response.data.pendingJobs || 0,
+      });
+    } catch (error) {
+      console.error('Error fetching admin sidebar counts:', error);
+    }
+  };
 
   useEffect(() => {
     const checkFeedbackVisibility = async () => {
@@ -163,11 +187,13 @@ const Layout = () => {
     to,
     icon: Icon,
     label,
+    badgeCount,
     activeCheck = false,
   }: {
     to: string;
     icon: any;
     label: string;
+    badgeCount?: number;
     activeCheck?: boolean;
   }) => {
     const isActive = activeCheck
@@ -191,7 +217,14 @@ const Layout = () => {
           <Icon className='text-lg' />
         </span>
         <span className='font-medium text-sm'>{label}</span>
-        {isActive && <FaChevronRight className='ml-auto text-xs opacity-60' />}
+        {typeof badgeCount === 'number' && badgeCount > 0 && (
+          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white shadow-sm shadow-red-500/50 animate-pulse'>
+            {badgeCount > 99 ? '99+' : badgeCount}
+          </span>
+        )}
+        {isActive && (!badgeCount || badgeCount <= 0) && (
+          <FaChevronRight className='ml-auto text-xs opacity-60' />
+        )}
       </Link>
     );
   };
@@ -308,7 +341,12 @@ const Layout = () => {
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
           <NavLink to='/admin/news' icon={FaNewspaper} label='Kelola Berita' />
-          <NavLink to='/admin/jobs' icon={FaBriefcase} label='Bursa Kerja' />
+          <NavLink
+            to='/admin/jobs'
+            icon={FaBriefcase}
+            label='Bursa Kerja'
+            badgeCount={sidebarCounts.pendingJobs}
+          />
 
           <SectionLabel label='Audit & Feedback' />
           <NavLink
@@ -320,6 +358,7 @@ const Layout = () => {
             to='/admin/feedback'
             icon={FaCommentDots}
             label='Kritik & Saran'
+            badgeCount={sidebarCounts.unrepliedFeedback}
           />
 
           <SectionLabel label='Akun' />

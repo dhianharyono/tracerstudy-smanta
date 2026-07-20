@@ -9,6 +9,7 @@ import Settings from '../models/Settings';
 import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import University from '../models/University';
+import Job from '../models/Job';
 import { ensureUniversityExists, inferUniversityType, syncAllReferencedUniversities } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
 import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder, sendStudentIncompleteReminder } from '../utils/mailer';
@@ -45,6 +46,29 @@ router.get(
 // All other admin routes require authentication and admin role
 router.use(authenticate);
 router.use(authorize('admin'));
+
+// Get sidebar notification badge counts (unreplied feedback, pending jobs)
+router.get('/sidebar-counts', async (req: Request, res: Response) => {
+  try {
+    const unrepliedFeedback = await Feedback.countDocuments({
+      $or: [
+        { reply: null },
+        { reply: { $exists: false } },
+        { 'reply.content': { $exists: false } },
+        { 'reply.content': '' },
+      ],
+    });
+
+    const pendingJobs = await Job.countDocuments({ status: 'pending' });
+
+    res.json({
+      unrepliedFeedback,
+      pendingJobs,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Get verification stats
 router.get('/verification-stats', async (req: Request, res: Response) => {

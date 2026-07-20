@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import axios from 'axios';
 import {
   FaBriefcase,
@@ -271,13 +272,17 @@ const AdminOpportunityManagement = () => {
       )}
 
       {/* Reject Modal */}
-      {isRejectModalOpen && (activeTab === 'moderation') && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[color:var(--bg-card)] w-full max-w-md rounded-3xl shadow-2xl overflow-hidden">
+      {isRejectModalOpen && activeTab === 'moderation' && createPortal(
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm animate-fade-in"
+            onClick={() => setIsRejectModalOpen(false)}
+          />
+          <div className="relative z-10 bg-[color:var(--bg-card)] w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-fade-in">
             <div className="p-6 bg-red-500 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <FaExclamationCircle className="text-2xl" />
-                <h2 className="text-xl font-bold !mb-0">Tolak Lowongan</h2>
+                <h2 className="text-xl font-bold !mb-0 text-white">Tolak Lowongan</h2>
               </div>
               <p className="text-white/80 text-xs">Berikan alasan penolakan agar alumni dapat merevisi data mereka.</p>
             </div>
@@ -292,7 +297,7 @@ const AdminOpportunityManagement = () => {
                   value={rejectionReason}
                   onChange={(e) => setRejectionReason(e.target.value)}
                   placeholder="Contoh: Deskripsi kurang jelas atau kategori tidak sesuai..."
-                  className="w-full p-4 rounded-2xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] text-sm focus:border-red-400 outline-none transition-all resize-none"
+                  className="w-full p-4 rounded-2xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] text-sm text-[color:var(--text-primary)] placeholder-[color:var(--text-tertiary)] focus:border-red-400 outline-none transition-all resize-none"
                 />
               </div>
 
@@ -300,20 +305,21 @@ const AdminOpportunityManagement = () => {
                 <button
                   onClick={handleReject}
                   disabled={submitLoading}
-                  className="flex-1 py-3 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 disabled:opacity-50 transition-all"
+                  className="flex-1 py-3 bg-red-500 text-white font-bold rounded-2xl hover:bg-red-600 disabled:opacity-50 transition-all active:scale-95 shadow-md"
                 >
                   {submitLoading ? 'Memproses...' : 'Tolak & Kirim Alasan'}
                 </button>
                 <button
                   onClick={() => setIsRejectModalOpen(false)}
-                  className="px-6 py-3 bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] font-bold rounded-2xl hover:bg-gray-200 transition-all"
+                  className="px-6 py-3 bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-gray-700 transition-all active:scale-95"
                 >
                   Batal
                 </button>
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
