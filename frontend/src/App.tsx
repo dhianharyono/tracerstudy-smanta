@@ -54,6 +54,7 @@ const AdminVerificationLogs = lazy(
 const AdminJobManagement = lazy(
   () => import('./pages/admin/AdminOpportunityManagement'),
 );
+const AdminUniversities = lazy(() => import('./pages/admin/AdminUniversities'));
 
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
@@ -197,6 +198,7 @@ function App() {
               <Route path='stats' element={<AdminStatistics />} />
               <Route path='college-plans' element={<AdminCollegePlans />} />
               <Route path='school-users' element={<AdminSchoolUsers />} />
+              <Route path='universities' element={<AdminUniversities />} />
               <Route
                 path='verification-logs'
                 element={<AdminVerificationLogs />}

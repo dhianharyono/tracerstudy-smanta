@@ -8,7 +8,8 @@ import Feedback from '../models/Feedback';
 import Settings from '../models/Settings';
 import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
-import { ensureUniversityExists } from '../utils/universityHelper';
+import University from '../models/University';
+import { ensureUniversityExists, inferUniversityType, syncAllReferencedUniversities } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
 import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder, sendStudentIncompleteReminder } from '../utils/mailer';
 
@@ -2022,6 +2023,369 @@ router.post('/alumni/send-reminder', async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+});
+
+// ==================== UNIVERSITY MANAGEMENT ROUTES ====================
+
+// @desc    Get all universities with pagination, search, filters & usage stats
+// @route   GET /api/admin/universities
+// @access  Private (Admin)
+router.get('/universities', async (req: Request, res: Response) => {
+  try {
+    // Auto sync any university referenced in alumni or student college plans that isn't in master list yet
+    await syncAllReferencedUniversities();
+
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const search = (req.query.search as string) || '';
+    const type = (req.query.type as string) || '';
+    const isVerified = (req.query.isVerified as string) || '';
+    const alumniFilter = (req.query.alumniFilter as string) || '';
+
+    const filter: any = {};
+
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { location: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    if (type) {
+      filter.type = type;
+    }
+
+    if (isVerified !== '') {
+      filter.isVerified = isVerified === 'true';
+    }
+
+    if (alumniFilter) {
+      const u1Names = await User.distinct('university.name', { role: 'alumni' });
+      const u2Names = await User.distinct('universityS2.name', { role: 'alumni' });
+      const u3Names = await User.distinct('universityS3.name', { role: 'alumni' });
+
+      const allAlumniUnivNames = Array.from(
+        new Set(
+          [...u1Names, ...u2Names, ...u3Names]
+            .filter((n) => typeof n === 'string' && (n as string).trim() !== '')
+            .map((n) => (n as string).trim())
+        )
+      );
+
+      const regexList = allAlumniUnivNames.map(
+        (n) => new RegExp(`^${n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i')
+      );
+
+      if (alumniFilter === 'has_alumni') {
+        filter.name = { $in: regexList };
+      } else if (alumniFilter === 'no_alumni') {
+        filter.name = { $nin: regexList };
+      }
+    }
+
+    const total = await University.countDocuments(filter);
+    const universities = await University.find(filter)
+      .sort({ name: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // Compute stats
+    const totalAll = await University.countDocuments({});
+    const totalVerified = await University.countDocuments({ isVerified: true });
+    const totalUnverified = await University.countDocuments({ isVerified: false });
+    const totalPtn = await University.countDocuments({ type: 'negeri' });
+    const totalPts = await University.countDocuments({ type: 'swasta' });
+    const totalKedinasan = await University.countDocuments({ type: 'kedinasan' });
+    const totalLuarNegeri = await University.countDocuments({ type: 'luar negeri' });
+    const totalUnassignedType = await University.countDocuments({ $or: [{ type: '' }, { type: { $exists: false } }] });
+
+    // Attach usage count (alumni and college plans) for each university in page
+    const enrichedUniversities = await Promise.all(
+      universities.map(async (univ) => {
+        const univObj = univ.toObject();
+        const escName = univ.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`^${escName}$`, 'i');
+
+        const alumniCount = await User.countDocuments({
+          role: 'alumni',
+          $or: [
+            { 'university.name': regex },
+            { 'universityS2.name': regex },
+            { 'universityS3.name': regex },
+          ],
+        });
+
+        const studentPlanCount = await CollegePlan.countDocuments({
+          targetUniversity: regex,
+        });
+
+        return {
+          ...univObj,
+          alumniCount,
+          studentPlanCount,
+          totalUsage: alumniCount + studentPlanCount,
+        };
+      })
+    );
+
+    res.json({
+      universities: enrichedUniversities,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit) || 1,
+      },
+      stats: {
+        total: totalAll,
+        verified: totalVerified,
+        unverified: totalUnverified,
+        negeri: totalPtn,
+        swasta: totalPts,
+        kedinasan: totalKedinasan,
+        luarNegeri: totalLuarNegeri,
+        unassignedType: totalUnassignedType,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// @desc    Auto categorize unassigned universities based on name keywords
+// @route   POST /api/admin/universities/auto-categorize
+// @access  Private (Admin)
+router.post('/universities/auto-categorize', async (req: Request, res: Response) => {
+  try {
+    const unassignedList = await University.find({
+      $or: [{ type: '' }, { type: { $exists: false } }],
+    });
+
+    let updatedCount = 0;
+    for (const univ of unassignedList) {
+      const inferred = inferUniversityType(univ.name);
+      if (inferred) {
+        univ.type = inferred;
+        await univ.save();
+        updatedCount++;
+      }
+    }
+
+    // Write AuditLog
+    try {
+      await AuditLog.create({
+        action: 'AUTO_CATEGORIZE_UNIVERSITIES',
+        actor: {
+          userId: (req as any).user?._id,
+          username: (req as any).user?.username || 'admin',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'university',
+          name: `Bulk Auto Categorize (${updatedCount} updated)`,
+        },
+        details: `Meng-kategori otomatis ${updatedCount} perguruan tinggi berdasarkan kata kunci nama.`,
+      });
+    } catch (err) {
+      console.error('AuditLog error:', err);
+    }
+
+    res.json({
+      message: `Berhasil meng-kategori otomatis ${updatedCount} perguruan tinggi.`,
+      updatedCount,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// @desc    Add a new university
+// @route   POST /api/admin/universities
+// @access  Private (Admin)
+router.post('/universities', async (req: Request, res: Response) => {
+  try {
+    const { name, type, location, isVerified } = req.body;
+
+    if (!name || !name.trim()) {
+      return res.status(400).json({ message: 'Nama perguruan tinggi wajib diisi.' });
+    }
+
+    const trimmedName = name.trim();
+    const existing = await University.findOne({
+      name: { $regex: new RegExp(`^${trimmedName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+    });
+
+    if (existing) {
+      return res.status(400).json({ message: 'Perguruan tinggi dengan nama ini sudah ada.' });
+    }
+
+    const university = await University.create({
+      name: trimmedName,
+      type: type || '',
+      location: location || '',
+      isVerified: isVerified !== undefined ? isVerified : true,
+      addedBy: (req as any).user?._id,
+    });
+
+    // Write AuditLog
+    try {
+      await AuditLog.create({
+        action: 'CREATE_UNIVERSITY',
+        actor: {
+          userId: (req as any).user?._id,
+          username: (req as any).user?.username || 'admin',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'university',
+          name: university.name,
+        },
+        details: `Menambahkan perguruan tinggi baru: "${university.name}" (${university.type || 'N/A'})`,
+      });
+    } catch (err) {
+      console.error('AuditLog error:', err);
+    }
+
+    res.status(201).json(university);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// @desc    Update a university (with option to cascade name changes)
+// @route   PUT /api/admin/universities/:id
+// @access  Private (Admin)
+router.put('/universities/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { name, type, location, isVerified, cascadeUpdate = true } = req.body;
+
+    const university = await University.findById(id);
+    if (!university) {
+      return res.status(404).json({ message: 'Perguruan tinggi tidak ditemukan.' });
+    }
+
+    const oldName = university.name;
+    const newName = name ? name.trim() : oldName;
+
+    if (newName !== oldName) {
+      // Check if new name already exists in another document
+      const conflict = await University.findOne({
+        _id: { $ne: id },
+        name: { $regex: new RegExp(`^${newName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') },
+      });
+      if (conflict) {
+        return res.status(400).json({
+          message: `Perguruan tinggi "${newName}" sudah terdaftar di database.`,
+        });
+      }
+    }
+
+    university.name = newName;
+    if (type !== undefined) university.type = type;
+    if (location !== undefined) university.location = location;
+    if (isVerified !== undefined) university.isVerified = isVerified;
+
+    await university.save();
+
+    let updatedUsersCount = 0;
+    let updatedPlansCount = 0;
+
+    // Cascade name update if name changed and cascadeUpdate is enabled
+    if (oldName !== newName && cascadeUpdate) {
+      const escOldName = oldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regexOld = new RegExp(`^${escOldName}$`, 'i');
+
+      const u1 = await User.updateMany(
+        { 'university.name': regexOld },
+        { $set: { 'university.name': newName } }
+      );
+      const u2 = await User.updateMany(
+        { 'universityS2.name': regexOld },
+        { $set: { 'universityS2.name': newName } }
+      );
+      const u3 = await User.updateMany(
+        { 'universityS3.name': regexOld },
+        { $set: { 'universityS3.name': newName } }
+      );
+      updatedUsersCount = (u1.modifiedCount || 0) + (u2.modifiedCount || 0) + (u3.modifiedCount || 0);
+
+      const p1 = await CollegePlan.updateMany(
+        { targetUniversity: regexOld },
+        { $set: { targetUniversity: newName } }
+      );
+      updatedPlansCount = p1.modifiedCount || 0;
+    }
+
+    // Write AuditLog
+    try {
+      await AuditLog.create({
+        action: 'UPDATE_UNIVERSITY',
+        actor: {
+          userId: (req as any).user?._id,
+          username: (req as any).user?.username || 'admin',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'university',
+          name: university.name,
+        },
+        details: `Mengedit perguruan tinggi: "${oldName}" -> "${newName}". Cascade updated: ${updatedUsersCount} alumni, ${updatedPlansCount} rencana studi.`,
+      });
+    } catch (err) {
+      console.error('AuditLog error:', err);
+    }
+
+    res.json({
+      university,
+      cascadeStats: {
+        updatedUsersCount,
+        updatedPlansCount,
+      },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// @desc    Delete a university
+// @route   DELETE /api/admin/universities/:id
+// @access  Private (Admin)
+router.delete('/universities/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const university = await University.findById(id);
+
+    if (!university) {
+      return res.status(404).json({ message: 'Perguruan tinggi tidak ditemukan.' });
+    }
+
+    const name = university.name;
+    await University.findByIdAndDelete(id);
+
+    // Write AuditLog
+    try {
+      await AuditLog.create({
+        action: 'DELETE_UNIVERSITY',
+        actor: {
+          userId: (req as any).user?._id,
+          username: (req as any).user?.username || 'admin',
+          role: (req as any).user?.role || 'admin',
+        },
+        target: {
+          type: 'university',
+          name: name,
+        },
+        details: `Menghapus perguruan tinggi: "${name}"`,
+      });
+    } catch (err) {
+      console.error('AuditLog error:', err);
+    }
+
+    res.json({ message: `Perguruan tinggi "${name}" berhasil dihapus.` });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 

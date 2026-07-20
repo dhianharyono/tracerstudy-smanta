@@ -97,6 +97,7 @@ const Layout = () => {
       '/admin/news': 'Kelola Berita',
       '/admin/stats': 'Statistik Website',
       '/admin/reports': 'Laporan',
+      '/admin/universities': 'Kelola Perguruan Tinggi',
       '/admin/feedback': 'Kritik & Saran Admin',
       '/admin/profile': 'Profil Admin',
 
@@ -280,6 +281,12 @@ const Layout = () => {
             to='/admin/school-users'
             icon={FaUserTie}
             label='Kelola User Sekolah'
+          />
+          <NavLink
+            to='/admin/universities'
+            icon={FaUniversity}
+            label='Kelola Universitas'
+            activeCheck
           />
 
           <SectionLabel label='Konten & Moderasi' />
