@@ -24,7 +24,7 @@ router.use(authenticate);
 // Public / Shared routes for student and alumni
 router.get(
   '/universities',
-  authorize('student', 'alumni', 'school'),
+  authorize('student', 'alumni', 'school', 'admin'),
   async (req: Request, res: Response) => {
     try {
       const type = req.query.type as string;
@@ -99,7 +99,7 @@ router.get(
 
 router.get(
   '/majors',
-  authorize('student', 'alumni', 'school'),
+  authorize('student', 'alumni', 'school', 'admin'),
   async (req: Request, res: Response) => {
     try {
       const graduationYear = (req.query.graduationYear || req.query.year) as string;
@@ -145,7 +145,7 @@ router.get(
 
 router.get(
   '/alumni',
-  authorize('student', 'alumni'),
+  authorize('student', 'alumni', 'school', 'admin'),
   async (req: Request, res: Response) => {
     try {
       const page = parseInt(req.query.page as string) || 1;

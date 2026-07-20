@@ -2043,21 +2043,33 @@ router.get('/universities', async (req: Request, res: Response) => {
     const isVerified = (req.query.isVerified as string) || '';
     const alumniFilter = (req.query.alumniFilter as string) || '';
 
-    const filter: any = {};
+    const conditions: any[] = [];
 
     if (search) {
-      filter.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { location: { $regex: search, $options: 'i' } },
-      ];
+      conditions.push({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { location: { $regex: search, $options: 'i' } },
+        ],
+      });
     }
 
     if (type) {
-      filter.type = type;
+      if (
+        type === 'unassigned' ||
+        type === 'belum_terpilih' ||
+        type === 'belum_ditentukan'
+      ) {
+        conditions.push({
+          $or: [{ type: '' }, { type: null }, { type: { $exists: false } }],
+        });
+      } else {
+        conditions.push({ type });
+      }
     }
 
     if (isVerified !== '') {
-      filter.isVerified = isVerified === 'true';
+      conditions.push({ isVerified: isVerified === 'true' });
     }
 
     if (alumniFilter) {
@@ -2078,11 +2090,13 @@ router.get('/universities', async (req: Request, res: Response) => {
       );
 
       if (alumniFilter === 'has_alumni') {
-        filter.name = { $in: regexList };
+        conditions.push({ name: { $in: regexList } });
       } else if (alumniFilter === 'no_alumni') {
-        filter.name = { $nin: regexList };
+        conditions.push({ name: { $nin: regexList } });
       }
     }
+
+    const filter: any = conditions.length > 0 ? { $and: conditions } : {};
 
     const total = await University.countDocuments(filter);
     const universities = await University.find(filter)
@@ -2098,7 +2112,9 @@ router.get('/universities', async (req: Request, res: Response) => {
     const totalPts = await University.countDocuments({ type: 'swasta' });
     const totalKedinasan = await University.countDocuments({ type: 'kedinasan' });
     const totalLuarNegeri = await University.countDocuments({ type: 'luar negeri' });
-    const totalUnassignedType = await University.countDocuments({ $or: [{ type: '' }, { type: { $exists: false } }] });
+    const totalUnassignedType = await University.countDocuments({
+      $or: [{ type: '' }, { type: null }, { type: { $exists: false } }],
+    });
 
     // Attach usage count (alumni and college plans) for each university in page
     const enrichedUniversities = await Promise.all(

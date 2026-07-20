@@ -198,7 +198,9 @@ function App() {
               <Route path='stats' element={<AdminStatistics />} />
               <Route path='college-plans' element={<AdminCollegePlans />} />
               <Route path='school-users' element={<AdminSchoolUsers />} />
-              <Route path='universities' element={<AdminUniversities />} />
+              <Route path='manage-universities' element={<AdminUniversities />} />
+              <Route path='universities' element={<StudentUniversities />} />
+              <Route path='majors' element={<StudentMajors />} />
               <Route
                 path='verification-logs'
                 element={<AdminVerificationLogs />}

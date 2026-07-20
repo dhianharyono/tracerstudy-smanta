@@ -147,7 +147,7 @@ const AdminUniversities: React.FC = () => {
       );
       Toast(
         response.data.message ||
-        'Berhasil mengkategori perguruan tinggi otomatis',
+          'Berhasil mengkategori perguruan tinggi otomatis',
         'success',
       );
       fetchUniversities();
@@ -218,7 +218,7 @@ const AdminUniversities: React.FC = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-        'Gagal menyimpan data perguruan tinggi',
+          'Gagal menyimpan data perguruan tinggi',
         'error',
       );
     } finally {
@@ -251,31 +251,31 @@ const AdminUniversities: React.FC = () => {
     switch (type) {
       case 'negeri':
         return (
-          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-300 dark:bg-blue-900/60 dark:text-blue-200 dark:border-blue-700 shadow-xs'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 shadow-xs'>
             PTN (Negeri)
           </span>
         );
       case 'swasta':
         return (
-          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-900/60 dark:text-emerald-200 dark:border-emerald-700 shadow-xs'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border shadow-xs'>
             PTS (Swasta)
           </span>
         );
       case 'kedinasan':
         return (
-          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border border-purple-300 dark:bg-purple-900/60 dark:text-purple-200 dark:border-purple-700 shadow-xs'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-800 border shadow-xs'>
             Kedinasan
           </span>
         );
       case 'luar negeri':
         return (
-          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 border border-indigo-300 dark:bg-indigo-900/60 dark:text-indigo-200 dark:border-indigo-700 shadow-xs'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-indigo-100 text-indigo-800 border shadow-xs'>
             Luar Negeri
           </span>
         );
       default:
         return (
-          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800 border border-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 shadow-xs'>
+          <span className='inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-gray-200 text-gray-800 border shadow-xs'>
             Belum Dipilih
           </span>
         );
@@ -474,6 +474,7 @@ const AdminUniversities: React.FC = () => {
               <option value='swasta'>PTS (Swasta)</option>
               <option value='kedinasan'>Kedinasan</option>
               <option value='luar negeri'>Luar Negeri</option>
+              <option value='unassigned'>Belum Dipilih</option>
             </select>
           </div>
 
@@ -588,11 +589,11 @@ const AdminUniversities: React.FC = () => {
                     </td>
                     <td className='p-4'>
                       {univ.isVerified ? (
-                        <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-900/60 dark:text-emerald-200 dark:border-emerald-700 shadow-xs'>
+                        <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 shadow-xs'>
                           <FaCheckCircle className='text-xs' /> Terverifikasi
                         </span>
                       ) : (
-                        <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-900/60 dark:text-amber-200 dark:border-amber-700 shadow-xs'>
+                        <span className='inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800 shadow-xs'>
                           <FaExclamationTriangle className='text-xs' /> Belum
                           Terverifikasi
                         </span>
@@ -601,11 +602,8 @@ const AdminUniversities: React.FC = () => {
                     <td className='p-4 text-xs text-[color:var(--text-secondary)]'>
                       <div className='space-y-1'>
                         <div className='flex items-center gap-1.5'>
-                          <span className='font-bold text-[color:var(--text-primary)]'>
-                            {univ.totalUsage} Referensi
-                          </span>
                           {univ.alumniCount === 0 && (
-                            <span className='px-2 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-300 dark:bg-red-900/60 dark:text-red-200 dark:border-red-700 text-[10px] font-bold shadow-xs'>
+                            <span className='px-2 py-0.5 rounded-full text-red-800 bg-red-200 text-[10px] font-bold shadow-xs'>
                               Alumni Kosong
                             </span>
                           )}
@@ -615,8 +613,6 @@ const AdminUniversities: React.FC = () => {
                             <FaUserGraduate className='text-[10px]' />{' '}
                             {univ.alumniCount} Alumni
                           </span>
-                          <span>•</span>
-                          <span>📌 {univ.studentPlanCount} Plan Siswa</span>
                         </div>
                       </div>
                     </td>
@@ -701,7 +697,8 @@ const AdminUniversities: React.FC = () => {
               <form onSubmit={handleSubmitForm} className='p-6 space-y-4'>
                 <div>
                   <label className='block text-xs font-semibold uppercase tracking-wider text-[color:var(--text-secondary)] mb-1'>
-                    Nama Perguruan Tinggi <span className='text-red-500'>*</span>
+                    Nama Perguruan Tinggi{' '}
+                    <span className='text-red-500'>*</span>
                   </label>
                   <input
                     type='text'
@@ -729,8 +726,12 @@ const AdminUniversities: React.FC = () => {
                     }
                     className='w-full px-4 py-2.5 bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] rounded-xl text-sm text-[color:var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]'
                   >
-                    <option value='negeri'>PTN (Perguruan Tinggi Negeri)</option>
-                    <option value='swasta'>PTS (Perguruan Tinggi Swasta)</option>
+                    <option value='negeri'>
+                      PTN (Perguruan Tinggi Negeri)
+                    </option>
+                    <option value='swasta'>
+                      PTS (Perguruan Tinggi Swasta)
+                    </option>
                     <option value='kedinasan'>Kedinasan</option>
                     <option value='luar negeri'>Luar Negeri</option>
                     <option value=''>Lainnya / Belum Ditentukan</option>

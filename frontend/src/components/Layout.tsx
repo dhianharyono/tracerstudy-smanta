@@ -14,6 +14,7 @@ import {
   FaGraduationCap,
   FaUserTie,
   FaUniversity,
+  FaBuilding,
   FaBook,
   FaSignOutAlt,
   FaMedal,
@@ -97,7 +98,9 @@ const Layout = () => {
       '/admin/news': 'Kelola Berita',
       '/admin/stats': 'Statistik Website',
       '/admin/reports': 'Laporan',
-      '/admin/universities': 'Kelola Perguruan Tinggi',
+      '/admin/manage-universities': 'Kelola Universitas',
+      '/admin/universities': 'Perguruan Tinggi',
+      '/admin/majors': 'Jurusan',
       '/admin/feedback': 'Kritik & Saran Admin',
       '/admin/profile': 'Profil Admin',
 
@@ -282,9 +285,17 @@ const Layout = () => {
             icon={FaUserTie}
             label='Kelola User Sekolah'
           />
+
+          <SectionLabel label='Eksplorasi & Data' />
           <NavLink
             to='/admin/universities'
             icon={FaUniversity}
+            label='Perguruan Tinggi'
+          />
+          <NavLink to='/admin/majors' icon={FaBook} label='Jurusan' />
+          <NavLink
+            to='/admin/manage-universities'
+            icon={FaBuilding}
             label='Kelola Universitas'
             activeCheck
           />

@@ -135,7 +135,9 @@ const StudentAlumni = () => {
     setSearchParams({});
   };
 
-  if (user?.role === 'alumni') {
+  if (user?.role === 'admin' || user?.role === 'school') {
+    // Admin and school monitoring profiles do not need completeness verification
+  } else if (user?.role === 'alumni') {
     const hasUniversityData = !!(user?.university?.name);
     if (user?.questionnaireCompleted === false && !hasUniversityData) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;

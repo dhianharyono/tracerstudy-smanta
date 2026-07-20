@@ -287,8 +287,8 @@ const StudentMajors = () => {
     return <SmartLoader />;
   }
 
-  if (user?.role === 'school') {
-    // School monitoring user does not need to complete profile or questionnaire
+  if (user?.role === 'admin' || user?.role === 'school') {
+    // Admin and school monitoring user do not need to complete profile or questionnaire
   } else if (user?.role === 'alumni') {
     const hasUniversityData = !!(user?.university?.name);
     if (user?.questionnaireCompleted === false && !hasUniversityData) {
