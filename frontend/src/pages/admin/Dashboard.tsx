@@ -7,6 +7,7 @@ import News from '@/components/Dashboard/News';
 import Jurusan from '@/components/Dashboard/Jurusan';
 import TahunLulus from '@/components/Dashboard/TahunLulus';
 import AlumniDataProgress from '@/components/Dashboard/StatusAlumni';
+import AlumniRegistrationTrend from '@/components/Dashboard/AlumniRegistrationTrend';
 import SmartLoader from '@/components/SmartLoader';
 
 const AdminDashboard = () => {
@@ -87,6 +88,10 @@ const AdminDashboard = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>
         <PerguruanTinggi data={universityTypeData} />
         <News data={news} />
+      </div>
+
+      <div className='mb-6'>
+        <AlumniRegistrationTrend />
       </div>
 
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6'>

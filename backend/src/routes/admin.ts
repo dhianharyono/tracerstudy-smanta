@@ -401,6 +401,122 @@ router.get('/dashboard', async (req: Request, res: Response) => {
   }
 });
 
+// Get alumni and student registration trend over time
+router.get('/registration-trend', async (req: Request, res: Response) => {
+  try {
+    const range = (req.query.range as string) || 'last_12_months';
+    const targetRole = (req.query.role as string) || 'alumni';
+    const now = new Date();
+    let startDate = new Date();
+    let groupFormat = '%Y-%m';
+
+    let roleMatch: any = 'alumni';
+    if (targetRole === 'student') {
+      roleMatch = 'student';
+    } else if (targetRole === 'all') {
+      roleMatch = { $in: ['alumni', 'student'] };
+    }
+
+    if (range === 'last_7_days') {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      groupFormat = '%Y-%m-%d';
+    } else if (range === 'last_30_days') {
+      startDate = new Date(now);
+      startDate.setDate(now.getDate() - 29);
+      startDate.setHours(0, 0, 0, 0);
+      groupFormat = '%Y-%m-%d';
+    } else if (range === 'last_12_months') {
+      startDate = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+      groupFormat = '%Y-%m';
+    } else if (range === 'last_5_years') {
+      startDate = new Date(now.getFullYear() - 4, 0, 1);
+      groupFormat = '%Y';
+    } else {
+      // All time
+      const earliestUser = await User.findOne({ role: roleMatch }).sort({ createdAt: 1 });
+      if (earliestUser && earliestUser.createdAt) {
+        startDate = new Date(earliestUser.createdAt.getFullYear(), earliestUser.createdAt.getMonth(), 1);
+      } else {
+        startDate = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+      }
+      groupFormat = '%Y-%m';
+    }
+
+    const registrations = await User.aggregate([
+      {
+        $match: {
+          role: roleMatch,
+          createdAt: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: groupFormat, date: '$createdAt', timezone: '+07:00' } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+
+    const initialCount = await User.countDocuments({
+      role: roleMatch,
+      createdAt: { $lt: startDate }
+    });
+
+    const registrationMap = new Map<string, number>();
+    registrations.forEach((item: any) => {
+      registrationMap.set(item._id, item.count);
+    });
+
+    const dateList: string[] = [];
+    const tempDate = new Date(startDate);
+
+    if (range === 'last_7_days' || range === 'last_30_days') {
+      const endDate = new Date(now);
+      endDate.setHours(23, 59, 59, 999);
+      while (tempDate <= endDate) {
+        const year = tempDate.getFullYear();
+        const month = String(tempDate.getMonth() + 1).padStart(2, '0');
+        const day = String(tempDate.getDate()).padStart(2, '0');
+        dateList.push(`${year}-${month}-${day}`);
+        tempDate.setDate(tempDate.getDate() + 1);
+      }
+    } else if (range === 'last_12_months' || range === 'all') {
+      const endDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      while (tempDate <= endDate) {
+        const year = tempDate.getFullYear();
+        const month = String(tempDate.getMonth() + 1).padStart(2, '0');
+        dateList.push(`${year}-${month}`);
+        tempDate.setMonth(tempDate.getMonth() + 1);
+      }
+    } else if (range === 'last_5_years') {
+      const currentYear = now.getFullYear();
+      let yr = startDate.getFullYear();
+      while (yr <= currentYear) {
+        dateList.push(`${yr}`);
+        yr++;
+      }
+    }
+
+    let runningTotal = initialCount;
+    const trendData = dateList.map((dateStr) => {
+      const count = registrationMap.get(dateStr) || 0;
+      runningTotal += count;
+      return {
+        date: dateStr,
+        count,
+        cumulativeCount: runningTotal
+      };
+    });
+
+    res.json(trendData);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Get all mentors (alumni who are isMentor: true)
 router.get('/mentors', async (req: Request, res: Response) => {
   try {
