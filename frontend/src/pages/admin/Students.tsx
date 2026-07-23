@@ -91,13 +91,20 @@ const AdminStudents = () => {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const res = await axios.patch(`/api/admin/students/${student._id}/toggle-hide`);
+      const res = await axios.patch(
+        `/api/admin/students/${student._id}/toggle-hide`,
+      );
       Toast(res.data.message, 'success');
       setStudents((prev) =>
-        prev.map((s) => (s._id === student._id ? { ...s, isHidden: res.data.isHidden } : s))
+        prev.map((s) =>
+          s._id === student._id ? { ...s, isHidden: res.data.isHidden } : s,
+        ),
       );
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal mengubah status visibilitas', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal mengubah status visibilitas',
+        'error',
+      );
     }
   };
 
@@ -113,7 +120,8 @@ const AdminStudents = () => {
       fetchStudents();
     } catch (error: any) {
       Toast(
-        error.response?.data?.message || 'Gagal membatasi siswa nama tidak lengkap',
+        error.response?.data?.message ||
+          'Gagal membatasi siswa nama tidak lengkap',
         'error',
       );
     } finally {
@@ -155,9 +163,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n' +
-      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
-      'Batal/kosongkan untuk membatalkan.',
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -210,13 +218,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-        'Proses pengiriman email massal telah dimulai!',
+          'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-        'Gagal mengirim email pengingat massal',
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -228,9 +236,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n' +
-      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
-      'Batal/kosongkan untuk membatalkan.',
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -283,13 +291,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-        'Proses pengiriman email massal telah dimulai!',
+          'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-        'Gagal mengirim email pengingat massal',
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -309,7 +317,9 @@ const AdminStudents = () => {
         }),
         ...(filters.status && { status: filters.status }),
         ...(filters.duplicate && { duplicate: filters.duplicate }),
-        ...(filters.nameIncomplete && { nameIncomplete: filters.nameIncomplete }),
+        ...(filters.nameIncomplete && {
+          nameIncomplete: filters.nameIncomplete,
+        }),
         ...(filters.hiddenStatus && { hiddenStatus: filters.hiddenStatus }),
       });
 
@@ -437,7 +447,9 @@ const AdminStudents = () => {
               title='Membatasi/menyembunyikan semua siswa yang nama lengkapnya belum lengkap (kurang dari 3 karakter, 1 kata saja, atau tidak valid)'
             >
               <FaEyeSlash />{' '}
-              {hidingIncomplete ? 'Memproses...' : 'Batasi Semua Nama Tidak Lengkap'}
+              {hidingIncomplete
+                ? 'Memproses...'
+                : 'Batasi Semua Nama Tidak Lengkap'}
             </button>
           )}
           <button
@@ -608,7 +620,8 @@ const AdminStudents = () => {
           {/* Filter Card Header */}
           <div className='flex items-center justify-between border-b border-[color:var(--border-color)] pb-3'>
             <div className='flex items-center gap-2 text-sm font-semibold text-[color:var(--text-primary)]'>
-              <FaFilter className='text-[var(--primary)]' /> Filter & Pencarian Student
+              <FaFilter className='text-[var(--primary)]' /> Filter & Pencarian
+              Student
             </div>
             <button
               onClick={clearFilters}
@@ -636,7 +649,9 @@ const AdminStudents = () => {
           {/* Filter Dropdowns Grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3'>
             <div>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Tahun Masuk</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Tahun Masuk
+              </label>
               <input
                 type='number'
                 name='entryYear'
@@ -648,7 +663,9 @@ const AdminStudents = () => {
             </div>
 
             <div>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Tahun Lulus</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Tahun Lulus
+              </label>
               <input
                 type='number'
                 name='graduationYear'
@@ -660,7 +677,9 @@ const AdminStudents = () => {
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Kelengkapan Data</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Kelengkapan Data
+              </label>
               <select
                 name='status'
                 value={filters.status}
@@ -672,14 +691,26 @@ const AdminStudents = () => {
                 <option value='incomplete'>Kurang Lengkap</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Deteksi Duplikasi</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Deteksi Duplikasi
+              </label>
               <select
                 name='duplicate'
                 value={filters.duplicate}
@@ -692,14 +723,26 @@ const AdminStudents = () => {
                 <option value='all'>Duplikasi Nama/Email</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Status Nama</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Status Nama
+              </label>
               <select
                 name='nameIncomplete'
                 value={filters.nameIncomplete}
@@ -710,14 +753,26 @@ const AdminStudents = () => {
                 <option value='true'>Nama Pendek / 1 Kata</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Visibilitas User</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Visibilitas User
+              </label>
               <select
                 name='hiddenStatus'
                 value={filters.hiddenStatus}
@@ -729,8 +784,18 @@ const AdminStudents = () => {
                 <option value='hidden'>Tersembunyi (Dibatasi)</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
@@ -770,42 +835,57 @@ const AdminStudents = () => {
                         {student.profile?.fullName || '-'}
                       </span>
                       {student.isNameIncomplete && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm' title='Nama terdeteksi pendek atau tidak lengkap'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm'
+                          title='Nama terdeteksi pendek atau tidak lengkap'
+                        >
                           Nama Pendek
                         </span>
                       )}
                       {student.isHidden && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm' title='User disembunyikan dari publik dan dibatasi'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm'
+                          title='User disembunyikan dari publik dan dibatasi'
+                        >
                           Tersembunyi
                         </span>
                       )}
                       {student.isDuplicateName && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Nama terdeteksi ganda (duplikat)'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm'
+                          title='Nama terdeteksi ganda (duplikat)'
+                        >
                           Ganda (Nama)
                         </span>
                       )}
                     </div>
-                    {student.profile?.entryYear && student.profile?.graduationYear && <div
-                      className='text-xs text-[color:var(--text-secondary)] truncate'
-                      title={student.profile?.major}
-                    >
-                      {student.profile?.entryYear || '-'}
-                      <span className='mx-1'>•</span>{' '}
-                      {student.profile?.graduationYear || '-'}{' '}
-                    </div>}
+                    {student.profile?.entryYear &&
+                      student.profile?.graduationYear && (
+                        <div
+                          className='text-xs text-[color:var(--text-secondary)] truncate'
+                          title={student.profile?.major}
+                        >
+                          {student.profile?.entryYear || '-'}
+                          <span className='mx-1'>•</span>{' '}
+                          {student.profile?.graduationYear || '-'}{' '}
+                        </div>
+                      )}
                   </div>
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   <div className='flex flex-wrap items-center gap-1.5'>
                     <span>{student.email}</span>
                     {student.isDuplicateEmail && (
-                      <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Email terdeteksi ganda (duplikat)'>
+                      <span
+                        className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm'
+                        title='Email terdeteksi ganda (duplikat)'
+                      >
                         Ganda (Email)
                       </span>
                     )}
                   </div>
                 </TableCell>
-                 <TableCell className='text-[color:var(--text-secondary)]'>
+                <TableCell className='text-[color:var(--text-secondary)]'>
                   {new Date(student.createdAt).toLocaleDateString('id-ID', {
                     day: 'numeric',
                     month: 'short',
@@ -813,16 +893,18 @@ const AdminStudents = () => {
                   })}
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
-                  {student.updatedAt ? new Date(student.updatedAt).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  }) : '-'}
+                  {student.updatedAt
+                    ? new Date(student.updatedAt).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                    : '-'}
                 </TableCell>
                 <TableCell>
                   {student.profile?.fullName &&
-                    student.profile?.entryYear &&
-                    student.profile?.graduationYear ? (
+                  student.profile?.entryYear &&
+                  student.profile?.graduationYear ? (
                     <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
                       Lengkap
                     </span>
@@ -841,13 +923,21 @@ const AdminStudents = () => {
                           ? 'text-purple-600 hover:bg-purple-100'
                           : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
                       }`}
-                      title={student.isHidden ? 'Tampilkan User ke Publik' : 'Sembunyikan User dari Publik'}
+                      title={
+                        student.isHidden
+                          ? 'Tampilkan User ke Publik'
+                          : 'Sembunyikan User dari Publik'
+                      }
                     >
-                      {student.isHidden ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                      {student.isHidden ? (
+                        <FaEyeSlash size={14} />
+                      ) : (
+                        <FaEye size={14} />
+                      )}
                     </button>
                     {student.profile?.fullName &&
-                      student.profile?.entryYear &&
-                      student.profile?.graduationYear ? (
+                    student.profile?.entryYear &&
+                    student.profile?.graduationYear ? (
                       <button
                         onClick={() =>
                           handleSendReminder(
@@ -857,7 +947,7 @@ const AdminStudents = () => {
                           )
                         }
                         disabled={sendingEmailId !== null}
-                        className='rounded p-2 text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors disabled:opacity-50'
+                        className='rounded p-2 text-gray-300 hover:text-[color:var(--text-primary)] transition-colors disabled:opacity-50'
                         title='Kirim Pengingat Upgrade Akun'
                       >
                         <FaEnvelope
@@ -878,7 +968,7 @@ const AdminStudents = () => {
                           )
                         }
                         disabled={sendingEmailId !== null}
-                        className='rounded p-2 text-teal-600 hover:bg-teal-50 hover:text-teal-700 transition-colors disabled:opacity-50'
+                        className='rounded p-2 text-gray-300 hover:text-[color:var(--text-primary)] transition-colors disabled:opacity-50'
                         title='Kirim Pengingat Kelengkapan Data'
                       >
                         <FaEnvelope

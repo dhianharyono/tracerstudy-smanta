@@ -131,8 +131,9 @@ const AdminMentors = () => {
 
       {/* Filters */}
       <div
-        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-6 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 shadow-sm transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
           <div className='relative'>
@@ -291,7 +292,7 @@ const AdminMentors = () => {
                         {mentor.socialMedia?.email && (
                           <a
                             href={`mailto:${mentor.socialMedia.email}`}
-                            className='text-gray-600 hover:text-gray-800'
+                            className='text-gray-300 hover:text-[color:var(--text-primary)] transition-colors rounded-lg'
                           >
                             <FaEnvelope size={16} />
                           </a>

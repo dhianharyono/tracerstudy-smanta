@@ -65,11 +65,7 @@ const StatCard = ({
         <h3 className='text-3xl font-black text-[color:var(--text-primary)] tracking-tight'>
           {value !== undefined ? value : 0}
         </h3>
-        {description && (
-          <div className='mt-2.5'>
-            {description}
-          </div>
-        )}
+        {description && <div className='mt-2.5'>{description}</div>}
       </div>
       <div
         className={`flex h-11 w-11 items-center justify-center rounded-xl border border-current/20 ${bgClass} ${colorClass} shrink-0`}
@@ -117,7 +113,9 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
         bgClass: 'bg-emerald-500/10',
         description: stats?.onlineUsersDetail ? (
           <p className='text-[10px] text-[color:var(--text-secondary)] font-bold'>
-            {stats.onlineUsersDetail.student} Siswa, {stats.onlineUsersDetail.alumni} Alumni, {stats.onlineUsersDetail.school} Sekolah
+            {stats.onlineUsersDetail.student} Siswa,{' '}
+            {stats.onlineUsersDetail.alumni} Alumni,{' '}
+            {stats.onlineUsersDetail.school} Sekolah
           </p>
         ) : undefined,
       },

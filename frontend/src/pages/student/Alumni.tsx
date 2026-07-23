@@ -137,7 +137,13 @@ const StudentAlumni = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({ university: '', graduationYear: '', major: '', name: '', isMentor: '' });
+    setFilters({
+      university: '',
+      graduationYear: '',
+      major: '',
+      name: '',
+      isMentor: '',
+    });
     setPagination({ ...pagination, page: 1 });
     setSearchParams({});
   };
@@ -149,7 +155,7 @@ const StudentAlumni = () => {
   if (user?.role === 'admin' || user?.role === 'school') {
     // Admin and school monitoring profiles do not need completeness verification
   } else if (user?.role === 'alumni') {
-    const hasUniversityData = !!(user?.university?.name);
+    const hasUniversityData = !!user?.university?.name;
     if (user?.questionnaireCompleted === false && !hasUniversityData) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
     }
@@ -182,8 +188,9 @@ const StudentAlumni = () => {
 
       {/* Filters & Search - Desktop: Sidebar/TopBar Hybrid, Mobile: Collapsible */}
       <Card
-        className={`mb-8 p-4 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-8 p-4 transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
           {/* Search Name */}
@@ -356,186 +363,190 @@ const StudentAlumni = () => {
             <TableBody>
               {loading
                 ? // Skeleton Loading Rows
-                Array.from({ length: 10 }).map((_, index) => (
-                  <TableRow key={`skeleton-${index}`}>
-                    <TableCell>
-                      <div className='h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex items-center gap-3'>
-                        <div className='flex flex-col gap-2'>
-                          <div className='h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                          <div className='h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse'></div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex flex-col gap-2'>
-                        <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                        <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex gap-2'>
-                        <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                        <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex flex-col gap-2'>
-                        <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                        <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
-                : alumni.map((alum, index) => (
-                  <TableRow
-                    key={alum._id}
-                    className='group'
-                  >
-                    <TableCell className='text-sm text-[color:var(--text-secondary)]'>
-                      {(pagination.page - 1) * pagination.limit +
-                        index +
-                        1}
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex items-center gap-3'>
-                        <div>
-                          <div className='flex items-center gap-2'>
-                            <div className='font-semibold text-[color:var(--text-primary)]'>
-                              {alum.profile?.fullName || '-'}
-                            </div>
+                  Array.from({ length: 10 }).map((_, index) => (
+                    <TableRow key={`skeleton-${index}`}>
+                      <TableCell>
+                        <div className='h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center gap-3'>
+                          <div className='flex flex-col gap-2'>
+                            <div className='h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                            <div className='h-3 w-20 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
                           </div>
-                          <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
-                            {alum.isMentor && (
-                              <span className='flex items-center gap-1 text-amber-600 font-bold'>
-                                <FaCrown className='text-xs' />
-                                Mentor
-                              </span>
-                            )}
-                            {alum.isMentor &&
-                              alum.badges &&
-                              alum.badges.length > 0 && (
-                                <span className='text-gray-600 font-bold'>
-                                  •
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='h-6 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse'></div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex flex-col gap-2'>
+                          <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                          <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex gap-2'>
+                          <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                          <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex flex-col gap-2'>
+                          <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                          <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                : alumni.map((alum, index) => (
+                    <TableRow key={alum._id} className='group'>
+                      <TableCell className='text-sm text-[color:var(--text-secondary)]'>
+                        {(pagination.page - 1) * pagination.limit + index + 1}
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center gap-3'>
+                          <div>
+                            <div className='flex items-center gap-2'>
+                              <div className='font-semibold text-[color:var(--text-primary)]'>
+                                {alum.profile?.fullName || '-'}
+                              </div>
+                            </div>
+                            <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
+                              {alum.isMentor && (
+                                <span className='flex items-center gap-1 text-amber-600 font-bold'>
+                                  <FaCrown className='text-xs' />
+                                  Mentor
                                 </span>
                               )}
-                            {alum.badges && alum.badges.length > 0 && (
-                              <div className='flex gap-1 items-center'>
-                                {alum.badges.map(
-                                  (badge: any, idx: number) => (
-                                    <div
-                                      key={idx}
-                                      className='text-blue-500'
-                                      title={badge.name}
-                                    >
-                                      <FaMedal className='text-xs' />
-                                    </div>
-                                  ),
+                              {alum.isMentor &&
+                                alum.badges &&
+                                alum.badges.length > 0 && (
+                                  <span className='text-gray-600 font-bold'>
+                                    •
+                                  </span>
                                 )}
-                                {alum.badges.map(
-                                  (badge: any, idx: number) => (
-                                    <span
-                                      key={idx}
-                                      className='text-xs text-blue-500'
-                                    >
-                                      {badge.name}
-                                    </span>
-                                  ),
-                                )}
-                              </div>
-                            )}
+                              {alum.badges && alum.badges.length > 0 && (
+                                <div className='flex gap-1 items-center'>
+                                  {alum.badges.map(
+                                    (badge: any, idx: number) => (
+                                      <div
+                                        key={idx}
+                                        className='text-blue-500'
+                                        title={badge.name}
+                                      >
+                                        <FaMedal className='text-xs' />
+                                      </div>
+                                    ),
+                                  )}
+                                  {alum.badges.map(
+                                    (badge: any, idx: number) => (
+                                      <span
+                                        key={idx}
+                                        className='text-xs text-blue-500'
+                                      >
+                                        {badge.name}
+                                      </span>
+                                    ),
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/50'>
-                        {alum.profile?.graduationYear || '-'}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex flex-col min-w-[200px]'>
-                        <span
-                          className='font-medium text-[color:var(--text-primary)] '
-                          title={alum.university?.name}
-                        >
-                          {alum.university?.name || '-'}
+                      </TableCell>
+                      <TableCell>
+                        <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200/50'>
+                          {alum.profile?.graduationYear || '-'}
                         </span>
-                        <span
-                          className='text-xs text-[color:var(--text-secondary)]'
-                          title={alum.university?.major}
-                        >
-                          {alum.university?.major || '-'}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className='flex items-center gap-2'>
-                        {alum.socialMedia?.instagram && (
-                          <a
-                            href={getSocialUrl('instagram', alum.socialMedia.instagram)}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='text-pink-600 hover:text-pink-700 transition-colors p-1.5 rounded-lg'
-                            title={`Instagram: ${alum.socialMedia.instagram}`}
-                          >
-                            <FaInstagram className='text-base' />
-                          </a>
-                        )}
-                        {alum.socialMedia?.linkedin && (
-                          <a
-                            href={getSocialUrl('linkedin', alum.socialMedia.linkedin)}
-                            target='_blank'
-                            rel='noopener noreferrer'
-                            className='text-blue-600 hover:text-blue-700 transition-colors p-1.5 rounded-lg'
-                            title={`LinkedIn: ${alum.socialMedia.linkedin}`}
-                          >
-                            <FaLinkedin className='text-base' />
-                          </a>
-                        )}
-                        {alum.email && (
-                          <a
-                            href={`mailto:${alum.email}`}
-                            className='text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors p-1.5 rounded-lg'
-                            title={`Email: ${alum.email}`}
-                          >
-                            <FaEnvelope size={16} />
-                          </a>
-                        )}
-                        {!alum.socialMedia?.instagram && !alum.socialMedia?.linkedin && (
-                          <span className='text-[color:var(--text-secondary)] italic'>-</span>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {alum.job?.position || alum.job?.institution ? (
-                        <div className='flex flex-col max-w-[200px]'>
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex flex-col min-w-[200px]'>
                           <span
-                            className='font-medium text-[color:var(--text-primary)] truncate'
-                            title={alum.job?.position}
+                            className='font-medium text-[color:var(--text-primary)] '
+                            title={alum.university?.name}
                           >
-                            {alum.job?.position || 'Bekerja'}
+                            {alum.university?.name || '-'}
                           </span>
                           <span
-                            className='text-xs text-[color:var(--text-secondary)] truncate'
-                            title={alum.job?.institution}
+                            className='text-xs text-[color:var(--text-secondary)]'
+                            title={alum.university?.major}
                           >
-                            {alum.job?.institution || '-'}
+                            {alum.university?.major || '-'}
                           </span>
                         </div>
-                      ) : (
-                        <span className='text-[color:var(--text-secondary)] italic'>
-                          -
-                        </span>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      </TableCell>
+                      <TableCell>
+                        <div className='flex items-center gap-2'>
+                          {alum.socialMedia?.instagram && (
+                            <a
+                              href={getSocialUrl(
+                                'instagram',
+                                alum.socialMedia.instagram,
+                              )}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='text-pink-600 hover:text-pink-700 transition-colors p-1.5 rounded-lg'
+                              title={`Instagram: ${alum.socialMedia.instagram}`}
+                            >
+                              <FaInstagram className='text-base' />
+                            </a>
+                          )}
+                          {alum.socialMedia?.linkedin && (
+                            <a
+                              href={getSocialUrl(
+                                'linkedin',
+                                alum.socialMedia.linkedin,
+                              )}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              className='text-blue-600 hover:text-blue-700 transition-colors p-1.5 rounded-lg'
+                              title={`LinkedIn: ${alum.socialMedia.linkedin}`}
+                            >
+                              <FaLinkedin className='text-base' />
+                            </a>
+                          )}
+                          {alum.email && (
+                            <a
+                              href={`mailto:${alum.email}`}
+                              className='text-gray-300 hover:text-[color:var(--text-primary)] transition-colors rounded-lg'
+                              title={`Email: ${alum.email}`}
+                            >
+                              <FaEnvelope size={16} />
+                            </a>
+                          )}
+                          {!alum.socialMedia?.instagram &&
+                            !alum.socialMedia?.linkedin && (
+                              <span className='text-[color:var(--text-secondary)] italic'>
+                                -
+                              </span>
+                            )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {alum.job?.position || alum.job?.institution ? (
+                          <div className='flex flex-col max-w-[200px]'>
+                            <span
+                              className='font-medium text-[color:var(--text-primary)] truncate'
+                              title={alum.job?.position}
+                            >
+                              {alum.job?.position || 'Bekerja'}
+                            </span>
+                            <span
+                              className='text-xs text-[color:var(--text-secondary)] truncate'
+                              title={alum.job?.institution}
+                            >
+                              {alum.job?.institution || '-'}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className='text-[color:var(--text-secondary)] italic'>
+                            -
+                          </span>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
             </TableBody>
           </TableContainer>
 

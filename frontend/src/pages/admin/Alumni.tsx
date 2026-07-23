@@ -67,7 +67,10 @@ const AdminAlumni = () => {
   });
 
   useEffect(() => {
-    if (filters.university !== universityParam || filters.major !== majorParam) {
+    if (
+      filters.university !== universityParam ||
+      filters.major !== majorParam
+    ) {
       setFilters((prev) => ({
         ...prev,
         university: universityParam,
@@ -137,9 +140,9 @@ const AdminAlumni = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n' +
-      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-      "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
-      'Batal/kosongkan untuk membatalkan.',
+        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+        "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
+        'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -192,13 +195,13 @@ const AdminAlumni = () => {
       );
       Toast(
         response.data.message ||
-        'Proses pengiriman email massal telah dimulai!',
+          'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-        'Gagal mengirim email pengingat massal',
+          'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -272,8 +275,10 @@ const AdminAlumni = () => {
         params.append('questionnaireStatus', filters.questionnaireStatus);
       if (filters.name) params.append('name', filters.name);
       if (filters.duplicate) params.append('duplicate', filters.duplicate);
-      if (filters.nameIncomplete) params.append('nameIncomplete', filters.nameIncomplete);
-      if (filters.hiddenStatus) params.append('hiddenStatus', filters.hiddenStatus);
+      if (filters.nameIncomplete)
+        params.append('nameIncomplete', filters.nameIncomplete);
+      if (filters.hiddenStatus)
+        params.append('hiddenStatus', filters.hiddenStatus);
 
       const response = await axios.get(
         `/api/admin/alumni?${params.toString()}`,
@@ -300,13 +305,20 @@ const AdminAlumni = () => {
     if (!window.confirm(confirmMsg)) return;
 
     try {
-      const res = await axios.patch(`/api/admin/alumni/${alum._id}/toggle-hide`);
+      const res = await axios.patch(
+        `/api/admin/alumni/${alum._id}/toggle-hide`,
+      );
       Toast(res.data.message, 'success');
       setAlumni((prev) =>
-        prev.map((a) => (a._id === alum._id ? { ...a, isHidden: res.data.isHidden } : a))
+        prev.map((a) =>
+          a._id === alum._id ? { ...a, isHidden: res.data.isHidden } : a,
+        ),
       );
     } catch (error: any) {
-      Toast(error.response?.data?.message || 'Gagal mengubah status visibilitas', 'error');
+      Toast(
+        error.response?.data?.message || 'Gagal mengubah status visibilitas',
+        'error',
+      );
     }
   };
 
@@ -322,7 +334,8 @@ const AdminAlumni = () => {
       fetchAlumni();
     } catch (error: any) {
       Toast(
-        error.response?.data?.message || 'Gagal membatasi alumni nama tidak lengkap',
+        error.response?.data?.message ||
+          'Gagal membatasi alumni nama tidak lengkap',
         'error',
       );
     } finally {
@@ -436,7 +449,9 @@ const AdminAlumni = () => {
               title='Membatasi/menyembunyikan semua alumni yang nama lengkapnya belum lengkap (kurang dari 3 karakter, 1 kata saja, atau tidak valid)'
             >
               <FaEyeSlash />{' '}
-              {hidingIncomplete ? 'Memproses...' : 'Batasi Semua Nama Tidak Lengkap'}
+              {hidingIncomplete
+                ? 'Memproses...'
+                : 'Batasi Semua Nama Tidak Lengkap'}
             </button>
           )}
           <button
@@ -459,14 +474,16 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <Card
-        className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
-          }`}
+        className={`mb-6 transition-all duration-300 ${
+          showFilters ? 'block' : 'hidden md:block'
+        }`}
       >
         <div className='flex flex-col gap-4'>
           {/* Filter Card Header */}
           <div className='flex items-center justify-between border-b border-[color:var(--border-color)] pb-3'>
             <div className='flex items-center gap-2 text-sm font-semibold text-[color:var(--text-primary)]'>
-              <FaFilter className='text-[var(--primary)]' /> Filter & Pencarian Alumni
+              <FaFilter className='text-[var(--primary)]' /> Filter & Pencarian
+              Alumni
             </div>
             <button
               onClick={handleClearFilters}
@@ -493,10 +510,14 @@ const AdminAlumni = () => {
           {/* Filter Dropdowns Grid */}
           <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3'>
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Perguruan Tinggi</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Perguruan Tinggi
+              </label>
               <select
                 value={filters.university}
-                onChange={(e) => handleFilterChange('university', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('university', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua PT</option>
@@ -507,17 +528,31 @@ const AdminAlumni = () => {
                 ))}
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Tahun Lulus</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Tahun Lulus
+              </label>
               <select
                 value={filters.graduationYear}
-                onChange={(e) => handleFilterChange('graduationYear', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('graduationYear', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua Tahun</option>
@@ -528,14 +563,26 @@ const AdminAlumni = () => {
                 ))}
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Jurusan</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Jurusan
+              </label>
               <select
                 value={filters.major}
                 onChange={(e) => handleFilterChange('major', e.target.value)}
@@ -549,17 +596,31 @@ const AdminAlumni = () => {
                 ))}
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Status Survei</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Status Survei
+              </label>
               <select
                 value={filters.questionnaireStatus}
-                onChange={(e) => handleFilterChange('questionnaireStatus', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('questionnaireStatus', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua Status</option>
@@ -567,17 +628,31 @@ const AdminAlumni = () => {
                 <option value='incomplete'>Belum Lengkap</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Deteksi Duplikasi</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Deteksi Duplikasi
+              </label>
               <select
                 value={filters.duplicate}
-                onChange={(e) => handleFilterChange('duplicate', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('duplicate', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua (Tanpa Filter)</option>
@@ -586,34 +661,62 @@ const AdminAlumni = () => {
                 <option value='all'>Duplikasi Nama/Email</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Status Nama</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Status Nama
+              </label>
               <select
                 value={filters.nameIncomplete}
-                onChange={(e) => handleFilterChange('nameIncomplete', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('nameIncomplete', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua Status Nama</option>
                 <option value='true'>Nama Pendek / 1 Kata</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
 
             <div className='relative'>
-              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>Visibilitas User</label>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Visibilitas User
+              </label>
               <select
                 value={filters.hiddenStatus}
-                onChange={(e) => handleFilterChange('hiddenStatus', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('hiddenStatus', e.target.value)
+                }
                 className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
               >
                 <option value=''>Semua Visibilitas</option>
@@ -621,8 +724,18 @@ const AdminAlumni = () => {
                 <option value='hidden'>Tersembunyi (Dibatasi)</option>
               </select>
               <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
-                <svg className='h-4 w-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M19 9l-7 7-7-7' />
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
                 </svg>
               </div>
             </div>
@@ -635,9 +748,17 @@ const AdminAlumni = () => {
         <div className='mb-6 p-4 bg-blue-50 text-blue-700 rounded-xl flex items-center justify-between text-sm border border-blue-100'>
           <div className='flex items-center gap-2'>
             <span className='font-bold'>Penyaringan Aktif:</span>
-            {universityParam && <span>Universitas: <strong>{universityParam}</strong></span>}
+            {universityParam && (
+              <span>
+                Universitas: <strong>{universityParam}</strong>
+              </span>
+            )}
             {universityParam && majorParam && <span>•</span>}
-            {majorParam && <span>Jurusan: <strong>{majorParam}</strong></span>}
+            {majorParam && (
+              <span>
+                Jurusan: <strong>{majorParam}</strong>
+              </span>
+            )}
           </div>
           <button
             onClick={() => setSearchParams({})}
@@ -684,17 +805,26 @@ const AdminAlumni = () => {
                         />
                       )}
                       {alum.isNameIncomplete && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm' title='Nama terdeteksi pendek atau tidak lengkap'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-100 text-amber-800 border border-amber-200 shadow-sm'
+                          title='Nama terdeteksi pendek atau tidak lengkap'
+                        >
                           Nama Pendek
                         </span>
                       )}
                       {alum.isHidden && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm' title='User disembunyikan dari alumni publik'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm'
+                          title='User disembunyikan dari alumni publik'
+                        >
                           Tersembunyi
                         </span>
                       )}
                       {alum.isDuplicateName && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Nama terdeteksi ganda (duplikat)'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm'
+                          title='Nama terdeteksi ganda (duplikat)'
+                        >
                           Ganda (Nama)
                         </span>
                       )}
@@ -702,7 +832,10 @@ const AdminAlumni = () => {
                     <div className='text-xs text-[color:var(--text-secondary)] flex flex-wrap items-center gap-1.5 mt-0.5'>
                       <span>{alum.email}</span>
                       {alum.isDuplicateEmail && (
-                        <span className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm' title='Email terdeteksi ganda (duplikat)'>
+                        <span
+                          className='inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-red-100 text-red-800 border border-red-200 shadow-sm'
+                          title='Email terdeteksi ganda (duplikat)'
+                        >
                           Ganda (Email)
                         </span>
                       )}
@@ -768,7 +901,7 @@ const AdminAlumni = () => {
                     {alum.socialMedia?.email && (
                       <a
                         href={`mailto:${alum.socialMedia.email}`}
-                        className='text-gray-300 hover:text-[color:var(--text-primary)] transition-colors p-1.5 rounded-lg'
+                        className='text-gray-300 hover:text-[color:var(--text-primary)] transition-colors rounded-lg'
                       >
                         <FaEnvelope size={16} />
                       </a>
@@ -788,11 +921,13 @@ const AdminAlumni = () => {
                   })}
                 </TableCell>
                 <TableCell>
-                  {alum.updatedAt ? new Date(alum.updatedAt).toLocaleDateString('id-ID', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  }) : '-'}
+                  {alum.updatedAt
+                    ? new Date(alum.updatedAt).toLocaleDateString('id-ID', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })
+                    : '-'}
                 </TableCell>
                 <TableCell>
                   {!isUniversityIncomplete(alum) ? (
@@ -809,13 +944,22 @@ const AdminAlumni = () => {
                   <div className='flex gap-1'>
                     <button
                       onClick={() => handleToggleHide(alum)}
-                      className={`rounded p-2 transition-colors ${alum.isHidden
-                        ? 'text-purple-600 hover:bg-purple-100'
-                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-                        }`}
-                      title={alum.isHidden ? 'Tampilkan User ke Publik' : 'Sembunyikan User dari Publik'}
+                      className={`rounded p-2 transition-colors ${
+                        alum.isHidden
+                          ? 'text-purple-600 hover:bg-purple-100'
+                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                      }`}
+                      title={
+                        alum.isHidden
+                          ? 'Tampilkan User ke Publik'
+                          : 'Sembunyikan User dari Publik'
+                      }
                     >
-                      {alum.isHidden ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                      {alum.isHidden ? (
+                        <FaEyeSlash size={14} />
+                      ) : (
+                        <FaEye size={14} />
+                      )}
                     </button>
                     {isUniversityIncomplete(alum) && (
                       <button
@@ -842,14 +986,14 @@ const AdminAlumni = () => {
                     {(alum.profile?.graduationYear >=
                       new Date().getFullYear() ||
                       !alum.profile?.graduationYear) && (
-                        <button
-                          onClick={() => setDemotingAlumni(alum)}
-                          className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
-                          title='Ubah ke Student'
-                        >
-                          <FaUndo size={14} />
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setDemotingAlumni(alum)}
+                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                        title='Ubah ke Student'
+                      >
+                        <FaUndo size={14} />
+                      </button>
+                    )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
