@@ -35,18 +35,22 @@ export const stripHtml = (html: string): string => {
 export const isStudentProfileComplete = (user: any): boolean => {
   if (!user) return false;
   
-  const fullName = user.profile?.fullName || '';
+  const fullName = (user.profile?.fullName || user.fullName || '').trim();
+  const entryYear = user.profile?.entryYear || user.entryYear;
+  const graduationYear = user.profile?.graduationYear || user.graduationYear;
+
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
   const isValidName = 
-    fullName.trim().length >= 3 && 
-    /^[a-zA-Z\s.']+$/.test(fullName.trim()) &&
-    !placeholders.includes(fullName.trim().toLowerCase()) &&
-    !/^[.\-_ \s]+$/.test(fullName.trim());
+    fullName.length >= 3 && 
+    fullName.includes(' ') &&
+    /^[a-zA-Z\s.']+$/.test(fullName) &&
+    !placeholders.includes(fullName.toLowerCase()) &&
+    !/^[.\-_ \s]+$/.test(fullName);
 
   return !!(
     isValidName &&
-    user.profile?.entryYear &&
-    user.profile?.graduationYear
+    entryYear &&
+    graduationYear
   );
 };
 

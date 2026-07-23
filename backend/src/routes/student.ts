@@ -33,6 +33,7 @@ router.get(
       const matchQuery: any = {
         role: 'alumni',
         'university.name': { $exists: true, $ne: null },
+        isHidden: { $ne: true },
       };
 
       if (type && ['negeri', 'swasta', 'kedinasan'].includes(type)) {
@@ -107,6 +108,7 @@ router.get(
       const matchQuery: any = {
         role: 'alumni',
         'university.major': { $exists: true, $ne: null },
+        isHidden: { $ne: true },
       };
 
       if (graduationYear) {
@@ -159,8 +161,9 @@ router.get(
 
       const filter: any = {
         role: 'alumni',
-        'profile.fullName': { $exists: true, $nin: [null, ''] },
-        'university.name': { $exists: true, $nin: [null, ''] },
+        'profile.fullName': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] },
+        'university.name': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] },
+        isHidden: { $ne: true },
       };
 
       if (university) {
@@ -190,7 +193,7 @@ router.get(
       const alumni = await User.find(filter)
         .select('-password')
         .select(
-          'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram badges isMentor',
+          'profile.fullName profile.graduationYear university.name university.major job.position job.institution socialMedia.instagram socialMedia.linkedin badges isMentor',
         )
         .populate('badges')
         .skip(skip)
@@ -299,7 +302,17 @@ router.get('/dashboard', async (req: Request, res: Response) => {
     const [stats] = await User.aggregate([
       {
         $facet: {
-          totalAlumni: [{ $match: { role: 'alumni' } }, { $count: 'count' }],
+          totalAlumni: [
+            {
+              $match: {
+                role: 'alumni',
+                'profile.fullName': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] },
+                'university.name': { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] },
+                isHidden: { $ne: true },
+              },
+            },
+            { $count: 'count' },
+          ],
           totalStudents: [{ $match: { role: 'student' } }, { $count: 'count' }],
           completedStudents: [
             {

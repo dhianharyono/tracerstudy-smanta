@@ -130,7 +130,11 @@ const Profile = () => {
 
       const response = await axios.put('/api/users/profile', updateData);
       updateUser(response.data);
-      Toast('Profil berhasil diperbarui', 'success');
+      if (response.data?.isHidden) {
+        Toast('Profil berhasil diperbarui. Akses Anda tetap dibatasi hingga disetujui kembali oleh Administrator.', 'info');
+      } else {
+        Toast('Profil berhasil diperbarui', 'success');
+      }
       setPassword('');
       setConfirmPassword('');
       setShowPasswordFields(false);

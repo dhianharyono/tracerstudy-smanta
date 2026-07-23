@@ -136,6 +136,10 @@ const StudentDashboard = () => {
     );
   }
 
+  if (user?.isHidden) {
+    return <RestrictedAccess type='hidden_user' role='student' />;
+  }
+
   if (user && isNameIncomplete(user.profile || user)) {
     return <RestrictedAccess type='name_incomplete' role='student' />;
   }

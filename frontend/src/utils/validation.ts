@@ -1,47 +1,54 @@
-export const isUniversityIncomplete = (profile: any) => {
-  if (!profile) return true;
+export const isUniversityIncomplete = (obj: any) => {
+  if (!obj) return true;
 
-  const universityName = profile.university?.name || '';
-  const major = profile.university?.major || '';
+  const univ = obj.university || (obj.name !== undefined ? obj : null);
+  const universityName = (univ?.name || obj.universityName || '').trim();
+  const major = (univ?.major || obj.major || '').trim();
   
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
   
-  if (!universityName.trim() || placeholders.includes(universityName.trim().toLowerCase())) {
+  if (!universityName || placeholders.includes(universityName.toLowerCase())) {
     return true;
   }
   
-  if (!major.trim() || placeholders.includes(major.trim().toLowerCase())) {
+  if (!major || placeholders.includes(major.toLowerCase())) {
     return true;
   }
 
   return false;
 };
-export const isJobIncomplete = (profile: any) => {
-  if (!profile) return true;
 
-  const jobPosition = profile.job?.position || '';
-  const jobInstitution = profile.job?.institution || '';
+export const isJobIncomplete = (obj: any) => {
+  if (!obj) return true;
+
+  const job = obj.job || (obj.position !== undefined ? obj : null);
+  const jobPosition = (job?.position || obj.jobPosition || '').trim();
+  const jobInstitution = (job?.institution || obj.jobInstitution || '').trim();
   
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
   
-  if (!jobPosition.trim() || placeholders.includes(jobPosition.trim().toLowerCase())) {
+  if (!jobPosition || placeholders.includes(jobPosition.toLowerCase())) {
     return true;
   }
   
-  if (!jobInstitution.trim() || placeholders.includes(jobInstitution.trim().toLowerCase())) {
+  if (!jobInstitution || placeholders.includes(jobInstitution.toLowerCase())) {
     return true;
   }
 
   return false;
 };
-export const isNameIncomplete = (profile: any) => {
-  if (!profile || !profile.fullName) return true;
 
-  const fullName = profile.fullName.trim();
+export const isNameIncomplete = (obj: any) => {
+  if (!obj) return true;
+
+  const fullName = (obj.profile?.fullName || obj.fullName || '').trim();
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
 
-  if (fullName.length < 3) return true;
+  if (!fullName || fullName.length < 3) return true;
   
+  // Single word name check (full name should be at least 2 words)
+  if (!fullName.includes(' ')) return true;
+
   if (placeholders.includes(fullName.toLowerCase())) {
     return true;
   }

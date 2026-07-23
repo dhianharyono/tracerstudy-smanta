@@ -116,6 +116,10 @@ const AlumniDashboard = () => {
     );
   }
 
+  if (user?.isHidden) {
+    return <RestrictedAccess type='hidden_user' role='alumni' />;
+  }
+
   const hasUniversityData = !!(user?.university?.name);
   
   if (user?.questionnaireCompleted === false && !hasUniversityData) {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaUserEdit, FaClipboardList, FaLock, FaBriefcase } from 'react-icons/fa';
 
 interface RestrictedAccessProps {
-  type: 'profile_incomplete' | 'questionnaire_incomplete' | 'university_incomplete' | 'job_incomplete' | 'name_incomplete';
+  type: 'profile_incomplete' | 'questionnaire_incomplete' | 'university_incomplete' | 'job_incomplete' | 'name_incomplete' | 'hidden_user';
   role: 'student' | 'alumni';
 }
 
@@ -12,6 +12,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
   const isUniversity = type === 'university_incomplete';
   const isJob = type === 'job_incomplete';
   const isName = type === 'name_incomplete';
+  const isHidden = type === 'hidden_user';
 
   const profileLink = role === 'student' ? '/student/profile' : '/alumni/profile';
 
@@ -36,23 +37,29 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
         </h2>
 
         <p className='text-[color:var(--text-secondary)] mb-8 leading-relaxed text-xs md:text-sm'>
-          {isName
-            ? 'Maaf, nama lengkap Anda saat ini tidak valid atau terdeteksi asal-asalan. Anda diwajibkan untuk memperbaiki nama lengkap Anda (minimal 3 karakter dan hanya huruf) di profil untuk membuka akses.'
-            : isProfile
-              ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
-              : isUniversity
-                ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
-                : isJob
-                  ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah mengisi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
-                  : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
+          {isHidden
+            ? 'Akun Anda dibatasi oleh Administrator karena Anda belum melengkapi data diri dengan benar. Anda dapat memperbarui data diri Anda di profil, dan akses menu akan dibuka kembali oleh Administrator setelah disetujui.'
+            : isName
+              ? 'Maaf, nama lengkap Anda saat ini tidak valid atau terdeteksi asal-asalan. Anda diwajibkan untuk memperbaiki nama lengkap Anda (minimal 3 karakter dan hanya huruf) di profil untuk membuka akses.'
+              : isProfile
+                ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
+                : isUniversity
+                  ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
+                  : isJob
+                    ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah mengisi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
+                    : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
         </p>
 
         {/* Action Button */}
         <Link
-          to={isName || isProfile || isUniversity ? profileLink : '/alumni/questionnaire'}
+          to={isHidden || isName || isProfile || isUniversity ? profileLink : '/alumni/questionnaire'}
           className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200'
         >
-          {isName ? (
+          {isHidden ? (
+            <>
+              <FaUserEdit /> Perbaiki Data Profil
+            </>
+          ) : isName ? (
             <>
               <FaUserEdit /> Perbaiki Nama Sekarang
             </>
@@ -78,7 +85,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
         {/* Footer Note */}
         <p className='mt-6 text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
           <span className='inline-block w-2 h-2 rounded-full bg-amber-500 mr-2 animate-pulse' />
-          Tindakan ini diperlukan untuk melanjutkan
+          {isHidden ? 'Akses akan dipulihkan secara penuh setelah disetujui kembali oleh Administrator' : 'Tindakan ini diperlukan untuk melanjutkan'}
         </p>
       </div>
     </div>

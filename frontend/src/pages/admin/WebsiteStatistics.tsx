@@ -91,13 +91,6 @@ const WebsiteStatistics = () => {
             <span className='text-[color:var(--text-primary)]'>Berita</span>
           );
         }
-        if (path.includes('/student/alumni-contact')) {
-          return (
-            <span className='text-[color:var(--text-primary)]'>
-              Hubungi Alumni
-            </span>
-          );
-        }
         return (
           <span className='text-[color:var(--text-primary)]'>
             Dashboard Siswa

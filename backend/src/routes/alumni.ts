@@ -27,7 +27,7 @@ router.get(
   async (req: Request, res: Response) => {
     try {
       const { university, major, isMentor } = req.query;
-      const query: any = { role: 'alumni' };
+      const query: any = { role: 'alumni', isHidden: { $ne: true } };
 
       if (university) {
         query['university.name'] = university;
@@ -315,6 +315,7 @@ router.get(
       const matchQuery: any = {
         role: 'alumni',
         'university.name': { $exists: true, $nin: [null, ''] },
+        isHidden: { $ne: true },
       };
 
       if (major) {

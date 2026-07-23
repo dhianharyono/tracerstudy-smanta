@@ -8,6 +8,9 @@ import {
   FaTimes,
   FaMedal,
   FaCrown,
+  FaInstagram,
+  FaLinkedin,
+  FaEnvelope,
 } from 'react-icons/fa';
 import PageHeader from '@/components/common/PageHeader';
 import Card from '@/components/common/Card';
@@ -23,7 +26,7 @@ import {
 
 import { useAuth } from '../../contexts/AuthContext';
 import RestrictedAccess from '@/components/RestrictedAccess';
-import { isStudentProfileComplete } from '@/utils/helpers';
+import { isStudentProfileComplete, getSocialUrl } from '@/utils/helpers';
 import { isUniversityIncomplete, isNameIncomplete } from '@/utils/validation';
 
 const StudentAlumni = () => {
@@ -43,6 +46,7 @@ const StudentAlumni = () => {
     graduationYear: searchParams.get('graduationYear') || '',
     major: searchParams.get('major') || '',
     name: searchParams.get('name') || '',
+    isMentor: searchParams.get('isMentor') || '',
   });
   const [filterOptions, setFilterOptions] = useState({
     universities: [] as string[],
@@ -57,12 +61,14 @@ const StudentAlumni = () => {
     const major = searchParams.get('major') || '';
     const graduationYear = searchParams.get('graduationYear') || '';
     const name = searchParams.get('name') || '';
+    const isMentor = searchParams.get('isMentor') || '';
 
     setFilters({
       university,
       graduationYear,
       major,
       name,
+      isMentor,
     });
     setSearchTerm(name);
     setDebouncedName(name);
@@ -99,6 +105,7 @@ const StudentAlumni = () => {
         params.append('graduationYear', filters.graduationYear);
       if (filters.major) params.append('major', filters.major);
       if (filters.name) params.append('name', filters.name);
+      if (filters.isMentor) params.append('isMentor', filters.isMentor);
 
       const response = await axios.get(
         `/api/student/alumni?${params.toString()}`,
@@ -130,10 +137,14 @@ const StudentAlumni = () => {
   };
 
   const handleClearFilters = () => {
-    setFilters({ university: '', graduationYear: '', major: '', name: '' });
+    setFilters({ university: '', graduationYear: '', major: '', name: '', isMentor: '' });
     setPagination({ ...pagination, page: 1 });
     setSearchParams({});
   };
+
+  if (user?.isHidden) {
+    return <RestrictedAccess type='hidden_user' role={user.role as any} />;
+  }
 
   if (user?.role === 'admin' || user?.role === 'school') {
     // Admin and school monitoring profiles do not need completeness verification
@@ -174,7 +185,7 @@ const StudentAlumni = () => {
         className={`mb-8 p-4 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
           }`}
       >
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4'>
           {/* Search Name */}
           <div className='relative'>
             <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-gray-400' />
@@ -249,7 +260,34 @@ const StudentAlumni = () => {
             </div>
           </div>
 
-          {/* Year Filter */}
+          {/* Mentor Filter */}
+          <div className='relative'>
+            <select
+              value={filters.isMentor}
+              onChange={(e) => handleFilterChange('isMentor', e.target.value)}
+              className='w-full appearance-none rounded-lg bg-[color:var(--bg-tertiary)] py-2 pl-4 pr-8 text-sm outline-none cursor-pointer border border-transparent focus:border-[var(--primary)] focus:bg-[color:var(--bg-card)] transition-all'
+            >
+              <option value=''>Semua Status Mentor</option>
+              <option value='true'>Khusus Mentor Active</option>
+            </select>
+            <div className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400'>
+              <svg
+                className='h-4 w-4'
+                fill='none'
+                stroke='currentColor'
+                viewBox='0 0 24 24'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  strokeWidth='2'
+                  d='M19 9l-7 7-7-7'
+                />
+              </svg>
+            </div>
+          </div>
+
+          {/* Year Filter & Reset */}
           <div className='flex gap-2'>
             <div className='relative flex-1'>
               <select
@@ -312,6 +350,7 @@ const StudentAlumni = () => {
               <TableHeadCell>Nama Alumni</TableHeadCell>
               <TableHeadCell>Tahun</TableHeadCell>
               <TableHeadCell>Pendidikan</TableHeadCell>
+              <TableHeadCell>Sosial Media</TableHeadCell>
               <TableHeadCell>Pekerjaan</TableHeadCell>
             </TableHeader>
             <TableBody>
@@ -337,6 +376,12 @@ const StudentAlumni = () => {
                       <div className='flex flex-col gap-2'>
                         <div className='h-4 w-24 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
                         <div className='h-3 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex gap-2'>
+                        <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
+                        <div className='h-6 w-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse'></div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -427,6 +472,44 @@ const StudentAlumni = () => {
                         >
                           {alum.university?.major || '-'}
                         </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex items-center gap-2'>
+                        {alum.socialMedia?.instagram && (
+                          <a
+                            href={getSocialUrl('instagram', alum.socialMedia.instagram)}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-pink-600 hover:text-pink-700 transition-colors p-1.5 rounded-lg'
+                            title={`Instagram: ${alum.socialMedia.instagram}`}
+                          >
+                            <FaInstagram className='text-base' />
+                          </a>
+                        )}
+                        {alum.socialMedia?.linkedin && (
+                          <a
+                            href={getSocialUrl('linkedin', alum.socialMedia.linkedin)}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='text-blue-600 hover:text-blue-700 transition-colors p-1.5 rounded-lg'
+                            title={`LinkedIn: ${alum.socialMedia.linkedin}`}
+                          >
+                            <FaLinkedin className='text-base' />
+                          </a>
+                        )}
+                        {alum.email && (
+                          <a
+                            href={`mailto:${alum.email}`}
+                            className='text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] transition-colors p-1.5 rounded-lg'
+                            title={`Email: ${alum.email}`}
+                          >
+                            <FaEnvelope size={16} />
+                          </a>
+                        )}
+                        {!alum.socialMedia?.instagram && !alum.socialMedia?.linkedin && (
+                          <span className='text-[color:var(--text-secondary)] italic'>-</span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>

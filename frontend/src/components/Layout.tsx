@@ -4,6 +4,9 @@ import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
 import ConfirmationModal from './ConfirmationModal';
 import SmartLoader from './SmartLoader';
+import RestrictedAccess from './RestrictedAccess';
+import { isNameIncomplete, isUniversityIncomplete } from '../utils/validation';
+import { isStudentProfileComplete } from '../utils/helpers';
 import {
   FaChartBar,
   FaEdit,
@@ -138,7 +141,6 @@ const Layout = () => {
       '/student/news': 'Berita Siswa',
       '/student/feedback': 'Kritik & Saran Siswa',
       '/student/profile': 'Profil Siswa',
-      '/student/alumni-contact': 'Hubungi Alumni',
 
       // School
       '/school': 'Dashboard Sekolah',
@@ -411,11 +413,6 @@ const Layout = () => {
           />
           <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
-          <NavLink
-            to='/student/alumni-contact'
-            icon={FaUserTie}
-            label='Hubungi Alumni'
-          />
 
           <SectionLabel label='Informasi' />
           <NavLink to='/student/events' icon={FaChartBar} label='Event' />
@@ -448,73 +445,142 @@ const Layout = () => {
       admin: 'Administrator',
       alumni: 'Alumni',
       student: 'Siswa',
-      school: 'Pihak Sekolah',
+          school: 'Pihak Sekolah',
     };
     return roles[user?.role || ''] || 'User';
   };
 
+  const getRestrictedAccessComponent = () => {
+    if (!user) return null;
+    const path = location.pathname;
+    const isProfilePage = path.endsWith('/profile');
+    const isQuestionnairePage = path === '/alumni/questionnaire';
+
+    if (isProfilePage) return null;
+
+    if (user.isHidden) {
+      return <RestrictedAccess type='hidden_user' role={(user.role === 'admin' ? 'alumni' : user.role) as any} />;
+    }
+
+    if (user.role === 'student') {
+      if (isNameIncomplete(user)) {
+        return <RestrictedAccess type='name_incomplete' role='student' />;
+      }
+      if (!isStudentProfileComplete(user)) {
+        return <RestrictedAccess type='profile_incomplete' role='student' />;
+      }
+    }
+
+    if (user.role === 'alumni') {
+      if (isQuestionnairePage) return null;
+
+      if (isNameIncomplete(user)) {
+        return <RestrictedAccess type='name_incomplete' role='alumni' />;
+      }
+      if (!user.questionnaireCompleted) {
+        return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+      }
+      if (isUniversityIncomplete(user)) {
+        return <RestrictedAccess type='university_incomplete' role='alumni' />;
+      }
+    }
+
+    return null;
+  };
+
+  const restrictedComponent = getRestrictedAccessComponent();
+
   return (
-    <div className='flex h-dvh overflow-hidden bg-[color:var(--bg-primary)]'>
-      {/* Mobile Menu Overlay */}
+    <div className='flex h-screen bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] transition-colors duration-200 overflow-hidden font-sans'>
+      {/* Overlay Mobile */}
       {isMobileMenuOpen && (
         <div
-          className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity lg:hidden'
+          className='fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden'
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 shrink-0 transform bg-[color:var(--bg-card)] border-r border-[color:var(--border-color)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
-        <div className='flex h-full flex-col'>
-          {/* Header */}
-          <div className='p-6'>
-            <div className='flex items-center gap-1'>
-              <div className='flex items-center justify-center'>
-                <img src='/logo.png' alt='Logo' className='h-10 w-10' />
+        {/* Brand Logo & Name */}
+        <div className='flex h-[72px] shrink-0 items-center justify-between px-6 border-b border-[color:var(--border-color)]'>
+          <Link
+            to={
+              user
+                ? user.role === 'admin'
+                  ? '/admin'
+                  : user.role === 'alumni'
+                  ? '/alumni'
+                  : user.role === 'student'
+                  ? '/student'
+                  : '/school'
+                : '/'
+            }
+            className='flex items-center gap-3 group'
+          >
+            <div className='flex h-10 w-10 items-center justify-center transition-transform group-hover:scale-105'>
+              <img src='/logo.png' alt='Logo SMANTA' className='h-10 w-10 object-contain' />
+            </div>
+            <div className='flex flex-col'>
+              <span className='font-bold text-[color:var(--text-primary)] text-sm tracking-tight leading-none group-hover:text-[var(--primary)] transition-colors'>
+                TRACER STUDY
+              </span>
+              <span className='text-[9px] font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-1'>
+                SMAN 1 TAWANGSARI
+              </span>
+            </div>
+          </Link>
+          <button
+            onClick={() => setIsMobileMenuOpen(false)}
+            className='rounded-lg p-1.5 text-[color:var(--text-tertiary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] lg:hidden'
+          >
+            <FaTimes />
+          </button>
+        </div>
+
+        {/* Nav Links */}
+        <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
+          {getNavLinks()}
+        </nav>
+
+        {/* User Footer Profile */}
+        <div className='p-4 border-t border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/50'>
+          <div className='flex items-center justify-between gap-3'>
+            <Link
+              to={
+                user?.role === 'admin'
+                  ? '/admin/profile'
+                  : user?.role === 'alumni'
+                  ? '/alumni/profile'
+                  : user?.role === 'student'
+                  ? '/student/profile'
+                  : '/school/profile'
+              }
+              className='flex items-center gap-3 min-w-0 flex-1 group hover:opacity-80 transition-opacity'
+            >
+              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white font-bold text-sm shadow-sm'>
+                {getUserInitial()}
               </div>
-              <div className='mt-1'>
-                <h1 className='!mb-0 text-lg font-bold leading-tight tracking-tight text-[color:var(--text-primary)]'>
-                  TRACER STUDY
-                </h1>
-                <p className='text-[10px] font-medium text-[color:var(--text-secondary)] uppercase tracking-wider'>
-                  SMA N 1 TAWANGSARI
+              <div className='min-w-0 flex-1'>
+                <p className='truncate text-sm font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
+                  {user?.profile?.fullName || user?.username}
+                </p>
+                <p className='truncate text-xs text-[color:var(--text-secondary)]'>
+                  {getRoleName()}
                 </p>
               </div>
-            </div>
-          </div>
-
-          {/* Nav Links */}
-          <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
-            {getNavLinks()}
-          </nav>
-
-          {/* User Profile */}
-          <div className='border-t border-[color:var(--border-color)] p-4'>
-            <div className='rounded-xl bg-[color:var(--bg-tertiary)] p-3'>
-              <div className='flex items-center gap-3'>
-                <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-white font-bold text-sm'>
-                  {getUserInitial()}
-                </div>
-                <div className='min-w-0 flex-1'>
-                  <p className='truncate text-sm font-semibold text-[color:var(--text-primary)]'>
-                    {user?.profile?.fullName || user?.username}
-                  </p>
-                  <p className='truncate text-xs text-[color:var(--text-secondary)]'>
-                    {getRoleName()}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsLogoutModalOpen(true)}
-                  className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-white/50 dark:hover:bg-black/20 transition-colors'
-                  title='Logout'
-                >
-                  <FaSignOutAlt />
-                </button>
-              </div>
-            </div>
+            </Link>
+            <button
+              onClick={() => setIsLogoutModalOpen(true)}
+              className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-white/50 dark:hover:bg-black/20 transition-colors'
+              title='Logout'
+            >
+              <FaSignOutAlt />
+            </button>
           </div>
         </div>
       </aside>
@@ -550,19 +616,23 @@ const Layout = () => {
           className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
         >
           <div className='w-full flex-grow flex flex-col animate-fade-in pb-8'>
-            <Suspense
-              fallback={
-                <SmartLoader
-                  messages={[
-                    'Memuat halaman...',
-                    'Menyiapkan data...',
-                    'Mohon tunggu sebentar...',
-                  ]}
-                />
-              }
-            >
-              <Outlet />
-            </Suspense>
+            {restrictedComponent ? (
+              restrictedComponent
+            ) : (
+              <Suspense
+                fallback={
+                  <SmartLoader
+                    messages={[
+                      'Memuat halaman...',
+                      'Menyiapkan data...',
+                      'Mohon tunggu sebentar...',
+                    ]}
+                  />
+                }
+              >
+                <Outlet />
+              </Suspense>
+            )}
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
             &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All right reserved.

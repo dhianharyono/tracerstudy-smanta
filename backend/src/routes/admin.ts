@@ -608,6 +608,8 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const badgeId = req.query.badgeId as string;
     const name = (req.query.name || req.query.search) as string;
     const duplicate = req.query.duplicate as string;
+    const nameIncomplete = req.query.nameIncomplete as string;
+    const hiddenStatus = req.query.hiddenStatus as string;
 
     const filter: any = { role: 'alumni' };
 
@@ -627,15 +629,41 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['university.major'] = major;
     }
 
+    if (hiddenStatus === 'hidden') {
+      filter['isHidden'] = true;
+    } else if (hiddenStatus === 'visible') {
+      filter['isHidden'] = { $ne: true };
+    }
+
+    if (nameIncomplete === 'true') {
+      const nameIncompleteConditions = [
+        { 'profile.fullName': { $exists: false } },
+        { 'profile.fullName': null },
+        { 'profile.fullName': '' },
+        { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
+        { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
+        { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+        { 'profile.fullName': { $not: /\s/ } },
+      ];
+      filter['$or'] = nameIncompleteConditions;
+    }
+
     if (questionnaireStatus) {
       if (questionnaireStatus === 'completed') {
         filter['questionnaireCompleted'] = true;
         filter['university.name'] = { $exists: true, $nin: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] };
       } else if (questionnaireStatus === 'incomplete') {
-        filter['$or'] = [
+        const incCond = [
           { questionnaireCompleted: { $ne: true } },
           { 'university.name': { $in: [null, '', '-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'] } }
         ];
+        if (filter['$or']) {
+          const existingOr = filter['$or'];
+          delete filter['$or'];
+          filter['$and'] = [{ $or: existingOr }, { $or: incCond }];
+        } else {
+          filter['$or'] = incCond;
+        }
       }
     }
 
@@ -722,6 +750,12 @@ router.get('/alumni', async (req: Request, res: Response) => {
       const u = a.toObject() as any;
       u.isDuplicateName = u.profile?.fullName ? dupNameSet.has(u.profile.fullName.toLowerCase()) : false;
       u.isDuplicateEmail = u.email ? dupEmailSet.has(u.email.toLowerCase()) : false;
+
+      const fn = (u.profile?.fullName || '').trim();
+      const placeholders = ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'];
+      const isSingleWord = !fn.includes(' ');
+      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.']+$/.test(fn);
+
       return u;
     });
 
@@ -908,6 +942,97 @@ router.patch('/alumni/:id/demote', async (req: Request, res: Response) => {
   }
 });
 
+// Bulk hide all alumni with incomplete names or 1-word names
+router.patch('/alumni/hide-all-incomplete', async (req: Request, res: Response) => {
+  try {
+    const nameIncompleteConditions = [
+      { 'profile.fullName': { $exists: false } },
+      { 'profile.fullName': null },
+      { 'profile.fullName': '' },
+      { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
+      { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
+      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+      { 'profile.fullName': { $not: /\s/ } },
+    ];
+
+    const result = await User.updateMany(
+      {
+        role: 'alumni',
+        $or: nameIncompleteConditions,
+        isHidden: { $ne: true },
+      },
+      {
+        $set: { isHidden: true },
+      }
+    );
+
+    res.json({
+      message: `Berhasil membatasi ${result.modifiedCount} alumni dengan nama tidak lengkap`,
+      modifiedCount: result.modifiedCount,
+    });
+
+    if (result.modifiedCount > 0) {
+      await AuditLog.create({
+        action: 'HIDE_ALL_INCOMPLETE_ALUMNI',
+        actor: {
+          userId: (req as any).user._id,
+          username: (req as any).user.username,
+          role: (req as any).user.role,
+        },
+        target: {
+          type: 'alumni',
+          name: 'Bulk Incomplete Alumni',
+        },
+        details: `Membatasi ${result.modifiedCount} alumni dengan nama tidak lengkap / 1 kata secara massal`,
+      });
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Toggle hide alumni (hide/unhide user from public/student/alumni lists)
+router.patch('/alumni/:id/toggle-hide', async (req: Request, res: Response) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const newHiddenStatus = !user.isHidden;
+    user.isHidden = newHiddenStatus;
+    await user.save();
+
+    res.json({
+      message: newHiddenStatus
+        ? 'User berhasil disembunyikan dari data alumni publik'
+        : 'User berhasil ditampilkan kembali di data alumni publik',
+      isHidden: newHiddenStatus,
+      user: {
+        _id: user._id,
+        username: user.username,
+        isHidden: user.isHidden,
+      },
+    });
+
+    await AuditLog.create({
+      action: newHiddenStatus ? 'HIDE_USER' : 'UNHIDE_USER',
+      actor: {
+        userId: (req as any).user._id,
+        username: (req as any).user.username,
+        role: (req as any).user.role,
+      },
+      target: {
+        type: user.role,
+        name: user.profile?.fullName || user.username,
+      },
+      details: `${newHiddenStatus ? 'Menyembunyikan' : 'Menampilkan'} user ${user.profile?.fullName || user.username} (${user.role})`,
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Remove badge from alumni
 router.delete(
   '/alumni/:userId/badges/:badgeId',
@@ -1007,7 +1132,7 @@ router.get('/students', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
-    const { search, entryYear, graduationYear, status, duplicate } = req.query;
+    const { search, entryYear, graduationYear, status, duplicate, nameIncomplete, hiddenStatus } = req.query;
 
     const query: any = { role: 'student' };
     const andConditions: any[] = [];
@@ -1028,6 +1153,27 @@ router.get('/students', async (req: Request, res: Response) => {
 
     if (graduationYear) {
       andConditions.push({ 'profile.graduationYear': parseInt(graduationYear as string) });
+    }
+
+    if (hiddenStatus === 'hidden') {
+      andConditions.push({ isHidden: true });
+    } else if (hiddenStatus === 'visible') {
+      andConditions.push({ isHidden: { $ne: true } });
+    }
+
+    if (nameIncomplete === 'true') {
+      andConditions.push({
+        $or: [
+          { 'profile': { $exists: false } },
+          { 'profile.fullName': { $exists: false } },
+          { 'profile.fullName': null },
+          { 'profile.fullName': '' },
+          { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
+          { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
+          { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+          { 'profile.fullName': { $not: /\s/ } },
+        ]
+      });
     }
 
     if (status) {
@@ -1124,6 +1270,12 @@ router.get('/students', async (req: Request, res: Response) => {
       const u = s.toObject() as any;
       u.isDuplicateName = u.profile?.fullName ? dupNameSet.has(u.profile.fullName.toLowerCase()) : false;
       u.isDuplicateEmail = u.email ? dupEmailSet.has(u.email.toLowerCase()) : false;
+
+      const fn = (u.profile?.fullName || '').trim();
+      const placeholders = ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'];
+      const isSingleWord = !fn.includes(' ');
+      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.']+$/.test(fn);
+
       return u;
     });
 
@@ -1135,6 +1287,98 @@ router.get('/students', async (req: Request, res: Response) => {
         total,
         pages: Math.ceil(total / limit),
       },
+    });
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Bulk hide all students with incomplete names or 1-word names
+router.patch('/students/hide-all-incomplete', async (req: Request, res: Response) => {
+  try {
+    const nameIncompleteConditions = [
+      { 'profile': { $exists: false } },
+      { 'profile.fullName': { $exists: false } },
+      { 'profile.fullName': null },
+      { 'profile.fullName': '' },
+      { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
+      { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
+      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+      { 'profile.fullName': { $not: /\s/ } },
+    ];
+
+    const result = await User.updateMany(
+      {
+        role: 'student',
+        $or: nameIncompleteConditions,
+        isHidden: { $ne: true },
+      },
+      {
+        $set: { isHidden: true },
+      }
+    );
+
+    res.json({
+      message: `Berhasil membatasi ${result.modifiedCount} siswa dengan nama tidak lengkap`,
+      modifiedCount: result.modifiedCount,
+    });
+
+    if (result.modifiedCount > 0) {
+      await AuditLog.create({
+        action: 'HIDE_ALL_INCOMPLETE_STUDENTS',
+        actor: {
+          userId: (req as any).user._id,
+          username: (req as any).user.username,
+          role: (req as any).user.role,
+        },
+        target: {
+          type: 'student',
+          name: 'Bulk Incomplete Students',
+        },
+        details: `Membatasi ${result.modifiedCount} siswa dengan nama tidak lengkap / 1 kata secara massal`,
+      });
+    }
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Toggle hide student
+router.patch('/students/:id/toggle-hide', async (req: Request, res: Response) => {
+  try {
+    const user = await User.findOne({ _id: req.params.id, role: 'student' });
+    if (!user) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    const newHiddenStatus = !user.isHidden;
+    user.isHidden = newHiddenStatus;
+    await user.save();
+
+    res.json({
+      message: newHiddenStatus
+        ? 'User siswa berhasil disembunyikan dan diberikan akses terbatas'
+        : 'User siswa berhasil ditampilkan kembali',
+      isHidden: newHiddenStatus,
+      user: {
+        _id: user._id,
+        username: user.username,
+        isHidden: user.isHidden,
+      },
+    });
+
+    await AuditLog.create({
+      action: newHiddenStatus ? 'HIDE_USER' : 'UNHIDE_USER',
+      actor: {
+        userId: (req as any).user._id,
+        username: (req as any).user.username,
+        role: (req as any).user.role,
+      },
+      target: {
+        type: user.role,
+        name: user.profile?.fullName || user.username,
+      },
+      details: `${newHiddenStatus ? 'Menyembunyikan' : 'Menampilkan'} user ${user.profile?.fullName || user.username} (${user.role})`,
     });
   } catch (error: any) {
     res.status(500).json({ message: error.message });
