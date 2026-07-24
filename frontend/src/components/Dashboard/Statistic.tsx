@@ -78,7 +78,6 @@ const StatCard = ({
 
 const Statistic = ({ stats }: { stats: StatsObject }) => {
   const { user } = useAuth();
-  const isAlumni = user?.role === 'alumni';
   const isStudent = user?.role === 'student';
   const isAdmin = user?.role === 'admin';
 
@@ -207,70 +206,26 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       colorClass: 'text-[var(--primary)]',
       bgClass: 'bg-[var(--primary)]/10',
     },
-    ...(isAlumni
-      ? [
-          {
-            title: 'Total Siswa',
-            value: stats?.totalStudents,
-            icon: FaUserGraduate,
-            colorClass: 'text-indigo-500',
-            bgClass: 'bg-indigo-500/10',
-          },
-        ]
-      : []),
-    ...(isAlumni
-      ? [
-          {
-            title: 'Mentor Aktif',
-            value: stats?.activeMentors,
-            icon: FaCrown,
-            colorClass: 'text-amber-500',
-            bgClass: 'bg-amber-500/10',
-          },
-        ]
-      : []),
     {
-      title: 'Alumni Bekerja',
-      value: stats?.workingAlumni,
-      icon: FaBriefcase,
-      colorClass: 'text-amber-500',
-      bgClass: 'bg-amber-500/10',
-    },
-    {
-      title: 'Alumni Kuliah',
-      value: stats?.studyingAlumni,
-      icon: FaGraduationCap,
-      colorClass: 'text-emerald-500',
-      bgClass: 'bg-emerald-500/10',
-    },
-    {
-      title: 'PTN',
-      value: stats?.universityTypes?.negeri,
-      icon: FaUniversity,
-      colorClass: 'text-violet-500',
-      bgClass: 'bg-violet-500/10',
-    },
-    {
-      title: 'PTS',
-      value: stats?.universityTypes?.swasta,
-      icon: FaUniversity,
-      colorClass: 'text-pink-500',
-      bgClass: 'bg-pink-500/10',
-    },
-    {
-      title: 'Kedinasan',
-      value: stats?.universityTypes?.kedinasan,
-      icon: FaUniversity,
+      title: 'Total Siswa',
+      value: stats?.totalStudents,
+      icon: FaUserGraduate,
       colorClass: 'text-indigo-500',
       bgClass: 'bg-indigo-500/10',
+    },
+    {
+      title: 'Mentor Aktif',
+      value: stats?.activeMentors ?? stats?.totalMentors ?? 0,
+      icon: FaCrown,
+      colorClass: 'text-amber-500',
+      bgClass: 'bg-amber-500/10',
     },
   ];
 
   return (
     <div
-      className={`grid grid-cols-2 ${
-        isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
-      } gap-4 mb-8`}
+      className={`grid grid-cols-2 ${isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-3'
+        } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (
         <StatCard key={index} {...item} />

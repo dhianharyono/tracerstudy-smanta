@@ -481,6 +481,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       incompleteStudentsCount: getCount(stats.incompleteStudents),
       workingAlumni: getCount(stats.workingAlumni),
       studyingAlumni: getCount(stats.studyingAlumni),
+      activeMentors: getCount(stats.activeMentors),
       completedCount: getCount(stats.completedData),
       incompleteCount: getCount(stats.incompleteData),
       studentYearStats: stats.studentYearStats || [],

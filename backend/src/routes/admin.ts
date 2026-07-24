@@ -384,6 +384,7 @@ router.get('/dashboard', async (req: Request, res: Response) => {
       workingAlumni: getCount(stats.workingAlumni),
       studyingAlumni: getCount(stats.studyingAlumni),
       totalMentors: getCount(stats.totalMentors),
+      activeMentors: getCount(stats.totalMentors),
       universityTypes: getMap(stats.universityTypes),
       yearStats: stats.yearStats,
       majorStats: stats.majorStats,
