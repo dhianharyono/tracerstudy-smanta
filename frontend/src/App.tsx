@@ -13,8 +13,7 @@ import { useAuth } from './contexts/AuthContext';
 import { UserRole } from './types';
 
 // Auth Pages
-const Login = lazy(() => import('./pages/auth/Login'));
-const Register = lazy(() => import('./pages/auth/Register'));
+const AuthLayout = lazy(() => import('./components/auth/AuthLayout'));
 const Profile = lazy(() => import('./pages/Profile'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 
@@ -133,7 +132,7 @@ function App() {
               path='/login'
               element={
                 <PublicRoute>
-                  <Login />
+                  <AuthLayout initialMode='login' />
                 </PublicRoute>
               }
             />
@@ -141,7 +140,7 @@ function App() {
               path='/register'
               element={
                 <PublicRoute>
-                  <Register />
+                  <AuthLayout initialMode='register' />
                 </PublicRoute>
               }
             />
