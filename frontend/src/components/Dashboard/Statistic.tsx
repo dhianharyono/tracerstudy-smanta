@@ -137,44 +137,6 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       },
     ];
 
-    const alumniDetails = [
-      {
-        title: 'Alumni Bekerja',
-        value: stats?.workingAlumni,
-        icon: FaBriefcase,
-        colorClass: 'text-amber-500',
-        bgClass: 'bg-amber-500/10',
-      },
-      {
-        title: 'Alumni Kuliah',
-        value: stats?.studyingAlumni,
-        icon: FaGraduationCap,
-        colorClass: 'text-emerald-500',
-        bgClass: 'bg-emerald-500/10',
-      },
-      {
-        title: 'PTN',
-        value: stats?.universityTypes?.negeri,
-        icon: FaUniversity,
-        colorClass: 'text-violet-500',
-        bgClass: 'bg-violet-500/10',
-      },
-      {
-        title: 'PTS',
-        value: stats?.universityTypes?.swasta,
-        icon: FaUniversity,
-        colorClass: 'text-pink-500',
-        bgClass: 'bg-pink-500/10',
-      },
-      {
-        title: 'Kedinasan',
-        value: stats?.universityTypes?.kedinasan,
-        icon: FaUniversity,
-        colorClass: 'text-indigo-500',
-        bgClass: 'bg-indigo-500/10',
-      },
-    ];
-
     return (
       <div className='space-y-6 mb-8'>
         <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
@@ -185,12 +147,6 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
         <div className='grid grid-cols-2 gap-4'>
           {incompleteStats.map((item, index) => (
-            <StatCard key={index} {...item} />
-          ))}
-        </div>
-
-        <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4'>
-          {alumniDetails.map((item, index) => (
             <StatCard key={index} {...item} />
           ))}
         </div>
@@ -224,8 +180,9 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
 
   return (
     <div
-      className={`grid grid-cols-2 ${isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-3'
-        } gap-4 mb-8`}
+      className={`grid grid-cols-2 ${
+        isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-3'
+      } gap-4 mb-8`}
     >
       {statItems.map((item, index) => (
         <StatCard key={index} {...item} />
