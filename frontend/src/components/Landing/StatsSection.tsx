@@ -1,5 +1,11 @@
 import { motion } from 'framer-motion';
-import { FaGraduationCap, FaUsers, FaBriefcase, FaUniversity } from 'react-icons/fa';
+import {
+  FaGraduationCap,
+  FaUsers,
+  FaUserGraduate,
+  FaUniversity,
+  FaBookOpen,
+} from 'react-icons/fa';
 import StatCard from '../common/StatCard';
 import { LandingPageStats } from '@/types';
 
@@ -10,7 +16,10 @@ interface StatsSectionProps {
 
 const StatsSection = ({ stats, loading }: StatsSectionProps) => {
   return (
-    <section id='stats' className='py-20 px-4 sm:px-6 relative bg-slate-50 border-t border-slate-200/50 scroll-mt-24'>
+    <section
+      id='stats'
+      className='py-20 px-4 sm:px-6 relative bg-slate-50 border-t border-slate-200/50 scroll-mt-24'
+    >
       <div className='max-w-7xl mx-auto'>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -23,7 +32,8 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
           <p className='text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium'>
-            Pantau pencapaian alumni kita di berbagai sektor dan perguruan tinggi favorit.
+            Pantau pencapaian alumni kita di berbagai sektor dan perguruan
+            tinggi favorit.
           </p>
         </motion.div>
 
@@ -32,7 +42,10 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
             {/* Stats Cards Skeleton */}
             <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-12'>
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className='bg-white p-5 md:p-8 rounded-2xl md:rounded-[2rem] border border-slate-200 shadow-md'>
+                <div
+                  key={i}
+                  className='bg-white p-5 md:p-8 rounded-2xl md:rounded-[2rem] border border-slate-200 shadow-md'
+                >
                   <div className='w-10 h-10 md:w-14 md:h-14 bg-slate-100 rounded-2xl mb-4 md:mb-6'></div>
                   <div className='h-8 md:h-10 bg-slate-100 rounded-lg w-1/2 mb-2'></div>
                   <div className='h-3 md:h-4 bg-slate-100 rounded-lg w-3/4'></div>
@@ -48,7 +61,10 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               </div>
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className='p-6 md:p-8 bg-white rounded-[2rem] border border-slate-200 flex flex-col'>
+                  <div
+                    key={i}
+                    className='p-6 md:p-8 bg-white rounded-[2rem] border border-slate-200 flex flex-col'
+                  >
                     <div className='h-4 mb-4 bg-slate-100 rounded-lg w-24'></div>
                     <div className='flex items-baseline gap-2'>
                       <div className='h-10 md:h-12 bg-slate-100 rounded-lg w-16'></div>
@@ -86,7 +102,10 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                 </div>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4'>
                   {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className='p-5 bg-slate-50 rounded-[1.5rem] border border-slate-200 flex items-start justify-between'>
+                    <div
+                      key={i}
+                      className='p-5 bg-slate-50 rounded-[1.5rem] border border-slate-200 flex items-start justify-between'
+                    >
                       <div className='flex-1 mr-4 space-y-3'>
                         <div className='h-3 bg-slate-100 rounded w-16'></div>
                         <div className='h-4 bg-slate-100 rounded w-full'></div>
@@ -107,35 +126,35 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
             <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-16'>
               <StatCard
                 icon={FaUsers}
-                label="Total Alumni"
-                value={stats?.totalAlumni || 0}
-                color="text-blue-600"
-                bgColor="bg-blue-600/10"
-                delay={0.05}
-              />
-              <StatCard
-                icon={FaBriefcase}
-                label="Alumni Bekerja"
-                value={stats?.workingAlumni || 0}
-                color="text-emerald-600"
-                bgColor="bg-emerald-500/10"
+                label='Total Siswa'
+                value={stats?.totalStudents || 0}
+                color='text-emerald-600'
+                bgColor='bg-emerald-500/10'
                 delay={0.1}
               />
               <StatCard
-                icon={FaGraduationCap}
-                label="Alumni Kuliah"
-                value={stats?.studyingAlumni || 0}
-                color="text-violet-600"
-                bgColor="bg-violet-500/10"
-                delay={0.15}
+                icon={FaUserGraduate}
+                label='Total Alumni'
+                value={stats?.totalAlumni || 0}
+                color='text-blue-600'
+                bgColor='bg-blue-600/10'
+                delay={0.05}
               />
               <StatCard
                 icon={FaUniversity}
-                label="Kampus Terdaftar"
+                label='Kampus Terdaftar'
                 value={stats?.totalConnectedUniversities || 0}
-                color="text-amber-600"
-                bgColor="bg-amber-500/10"
+                color='text-amber-600'
+                bgColor='bg-amber-500/10'
                 delay={0.2}
+              />
+              <StatCard
+                icon={FaBookOpen}
+                label='Jurusan Terdaftar'
+                value={stats?.totalMajors || 0}
+                color='text-violet-600'
+                bgColor='bg-violet-500/10'
+                delay={0.15}
               />
             </div>
 
@@ -145,15 +164,34 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                   Distribusi Perguruan Tinggi
                 </h4>
                 <p className='text-sm md:text-base text-slate-500 mt-2 font-medium'>
-                  Persebaran alumni SMANTA berdasarkan tipe institusi pendidikan tinggi.
+                  Persebaran alumni SMANTA berdasarkan tipe institusi pendidikan
+                  tinggi.
                 </p>
               </div>
 
               <div className='grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8'>
                 {[
-                  { label: 'PTN (Negeri)', val: stats?.ptnCount, color: 'text-blue-600', bg: 'bg-blue-50/50', border: 'border-blue-100' },
-                  { label: 'PTS (Swasta)', val: stats?.ptsCount, color: 'text-indigo-600', bg: 'bg-indigo-50/50', border: 'border-indigo-100' },
-                  { label: 'Kedinasan', val: stats?.kedinasanCount, color: 'text-amber-600', bg: 'bg-amber-50/50', border: 'border-amber-100' },
+                  {
+                    label: 'PTN (Negeri)',
+                    val: stats?.ptnCount,
+                    color: 'text-blue-600',
+                    bg: 'bg-blue-50/50',
+                    border: 'border-blue-100',
+                  },
+                  {
+                    label: 'PTS (Swasta)',
+                    val: stats?.ptsCount,
+                    color: 'text-indigo-600',
+                    bg: 'bg-indigo-50/50',
+                    border: 'border-indigo-100',
+                  },
+                  {
+                    label: 'Kedinasan',
+                    val: stats?.kedinasanCount,
+                    color: 'text-amber-600',
+                    bg: 'bg-amber-50/50',
+                    border: 'border-amber-100',
+                  },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -167,7 +205,9 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                       {item.label}
                     </span>
                     <div className='flex items-baseline gap-2'>
-                      <span className={`text-3xl md:text-5xl font-bold ${item.color}`}>
+                      <span
+                        className={`text-3xl md:text-5xl font-bold ${item.color}`}
+                      >
                         {item.val || 0}
                       </span>
                       <span className='text-xs font-bold text-slate-500'>
@@ -210,7 +250,10 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                         <div
                           className='bg-gradient-to-r from-blue-600 to-indigo-500 h-full rounded-full transition-all duration-1000 ease-out'
                           style={{
-                            width: (stats?.totalAlumni || 0) > 0 ? `${(uni.count / stats!.totalAlumni) * 100 * 2}%` : '0%',
+                            width:
+                              (stats?.totalAlumni || 0) > 0
+                                ? `${(uni.count / stats!.totalAlumni) * 100 * 2}%`
+                                : '0%',
                           }}
                         ></div>
                       </div>
@@ -253,14 +296,19 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                           </h6>
 
                           <div className='flex flex-col gap-1.5'>
-                            {major.universities.slice(0, 3).map((uni: string, i: number) => (
-                              <div key={i} className='flex items-center gap-1.5 min-w-0'>
-                                <div className='w-1.5 h-1.5 rounded-full bg-blue-500/50 shrink-0 shadow-sm'></div>
-                                <span className='text-[10px] md:text-[11px] font-semibold text-slate-500 truncate leading-none'>
-                                  {uni}
-                                </span>
-                              </div>
-                            ))}
+                            {major.universities
+                              .slice(0, 3)
+                              .map((uni: string, i: number) => (
+                                <div
+                                  key={i}
+                                  className='flex items-center gap-1.5 min-w-0'
+                                >
+                                  <div className='w-1.5 h-1.5 rounded-full bg-blue-500/50 shrink-0 shadow-sm'></div>
+                                  <span className='text-[10px] md:text-[11px] font-semibold text-slate-500 truncate leading-none'>
+                                    {uni}
+                                  </span>
+                                </div>
+                              ))}
                             {major.universities.length > 3 && (
                               <span className='text-[9px] md:text-[10px] font-bold text-indigo-500/50 ml-3.5 italic'>
                                 + {major.universities.length - 3} PT Lainnya

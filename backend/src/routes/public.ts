@@ -29,6 +29,12 @@ router.get('/stats', async (req: Request, res: Response) => {
         }) || [];
         const totalConnectedUniversities = allUniversities.length;
 
+        const allMajors = await User.distinct('university.major', {
+            role: 'alumni',
+            'university.major': { $exists: true, $nin: [null, ''] }
+        }) || [];
+        const totalMajors = allMajors.length;
+
         const universityStats = await User.aggregate([
             {
                 $match: {
@@ -74,6 +80,7 @@ router.get('/stats', async (req: Request, res: Response) => {
             ptsCount,
             kedinasanCount,
             totalConnectedUniversities,
+            totalMajors,
             totalVisits,
             topUniversities: universityStats,
             topMajors: majorStats

@@ -37,6 +37,8 @@ export interface MajorStats {
 
 export interface LandingPageStats {
   totalAlumni: number;
+  totalStudents: number;
+  totalMajors: number;
   workingAlumni: number;
   studyingAlumni: number;
   totalConnectedUniversities: number;

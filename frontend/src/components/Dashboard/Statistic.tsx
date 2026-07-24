@@ -1,9 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import {
   FaUsers,
-  FaBriefcase,
-  FaGraduationCap,
-  FaUniversity,
   FaUserGraduate,
   FaCrown,
   FaUserTimes,
