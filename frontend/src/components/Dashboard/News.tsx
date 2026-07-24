@@ -42,13 +42,13 @@ const News = ({ data }: NewsProps) => {
     <div className='card flex flex-col h-full overflow-hidden group'>
       {/* Header */}
       <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-lg md:text-xl flex items-center gap-3 font-black text-[color:var(--text-primary)]'>
+        <h2 className='text-lg md:text-xl flex items-center gap-3 font-bold text-[color:var(--text-primary)]'>
           <div className='p-2 bg-amber-500/10 rounded-lg group-hover:rotate-12 transition-transform duration-300'>
             <FaNewspaper className='text-amber-500' />
           </div>
-          <span>Warta SMANTA</span>
+          <span>Informasi SMANTA</span>
         </h2>
-        <div className='flex items-center gap-1 text-[9px] font-black text-amber-500 uppercase tracking-widest bg-amber-500/5 px-2 py-1 rounded-md'>
+        <div className='flex items-center gap-1 text-[9px] font-bold text-amber-500 uppercase tracking-widest bg-amber-500/5 px-2 py-1 rounded-md'>
           <FaClock className='animate-pulse' />
           <span>Terupdate</span>
         </div>
@@ -73,16 +73,16 @@ const News = ({ data }: NewsProps) => {
                   className='relative cursor-pointer group/item overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-600 via-blue-600 to-indigo-700 p-6 shadow-xl shadow-blue-500/20 mb-2'
                 >
                   <div className='relative z-10'>
-                    <span className='inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-md text-[9px] font-black text-white uppercase tracking-widest mb-3 border border-white/20'>
+                    <span className='inline-block px-2 py-0.5 bg-white/20 backdrop-blur-md rounded-md text-[9px] font-bold text-white uppercase tracking-widest mb-3 border border-white/20'>
                       Sorotan Utama
                     </span>
-                    <h3 className='text-sm md:text-base font-black text-white mb-2 leading-tight line-clamp-2 decoration-white/30 group-hover/item:underline'>
+                    <h3 className='text-sm md:text-base font-bold text-white mb-2 leading-tight line-clamp-2 decoration-white/30 group-hover/item:underline'>
                       {newsItem.title}
                     </h3>
                     <p className='text-[10px] md:text-xs text-white/80 line-clamp-2 mb-4 leading-relaxed font-medium'>
                       {stripHtml(newsItem.content || '')}
                     </p>
-                    <div className='flex items-center gap-4 text-[9px] font-black text-white/60'>
+                    <div className='flex items-center gap-4 text-[9px] font-bold text-white/60'>
                       <span className='flex items-center gap-1'><FaUserEdit className='text-white/40' /> {newsItem.author?.username || 'Admin'}</span>
                       <span className='flex items-center gap-1'><FaCalendarAlt className='text-white/40' /> {date}</span>
                     </div>
@@ -103,11 +103,11 @@ const News = ({ data }: NewsProps) => {
                 className='flex gap-4 cursor-pointer py-3.5 border-b border-[color:var(--border-color)] last:border-0 group/item'
               >
                 <div className='w-12 h-12 rounded-xl bg-[color:var(--bg-tertiary)] flex flex-col items-center justify-center shrink-0 border border-[color:var(--border-color)] group-hover/item:bg-blue-500/10 group-hover/item:border-blue-500/20 transition-all'>
-                  <span className='text-[10px] font-black text-text-tertiary group-hover/item:text-blue-500 uppercase'>{new Date(newsItem.createdAt).getDate()}</span>
-                  <span className='text-[8px] font-black text-text-tertiary uppercase opacity-50'>{new Date(newsItem.createdAt).toLocaleDateString('id-ID', { month: 'short' })}</span>
+                  <span className='text-[10px] font-bold text-text-tertiary group-hover/item:text-blue-500 uppercase'>{new Date(newsItem.createdAt).getDate()}</span>
+                  <span className='text-[8px] font-bold text-text-tertiary uppercase opacity-50'>{new Date(newsItem.createdAt).toLocaleDateString('id-ID', { month: 'short' })}</span>
                 </div>
                 <div className='min-w-0 flex-1'>
-                  <h3 className='text-xs font-black text-text-primary mb-1 line-clamp-2 leading-tight group-hover/item:text-blue-500 transition-colors'>
+                  <h3 className='text-xs font-bold text-text-primary mb-1 line-clamp-2 leading-tight group-hover/item:text-blue-500 transition-colors'>
                     {newsItem.title}
                   </h3>
                   <div className='flex text-xs items-center gap-2 text-[9px] font-bold text-text-tertiary'>
@@ -123,7 +123,7 @@ const News = ({ data }: NewsProps) => {
           <div className='mt-4'>
             <button
               onClick={() => navigate(getAllPath())}
-              className='w-full py-3 px-4 rounded-xl text-[10px] font-black text-text-tertiary hover:text-blue-500 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all flex items-center justify-center gap-2 uppercase tracking-widest'
+              className='w-full py-3 px-4 rounded-xl text-[10px] font-bold text-text-tertiary hover:text-blue-500 hover:border-blue-500/50 hover:bg-blue-500/5 transition-all flex items-center justify-center gap-2 uppercase tracking-widest'
             >
               Jelajahi Semua Arsip Warta <FaChevronRight size={10} />
             </button>

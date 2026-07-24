@@ -75,13 +75,13 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
           {hasData ? (
             <>
               <div className='absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-10'>
-                <span className='text-[10px] font-black text-text-tertiary uppercase tracking-widest'>
+                <span className='text-[10px] font-bold text-text-tertiary uppercase tracking-widest'>
                   TOTAL
                 </span>
-                <span className='text-3xl font-black text-text-primary -mt-1'>
+                <span className='text-3xl font-bold text-text-primary -mt-1'>
                   {totalValue}
                 </span>
-                <span className='text-[10px] font-black text-text-tertiary uppercase tracking-wider'>
+                <span className='text-[10px] font-bold text-text-tertiary uppercase tracking-wider'>
                   Alumni
                 </span>
               </div>
@@ -112,10 +112,10 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                         const { name, value } = payload[0];
                         return (
                           <div className='bg-white dark:bg-gray-900 px-4 py-3 rounded-2xl shadow-2xl border border-blue-500/30 animate-in zoom-in-95 duration-300'>
-                            <p className='text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-1'>
+                            <p className='text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1'>
                               {name}
                             </p>
-                            <p className='text-sm font-black text-blue-500 text-center'>
+                            <p className='text-sm font-bold text-blue-500 text-center'>
                               {value} Alumni
                             </p>
                           </div>
@@ -139,7 +139,7 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
 
         {/* Details Section */}
         <div className='lg:col-span-3 flex flex-col justify-center gap-4'>
-          <h3 className='text-xs font-black text-text-tertiary uppercase tracking-[0.2em] mb-1 px-1'>
+          <h3 className='text-xs font-bold text-text-tertiary uppercase tracking-[0.2em] mb-1 px-1'>
             Rincian Jalur & Kategori
           </h3>
           <div className='space-y-4'>
@@ -173,14 +173,14 @@ const PerguruanTinggi = ({ data }: PerguruanTinggiProps) => {
                       </span>
                     </div>
                     <div className='flex items-center gap-3'>
-                      <span className='text-sm font-black text-text-primary'>
+                      <span className='text-sm font-bold text-text-primary'>
                         {item.value}{' '}
                         <span className='text-[10px] font-bold text-text-tertiary uppercase'>
                           Alumni
                         </span>
                       </span>
                       <span
-                        className={`px-2 py-1 rounded-lg text-xs font-black ${config.bgColor} ${config.color}`}
+                        className={`px-2 py-1 rounded-lg text-xs font-bold ${config.bgColor} ${config.color}`}
                       >
                         {percentage}%
                       </span>

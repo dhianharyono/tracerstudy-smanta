@@ -463,22 +463,22 @@ const Layout = () => {
     }
 
     if (user.role === 'student') {
-      if (isNameIncomplete(user)) {
-        return <RestrictedAccess type='name_incomplete' role='student' />;
-      }
       if (!isStudentProfileComplete(user)) {
         return <RestrictedAccess type='profile_incomplete' role='student' />;
+      }
+      if (isNameIncomplete(user)) {
+        return <RestrictedAccess type='name_incomplete' role='student' />;
       }
     }
 
     if (user.role === 'alumni') {
       if (isQuestionnairePage) return null;
 
-      if (isNameIncomplete(user)) {
-        return <RestrictedAccess type='name_incomplete' role='alumni' />;
-      }
       if (!user.questionnaireCompleted) {
         return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+      }
+      if (isNameIncomplete(user)) {
+        return <RestrictedAccess type='name_incomplete' role='alumni' />;
       }
       if (isUniversityIncomplete(user)) {
         return <RestrictedAccess type='university_incomplete' role='alumni' />;

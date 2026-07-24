@@ -140,12 +140,12 @@ const StudentDashboard = () => {
     return <RestrictedAccess type='hidden_user' role='student' />;
   }
 
-  if (user && isNameIncomplete(user.profile || user)) {
-    return <RestrictedAccess type='name_incomplete' role='student' />;
-  }
-
   if (!isStudentProfileComplete(user)) {
     return <RestrictedAccess type='profile_incomplete' role='student' />;
+  }
+
+  if (user && isNameIncomplete(user.profile || user)) {
+    return <RestrictedAccess type='name_incomplete' role='student' />;
   }
 
   return (

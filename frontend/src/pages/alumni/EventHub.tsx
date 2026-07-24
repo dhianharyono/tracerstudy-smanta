@@ -257,8 +257,7 @@ const AlumniEventHub = () => {
     );
   }
 
-  const hasUniversityData = !!(user?.university?.name);
-  if (user?.questionnaireCompleted === false && !hasUniversityData) {
+  if (!user?.questionnaireCompleted) {
     return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
   }
 

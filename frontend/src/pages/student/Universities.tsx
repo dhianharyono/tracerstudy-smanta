@@ -103,11 +103,11 @@ const UniversityDetailModal = ({
               </div>
               <div>
                 <div className='flex items-center gap-2 mb-1'>
-                  <span className='px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-black text-white uppercase tracking-wider backdrop-blur-md border border-white/20'>
+                  <span className='px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-bold text-white uppercase tracking-wider backdrop-blur-md border border-white/20'>
                     {university._id.type || 'Swasta'}
                   </span>
                 </div>
-                <h2 className='text-xl md:text-2xl font-black text-white leading-tight'>
+                <h2 className='text-xl md:text-2xl font-bold text-white leading-tight'>
                   {university._id.name}
                 </h2>
               </div>
@@ -123,10 +123,10 @@ const UniversityDetailModal = ({
                     className={`p-6 rounded-3xl ${brandBg} border ${brandBorder} flex items-center justify-between`}
                   >
                     <div>
-                      <p className='text-[10px] font-black text-text-tertiary uppercase tracking-widest mb-1'>
+                      <p className='text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1'>
                         Jumlah Alumni
                       </p>
-                      <p className={`text-3xl font-black ${brandColor}`}>
+                      <p className={`text-3xl font-bold ${brandColor}`}>
                         {university.count}
                       </p>
                     </div>
@@ -139,7 +139,7 @@ const UniversityDetailModal = ({
                 </div>
 
                 <div>
-                  <h3 className='text-xs font-black text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                  <h3 className='text-xs font-bold text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
                     <FaBook className={brandColor} /> Jurusan Terpopuler
                   </h3>
                   <div className='space-y-2'>
@@ -152,7 +152,7 @@ const UniversityDetailModal = ({
                           {major}
                         </span>
                         <span
-                          className={`text-[10px] font-black ${brandColor} whitespace-nowrap ${brandBg} px-2 py-0.5 rounded-lg`}
+                          className={`text-[10px] font-bold ${brandColor} whitespace-nowrap ${brandBg} px-2 py-0.5 rounded-lg`}
                         >
                           {count} Siswa
                         </span>
@@ -164,7 +164,7 @@ const UniversityDetailModal = ({
 
               {/* Right List */}
               <div>
-                <h3 className='text-xs font-black text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                <h3 className='text-xs font-bold text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
                   <FaGraduationCap className={brandColor} /> Alumni Terbaru
                 </h3>
                 <div className='space-y-3'>
@@ -174,19 +174,19 @@ const UniversityDetailModal = ({
                       className={`flex items-center gap-3 p-3 rounded-2xl border border-slate-200/60 bg-slate-50/50 hover:${brandBorder} transition-colors`}
                     >
                       <div
-                        className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white font-black text-xs shadow-lg`}
+                        className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white font-bold text-xs shadow-lg`}
                       >
                         {alum.name.charAt(0)}
                       </div>
                       <div className='min-w-0'>
-                        <p className='text-sm font-black text-text-primary truncate'>
+                        <p className='text-sm font-bold text-text-primary truncate'>
                           {alum.name}
                         </p>
                         <p className='text-[10px] font-bold text-text-tertiary truncate'>
                           {alum.major}
                         </p>
                         <p
-                          className={`text-[9px] font-black ${brandColor} uppercase mt-1`}
+                          className={`text-[9px] font-bold ${brandColor} uppercase mt-1`}
                         >
                           Angkatan {alum.graduationYear}
                         </p>
@@ -201,7 +201,7 @@ const UniversityDetailModal = ({
           <div className='p-6 bg-slate-50/50 border-t border-slate-200/60'>
             <button
               onClick={() => onViewAll(university._id.name)}
-              className={`w-full py-4 ${buttonBg} text-white rounded-2xl font-black shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]`}
+              className={`w-full py-4 ${buttonBg} text-white rounded-2xl font-bold shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]`}
             >
               Lihat Informasi Selengkapnya <FaArrowRight />
             </button>
@@ -279,8 +279,7 @@ const StudentUniversities = () => {
   if (user?.role === 'admin' || user?.role === 'school') {
     // Admin and school monitoring profiles do not need completeness verification
   } else if (user?.role === 'alumni') {
-    const hasUniversityData = !!user?.university?.name;
-    if (user?.questionnaireCompleted === false && !hasUniversityData) {
+    if (!user?.questionnaireCompleted) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
     }
     if (isNameIncomplete(user?.profile)) {
@@ -348,6 +347,47 @@ const StudentUniversities = () => {
         </div>
       </div>
 
+      {topUniversity && (
+        <Card className='bg-gradient-to-r from-amber-500/25 to-transparent border-l-4 border-l-amber-500 mb-8'>
+          <div className='flex items-center gap-6'>
+            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+              <FaTrophy size={28} />
+            </div>
+            <div className='flex-1 min-w-0'>
+              <div className='flex items-center gap-2 mb-1'>
+                <FaTrophy className='text-amber-500 sm:hidden' />
+                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
+                  Kampus Terfavorit Alumni
+                </p>
+              </div>
+              <h3
+                className='text-xl md:text-2xl font-bold text-[color:var(--text-primary)] truncate'
+                title={topUniversity._id.name}
+              >
+                {topUniversity._id.name}
+              </h3>
+              <div className='flex items-center gap-3 mt-2'>
+                <span
+                  className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
+                           ${topUniversity._id.type === 'negeri'
+                      ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                      : topUniversity._id.type === 'kedinasan'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                        : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                    }`}
+                >
+                  {topUniversity._id.type || 'Swasta'}
+                </span>
+                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
+                  <span className='text-amber-500'>{topUniversity.count}</span>{' '}
+                  Alumni Bergabung
+                </span>
+              </div>
+            </div>
+          </div>
+        </Card>
+      )}
+
       {/* Stats Cards */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
         <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
@@ -359,7 +399,7 @@ const StudentUniversities = () => {
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                 Total PT Terdata
               </p>
-              <h3 className='text-2xl font-black !text-white'>
+              <h3 className='text-2xl font-bold !text-white'>
                 {universities.length}
               </h3>
             </div>
@@ -375,7 +415,7 @@ const StudentUniversities = () => {
               <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
                 PT Negeri (PTN)
               </p>
-              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {universities.filter((u) => u._id.type === 'negeri').length}
               </h3>
             </div>
@@ -391,7 +431,7 @@ const StudentUniversities = () => {
               <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
                 PT Swasta (PTS)
               </p>
-              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {
                   universities.filter(
                     (u) => !u._id.type || u._id.type === 'swasta',
@@ -411,55 +451,13 @@ const StudentUniversities = () => {
               <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
                 Kedinasan
               </p>
-              <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {universities.filter((u) => u._id.type === 'kedinasan').length}
               </h3>
             </div>
           </div>
         </Card>
       </div>
-
-      {topUniversity && (
-        <Card className='bg-gradient-to-r from-amber-500/5 to-transparent border-l-4 border-l-amber-500 mb-8'>
-          <div className='flex items-center gap-6'>
-            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
-              <FaTrophy size={28} />
-            </div>
-            <div className='flex-1 min-w-0'>
-              <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-amber-500 sm:hidden' />
-                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
-                  Kampus Terfavorit Alumni
-                </p>
-              </div>
-              <h3
-                className='text-xl md:text-2xl font-black text-[color:var(--text-primary)] truncate'
-                title={topUniversity._id.name}
-              >
-                {topUniversity._id.name}
-              </h3>
-              <div className='flex items-center gap-3 mt-2'>
-                <span
-                  className={`px-2 py-0.5 rounded text-[10px] font-black uppercase border
-                           ${
-                             topUniversity._id.type === 'negeri'
-                               ? 'bg-amber-50 text-amber-700 border-amber-200/50'
-                               : topUniversity._id.type === 'kedinasan'
-                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                                 : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                           }`}
-                >
-                  {topUniversity._id.type || 'Swasta'}
-                </span>
-                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
-                  <span className='text-amber-500'>{topUniversity.count}</span>{' '}
-                  Alumni Bergabung
-                </span>
-              </div>
-            </div>
-          </div>
-        </Card>
-      )}
 
       {/* Search and List */}
       <Card className='min-h-[500px]'>
@@ -491,11 +489,10 @@ const StudentUniversities = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
-                  filterType === type.id
-                    ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
-                    : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
-                }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${filterType === type.id
+                  ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
+                  : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
+                  }`}
               >
                 {type.label}
               </button>
@@ -534,13 +531,12 @@ const StudentUniversities = () => {
                       </h4>
                       <span
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
-                                    ${
-                                      univ._id.type === 'negeri'
-                                        ? 'bg-amber-50 text-amber-700 border-amber-200/50'
-                                        : univ._id.type === 'kedinasan'
-                                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                                          : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                                    }`}
+                                    ${univ._id.type === 'negeri'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                            : univ._id.type === 'kedinasan'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                              : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                          }`}
                       >
                         {univ._id.type || 'Swasta'}
                       </span>
@@ -550,7 +546,7 @@ const StudentUniversities = () => {
 
                 <div className='pt-4 border-t border-[color:var(--border-color)] flex justify-between items-end'>
                   <div>
-                    <span className='text-2xl font-black text-[var(--primary)] group-hover:scale-110 transition-transform inline-block'>
+                    <span className='text-2xl font-bold text-[var(--primary)] group-hover:scale-110 transition-transform inline-block'>
                       {univ.count}
                     </span>
                     <span className='text-xs font-bold text-[color:var(--text-secondary)] uppercase tracking-wider ml-2'>

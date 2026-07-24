@@ -111,8 +111,7 @@ const ManageMyJobs = () => {
 
   // Alumni Restrictions
   if (user?.role === 'alumni') {
-    const hasUniversityData = !!user?.university?.name;
-    if (user.questionnaireCompleted === false && !hasUniversityData) {
+    if (!user.questionnaireCompleted) {
       return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
     }
     if (isUniversityIncomplete(user)) {

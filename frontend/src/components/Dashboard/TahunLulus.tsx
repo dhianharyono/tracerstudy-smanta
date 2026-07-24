@@ -121,12 +121,12 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
       {hasData && (
         <div className='mt-8 pt-8 border-t border-[color:var(--border-color)] flex justify-center gap-12'>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-black mb-2'>Lulusan Terbaru</p>
-            <p className='text-xl font-black text-indigo-500'>{sortedData[sortedData.length - 1]._id}</p>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>Lulusan Terbaru</p>
+            <p className='text-xl font-bold text-indigo-500'>{sortedData[sortedData.length - 1]._id}</p>
           </div>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-black mb-2'>Total Alumni</p>
-            <p className='text-xl font-black text-indigo-500'>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>Total Alumni</p>
+            <p className='text-xl font-bold text-indigo-500'>
               {sortedData.reduce((sum, item) => sum + item.count, 0)}
             </p>
           </div>

@@ -100,7 +100,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
                     </div>
                     <span>{item.label}</span>
                   </div>
-                  <span className='font-black text-text-primary text-base'>
+                  <span className='font-bold text-text-primary text-base'>
                     {item.value.toLocaleString()}
                   </span>
                 </div>
@@ -144,7 +144,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
                       <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
                         Angkatan
                       </p>
-                      <p className='text-base font-black text-text-primary'>
+                      <p className='text-base font-bold text-text-primary'>
                         {item._id}
                       </p>
                     </div>
@@ -153,7 +153,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
                     <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
                       Jumlah
                     </p>
-                    <p className='text-lg font-black text-indigo-500'>
+                    <p className='text-lg font-bold text-indigo-500'>
                       {item.count}{' '}
                       <span className='text-xs font-bold text-text-tertiary'>
                         Siswa
@@ -169,18 +169,18 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
 
       <div className='mt-8 pt-6 border-t border-[color:var(--border-color)] grid grid-cols-2 gap-8'>
         <div>
-          <p className='text-xs font-black text-text-tertiary uppercase tracking-widest mb-1'>
+          <p className='text-xs font-bold text-text-tertiary uppercase tracking-widest mb-1'>
             Total Alumni
           </p>
-          <p className='text-xl font-black text-blue-500'>
+          <p className='text-xl font-bold text-blue-500'>
             {totalAlumni.toLocaleString()}
           </p>
         </div>
         <div className='text-right'>
-          <p className='text-xs font-black text-text-tertiary uppercase tracking-widest mb-1'>
+          <p className='text-xs font-bold text-text-tertiary uppercase tracking-widest mb-1'>
             Total Siswa
           </p>
-          <p className='text-xl font-black text-indigo-500'>
+          <p className='text-xl font-bold text-indigo-500'>
             {totalStudents.toLocaleString()}
           </p>
         </div>

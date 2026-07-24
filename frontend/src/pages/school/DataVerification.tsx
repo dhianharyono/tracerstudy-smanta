@@ -271,7 +271,7 @@ const SchoolDataVerification = () => {
                     <p className='text-xs font-bold text-green-600 uppercase mb-1'>
                       Cocok & Terverifikasi
                     </p>
-                    <p className='text-2xl font-black text-green-700'>
+                    <p className='text-2xl font-bold text-green-700'>
                       {results.summary.verifiedCount}
                     </p>
                   </div>
@@ -279,7 +279,7 @@ const SchoolDataVerification = () => {
                     <p className='text-xs font-bold text-amber-600 uppercase mb-1'>
                       Data Berbeda (Mismatch)
                     </p>
-                    <p className='text-2xl font-black text-amber-700'>
+                    <p className='text-2xl font-bold text-amber-700'>
                       {results.summary.mismatchCount}
                     </p>
                   </div>
@@ -287,7 +287,7 @@ const SchoolDataVerification = () => {
                     <p className='text-xs font-bold text-red-600 uppercase mb-1'>
                       Belum Terdaftar (Missing)
                     </p>
-                    <p className='text-2xl font-black text-red-700'>
+                    <p className='text-2xl font-bold text-red-700'>
                       {results.summary.notFoundCount}
                     </p>
                   </div>
@@ -429,11 +429,11 @@ const SchoolDataVerification = () => {
                 <div className='bg-[color:var(--bg-tertiary)] p-4 rounded-xl border border-[color:var(--border-color)]'>
                   <div className='flex justify-between items-center mb-2'>
                     <span className='text-xs font-semibold text-[color:var(--text-secondary)]'>Terverifikasi Sekolah</span>
-                    <span className='text-sm font-black text-emerald-600 dark:text-emerald-400'>{stats?.verifiedAlumni || 0} Alumni</span>
+                    <span className='text-sm font-bold text-emerald-600 dark:text-emerald-400'>{stats?.verifiedAlumni || 0} Alumni</span>
                   </div>
                   <div className='flex justify-between items-center'>
                     <span className='text-xs font-semibold text-[color:var(--text-secondary)]'>Belum Terverifikasi</span>
-                    <span className='text-sm font-black text-amber-500'>{(stats?.totalAlumni - stats?.verifiedAlumni) || 0} Alumni</span>
+                    <span className='text-sm font-bold text-amber-500'>{(stats?.totalAlumni - stats?.verifiedAlumni) || 0} Alumni</span>
                   </div>
                 </div>
               </div>

@@ -65,7 +65,7 @@ const LandingPage = () => {
             />
             <div className='block'>
               <div
-                className={`text-xs md:text-lg font-black leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
+                className={`text-xs md:text-lg font-bold leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
                   }`}
               >
                 TRACER STUDY
@@ -160,7 +160,7 @@ const LandingPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className='text-2xl md:text-5xl font-black text-white leading-tight tracking-tight'
+            className='text-2xl md:text-5xl font-bold text-white leading-tight tracking-tight'
           >
             Siap Menjadi Bagian Dari Perubahan ?
           </motion.div>
@@ -189,7 +189,7 @@ const LandingPage = () => {
                       ? '/student'
                       : '/alumni'
                 }
-                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-black text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
               >
                 Kembali ke Dashboard
               </Link>
@@ -197,13 +197,13 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/register'
-                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-black text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
                 >
                   Kontribusi Sekarang
                 </Link>
                 <Link
                   to='/login'
-                  className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-black text-xs md:text-base hover:bg-blue-800/60 hover:scale-105 active:scale-95 transition-all duration-200'
+                  className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base hover:bg-blue-800/60 hover:scale-105 active:scale-95 transition-all duration-200'
                 >
                   Masuk Kembali
                 </Link>
@@ -229,7 +229,7 @@ const LandingPage = () => {
                   <h5 className='text-base font-extrabold text-slate-900 tracking-tight leading-none'>
                     TRACER STUDY SMANTA
                   </h5>
-                  <p className='text-[10px] text-slate-400 font-black tracking-wider mt-1.5 uppercase'>
+                  <p className='text-[10px] text-slate-400 font-bold tracking-wider mt-1.5 uppercase'>
                     SMAN 1 Tawangsari
                   </p>
                 </div>
@@ -244,7 +244,7 @@ const LandingPage = () => {
 
             {/* Developed By Column */}
             <div className='md:col-span-3 text-center md:text-left space-y-3'>
-              <h6 className='text-xs font-black text-slate-400 uppercase tracking-widest mb-4'>
+              <h6 className='text-xs font-bold text-slate-400 uppercase tracking-widest mb-4'>
                 Pengembang
               </h6>
               <p className='text-sm text-slate-500 font-medium leading-relaxed'>

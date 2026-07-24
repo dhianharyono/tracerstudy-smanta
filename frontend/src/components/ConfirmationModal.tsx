@@ -94,7 +94,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     : 'relative w-full max-w-sm md:max-w-md bg-[color:var(--bg-card)] rounded-2xl shadow-2xl border border-[color:var(--border-color)] overflow-hidden animate-scale-up';
 
   const titleClass = theme === 'light'
-    ? 'mb-2 text-lg md:text-xl font-black text-slate-900 tracking-tight'
+    ? 'mb-2 text-lg md:text-xl font-bold text-slate-900 tracking-tight'
     : 'mb-2 text-lg md:text-xl font-bold text-[color:var(--text-primary)]';
 
   const messageClass = theme === 'light'

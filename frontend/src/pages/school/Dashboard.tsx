@@ -197,7 +197,7 @@ const SchoolDashboard = () => {
               <div className='w-10 h-10 mb-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl flex items-center justify-center'>
                 <FaUsers size={20} />
               </div>
-              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.totalAlumni || 0}
               </h3>
               <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>
@@ -213,7 +213,7 @@ const SchoolDashboard = () => {
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
-                <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+                <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                   {stats?.completedAlumni || 0}
                 </h3>
                 {stats?.totalAlumni > 0 && (
@@ -239,7 +239,7 @@ const SchoolDashboard = () => {
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
-                <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+                <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                   {stats?.incompleteAlumni || 0}
                 </h3>
                 {stats?.totalAlumni > 0 && (
@@ -274,7 +274,7 @@ const SchoolDashboard = () => {
               <div className='w-10 h-10 mb-3 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center'>
                 <FaBriefcase size={20} />
               </div>
-              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.workingAlumni || 0}
               </h3>
               <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>
@@ -289,7 +289,7 @@ const SchoolDashboard = () => {
               <div className='w-10 h-10 mb-3 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center'>
                 <FaUniversity size={20} />
               </div>
-              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.studyingAlumni || 0}
               </h3>
               <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>
@@ -313,7 +313,7 @@ const SchoolDashboard = () => {
               <div className='w-10 h-10 mb-3 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center'>
                 <FaGraduationCap size={20} />
               </div>
-              <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+              <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                 {stats?.totalStudents || 0}
               </h3>
               <p className='text-xs font-bold text-[color:var(--text-secondary)] tracking-wide uppercase mt-1'>
@@ -329,7 +329,7 @@ const SchoolDashboard = () => {
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
-                <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+                <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                   {stats?.completedStudents || 0}
                 </h3>
                 {stats?.totalStudents > 0 && (
@@ -355,7 +355,7 @@ const SchoolDashboard = () => {
                 <FaCheckCircle size={20} />
               </div>
               <div className='flex items-baseline gap-2'>
-                <h3 className='text-3xl font-black text-[color:var(--text-primary)]'>
+                <h3 className='text-3xl font-bold text-[color:var(--text-primary)]'>
                   {stats?.incompleteStudents || 0}
                 </h3>
                 {stats?.totalStudents > 0 && (

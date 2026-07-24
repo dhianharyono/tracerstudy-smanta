@@ -18,7 +18,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
           viewport={{ once: true }}
           className='text-center mb-16 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-black text-slate-900 tracking-tight'>
+          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Statistik Tracer Study
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
@@ -141,7 +141,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
 
             <div className='mb-16'>
               <div className='mb-8 text-center md:text-left'>
-                <h4 className='text-2xl md:text-3xl font-black text-slate-900 tracking-tight'>
+                <h4 className='text-2xl md:text-3xl font-bold text-slate-900 tracking-tight'>
                   Distribusi Perguruan Tinggi
                 </h4>
                 <p className='text-sm md:text-base text-slate-500 mt-2 font-medium'>
@@ -163,11 +163,11 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                     transition={{ delay: 0.1 + idx * 0.05 }}
                     className={`flex flex-col p-6 md:p-8 bg-white rounded-[2rem] border ${item.border} ${item.bg} shadow-sm group hover:shadow-md hover:scale-[1.02] transition-all duration-300`}
                   >
-                    <span className='text-xs font-black text-slate-400 uppercase tracking-widest mb-2'>
+                    <span className='text-xs font-bold text-slate-400 uppercase tracking-widest mb-2'>
                       {item.label}
                     </span>
                     <div className='flex items-baseline gap-2'>
-                      <span className={`text-3xl md:text-5xl font-black ${item.color}`}>
+                      <span className={`text-3xl md:text-5xl font-bold ${item.color}`}>
                         {item.val || 0}
                       </span>
                       <span className='text-xs font-bold text-slate-500'>
@@ -188,7 +188,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               {/* Top Colleges panel */}
               <div className='bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
                 <div className='flex items-center justify-between mb-8'>
-                  <h5 className='text-lg md:text-xl font-black text-slate-900 tracking-tight'>
+                  <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Top 10 Perguruan Tinggi
                   </h5>
                   <div className='p-2 bg-blue-50 rounded-full text-blue-600 shadow-inner'>
@@ -222,7 +222,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               {/* Popular Majors panel */}
               <div className='bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
                 <div className='flex items-center justify-between mb-8'>
-                  <h5 className='text-lg md:text-xl font-black text-slate-900 tracking-tight'>
+                  <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Jurusan Populer
                   </h5>
                   <div className='p-2 bg-indigo-50 rounded-full text-indigo-600 shadow-inner'>
@@ -236,19 +236,19 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                       className='relative p-5 bg-slate-50/50 hover:bg-white rounded-[1.5rem] border border-slate-200/80 overflow-hidden group hover:border-blue-500/50 hover:shadow-md transition-all duration-200'
                     >
                       {/* Stylized background watermark for rank */}
-                      <div className='absolute -right-1.5 -bottom-2.5 text-6xl font-black text-slate-100/80 group-hover:text-blue-500/5 transition-colors pointer-events-none'>
+                      <div className='absolute -right-1.5 -bottom-2.5 text-6xl font-bold text-slate-100/80 group-hover:text-blue-500/5 transition-colors pointer-events-none'>
                         #{idx + 1}
                       </div>
 
                       <div className='flex items-start justify-between relative z-10'>
                         <div className='flex flex-col min-w-0 flex-1 mr-3'>
                           <div className='flex items-center gap-2 mb-2'>
-                            <span className='px-2 py-0.5 bg-indigo-50 border border-indigo-100/50 text-indigo-650 text-[8px] md:text-[9px] font-black rounded uppercase tracking-wider'>
+                            <span className='px-2 py-0.5 bg-indigo-50 border border-indigo-100/50 text-indigo-650 text-[8px] md:text-[9px] font-bold rounded uppercase tracking-wider'>
                               Rank #{idx + 1}
                             </span>
                           </div>
 
-                          <h6 className='text-sm md:text-base font-black text-slate-900 mb-3 group-hover:text-blue-600 transition-colors truncate max-w-full leading-tight'>
+                          <h6 className='text-sm md:text-base font-bold text-slate-900 mb-3 group-hover:text-blue-600 transition-colors truncate max-w-full leading-tight'>
                             {major._id}
                           </h6>
 
@@ -270,7 +270,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                         </div>
 
                         <div className='flex flex-col items-center justify-center bg-white px-2.5 py-2 rounded-[1rem] border border-slate-200 shadow-sm shrink-0 min-w-[3.25rem] group-hover:border-blue-500/50 transition-all duration-200'>
-                          <span className='text-base md:text-lg font-black text-slate-800 leading-none'>
+                          <span className='text-base md:text-lg font-bold text-slate-800 leading-none'>
                             {major.count}
                           </span>
                           <span className='text-[7px] font-extrabold text-slate-400 uppercase tracking-widest mt-1'>

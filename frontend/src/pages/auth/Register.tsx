@@ -139,7 +139,7 @@ const Register = () => {
             <div className='flex items-center justify-center mb-3'>
               <img src='/logo.png' alt='Logo' className='h-14 w-14 filter drop-shadow-sm' />
             </div>
-            <div className='text-lg md:text-xl font-black text-slate-900 tracking-tight'>
+            <div className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
               Buat Akun Baru
             </div>
             <p className='mt-1 text-xs text-slate-500 font-bold'>
@@ -167,7 +167,7 @@ const Register = () => {
 
             <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
               <div className='flex flex-col gap-2'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Pilih Peran
                 </label>
                 <div className='grid grid-cols-2 gap-4'>
@@ -218,7 +218,7 @@ const Register = () => {
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Username
                 </label>
                 <div className='relative'>
@@ -238,7 +238,7 @@ const Register = () => {
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Email
                 </label>
                 <div className='relative'>
@@ -258,7 +258,7 @@ const Register = () => {
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Password
                 </label>
                 <div className='relative'>
@@ -308,7 +308,7 @@ const Register = () => {
               </div>
 
               <div className='flex flex-col gap-1.5'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Konfirmasi Password
                 </label>
                 <div className='relative'>
@@ -333,12 +333,12 @@ const Register = () => {
                   </button>
                 </div>
                 {formData.confirmPassword.length > 0 && formData.password !== formData.confirmPassword && (
-                  <p className='text-[10px] font-black text-red-500 mt-1.5 animate-pulse'>
+                  <p className='text-[10px] font-bold text-red-500 mt-1.5 animate-pulse'>
                     Password tidak cocok!
                   </p>
                 )}
                 {formData.confirmPassword.length > 0 && formData.password === formData.confirmPassword && (
-                  <p className='text-[10px] font-black text-green-650 mt-1.5 flex items-center gap-1'>
+                  <p className='text-[10px] font-bold text-green-650 mt-1.5 flex items-center gap-1'>
                     <svg className="w-3.5 h-3.5 text-green-500 shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
                     </svg>
@@ -360,7 +360,7 @@ const Register = () => {
               <button
                 type='submit'
                 disabled={loading}
-                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-black text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-3'
+                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-3'
               >
                 {loading ? (
                   <span className='flex items-center justify-center gap-2'>

@@ -23,7 +23,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
           viewport={{ once: true }}
           className='text-center mb-16 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-black text-slate-900 tracking-tight'>
+          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Apa Kata Alumni & Siswa?
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
@@ -73,14 +73,14 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
                     "
                   </p>
                   <div className='flex items-center gap-3 md:gap-4 mt-auto relative z-10'>
-                    <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-650 flex items-center justify-center text-white font-black text-lg shadow-md'>
+                    <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-650 flex items-center justify-center text-white font-bold text-lg shadow-md'>
                       A
                     </div>
                     <div>
                       <h6 className='text-sm md:text-base font-extrabold text-slate-900'>
                         Anonymous
                       </h6>
-                      <p className='text-[10px] md:text-xs font-black text-indigo-600 uppercase tracking-widest mt-0.5'>
+                      <p className='text-[10px] md:text-xs font-bold text-indigo-600 uppercase tracking-widest mt-0.5'>
                         {item.user?.role === 'student' ? 'Siswa' : item.user?.role === 'school' ? 'Sekolah' : 'Alumni'}
                       </p>
                     </div>

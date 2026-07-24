@@ -59,10 +59,10 @@ const StatCard = ({
 
     <div className='relative z-10 flex items-start justify-between'>
       <div>
-        <p className='text-[10px] font-black uppercase tracking-wider text-[color:var(--text-secondary)] mb-1.5'>
+        <p className='text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-secondary)] mb-1.5'>
           {title}
         </p>
-        <h3 className='text-3xl font-black text-[color:var(--text-primary)] tracking-tight'>
+        <h3 className='text-3xl font-bold text-[color:var(--text-primary)] tracking-tight'>
           {value !== undefined ? value : 0}
         </h3>
         {description && <div className='mt-2.5'>{description}</div>}

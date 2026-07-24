@@ -23,7 +23,7 @@ const MissionSection = () => {
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className='text-xl md:text-3xl font-black text-slate-900 leading-tight tracking-tight'
+                className='text-xl md:text-3xl font-bold text-slate-900 leading-tight tracking-tight'
               >
                 Menavigasi Persimpangan Jalan Siswa <br className='hidden md:block' />
                 <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600'>
@@ -56,13 +56,13 @@ const MissionSection = () => {
                     ].map((item, i) => (
                       <div
                         key={i}
-                        className={`w-10 h-10 rounded-full border-2 border-white ${item.bg} flex items-center justify-center text-[10px] font-black text-white shadow-sm`}
+                        className={`w-10 h-10 rounded-full border-2 border-white ${item.bg} flex items-center justify-center text-[10px] font-bold text-white shadow-sm`}
                       >
                         {item.text}
                       </div>
                     ))}
                   </div>
-                  <span className='text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest'>
+                  <span className='text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest'>
                     Inspirasi & Panduan
                   </span>
                 </div>

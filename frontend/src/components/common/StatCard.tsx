@@ -32,10 +32,10 @@ const StatCard: React.FC<StatCardProps> = ({
       >
         <Icon size={22} className='md:w-[28px] md:h-[28px]' />
       </div>
-      <h4 className='text-3xl md:text-5xl font-black text-slate-900 mb-1 md:mb-2 tracking-tight'>
+      <h4 className='text-3xl md:text-5xl font-bold text-slate-900 mb-1 md:mb-2 tracking-tight'>
         {value || 0}
       </h4>
-      <p className='font-black text-slate-400 uppercase text-[9px] md:text-xs tracking-widest mt-1.5'>
+      <p className='font-bold text-slate-400 uppercase text-[9px] md:text-xs tracking-widest mt-1.5'>
         {label}
       </p>
     </motion.div>

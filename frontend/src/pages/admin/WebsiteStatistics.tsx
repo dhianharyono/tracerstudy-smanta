@@ -175,8 +175,8 @@ const WebsiteStatistics = () => {
             <FaEye size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>PENGUNJUNG LANDING</p>
-            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-bold tracking-wider mb-1'>PENGUNJUNG LANDING</p>
+            <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
               {stats?.landingPageVisits || 0}
             </h3>
             <p className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold'>
@@ -192,7 +192,7 @@ const WebsiteStatistics = () => {
           </div>
           <div>
             <div className='flex items-center gap-1.5 mb-1'>
-              <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider'>
+              <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-bold tracking-wider'>
                 TOTAL KUNJUNGAN
               </p>
               <div className='group/tip relative'>
@@ -203,7 +203,7 @@ const WebsiteStatistics = () => {
                 </div>
               </div>
             </div>
-            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+            <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
               {stats?.visitsByDate?.reduce(
                 (acc: number, curr: any) => acc + curr.count,
                 0,
@@ -221,10 +221,10 @@ const WebsiteStatistics = () => {
             <FaWifi size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-bold tracking-wider mb-1'>
               PENGGUNA ONLINE
             </p>
-            <h3 className='text-2xl font-black text-[color:var(--text-primary)]'>
+            <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
               {stats?.activeUsers || 0}
             </h3>
             <div className='text-[10px] text-[color:var(--text-tertiary)] mt-1 font-bold flex flex-col gap-0.5'>
@@ -244,10 +244,10 @@ const WebsiteStatistics = () => {
             <FaChartLine size={22} />
           </div>
           <div>
-            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-black tracking-wider mb-1'>
+            <p className='text-[10px] text-[color:var(--text-secondary)] uppercase font-bold tracking-wider mb-1'>
               TOP HALAMAN
             </p>
-            <h3 className='text-lg font-black text-[color:var(--text-primary)] truncate max-w-[200px]'>
+            <h3 className='text-lg font-bold text-[color:var(--text-primary)] truncate max-w-[200px]'>
               {stats?.popularPages?.[0]?.path
                 ? renderMenuName('', stats?.popularPages?.[0]?.path)
                 : '-'}

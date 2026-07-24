@@ -1090,7 +1090,7 @@ const AlumniQuestionnaire = () => {
 
             <div className="w-64 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto mb-16"></div>
 
-            <h2 className="text-[5.5rem] font-black text-white mb-4 uppercase tracking-widest text-center w-full mx-auto" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+            <h2 className="text-[5.5rem] font-bold text-white mb-4 uppercase tracking-widest text-center w-full mx-auto" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
               CERTIFICATE
             </h2>
             <h3 className="text-4xl font-light text-blue-200 tracking-[0.4em] mb-20 text-center w-full mx-auto">
@@ -1102,7 +1102,7 @@ const AlumniQuestionnaire = () => {
             </p>
 
             <div className="bg-[#0f172a]/50 px-16 py-10 rounded-[3rem] border border-blue-500/20 mb-16 w-full max-w-[85%] mx-auto flex flex-col items-center justify-center">
-              <p className="text-6xl font-black text-white text-center w-full m-0 p-0 leading-normal flex items-center justify-center">
+              <p className="text-6xl font-bold text-white text-center w-full m-0 p-0 leading-normal flex items-center justify-center">
                 {formData.profile.fullName || 'Alumni SMANTA'}
               </p>
             </div>

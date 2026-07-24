@@ -83,7 +83,7 @@ const Login = () => {
             <div className='flex items-center justify-center mb-3'>
               <img src='/logo.png' alt='Logo' className='h-14 w-14 filter drop-shadow-sm' />
             </div>
-            <div className='text-xl font-black text-slate-900 tracking-tight'>
+            <div className='text-xl font-bold text-slate-900 tracking-tight'>
               Selamat Datang
             </div>
             <p className='mt-1 text-xs text-slate-500 font-bold'>
@@ -111,7 +111,7 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
               <div className='flex flex-col gap-2'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Username
                 </label>
                 <div className='relative'>
@@ -130,7 +130,7 @@ const Login = () => {
               </div>
 
               <div className='flex flex-col gap-2'>
-                <label className='block text-xs font-black uppercase tracking-widest text-slate-400'>
+                <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
                   Password
                 </label>
                 <div className='relative'>
@@ -158,7 +158,7 @@ const Login = () => {
               <button
                 type='submit'
                 disabled={loading}
-                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-black text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-2'
+                className='w-full transform rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70 mt-2'
               >
                 {loading ? (
                   <span className='flex items-center justify-center gap-2'>

@@ -194,7 +194,7 @@ const AlumniRegistrationTrend = () => {
             <p className='text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
               Pendaftar Baru (Periode Ini)
             </p>
-            <p className='text-xl font-black text-blue-600 m-0'>
+            <p className='text-xl font-bold text-blue-600 m-0'>
               {totalNewInPeriod.toLocaleString('id-ID')} <span className='text-xs font-normal text-blue-600/70'>{roleLabel}</span>
             </p>
           </div>
@@ -208,7 +208,7 @@ const AlumniRegistrationTrend = () => {
             <p className='text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
               {viewMode === 'new' ? 'Puncak Registrasi' : 'Total Akumulasi Terdaftar'}
             </p>
-            <p className='text-xl font-black text-indigo-600 m-0'>
+            <p className='text-xl font-bold text-indigo-600 m-0'>
               {viewMode === 'new' ? (
                 <>
                   {peakItem.count.toLocaleString('id-ID')}{' '}

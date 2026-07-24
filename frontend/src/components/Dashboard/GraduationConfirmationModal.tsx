@@ -70,7 +70,7 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
                 <FaTimes />
               </button>
 
-              <h2 className="text-2xl font-black text-[color:var(--text-primary)] mb-3 leading-tight">
+              <h2 className="text-2xl font-bold text-[color:var(--text-primary)] mb-3 leading-tight">
                 Selamat atas Kelulusanmu! 🥳
               </h2>
               <p className="text-sm text-[color:var(--text-secondary)] mb-6 leading-relaxed">
@@ -93,7 +93,7 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
                 <button
                   onClick={handleConfirm}
                   disabled={loading}
-                  className="w-full py-4 px-6 bg-[color:var(--primary)] hover:bg-[color:var(--primary-dark)] text-white font-black rounded-2xl shadow-lg shadow-[var(--primary)]/30 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
+                  className="w-full py-4 px-6 bg-[color:var(--primary)] hover:bg-[color:var(--primary-dark)] text-white font-bold rounded-2xl shadow-lg shadow-[var(--primary)]/30 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
                 >
                   {loading ? 'Memproses...' : (
                     <>

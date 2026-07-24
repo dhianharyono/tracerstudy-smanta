@@ -40,7 +40,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
           {isHidden
             ? 'Akun Anda dibatasi oleh Administrator karena Anda belum melengkapi data diri dengan benar. Anda dapat memperbarui data diri Anda di profil, dan akses menu akan dibuka kembali oleh Administrator setelah disetujui.'
             : isName
-              ? 'Maaf, nama lengkap Anda saat ini tidak valid atau terdeteksi asal-asalan. Anda diwajibkan untuk memperbaiki nama lengkap Anda (minimal 3 karakter dan hanya huruf) di profil untuk membuka akses.'
+              ? 'Maaf, nama lengkap Anda saat ini tidak sesuai dengan format yang ditentukan. Anda diwajibkan untuk memperbaiki nama lengkap Anda di profil untuk membuka akses.'
               : isProfile
                 ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
                 : isUniversity

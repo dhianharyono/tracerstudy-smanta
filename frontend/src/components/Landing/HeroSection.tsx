@@ -89,7 +89,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
             Tracer Study SMANTA
           </div>
 
-          <h1 className='text-4xl sm:text-6xl lg:text-6xl font-black leading-[1.08] tracking-tight text-white'>
+          <h1 className='text-4xl sm:text-6xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white'>
             Membangun <br className='hidden lg:block' />
             <span className='text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-blue-50'>
               Database & Kolaborasi
@@ -106,13 +106,13 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
           <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0 pt-2 h-auto sm:h-14'>
             <Link
               to='/register'
-              className='text-xs md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black shadow-xl shadow-blue-950/20 hover:scale-105 active:scale-95 transition-all duration-200 group'
+              className='text-xs md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold shadow-xl shadow-blue-950/20 hover:scale-105 active:scale-95 transition-all duration-200 group'
             >
               Mulai Kontribusi
             </Link>
             <a
               href='#stats'
-              className='text-xs md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-black hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-200'
+              className='text-xs md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold hover:bg-white/10 hover:scale-105 active:scale-95 transition-all duration-200'
             >
               Lihat Statistik
             </a>
@@ -165,7 +165,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
                 <p className='text-[8px] font-extrabold uppercase tracking-wider text-blue-600'>
                   Total Alumni
                 </p>
-                <p className='text-[10px] font-black text-slate-800'>
+                <p className='text-[10px] font-bold text-slate-800'>
                   +{loading ? '...' : stats?.totalAlumni || 0} Alumni
                 </p>
               </div>
@@ -192,7 +192,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
                 <p className='text-[8px] font-extrabold uppercase tracking-wider text-green-600'>
                   Status Data
                 </p>
-                <p className='text-[10px] font-black text-slate-800'>
+                <p className='text-[10px] font-bold text-slate-800'>
                   100% Terverifikasi
                 </p>
               </div>
@@ -200,7 +200,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
 
             {/* Floating text badge: SMANTA Juara */}
             <div className='absolute top-[16%] right-[0%] z-20 py-1.5 px-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-lg flex items-center gap-1 animate-pulse [animation-duration:4s]'>
-              <span className='text-[9px] font-black tracking-widest uppercase'>
+              <span className='text-[9px] font-bold tracking-widest uppercase'>
                 SMANTA Juara!
               </span>
             </div>

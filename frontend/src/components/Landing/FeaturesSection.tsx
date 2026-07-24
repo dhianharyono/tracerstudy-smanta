@@ -11,7 +11,7 @@ const FeaturesSection = () => {
           viewport={{ once: true }}
           className='text-center mb-20 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-black text-slate-900 tracking-tight'>
+          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Fitur Siswa, Alumni, dan Sekolah
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
@@ -35,7 +35,7 @@ const FeaturesSection = () => {
                 <div className='w-12 h-12 md:w-14 md:h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner group-hover:bg-blue-600 group-hover:text-white transition-all duration-300'>
                   <FaGraduationCap size={24} className='md:w-[28px] md:h-[28px]' />
                 </div>
-                <h4 className='text-xl md:text-2xl font-black text-slate-900'>
+                <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Siswa
                 </h4>
               </div>
@@ -92,7 +92,7 @@ const FeaturesSection = () => {
                 <div className='w-12 h-12 md:w-14 md:h-14 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300'>
                   <FaUsers size={24} className='md:w-[28px] md:h-[28px]' />
                 </div>
-                <h4 className='text-xl md:text-2xl font-black text-slate-900'>
+                <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Alumni
                 </h4>
               </div>
@@ -149,7 +149,7 @@ const FeaturesSection = () => {
                 <div className='w-12 h-12 md:w-14 md:h-14 bg-emerald-600/10 rounded-2xl flex items-center justify-center text-emerald-600 shadow-inner group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300'>
                   <FaSchool size={24} className='md:w-[28px] md:h-[28px]' />
                 </div>
-                <h4 className='text-xl md:text-2xl font-black text-slate-900'>
+                <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Sekolah
                 </h4>
               </div>
