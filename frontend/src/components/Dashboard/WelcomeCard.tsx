@@ -7,22 +7,36 @@ const WelcomeCard = ({
   username: string;
   fullName?: string;
 }) => {
-  const name = fullName || username || 'Pengguna';
-
   return (
-    <div className='relative overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-700 text-white p-6 sm:p-8 shadow-xl shadow-blue-500/20 mb-6'>
-      <div className='absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-3xl pointer-events-none' />
-      <div className='absolute right-4 top-4 opacity-10 text-white pointer-events-none'>
-        <FaGraduationCap size={140} />
-      </div>
-
-      <div className='relative z-10 flex items-center gap-4 sm:gap-6'>
+    <div
+      className='card max-w-sm md:max-w-md lg:max-w-full'
+      style={{
+        background:
+          'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+        border: '2px solid rgba(102, 126, 234, 0.3)',
+        marginBottom: '24px',
+      }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+        }}
+      >
+        <FaGraduationCap
+          className='text-4xl md:text-5xl'
+          style={{ color: 'var(--primary)' }}
+        />
         <div>
-          <p className='text-lg sm:text-2xl font-black text-white leading-tight'>
-            Selamat Datang, {name}!
-          </p>
-          <p className='text-xs sm:text-sm text-blue-100/90 mt-1 font-medium'>
-            Jelajahi data alumni dan informasi terkini SMAN 1 Tawangsari.
+          <h2 className='mb-1 text-sm md:text-xl text-[color:var(--text-)]'>
+            Selamat Datang, {fullName || username}!
+          </h2>
+          <p
+            className='text-xs md:text-sm'
+            style={{ color: 'var(--text-tertiary)' }}
+          >
+            Jelajahi data alumni dan informasi terkini
           </p>
         </div>
       </div>

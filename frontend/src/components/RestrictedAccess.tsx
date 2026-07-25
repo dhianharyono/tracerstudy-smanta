@@ -53,7 +53,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
         {/* Action Button */}
         <Link
           to={isHidden || isName || isProfile || isUniversity ? profileLink : '/alumni/questionnaire'}
-          className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200'
+          className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200'
         >
           {isHidden ? (
             <>

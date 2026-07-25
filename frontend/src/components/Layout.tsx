@@ -205,27 +205,27 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/25 font-semibold'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] hover:translate-x-1'
+        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
           }`}
       >
         <span
           className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20 text-white'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-blue-50 text-[color:var(--text-secondary)] group-hover:text-blue-600'
+            ? 'bg-white/20'
+            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
             }`}
         >
-          <Icon className='text-base' />
+          <Icon className='text-lg' />
         </span>
-        <span className='font-medium text-xs md:text-sm tracking-tight'>{label}</span>
+        <span className='font-medium text-sm'>{label}</span>
         {typeof badgeCount === 'number' && badgeCount > 0 && (
-          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white shadow-sm shadow-rose-500/50 animate-pulse'>
+          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white shadow-sm shadow-red-500/50 animate-pulse'>
             {badgeCount > 99 ? '99+' : badgeCount}
           </span>
         )}
         {isActive && (!badgeCount || badgeCount <= 0) && (
-          <FaChevronRight className='ml-auto text-xs opacity-70' />
+          <FaChevronRight className='ml-auto text-xs opacity-60' />
         )}
       </Link>
     );
@@ -233,7 +233,7 @@ const Layout = () => {
 
   const getNavLinks = () => {
     const SectionLabel = ({ label }: { label: string }) => (
-      <p className='mt-5 mb-1.5 px-3 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] opacity-75'>
+      <p className='mt-6 mb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] opacity-80'>
         {label}
       </p>
     );
@@ -491,7 +491,7 @@ const Layout = () => {
   const restrictedComponent = getRestrictedAccessComponent();
 
   return (
-    <div className='flex h-screen bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] transition-colors duration-200 overflow-hidden font-sans selection:bg-blue-600 selection:text-white'>
+    <div className='flex h-screen bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] transition-colors duration-200 overflow-hidden font-sans'>
       {/* Overlay Mobile */}
       {isMobileMenuOpen && (
         <div
@@ -507,7 +507,7 @@ const Layout = () => {
         }`}
       >
         {/* Brand Logo & Name */}
-        <div className='flex h-[76px] shrink-0 items-center justify-between px-5 border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)]'>
+        <div className='flex h-[72px] shrink-0 items-center justify-between px-6 border-b border-[color:var(--border-color)]'>
           <Link
             to={
               user
@@ -522,34 +522,34 @@ const Layout = () => {
             }
             className='flex items-center gap-3 group'
           >
-            <div className='flex h-11 w-11 items-center justify-center rounded-xl bg-slate-50 border border-slate-200/60 p-1.5 transition-transform duration-300 group-hover:scale-105 group-hover:shadow-md group-hover:shadow-blue-500/10'>
-              <img src='/logo.png' alt='Logo SMANTA' className='h-full w-full object-contain filter drop-shadow-sm' />
+            <div className='flex h-10 w-10 items-center justify-center transition-transform group-hover:scale-105'>
+              <img src='/logo.png' alt='Logo SMANTA' className='h-10 w-10 object-contain' />
             </div>
             <div className='flex flex-col'>
-              <span className='font-extrabold text-[color:var(--text-primary)] text-sm tracking-tight leading-none group-hover:text-blue-600 transition-colors'>
+              <span className='font-bold text-[color:var(--text-primary)] text-sm tracking-tight leading-none group-hover:text-[var(--primary)] transition-colors'>
                 TRACER STUDY
               </span>
-              <span className='text-[8px] font-bold text-blue-600 uppercase tracking-widest mt-1 bg-blue-50 px-1.5 py-0.5 rounded-md inline-block max-w-max border border-blue-100'>
+              <span className='text-[9px] font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-1'>
                 SMAN 1 TAWANGSARI
               </span>
             </div>
           </Link>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className='rounded-lg p-2 text-[color:var(--text-tertiary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] lg:hidden'
+            className='rounded-lg p-1.5 text-[color:var(--text-tertiary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] lg:hidden'
           >
             <FaTimes />
           </button>
         </div>
 
         {/* Nav Links */}
-        <nav className='flex-1 overflow-y-auto px-3.5 py-4 scrollbar-hide space-y-0.5'>
+        <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
           {getNavLinks()}
         </nav>
 
         {/* User Footer Profile */}
-        <div className='p-3.5 border-t border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/60 backdrop-blur-md'>
-          <div className='flex items-center justify-between gap-3 bg-[color:var(--bg-card)] p-2.5 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
+        <div className='p-4 border-t border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/50'>
+          <div className='flex items-center justify-between gap-3'>
             <Link
               to={
                 user?.role === 'admin'
@@ -560,28 +560,26 @@ const Layout = () => {
                   ? '/student/profile'
                   : '/school/profile'
               }
-              className='flex items-center gap-2.5 min-w-0 flex-1 group hover:opacity-90 transition-opacity'
+              className='flex items-center gap-3 min-w-0 flex-1 group hover:opacity-80 transition-opacity'
             >
-              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-bold text-sm shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform'>
+              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white font-bold text-sm shadow-sm'>
                 {getUserInitial()}
               </div>
               <div className='min-w-0 flex-1'>
-                <p className='truncate text-xs font-bold text-[color:var(--text-primary)] group-hover:text-blue-600 transition-colors'>
+                <p className='truncate text-sm font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
                   {user?.profile?.fullName || user?.username}
                 </p>
-                <div className='flex items-center gap-1 mt-0.5'>
-                  <span className='inline-block text-[9px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200 capitalize'>
-                    {getRoleName()}
-                  </span>
-                </div>
+                <p className='truncate text-xs text-[color:var(--text-secondary)]'>
+                  {getRoleName()}
+                </p>
               </div>
             </Link>
             <button
               onClick={() => setIsLogoutModalOpen(true)}
-              className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200'
+              className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-white/50 dark:hover:bg-black/20 transition-colors'
               title='Logout'
             >
-              <FaSignOutAlt className='text-sm' />
+              <FaSignOutAlt />
             </button>
           </div>
         </div>

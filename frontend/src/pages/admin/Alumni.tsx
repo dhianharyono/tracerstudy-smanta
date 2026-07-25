@@ -1174,7 +1174,7 @@ const AdminAlumni = () => {
                   </button>
                   <button
                     type='submit'
-                    className='flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2'
+                    className='flex-1 py-2.5 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2'
                   >
                     <FaSave /> Simpan Perubahan
                   </button>

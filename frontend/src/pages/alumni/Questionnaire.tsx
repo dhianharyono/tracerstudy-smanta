@@ -1040,7 +1040,7 @@ const AlumniQuestionnaire = () => {
             <button
               type='submit'
               disabled={submitLoading}
-              className='flex text-xs md:text-sm items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-10 py-3.5 font-extrabold text-white shadow-md shadow-blue-500/25 transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/35 active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100'
+              className='flex text-xs md:text-sm items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[var(--primary)] to-blue-500 px-10 py-3.5 font-extrabold text-white shadow-lg shadow-blue-500/30 transition-all hover:scale-[1.02] hover:shadow-blue-500/40 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70'
             >
               {submitLoading ? (
                 <>

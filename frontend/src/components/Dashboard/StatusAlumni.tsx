@@ -49,7 +49,7 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
       : null;
 
   return (
-    <div className='card flex flex-col h-full lg:h-[850px]'>
+    <div className='card h-full flex flex-col'>
       {/* Header Section */}
       <div className='flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-[color:var(--border-color)]/60'>
         <h2 className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
@@ -178,3 +178,4 @@ const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
 };
 
 export default AlumniDataProgress;
+

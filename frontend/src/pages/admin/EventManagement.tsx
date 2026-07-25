@@ -315,7 +315,7 @@ const AdminEventManagement = () => {
             resetForm();
             setIsModalOpen(true);
           }}
-          className='inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200'
+          className='text-sm flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white rounded-lg hover:opacity-90 transition-opacity'
         >
           <LuPlus size={20} />
           <span>Tambah Event</span>

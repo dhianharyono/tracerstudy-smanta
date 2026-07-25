@@ -202,7 +202,7 @@ const AdminBadges = () => {
               <div className='flex gap-2'>
                 <button
                   type='submit'
-                  className='flex-1 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200'
+                  className='flex-1 py-2.5 bg-[var(--primary)] text-white font-bold rounded-xl hover:opacity-90 transition-opacity'
                 >
                   {editingBadge ? 'Simpan Perubahan' : 'Simpan Badge'}
                 </button>

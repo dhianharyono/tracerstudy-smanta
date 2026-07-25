@@ -166,13 +166,13 @@ const EventRegisterModal: React.FC<EventRegisterModalProps> = ({
             <button
               type='submit'
               disabled={loading}
-              className='w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-xs sm:text-sm shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none'
+              className='w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-[var(--primary)] text-white font-bold hover:brightness-110 hover:shadow-lg hover:shadow-[var(--primary)]/30 hover:-translate-y-0.5 transition-all duration-200 transform disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none'
             >
               {loading ? (
                 <div className='w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin' />
               ) : (
                 <>
-                  <span>Daftar Sekarang</span>
+                  <span>Daftar</span>
                 </>
               )}
             </button>

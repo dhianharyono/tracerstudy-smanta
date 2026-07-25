@@ -319,7 +319,7 @@ const AlumniEventHub = () => {
             {hasAccess(event) && (
               <button
                 onClick={() => handlePreview(event)}
-                className='w-full md:w-auto flex items-center justify-center gap-2 px-4 py-2.5 md:px-6 md:py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs md:text-sm font-extrabold rounded-2xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200 mt-auto md:mt-0'
+                className='w-full md:w-auto flex items-center justify-center gap-2 px-3 py-2 md:px-6 md:py-3 bg-[var(--primary)] text-white text-xs md:text-sm rounded-lg md:rounded-xl hover:opacity-90 transition-all shadow-sm md:shadow-lg hover:shadow-primary/30 mt-auto md:mt-0'
               >
                 <LuEye className='text-sm md:text-xl' />
                 <span>Preview</span>
