@@ -8,8 +8,6 @@ import RestrictedAccess from './RestrictedAccess';
 import { isNameIncomplete, isUniversityIncomplete } from '../utils/validation';
 import { isStudentProfileComplete } from '../utils/helpers';
 import {
-  FaChartBar,
-  FaEdit,
   FaUser,
   FaNewspaper,
   FaCommentDots,
@@ -18,7 +16,6 @@ import {
   FaUserTie,
   FaUniversity,
   FaBuilding,
-  FaBook,
   FaSignOutAlt,
   FaMedal,
   FaBars,
@@ -31,6 +28,11 @@ import {
   FaBriefcase,
   FaUserShield,
   FaHistory,
+  FaThLarge,
+  FaClipboardList,
+  FaBookOpen,
+  FaUserFriends,
+  FaCalendarAlt,
 } from 'react-icons/fa';
 import './Layout.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -205,27 +207,30 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/30'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)]'
+        className={`group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 ${isActive
+          ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
           }`}
       >
         <span
-          className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${isActive
-            ? 'bg-white/20'
-            : 'bg-[color:var(--bg-tertiary)] group-hover:bg-white/50 dark:group-hover:bg-black/20'
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${isActive
+            ? 'bg-white/20 text-white'
+            : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] group-hover:scale-105'
             }`}
         >
-          <Icon className='text-lg' />
+          <Icon className='text-sm transition-transform duration-200 group-hover:scale-110' />
         </span>
-        <span className='font-medium text-sm'>{label}</span>
+
+        <span className='truncate text-sm tracking-tight'>{label}</span>
+
         {typeof badgeCount === 'number' && badgeCount > 0 && (
-          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[11px] font-bold text-white shadow-sm shadow-red-500/50 animate-pulse'>
+          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white shadow-sm shadow-rose-500/40 animate-pulse'>
             {badgeCount > 99 ? '99+' : badgeCount}
           </span>
         )}
+
         {isActive && (!badgeCount || badgeCount <= 0) && (
-          <FaChevronRight className='ml-auto text-xs opacity-60' />
+          <FaChevronRight className='ml-auto text-[10px] opacity-70 transition-transform group-hover:translate-x-0.5' />
         )}
       </Link>
     );
@@ -233,9 +238,10 @@ const Layout = () => {
 
   const getNavLinks = () => {
     const SectionLabel = ({ label }: { label: string }) => (
-      <p className='mt-6 mb-2 px-4 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] opacity-80'>
-        {label}
-      </p>
+      <div className='mt-5 mb-2 px-3.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] select-none opacity-80'>
+        <span className='w-1.5 h-1.5 rounded-full bg-[var(--primary)]/40 shrink-0' />
+        <span>{label}</span>
+      </div>
     );
 
     if (user?.role === 'alumni') {
@@ -244,8 +250,8 @@ const Layout = () => {
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
 
           <SectionLabel label='Dashboard' />
-          <NavLink to='/alumni' icon={FaChartBar} label='Dashboard' />
-          <NavLink to='/alumni/questionnaire' icon={FaEdit} label='Kuesioner' />
+          <NavLink to='/alumni' icon={FaThLarge} label='Dashboard' />
+          <NavLink to='/alumni/questionnaire' icon={FaClipboardList} label='Kuesioner' />
 
           <SectionLabel label='Eksplorasi' />
           <NavLink
@@ -253,16 +259,16 @@ const Layout = () => {
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
-          <NavLink to='/alumni/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/alumni/majors' icon={FaBookOpen} label='Jurusan' />
           <NavLink to='/alumni/alumni' icon={FaUsers} label='Alumni' />
           <NavLink
             to='/alumni/mutual-alumni'
-            icon={FaUsers}
+            icon={FaUserFriends}
             label='Rekan Seangkatan'
           />
 
           <SectionLabel label='Sosial & Berita' />
-          <NavLink to='/alumni/events' icon={FaChartBar} label='Event' />
+          <NavLink to='/alumni/events' icon={FaCalendarAlt} label='Event' />
           <NavLink
             to='/alumni/news'
             icon={FaNewspaper}
@@ -293,13 +299,12 @@ const Layout = () => {
     }
 
     if (user?.role === 'admin') {
-
       return (
         <div className='space-y-1 pb-4'>
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
 
           <SectionLabel label='Dashboard & Statistik' />
-          <NavLink to='/admin' icon={FaChartBar} label='Dashboard' />
+          <NavLink to='/admin' icon={FaThLarge} label='Dashboard' />
           <NavLink
             to='/admin/stats'
             icon={FaChartPie}
@@ -327,7 +332,7 @@ const Layout = () => {
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
-          <NavLink to='/admin/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/admin/majors' icon={FaBookOpen} label='Jurusan' />
           <NavLink
             to='/admin/manage-universities'
             icon={FaBuilding}
@@ -338,7 +343,7 @@ const Layout = () => {
           <SectionLabel label='Konten & Moderasi' />
           <NavLink
             to='/admin/events'
-            icon={FaChartBar}
+            icon={FaCalendarAlt}
             label='Manajemen Event'
           />
           <NavLink to='/admin/badges' icon={FaMedal} label='Kelola Badge' />
@@ -375,14 +380,14 @@ const Layout = () => {
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
 
           <SectionLabel label='Monitoring' />
-          <NavLink to='/school' icon={FaChartBar} label='Dashboard' />
+          <NavLink to='/school' icon={FaThLarge} label='Dashboard' />
           <NavLink to='/school/alumni' icon={FaUsers} label='Data Alumni' />
           <NavLink
             to='/school/universities'
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
-          <NavLink to='/school/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/school/majors' icon={FaBookOpen} label='Jurusan' />
           <NavLink
             to='/school/verification'
             icon={FaSync}
@@ -405,17 +410,17 @@ const Layout = () => {
           <NavLink to='/' icon={FaHome} label='Halaman Utama' />
 
           <SectionLabel label='Eksplorasi Alumni' />
-          <NavLink to='/student' icon={FaChartBar} label='Dashboard' />
+          <NavLink to='/student' icon={FaThLarge} label='Dashboard' />
           <NavLink
             to='/student/universities'
             icon={FaUniversity}
             label='Perguruan Tinggi'
           />
-          <NavLink to='/student/majors' icon={FaBook} label='Jurusan' />
+          <NavLink to='/student/majors' icon={FaBookOpen} label='Jurusan' />
           <NavLink to='/student/alumni' icon={FaUsers} label='Alumni' />
 
           <SectionLabel label='Informasi' />
-          <NavLink to='/student/events' icon={FaChartBar} label='Event' />
+          <NavLink to='/student/events' icon={FaCalendarAlt} label='Event' />
           <NavLink
             to='/student/news'
             icon={FaNewspaper}
@@ -445,7 +450,7 @@ const Layout = () => {
       admin: 'Administrator',
       alumni: 'Alumni',
       student: 'Siswa',
-          school: 'Pihak Sekolah',
+      school: 'Pihak Sekolah',
     };
     return roles[user?.role || ''] || 'User';
   };
@@ -502,84 +507,88 @@ const Layout = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* Brand Logo & Name */}
-        <div className='flex h-[72px] shrink-0 items-center justify-between px-6 border-b border-[color:var(--border-color)]'>
+        <div className='flex h-[76px] shrink-0 items-center justify-between px-5 border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)]'>
           <Link
             to={
               user
                 ? user.role === 'admin'
                   ? '/admin'
                   : user.role === 'alumni'
-                  ? '/alumni'
-                  : user.role === 'student'
-                  ? '/student'
-                  : '/school'
+                    ? '/alumni'
+                    : user.role === 'student'
+                      ? '/student'
+                      : '/school'
                 : '/'
             }
             className='flex items-center gap-3 group'
           >
-            <div className='flex h-10 w-10 items-center justify-center transition-transform group-hover:scale-105'>
-              <img src='/logo.png' alt='Logo SMANTA' className='h-10 w-10 object-contain' />
+            <div className='relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[var(--primary)]/15 to-blue-500/15 p-1.5 border border-[var(--primary)]/20 transition-all duration-300 group-hover:scale-105 group-hover:border-[var(--primary)]/40 group-hover:shadow-md group-hover:shadow-[var(--primary)]/10'>
+              <img src='/logo.png' alt='Logo SMANTA' className='h-full w-full object-contain filter drop-shadow-sm' />
             </div>
-            <div className='flex flex-col'>
-              <span className='font-bold text-[color:var(--text-primary)] text-sm tracking-tight leading-none group-hover:text-[var(--primary)] transition-colors'>
-                TRACER STUDY
-              </span>
-              <span className='text-[9px] font-semibold text-[color:var(--text-tertiary)] uppercase tracking-wider mt-1'>
+            <div className='flex flex-col min-w-0'>
+              <div className='flex items-center gap-1.5'>
+                <span className='font-extrabold text-[color:var(--text-primary)] text-sm tracking-tight leading-tight group-hover:text-[var(--primary)] transition-colors'>
+                  TRACER STUDY
+                </span>
+              </div>
+              <span className='text-[9px] font-bold text-[color:var(--text-tertiary)] uppercase tracking-widest mt-0.5 truncate'>
                 SMAN 1 TAWANGSARI
               </span>
             </div>
           </Link>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className='rounded-lg p-1.5 text-[color:var(--text-tertiary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] lg:hidden'
+            className='rounded-lg p-2 text-[color:var(--text-tertiary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] lg:hidden transition-colors'
           >
-            <FaTimes />
+            <FaTimes className='text-sm' />
           </button>
         </div>
 
         {/* Nav Links */}
-        <nav className='flex-1 overflow-y-auto px-4 py-4 scrollbar-hide'>
+        <nav className='flex-1 overflow-y-auto px-3.5 py-3 sidebar-nav-scroll'>
           {getNavLinks()}
         </nav>
 
         {/* User Footer Profile */}
-        <div className='p-4 border-t border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/50'>
-          <div className='flex items-center justify-between gap-3'>
+        <div className='p-3.5 border-t border-[color:var(--border-color)] bg-[color:var(--bg-card)]/80 backdrop-blur-sm'>
+          <div className='flex items-center justify-between gap-2.5 p-2 rounded-xl border border-[color:var(--border-color)]/60 bg-[color:var(--bg-tertiary)]/40 hover:border-[var(--primary)]/30 hover:bg-[color:var(--bg-tertiary)] transition-all duration-200'>
             <Link
               to={
                 user?.role === 'admin'
                   ? '/admin/profile'
                   : user?.role === 'alumni'
-                  ? '/alumni/profile'
-                  : user?.role === 'student'
-                  ? '/student/profile'
-                  : '/school/profile'
+                    ? '/alumni/profile'
+                    : user?.role === 'student'
+                      ? '/student/profile'
+                      : '/school/profile'
               }
-              className='flex items-center gap-3 min-w-0 flex-1 group hover:opacity-80 transition-opacity'
+              className='flex items-center gap-2.5 min-w-0 flex-1 group'
             >
-              <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr from-[var(--primary)] to-blue-400 text-white font-bold text-sm shadow-sm'>
+              <div className='relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[var(--primary)] to-blue-600 text-white font-bold text-sm shadow-sm group-hover:scale-105 transition-transform'>
                 {getUserInitial()}
+                <span className='absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[color:var(--bg-card)] rounded-full' />
               </div>
               <div className='min-w-0 flex-1'>
-                <p className='truncate text-sm font-semibold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors'>
+                <p className='truncate text-xs font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors leading-snug'>
                   {user?.profile?.fullName || user?.username}
                 </p>
-                <p className='truncate text-xs text-[color:var(--text-secondary)]'>
-                  {getRoleName()}
-                </p>
+                <div className='flex items-center gap-1 mt-0.5'>
+                  <span className='inline-block px-1.5 py-0.5 text-[9px] font-semibold text-[var(--primary)] bg-[var(--primary)]/10 rounded-md truncate max-w-full'>
+                    {getRoleName()}
+                  </span>
+                </div>
               </div>
             </Link>
             <button
               onClick={() => setIsLogoutModalOpen(true)}
-              className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-red-500 hover:bg-white/50 dark:hover:bg-black/20 transition-colors'
+              className='flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors'
               title='Logout'
             >
-              <FaSignOutAlt />
+              <FaSignOutAlt className='text-sm' />
             </button>
           </div>
         </div>
