@@ -152,14 +152,23 @@ const LandingPage = () => {
         className='py-24 px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden'
       >
         {/* Modern decorative rings */}
-        <div className='absolute top-[-50px] left-[-50px] w-96 h-96 border-4 border-white/5 rounded-full pointer-events-none'></div>
-        <div className='absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] border-8 border-white/5 rounded-full pointer-events-none'></div>
+        <motion.div
+          animate={{ rotate: [0, 360] }}
+          transition={{ repeat: Infinity, duration: 90, ease: 'linear' }}
+          className='absolute top-[-50px] left-[-50px] w-96 h-96 border-4 border-white/5 rounded-full pointer-events-none'
+        />
+        <motion.div
+          animate={{ rotate: [360, 0] }}
+          transition={{ repeat: Infinity, duration: 120, ease: 'linear' }}
+          className='absolute bottom-[-100px] right-[-100px] w-[500px] h-[500px] border-8 border-white/5 rounded-full pointer-events-none'
+        />
         <div className='absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none'></div>
 
         <div className='max-w-4xl mx-auto text-center relative z-10 space-y-8 md:space-y-10'>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             className='text-2xl md:text-5xl font-bold text-white leading-tight tracking-tight'
           >
             Siap Menjadi Bagian Dari Perubahan ?
@@ -167,6 +176,7 @@ const LandingPage = () => {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: 0.1 }}
             className='text-sm md:text-xl text-blue-100/90 max-w-2xl mx-auto px-4 md:px-0 font-medium leading-relaxed'
           >
@@ -177,36 +187,56 @@ const LandingPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ delay: 0.2 }}
             className='flex flex-row gap-4 justify-center px-4 md:px-0'
           >
             {user ? (
-              <Link
-                to={
-                  user.role === 'admin'
-                    ? '/admin'
-                    : user.role === 'student'
-                      ? '/student'
-                      : '/alumni'
-                }
-                className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 17 }}
               >
-                Kembali ke Dashboard
-              </Link>
+                <Link
+                  to={
+                    user.role === 'admin'
+                      ? '/admin'
+                      : user.role === 'student'
+                        ? '/student'
+                        : '/alumni'
+                  }
+                  className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
+                >
+                  Kembali ke Dashboard
+                </Link>
+              </motion.div>
             ) : (
               <>
-                <Link
-                  to='/register'
-                  className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base shadow-xl hover:bg-slate-50 hover:scale-105 active:scale-95 transition-all duration-200'
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 >
-                  Kontribusi Sekarang
-                </Link>
-                <Link
-                  to='/login'
-                  className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base hover:bg-blue-800/60 hover:scale-105 active:scale-95 transition-all duration-200'
+                  <Link
+                    to='/register'
+                    className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
+                  >
+                    Kontribusi Sekarang
+                  </Link>
+                </motion.div>
+
+                <motion.div
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 17 }}
                 >
-                  Masuk Kembali
-                </Link>
+                  <Link
+                    to='/login'
+                    className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base hover:bg-blue-800/60 transition-colors inline-block'
+                  >
+                    Masuk Kembali
+                  </Link>
+                </motion.div>
               </>
             )}
           </motion.div>

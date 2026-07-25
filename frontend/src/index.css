@@ -649,6 +649,15 @@ h3 {
   scrollbar-color: var(--gray-300) var(--bg-secondary);
 }
 
+/* Hide scrollbar utility class */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 /* Leaflet Map Custom Styles */
 .leaflet-container {
   background: var(--bg-secondary);

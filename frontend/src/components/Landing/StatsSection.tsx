@@ -199,7 +199,8 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.1 + idx * 0.05 }}
-                    className={`flex flex-col p-6 md:p-8 bg-white rounded-[2rem] border ${item.border} ${item.bg} shadow-sm group hover:shadow-md hover:scale-[1.02] transition-all duration-300`}
+                    whileHover={{ y: -6, scale: 1.02 }}
+                    className={`flex flex-col p-6 md:p-8 bg-white rounded-[2rem] border ${item.border} ${item.bg} shadow-sm group hover:shadow-md transition-all duration-300 cursor-default`}
                   >
                     <span className='text-xs font-bold text-slate-400 uppercase tracking-widest mb-2'>
                       {item.label}
@@ -223,6 +224,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
               className='grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8'
             >
               {/* Top Colleges panel */}
@@ -231,9 +233,12 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                   <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Top 10 Perguruan Tinggi
                   </h5>
-                  <div className='p-2 bg-blue-50 rounded-full text-blue-600 shadow-inner'>
+                  <motion.div
+                    whileHover={{ scale: 1.15, rotate: 10 }}
+                    className='p-2 bg-blue-50 rounded-full text-blue-600 shadow-inner'
+                  >
                     <FaUniversity className='w-4.5 h-4.5 md:w-5 md:h-5' />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className='space-y-5 md:space-y-6'>
                   {stats?.topUniversities?.map((uni: any, idx: number) => (
@@ -247,15 +252,22 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                         </span>
                       </div>
                       <div className='w-full bg-slate-100 h-2 md:h-2.5 rounded-full overflow-hidden'>
-                        <div
-                          className='bg-gradient-to-r from-blue-600 to-indigo-500 h-full rounded-full transition-all duration-1000 ease-out'
-                          style={{
+                        <motion.div
+                          initial={{ width: 0 }}
+                          whileInView={{
                             width:
                               (stats?.totalAlumni || 0) > 0
                                 ? `${(uni.count / stats!.totalAlumni) * 100 * 2}%`
                                 : '0%',
                           }}
-                        ></div>
+                          viewport={{ once: true }}
+                          transition={{
+                            duration: 1.2,
+                            delay: 0.1 * idx,
+                            ease: [0.215, 0.61, 0.355, 1.0],
+                          }}
+                          className='bg-gradient-to-r from-blue-600 to-indigo-500 h-full rounded-full'
+                        ></motion.div>
                       </div>
                     </div>
                   ))}
@@ -268,15 +280,20 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                   <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Jurusan Populer
                   </h5>
-                  <div className='p-2 bg-indigo-50 rounded-full text-indigo-600 shadow-inner'>
+                  <motion.div
+                    whileHover={{ scale: 1.15, rotate: 10 }}
+                    className='p-2 bg-indigo-50 rounded-full text-indigo-600 shadow-inner'
+                  >
                     <FaGraduationCap className='w-4.5 h-4.5 md:w-5 md:h-5' />
-                  </div>
+                  </motion.div>
                 </div>
                 <div className='grid grid-cols-1 sm:grid-cols-2 gap-4'>
                   {stats?.topMajors?.map((major: any, idx: number) => (
-                    <div
+                    <motion.div
                       key={idx}
-                      className='relative p-5 bg-slate-50/50 hover:bg-white rounded-[1.5rem] border border-slate-200/80 overflow-hidden group hover:border-blue-500/50 hover:shadow-md transition-all duration-200'
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className='relative p-5 bg-slate-50/50 hover:bg-white rounded-[1.5rem] border border-slate-200/80 overflow-hidden group hover:border-blue-500/50 hover:shadow-md transition-all duration-200 cursor-default'
                     >
                       {/* Stylized background watermark for rank */}
                       <div className='absolute -right-1.5 -bottom-2.5 text-6xl font-bold text-slate-100/80 group-hover:text-blue-500/5 transition-colors pointer-events-none'>
@@ -326,7 +343,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                           </span>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>

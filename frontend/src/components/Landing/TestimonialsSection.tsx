@@ -21,6 +21,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className='text-center mb-16 space-y-4'
         >
           <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
@@ -33,7 +34,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
         </motion.div>
 
         {loading ? (
-          <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar w-full'>
+          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden w-full'>
             {[1, 2, 3].map((i) => (
               <div key={i} className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-slate-50/50 p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-md animate-pulse flex flex-col h-[250px] md:h-[300px]'>
                 <div className='w-8 h-8 md:w-10 md:h-10 bg-slate-100 rounded-full mb-4 md:mb-6'></div>
@@ -53,18 +54,24 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
             ))}
           </div>
         ) : (
-          <div className='flex overflow-x-auto pb-12 gap-6 md:gap-8 snap-x no-scrollbar'>
+          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
             {testimonials.length > 0 ? (
               testimonials.map((item, idx) => (
                 <motion.div
                   key={idx}
-                  initial={{ opacity: 0, scale: 0.9, x: 20 }}
+                  initial={{ opacity: 0, scale: 0.92, x: 30 }}
                   whileInView={{ opacity: 1, scale: 1, x: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.08 }}
-                  className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-slate-50/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 shadow-md relative overflow-hidden flex flex-col hover:bg-white hover:shadow-xl transition-all duration-300'
+                  transition={{ delay: idx * 0.08, duration: 0.6, ease: [0.215, 0.61, 0.355, 1.0] }}
+                  whileHover={{ y: -4, scale: 1.015 }}
+                  className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-slate-50/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 shadow-md relative overflow-hidden flex flex-col hover:bg-white hover:shadow-xl transition-all duration-300 cursor-default group'
                 >
-                  <FaQuoteLeft className='text-3xl md:text-4xl text-blue-500/10 mb-4 md:mb-6' />
+                  <motion.div
+                    whileHover={{ scale: 1.15, rotate: -4 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  >
+                    <FaQuoteLeft className='text-3xl md:text-4xl text-blue-500/20 group-hover:text-blue-500/40 mb-4 md:mb-6 transition-colors' />
+                  </motion.div>
                   <p className='text-sm md:text-base text-slate-700 italic leading-relaxed mb-6 md:mb-8 flex-grow font-medium'>
                     "
                     {item.kritik ||
@@ -73,9 +80,12 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
                     "
                   </p>
                   <div className='flex items-center gap-3 md:gap-4 mt-auto relative z-10'>
-                    <div className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-650 flex items-center justify-center text-white font-bold text-lg shadow-md'>
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      className='w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-650 flex items-center justify-center text-white font-bold text-lg shadow-md'
+                    >
                       A
-                    </div>
+                    </motion.div>
                     <div>
                       <h6 className='text-sm md:text-base font-extrabold text-slate-900'>
                         Anonymous
@@ -102,3 +112,4 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
 };
 
 export default TestimonialsSection;
+

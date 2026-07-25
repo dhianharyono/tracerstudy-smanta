@@ -1,5 +1,26 @@
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import { FaGraduationCap, FaUsers, FaSchool } from 'react-icons/fa';
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 35, scale: 0.96 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.7, ease: [0.215, 0.61, 0.355, 1.0] as const },
+  },
+};
 
 const FeaturesSection = () => {
   return (
@@ -9,6 +30,7 @@ const FeaturesSection = () => {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
           className='text-center mb-20 space-y-4'
         >
           <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
@@ -20,21 +42,30 @@ const FeaturesSection = () => {
           </p>
         </motion.div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10'>
+        <motion.div
+          variants={containerVariants}
+          initial='hidden'
+          whileInView='visible'
+          viewport={{ once: true, margin: '-50px' }}
+          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10'
+        >
           {/* Student Features */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className='bg-blue-50/30 p-6 md:p-8 rounded-[2.5rem] border border-blue-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white hover:scale-[1.03] transition-all duration-300'
+            variants={cardVariants}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className='bg-blue-50/30 p-6 md:p-8 rounded-[2.5rem] border border-blue-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300'
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>
               <div className='flex items-center gap-4 mb-8'>
-                <div className='w-12 h-12 md:w-14 md:h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner group-hover:bg-blue-600 group-hover:text-white transition-all duration-300'>
+                <motion.div
+                  whileHover={{ rotate: 12, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  className='w-12 h-12 md:w-14 md:h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center text-blue-600 shadow-inner group-hover:bg-blue-600 group-hover:text-white transition-all duration-300'
+                >
                   <FaGraduationCap size={24} className='md:w-[28px] md:h-[28px]' />
-                </div>
+                </motion.div>
                 <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Siswa
                 </h4>
@@ -62,7 +93,12 @@ const FeaturesSection = () => {
                     desc: 'Dapatkan informasi terbaru seputar SMANTA.',
                   },
                 ].map((f, i) => (
-                  <li key={i} className='flex gap-4 group/item'>
+                  <motion.li
+                    key={i}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className='flex gap-4 group/item cursor-default'
+                  >
                     <div className='mt-2 w-2 h-2 rounded-full bg-blue-500 shrink-0 group-hover/item:scale-125 transition-transform'></div>
                     <div>
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-blue-600 transition-colors'>
@@ -72,7 +108,7 @@ const FeaturesSection = () => {
                         {f.desc}
                       </p>
                     </div>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -80,18 +116,21 @@ const FeaturesSection = () => {
 
           {/* Alumni Features */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className='bg-indigo-50/30 p-6 md:p-8 rounded-[2.5rem] border border-indigo-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white hover:scale-[1.03] transition-all duration-300'
+            variants={cardVariants}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className='bg-indigo-50/30 p-6 md:p-8 rounded-[2.5rem] border border-indigo-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300'
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>
               <div className='flex items-center gap-4 mb-8'>
-                <div className='w-12 h-12 md:w-14 md:h-14 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300'>
+                <motion.div
+                  whileHover={{ rotate: 12, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  className='w-12 h-12 md:w-14 md:h-14 bg-indigo-600/10 rounded-2xl flex items-center justify-center text-indigo-600 shadow-inner group-hover:bg-indigo-600 group-hover:text-white transition-all duration-300'
+                >
                   <FaUsers size={24} className='md:w-[28px] md:h-[28px]' />
-                </div>
+                </motion.div>
                 <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Alumni
                 </h4>
@@ -119,7 +158,12 @@ const FeaturesSection = () => {
                     desc: 'Cari dan dapatkan informasi lowongan kerja yang sesuai.',
                   },
                 ].map((f, i) => (
-                  <li key={i} className='flex gap-4 group/item'>
+                  <motion.li
+                    key={i}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className='flex gap-4 group/item cursor-default'
+                  >
                     <div className='mt-2 w-2 h-2 rounded-full bg-indigo-500 shrink-0 group-hover/item:scale-125 transition-transform'></div>
                     <div>
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-indigo-600 transition-colors'>
@@ -129,7 +173,7 @@ const FeaturesSection = () => {
                         {f.desc}
                       </p>
                     </div>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
@@ -137,18 +181,21 @@ const FeaturesSection = () => {
 
           {/* School Features */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className='bg-emerald-50/30 p-6 md:p-8 rounded-[2.5rem] border border-emerald-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white hover:scale-[1.03] transition-all duration-300 md:col-span-2 lg:col-span-1'
+            variants={cardVariants}
+            whileHover={{ y: -8, scale: 1.02 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+            className='bg-emerald-50/30 p-6 md:p-8 rounded-[2.5rem] border border-emerald-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300 md:col-span-2 lg:col-span-1'
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>
               <div className='flex items-center gap-4 mb-8'>
-                <div className='w-12 h-12 md:w-14 md:h-14 bg-emerald-600/10 rounded-2xl flex items-center justify-center text-emerald-600 shadow-inner group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300'>
+                <motion.div
+                  whileHover={{ rotate: 12, scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+                  className='w-12 h-12 md:w-14 md:h-14 bg-emerald-600/10 rounded-2xl flex items-center justify-center text-emerald-600 shadow-inner group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300'
+                >
                   <FaSchool size={24} className='md:w-[28px] md:h-[28px]' />
-                </div>
+                </motion.div>
                 <h4 className='text-xl md:text-2xl font-bold text-slate-900'>
                   Untuk Sekolah
                 </h4>
@@ -176,7 +223,12 @@ const FeaturesSection = () => {
                     desc: 'Kelola dan organisir data alumni untuk keperluan sekolah.',
                   },
                 ].map((f, i) => (
-                  <li key={i} className='flex gap-4 group/item'>
+                  <motion.li
+                    key={i}
+                    whileHover={{ x: 5 }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                    className='flex gap-4 group/item cursor-default'
+                  >
                     <div className='mt-2 w-2 h-2 rounded-full bg-emerald-500 shrink-0 group-hover/item:scale-125 transition-transform'></div>
                     <div>
                       <p className='text-sm md:text-base font-extrabold text-slate-800 mb-0.5 group-hover/item:text-emerald-600 transition-colors'>
@@ -186,15 +238,16 @@ const FeaturesSection = () => {
                         {f.desc}
                       </p>
                     </div>
-                  </li>
+                  </motion.li>
                 ))}
               </ul>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
 };
 
 export default FeaturesSection;
+
