@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
@@ -17,7 +18,7 @@ import {
 } from 'react-icons/fa';
 
 interface AuthLayoutProps {
-  initialMode?: 'login' | 'register';
+  initialMode?: 'login' | 'register' | 'forgot';
 }
 
 const springConfig = { type: 'spring' as const, stiffness: 220, damping: 26, mass: 0.8 };
@@ -28,10 +29,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
   const { login, register } = useAuth();
   const toastShown = useRef(false);
 
-  // Active view mode: 'login' or 'register'
-  const [mode, setMode] = useState<'login' | 'register'>(() => {
+  // Active view mode: 'login', 'register', or 'forgot'
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(() => {
     if (location.pathname === '/register') return 'register';
     if (location.pathname === '/login') return 'login';
+    if (location.pathname === '/forgot-password') return 'forgot';
     return initialMode;
   });
 
@@ -41,6 +43,8 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       setMode('register');
     } else if (location.pathname === '/login') {
       setMode('login');
+    } else if (location.pathname === '/forgot-password') {
+      setMode('forgot');
     }
   }, [location.pathname]);
 
@@ -171,20 +175,158 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
     '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI';
 
   // Mode switching helper with optional success toast state
-  const switchMode = (targetMode: 'login' | 'register', successMsg?: string) => {
+  const switchMode = (targetMode: 'login' | 'register' | 'forgot', successMsg?: string) => {
     setMode(targetMode);
-    const targetUrl = targetMode === 'login' ? '/login' : '/register';
+    let targetUrl = '/login';
+    if (targetMode === 'register') targetUrl = '/register';
+    if (targetMode === 'forgot') targetUrl = '/forgot-password';
+
     navigate(targetUrl, {
       replace: false,
       state: successMsg ? { successMessage: successMsg } : {},
     });
   };
 
+  // ------------ FORGOT PASSWORD STATE ------------
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotError, setForgotError] = useState('');
+  const [forgotSuccess, setForgotSuccess] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const timer = setInterval(() => {
+      setCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [cooldown]);
+
+  const handleForgotSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (cooldown > 0) return;
+    setForgotError('');
+    setForgotSuccess('');
+    setForgotLoading(true);
+
+    try {
+      const res = await axios.post('/api/auth/forgot-password', { email: forgotEmail });
+      setForgotSuccess(res.data.message || 'Instruksi reset password telah dikirim ke email Anda.');
+      setCooldown(60);
+    } catch (err: any) {
+      setForgotError(
+        err.response?.data?.message ||
+        err.message ||
+        'Terjadi kesalahan saat memproses permintaan reset password.'
+      );
+    } finally {
+      setForgotLoading(false);
+    }
+  };
+
+  const renderForgotPasswordForm = () => (
+    <div className='w-full max-w-md my-auto space-y-6 animate-fadeIn'>
+      <div className='text-center space-y-2'>
+        <div className='inline-flex items-center justify-center p-3 bg-blue-50 rounded-2xl shadow-sm mb-1'>
+          <img src='/logo.png' alt='Logo SMANTA' className='h-12 w-12 filter drop-shadow-sm' />
+        </div>
+        <h2 className='text-2xl font-extrabold text-slate-900 tracking-tight'>
+          Lupa Password
+        </h2>
+        <p className='text-xs sm:text-sm text-slate-500 font-bold'>
+          Masukkan email akun Tracer Study Anda untuk menerima instruksi reset password.
+        </p>
+      </div>
+
+      {forgotError && (
+        <div className='flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-700 font-semibold shadow-sm animate-slide-up'>
+          <svg className='h-5 w-5 shrink-0 text-red-500' fill='currentColor' viewBox='0 0 20 20'>
+            <path
+              fillRule='evenodd'
+              d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
+              clipRule='evenodd'
+            />
+          </svg>
+          <span>{forgotError}</span>
+        </div>
+      )}
+
+      {forgotSuccess && (
+        <div className='flex flex-col gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-xs text-emerald-800 font-semibold shadow-sm animate-slide-up'>
+          <div className='flex items-center gap-2'>
+            <svg className='h-5 w-5 text-emerald-600 shrink-0' fill='currentColor' viewBox='0 0 20 20'>
+              <path
+                fillRule='evenodd'
+                d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z'
+                clipRule='evenodd'
+              />
+            </svg>
+            <span>{forgotSuccess}</span>
+          </div>
+        </div>
+      )}
+
+      <form onSubmit={handleForgotSubmit} className='flex flex-col gap-5'>
+        <div className='flex flex-col gap-2'>
+          <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
+            Email Terdaftar
+          </label>
+          <div className='relative'>
+            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
+              <FaEnvelope />
+            </div>
+            <input
+              type='email'
+              value={forgotEmail}
+              onChange={(e) => setForgotEmail(e.target.value)}
+              required
+              disabled={forgotLoading || cooldown > 0}
+              placeholder='Masukkan alamat email Anda'
+              className='w-full rounded-xl border border-slate-200 bg-white py-3.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:bg-slate-100 disabled:cursor-not-allowed'
+            />
+          </div>
+        </div>
+
+        <motion.button
+          whileHover={{ scale: cooldown > 0 || forgotLoading ? 1 : 1.01 }}
+          whileTap={{ scale: cooldown > 0 || forgotLoading ? 1 : 0.99 }}
+          type='submit'
+          disabled={forgotLoading || cooldown > 0}
+          className='w-full rounded-xl bg-gradient-to-r from-blue-600 via-blue-650 to-indigo-650 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 disabled:cursor-not-allowed disabled:opacity-70 disabled:from-slate-400 disabled:to-slate-500 disabled:shadow-none mt-2'
+        >
+          {forgotLoading ? (
+            <span className='flex items-center justify-center gap-2'>
+              <svg className='animate-spin h-5 w-5 text-white' fill='none' viewBox='0 0 24 24'>
+                <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
+                <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
+              </svg>
+              Mengirim...
+            </span>
+          ) : cooldown > 0 ? (
+            `TUNGGU ${cooldown} DETIK UNTUK MENGIRIM ULANG`
+          ) : (
+            'KIRIM INSTRUKSI RESET'
+          )}
+        </motion.button>
+      </form>
+
+      <div className='text-center pt-2'>
+        <button
+          type='button'
+          onClick={() => switchMode('login')}
+          className='inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-650 transition-colors'
+        >
+          <FaArrowLeft size={12} /> Kembali ke halaman Login
+        </button>
+      </div>
+    </div>
+  );
+
   const isSignUp = mode === 'register';
 
   // Reusable Login Form JSX
   const renderLoginForm = () => (
-    <div className='w-full max-w-md my-auto space-y-6'>
+    <div className='w-full max-w-md my-auto space-y-6 animate-fadeIn'>
       {/* Header */}
       <div className='text-center space-y-2'>
         <div className='inline-flex items-center justify-center p-3 bg-blue-50 rounded-2xl shadow-sm mb-1'>
@@ -255,6 +397,15 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               className='absolute right-0 top-0 h-full px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
             >
               {showLoginPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+            </button>
+          </div>
+          <div className='flex justify-end items-center mt-1'>
+            <button
+              type='button'
+              onClick={() => switchMode('forgot')}
+              className='text-xs font-bold text-blue-650 hover:text-blue-700 hover:underline transition-colors'
+            >
+              Lupa Password?
             </button>
           </div>
         </div>
@@ -615,14 +766,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       <div className='flex lg:hidden relative w-full h-full overflow-hidden z-10'>
         <AnimatePresence mode='wait' initial={false}>
           <motion.div
-            key={mode}
+            key={isSignUp ? 'register' : 'auth-left'}
             initial={{ opacity: 0, x: isSignUp ? '100%' : '-100%' }}
             animate={{ opacity: 1, x: '0%' }}
             exit={{ opacity: 0, x: isSignUp ? '-100%' : '100%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 28 }}
             className='w-full h-full absolute inset-0 p-6 pt-20 pb-8 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           >
-            {isSignUp ? renderRegisterForm() : renderLoginForm()}
+            {mode === 'register'
+              ? renderRegisterForm()
+              : mode === 'forgot'
+                ? renderForgotPasswordForm()
+                : renderLoginForm()}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -633,8 +788,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       {/* ======================================================== */}
       <div className='hidden lg:flex relative w-full h-full z-10'>
 
-        {/* LEFT HALF: LOGIN FORM */}
+        {/* LEFT HALF: LOGIN / FORGOT PASSWORD FORM */}
         <motion.div
+          initial={false}
           className='w-1/2 h-full absolute left-0 top-0 p-12 lg:p-16 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           animate={{
             opacity: !isSignUp ? 1 : 0,
@@ -645,18 +801,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
           }}
           transition={springConfig}
         >
-          {renderLoginForm()}
+          {mode === 'forgot' ? renderForgotPasswordForm() : renderLoginForm()}
         </motion.div>
 
         {/* RIGHT HALF: REGISTER FORM */}
         <motion.div
           className='w-1/2 h-full absolute left-1/2 top-0 p-12 lg:p-16 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           animate={{
-            opacity: isSignUp ? 1 : 0,
-            x: isSignUp ? 0 : 60,
-            scale: isSignUp ? 1 : 0.95,
-            pointerEvents: isSignUp ? 'auto' : 'none',
-            zIndex: isSignUp ? 20 : 10,
+            opacity: mode === 'register' ? 1 : 0,
+            x: mode === 'register' ? 0 : 60,
+            scale: mode === 'register' ? 1 : 0.95,
+            pointerEvents: mode === 'register' ? 'auto' : 'none',
+            zIndex: mode === 'register' ? 20 : 10,
           }}
           transition={springConfig}
         >
@@ -665,12 +821,14 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
 
         {/* FULL HEIGHT SLIDING OVERLAY PANEL WITH FRAMER MOTION */}
         <motion.div
+          initial={false}
           className='w-1/2 h-full absolute top-0 left-0 z-30 shadow-2xl overflow-hidden pointer-events-auto'
           animate={{ x: isSignUp ? '0%' : '100%' }}
           transition={springConfig}
         >
           {/* Double-width inner container that slides content synchronously */}
           <motion.div
+            initial={false}
             className='relative w-[200%] h-full flex bg-gradient-to-br from-blue-600 via-blue-650 to-indigo-700 text-white shadow-2xl'
             animate={{ x: isSignUp ? '0%' : '-50%' }}
             transition={springConfig}

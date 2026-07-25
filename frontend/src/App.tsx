@@ -14,6 +14,8 @@ import { UserRole } from './types';
 
 // Auth Pages
 const AuthLayout = lazy(() => import('./components/auth/AuthLayout'));
+const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
 const Profile = lazy(() => import('./pages/Profile'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 
@@ -143,6 +145,18 @@ function App() {
                   <AuthLayout initialMode='register' />
                 </PublicRoute>
               }
+            />
+            <Route
+              path='/forgot-password'
+              element={
+                <PublicRoute>
+                  <ForgotPassword />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path='/reset-password'
+              element={<ResetPassword />}
             />
 
             {/* Alumni Routes */}

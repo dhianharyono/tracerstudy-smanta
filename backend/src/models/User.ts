@@ -46,6 +46,8 @@ export interface IUser extends Document {
   isVerifiedBySchool: boolean;
   verifiedAt?: Date;
   schoolRole?: 'bk' | 'teacher';
+  resetPasswordToken?: string;
+  resetPasswordExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
   lastActiveAt?: Date;
@@ -139,6 +141,12 @@ const UserSchema = new Schema<IUser>(
     schoolRole: {
       type: String,
       enum: ['bk', 'teacher', ''],
+    },
+    resetPasswordToken: {
+      type: String,
+    },
+    resetPasswordExpires: {
+      type: Date,
     },
     lastActiveAt: {
       type: Date,

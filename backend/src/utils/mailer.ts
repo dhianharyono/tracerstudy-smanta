@@ -31,7 +31,8 @@ export const sendAlumniUpgradeReminder = async (
 ): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
   if (!transporter) {
-    const errorMsg = 'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
+    const errorMsg =
+      'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
     console.error(`${errorMsg} Cannot send email to:`, toEmail);
     return { success: false, error: errorMsg };
   }
@@ -120,7 +121,8 @@ export const sendAlumniIncompleteReminder = async (
 ): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
   if (!transporter) {
-    const errorMsg = 'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
+    const errorMsg =
+      'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
     console.error(`${errorMsg} Cannot send email to:`, toEmail);
     return { success: false, error: errorMsg };
   }
@@ -131,8 +133,7 @@ export const sendAlumniIncompleteReminder = async (
   const mailOptions = {
     from: `"Tracer Study SMA Negeri 1 Tawangsari" <${process.env.EMAIL_USER}>`,
     to: toEmail,
-    subject:
-      'PENTING: Pengisian Data Tracer Study SMA Negeri 1 Tawangsari',
+    subject: 'PENTING: Pengisian Data Tracer Study SMA Negeri 1 Tawangsari',
     html: `
       <div style="background-color: #f3f4f6; padding: 40px 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100%;">
         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb;">
@@ -140,7 +141,7 @@ export const sendAlumniIncompleteReminder = async (
           <!-- HEADER -->
           <tr>
             <td style="background-color: #1e3a8a; padding: 35px 20px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">SMA NEGERI 1 TAWANGSARI</h1>
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold; letter-spacing: 0.5px;">TRACER STUDY SMA NEGERI 1 TAWANGSARI</h1>
               <p style="color: #93c5fd; margin: 5px 0 0 0; font-size: 14px; font-weight: 500;">Tracer Study & Manajemen Data Alumni</p>
             </td>
           </tr>
@@ -208,7 +209,8 @@ export const sendStudentIncompleteReminder = async (
 ): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
   if (!transporter) {
-    const errorMsg = 'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
+    const errorMsg =
+      'Email transporter not configured. EMAIL_USER or EMAIL_PASS environment variables are not set.';
     console.error(`${errorMsg} Cannot send email to:`, toEmail);
     return { success: false, error: errorMsg };
   }
@@ -219,8 +221,7 @@ export const sendStudentIncompleteReminder = async (
   const mailOptions = {
     from: `"Tracer Study SMA Negeri 1 Tawangsari" <${process.env.EMAIL_USER}>`,
     to: toEmail,
-    subject:
-      'PENTING: Lengkapi Data Akun Siswa SMA Negeri 1 Tawangsari',
+    subject: 'PENTING: Lengkapi Data Akun Siswa SMA Negeri 1 Tawangsari',
     html: `
       <div style="background-color: #f3f4f6; padding: 40px 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100%;">
         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid #e5e7eb;">
@@ -286,6 +287,80 @@ export const sendStudentIncompleteReminder = async (
     return { success: true };
   } catch (error: any) {
     console.error(`Error sending email to student ${toEmail}:`, error);
+    return { success: false, error: error?.message || String(error) };
+  }
+};
+
+export const sendPasswordResetEmail = async (
+  toEmail: string,
+  resetToken: string,
+  userName?: string,
+): Promise<{ success: boolean; error?: string }> => {
+  const transporter = getTransporter();
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
+
+  if (!transporter) {
+    const errorMsg =
+      'Email transporter tidak terkonfigurasi. Variabel EMAIL_USER dan EMAIL_PASS belum diisi di backend/.env.';
+    console.warn(`${errorMsg} Dev Mode reset link for ${toEmail}: ${resetUrl}`);
+    return { success: false, error: errorMsg };
+  }
+
+  const mailOptions = {
+    from: `"Tracer Study SMAN 1 Tawangsari" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Reset Password Akun Tracer Study SMAN 1 Tawangsari',
+    html: `
+      <div style="background-color: #f8fafc; padding: 40px 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0;">
+          <tr>
+            <td style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 35px 20px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">TRACER STUDY SMA NEGERI 1 TAWANGSARI</h1>
+              <p style="color: #bfdbfe; margin: 5px 0 0 0; font-size: 13px; font-weight: 600;">Permintaan Reset Password Akun</p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 40px 30px; color: #334155; line-height: 1.6;">
+              <h2 style="color: #0f172a; margin-top: 0; font-size: 18px; font-weight: 700;">Halo, ${userName || 'Pengguna'}! 👋</h2>
+              <p style="margin-bottom: 20px; font-size: 14.5px;">Kami menerima permintaan untuk memperbarui password akun Tracer Study SMAN 1 Tawangsari Anda.</p>
+              
+              <div style="background-color: #f1f5f9; border-left: 4px solid #2563eb; padding: 18px; margin: 25px 0; border-radius: 0 8px 8px 0;">
+                <p style="margin: 0; font-size: 14px; color: #334155;">Silakan klik tombol di bawah ini untuk mengatur password baru Anda. Tautan ini berlaku selama <strong>1 jam</strong>.</p>
+              </div>
+
+              <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 30px auto;">
+                <tr>
+                  <td align="center" style="border-radius: 12px; background-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);">
+                    <a href="${resetUrl}" target="_blank" style="display: inline-block; padding: 14px 32px; font-size: 14px; color: #ffffff; text-decoration: none; font-weight: bold; border-radius: 12px; letter-spacing: 0.5px;">
+                      RESET PASSWORD SAYA
+                    </a>
+                  </td>
+                </tr>
+              </table>
+              
+              <p style="margin-top: 25px; font-size: 13px; color: #64748b; text-align: center;">
+                Jika Anda tidak merasa meminta reset password, mohon abaikan email ini. Password Anda akan tetap aman.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #f8fafc; padding: 20px 30px; text-align: center; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 12px;">
+              <p style="margin: 0 0 4px 0; font-weight: 600; color: #64748b;">Sistem Informasi Tracer Study SMAN 1 Tawangsari</p>
+              <p style="margin: 0;">Email otomatis ini dikirim secara aman ke ${toEmail}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Password reset email sent to ${toEmail}: ${info.messageId}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error(`Error sending reset email to ${toEmail}:`, error);
     return { success: false, error: error?.message || String(error) };
   }
 };

@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import rateLimit from 'express-rate-limit';
@@ -6,6 +7,7 @@ import { body, validationResult } from 'express-validator';
 import axios from 'axios';
 import User from '../models/User';
 import { authenticate } from '../middleware/auth';
+import { sendPasswordResetEmail } from '../utils/mailer';
 
 // Rate limiting untuk login dan register
 const authLimiter = rateLimit({
@@ -236,6 +238,118 @@ router.get(
         .select('-password')
         .populate('badges');
       res.json(user);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Forgot Password
+router.post(
+  '/forgot-password',
+  authLimiter,
+  [body('email').isEmail().withMessage('Silakan masukkan email yang valid')],
+  async (req: Request, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { email } = req.body;
+      const user = await User.findOne({ email: email.toLowerCase() });
+
+      if (!user) {
+        return res.status(404).json({
+          message: 'Email tidak terdaftar dalam sistem Tracer Study SMANTA. Silakan periksa kembali email Anda.',
+        });
+      }
+
+      // Cegah permintaan berulang dalam kurun waktu 60 detik (cooldown 60s)
+      if (user.resetPasswordExpires) {
+        const createdTime = user.resetPasswordExpires.getTime() - 60 * 60 * 1000;
+        const secondsPassed = Math.floor((Date.now() - createdTime) / 1000);
+        if (secondsPassed < 60) {
+          const waitSeconds = 60 - secondsPassed;
+          return res.status(429).json({
+            message: `Instruksi reset password baru saja dikirim. Silakan tunggu ${waitSeconds} detik sebelum mencoba lagi.`,
+          });
+        }
+      }
+
+      // Generate random 32-byte hex token
+      const resetToken = crypto.randomBytes(32).toString('hex');
+      const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+      user.resetPasswordToken = hashedToken;
+      user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 jam expiry
+      await user.save();
+
+      // Kirim email reset password via Nodemailer
+      const emailResult = await sendPasswordResetEmail(
+        user.email,
+        resetToken,
+        user.profile?.fullName || user.username,
+      );
+
+      res.json({
+        message: 'Instruksi reset password telah dikirim ke email Anda.',
+        emailSent: emailResult.success,
+        emailError: emailResult.error,
+        resetToken: resetToken,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Reset Password
+router.post(
+  '/reset-password',
+  authLimiter,
+  [
+    body('token').notEmpty().withMessage('Token reset password diperlukan'),
+    body('password')
+      .isLength({ min: 8 })
+      .withMessage('Password minimal harus 8 karakter')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/)
+      .withMessage('Password harus mengandung huruf besar, huruf kecil, angka, dan simbol'),
+  ],
+  async (req: Request, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { token, password } = req.body;
+      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+      const user = await User.findOne({
+        resetPasswordToken: hashedToken,
+        resetPasswordExpires: { $gt: new Date() },
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          message: 'Token reset password tidak valid atau sudah kadaluarsa.',
+        });
+      }
+
+      // Hash password baru
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(password, salt);
+
+      // Clear reset token
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+
+      await user.save();
+
+      res.json({
+        message: 'Password berhasil diperbarui. Silakan login kembali dengan password baru Anda.',
+      });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }
