@@ -33,7 +33,7 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
   );
 
   return (
-    <div className='card h-full flex flex-col h-[850px]'>
+    <div className='card  flex flex-col h-full lg:h-[850px]'>
       <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
         <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
           <div className='p-2 bg-indigo-500/10 rounded-lg'>

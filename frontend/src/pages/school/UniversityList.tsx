@@ -103,46 +103,49 @@ const SchoolUniversityList = () => {
         </div>
       </div>
 
-      {/* Stats Cards */}
       {topUniversity && (
-        <Card className='bg-gradient-to-r from-amber-500/25 to-transparent border-l-4 border-l-amber-500 mb-8'>
-          <div className='flex items-center gap-6'>
-            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
-              <FaTrophy size={28} />
+        <div className='relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border border-blue-800/40 p-5 sm:p-7 shadow-xl shadow-blue-950/20 mb-6'>
+          <div className='absolute -right-10 -bottom-10 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl pointer-events-none' />
+          <div className='absolute -left-10 -top-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none' />
+
+          <div className='relative z-10 flex items-center gap-4 sm:gap-6'>
+            <div className='flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-amber-400 via-amber-300 to-amber-500 text-amber-950 shadow-lg shadow-amber-500/25 shrink-0 border border-amber-300/40'>
+              <FaTrophy className='text-xl sm:text-2xl text-amber-950' />
             </div>
+
             <div className='flex-1 min-w-0'>
-              <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-amber-500 sm:hidden' />
-                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
-                  Kampus Terfavorit Alumni
-                </p>
+              <div className='flex items-center gap-2 mb-1.5'>
+                <span className='inline-flex items-center gap-1.5 bg-amber-400/15 text-amber-300 border border-amber-400/30 px-3 py-1 rounded-full text-[10px] sm:text-xs font-extrabold uppercase tracking-wider backdrop-blur-md'>
+                  ✨ Kampus Terfavorit Alumni
+                </span>
               </div>
+
               <h3
-                className='text-xl md:text-2xl font-bold text-[color:var(--text-primary)] truncate'
+                className='text-lg sm:text-2xl font-black text-white truncate tracking-tight'
                 title={topUniversity._id}
               >
                 {topUniversity._id}
               </h3>
-              <div className='flex items-center gap-3 mt-2'>
+
+              <div className='flex items-center gap-3 mt-2 flex-wrap'>
                 <span
-                  className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                  ${topUniversity.type === 'negeri'
-                      ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                  className={`px-2.5 py-0.5 rounded-md text-[10px] font-extrabold uppercase tracking-wider border ${topUniversity.type === 'negeri'
+                      ? 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30'
                       : topUniversity.type === 'kedinasan'
-                        ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
-                        : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-400/30'
+                        : 'bg-indigo-500/20 text-indigo-300 border-indigo-400/30'
                     }`}
                 >
                   {topUniversity.type || 'Swasta'}
                 </span>
-                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
-                  <span className='text-amber-500'>{topUniversity.count}</span>{' '}
-                  Alumni Bergabung
+                <span className='text-xs sm:text-sm font-medium text-blue-100/90 flex items-center gap-1.5'>
+                  <span className='text-amber-400 font-extrabold text-base sm:text-xl'>{topUniversity.count}</span>
+                  <span>Alumni Bergabung</span>
                 </span>
               </div>
             </div>
           </div>
-        </Card>
+        </div>
       )}
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>

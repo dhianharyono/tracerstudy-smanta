@@ -524,7 +524,7 @@ const Profile = () => {
           <button
             type='submit'
             disabled={saving}
-            className='w-full md:w-fit justify-center flex items-center gap-2 px-8 py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-lg shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100'
+            className='w-full md:w-fit justify-center flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl font-extrabold text-xs sm:text-sm shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 disabled:shadow-none'
           >
             {saving ? (
               <>
@@ -532,7 +532,7 @@ const Profile = () => {
                 Menyimpan...
               </>
             ) : (
-              <div className='flex gap-2 items-center text-sm'>
+              <div className='flex gap-2 items-center'>
                 <FaSave /> Simpan Perubahan
               </div>
             )}

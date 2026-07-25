@@ -14,16 +14,19 @@ html {
 }
 
 :root {
-  /* Core Theme Colors (Matching landing page) */
-  --primary: #3b6ebb;
-  --primary-dark: #2b4e8c;
-  --primary-light: #98c4eb;
+  /* Core Theme Colors - Rich Royal Blue & Vibrant Indigo Accent */
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #60a5fa;
+  --primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  --primary-glow: rgba(37, 99, 235, 0.25);
+
   --secondary: #10b981;
-  --accent: #f59e0b;
+  --accent: #8b5cf6;
   --danger: #ef4444;
   --success: #10b981;
   --warning: #f59e0b;
-  --info: #4688cd;
+  --info: #3b82f6;
 
   /* Premium Light Background Colors */
   --bg-primary: #f8fafc;
@@ -31,16 +34,18 @@ html {
   --bg-tertiary: #f1f5f9;
   --bg-card: #ffffff;
   --bg-card-hover: #f8fafc;
+  --bg-glass: rgba(255, 255, 255, 0.85);
 
   /* High-Contrast Light Theme Text Colors */
   --text-primary: #0f172a;
-  --text-secondary: #475569;
+  --text-secondary: #334155;
   --text-tertiary: #64748b;
   --text-muted: #94a3b8;
 
   /* Modern Separation Borders */
-  --border-color: rgba(226, 232, 240, 0.8);
-  --border-hover: rgba(203, 213, 225, 0.9);
+  --border-color: rgba(226, 232, 240, 0.9);
+  --border-hover: rgba(203, 213, 225, 1);
+  --border-glass: rgba(255, 255, 255, 0.4);
 
   /* Light Theme Gray Scale */
   --gray-100: #f8fafc;
@@ -49,16 +54,16 @@ html {
   --gray-400: #cbd5e1;
   --gray-500: #94a3b8;
   --gray-600: #64748b;
-  --gray-700: #475569;
-  --gray-800: #334155;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
   --gray-900: #0f172a;
 
-  /* Premium Soft Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-  --shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
-  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.1);
+  /* Premium Soft Shadows & Multi-layer Depth */
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
+  --shadow: 0 2px 6px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px -4px rgba(15, 23, 42, 0.08), 0 4px 8px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 24px 36px -6px rgba(15, 23, 42, 0.12), 0 8px 16px -6px rgba(15, 23, 42, 0.06);
 }
 
 body {
@@ -149,28 +154,26 @@ code {
 .btn {
   padding: 12px 24px;
   border: none;
-  border-radius: 8px;
+  border-radius: 14px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
-  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 800;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
 }
 
 .btn-primary {
-  background: linear-gradient(135deg,
-      var(--primary) 0%,
-      var(--primary-dark) 100%);
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   color: white;
 }
 
 .btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-1.5px) scale(1.02);
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
 }
 
 .btn-primary svg,

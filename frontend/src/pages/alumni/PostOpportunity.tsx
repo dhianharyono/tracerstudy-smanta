@@ -291,7 +291,7 @@ const PostOpportunity = () => {
         <div className="flex gap-4">
           <button
             type="submit" disabled={submitLoading}
-            className="flex-1 py-3 bg-[var(--primary)] text-white font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold rounded-2xl shadow-md shadow-blue-500/25 hover:shadow-lg hover:shadow-blue-500/35 hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2 text-sm"
           >
             {submitLoading ? 'Memproses...' : (
               <>
