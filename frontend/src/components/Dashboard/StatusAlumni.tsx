@@ -1,9 +1,8 @@
 import {
-  FaUsers,
-  FaGraduationCap,
-  FaBriefcase,
-  FaExclamationCircle,
+  FaUserGraduate,
   FaCalendarAlt,
+  FaUsers,
+  FaChartLine,
 } from 'react-icons/fa';
 
 interface YearStat {
@@ -12,182 +11,171 @@ interface YearStat {
 }
 
 interface AlumniDataProgressProps {
-  stats: {
-    totalAlumni: number;
-    workingAlumni: number;
-    studyingAlumni: number;
-    completedCount: number;
-    incompleteCount: number;
-    totalStudents: number;
+  stats?: {
+    totalAlumni?: number;
+    workingAlumni?: number;
+    studyingAlumni?: number;
+    completedCount?: number;
+    incompleteCount?: number;
+    totalStudents?: number;
     studentYearStats?: YearStat[];
   };
 }
 
 const AlumniDataProgress = ({ stats }: AlumniDataProgressProps) => {
-  const {
-    totalAlumni,
-    workingAlumni,
-    studyingAlumni,
-    incompleteCount,
-    totalStudents,
-    studentYearStats = [],
-  } = stats || {
-    totalAlumni: 0,
-    workingAlumni: 0,
-    studyingAlumni: 0,
-    incompleteCount: 0,
-    totalStudents: 0,
-    studentYearStats: [],
-  };
+  const { totalStudents = 0, studentYearStats = [] } = stats || {};
 
-  const alumniItems = [
-    {
-      label: 'Alumni Sedang Kuliah',
-      value: studyingAlumni,
-      icon: <FaGraduationCap className='text-purple-500' />,
-      color: 'bg-purple-500',
-      bgColor: 'bg-purple-500/10',
-      percentage: totalAlumni > 0 ? (studyingAlumni / totalAlumni) * 100 : 0,
-    },
-    {
-      label: 'Alumni Sudah Bekerja',
-      value: workingAlumni,
-      icon: <FaBriefcase className='text-green-500' />,
-      color: 'bg-green-500',
-      bgColor: 'bg-green-500/10',
-      percentage: totalAlumni > 0 ? (workingAlumni / totalAlumni) * 100 : 0,
-    },
-    {
-      label: 'Alumni Belum Lengkap',
-      value: incompleteCount,
-      icon: <FaExclamationCircle className='text-amber-500' />,
-      color: 'bg-amber-500',
-      bgColor: 'bg-amber-500/10',
-      percentage: totalAlumni > 0 ? (incompleteCount / totalAlumni) * 100 : 0,
-    },
-  ];
-
-  // Sort students by year
+  // Sort students by year (ascending)
   const sortedStudentYears = [...studentYearStats].sort(
     (a, b) => parseInt(a._id) - parseInt(b._id),
   );
 
+  // Total count calculation
+  const calculatedTotal =
+    totalStudents > 0
+      ? totalStudents
+      : studentYearStats.reduce((sum, item) => sum + item.count, 0);
+
+  // Find maximum count in a single angkatan for relative bar width
+  const maxCount =
+    sortedStudentYears.length > 0
+      ? Math.max(...sortedStudentYears.map((item) => item.count))
+      : 1;
+
+  // Find top batch (highest student count)
+  const topAngkatan =
+    sortedStudentYears.length > 0
+      ? [...sortedStudentYears].sort((a, b) => b.count - a.count)[0]
+      : null;
+
   return (
     <div className='card h-full flex flex-col'>
-      <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 text-text-primary font-bold'>
-        <div className='p-2 bg-blue-500/10 rounded-lg'>
-          <FaUsers className='text-blue-500' />
-        </div>
-        <span>Progress Kelengkapan Data</span>
-      </h2>
+      {/* Header Section */}
+      <div className='flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-[color:var(--border-color)]/60'>
+        <h2 className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
+          <div className='p-2.5 bg-indigo-500/10 rounded-xl border border-indigo-500/20'>
+            <FaUserGraduate className='text-indigo-500 text-lg' />
+          </div>
+          <span>Statistik Data Siswa Per Angkatan</span>
+        </h2>
+        {calculatedTotal > 0 && (
+          <span className='px-3 py-1 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold rounded-full border border-indigo-500/20 flex items-center gap-1.5'>
+            <FaUsers className='text-indigo-500 text-xs' />
+            {calculatedTotal.toLocaleString()} Total Siswa
+          </span>
+        )}
+      </div>
 
-      <div className='flex-grow space-y-10 overflow-y-auto pr-2 custom-scrollbar'>
-        {/* Section Alumni */}
-        <div>
-          <div className='flex items-center gap-2 mb-6'>
-            <span className='text-xs items-center px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 font-bold uppercase tracking-widest'>
-              Alumni
-            </span>
-            <div className='h-[1px] flex-grow bg-border-color/50'></div>
+      {/* Main Content Area */}
+      <div className='flex-grow space-y-4 overflow-y-auto pr-1 custom-scrollbar min-h-[220px]'>
+        {sortedStudentYears.length === 0 ? (
+          <div className='h-full flex flex-col items-center justify-center text-center py-10 px-4'>
+            <div className='w-14 h-14 rounded-2xl bg-indigo-500/10 flex items-center justify-center mb-3 text-indigo-500'>
+              <FaCalendarAlt className='text-2xl' />
+            </div>
+            <p className='text-sm font-semibold text-text-secondary mb-1'>
+              Belum ada data angkatan siswa
+            </p>
+            <p className='text-xs text-text-tertiary max-w-xs'>
+              Data statistik angkatan dan jumlah siswa belum tersedia saat ini.
+            </p>
           </div>
-          <div className='space-y-6'>
-            {alumniItems.map((item, index) => (
-              <div key={index} className='space-y-2'>
-                <div className='flex justify-between items-center'>
-                  <div className='flex items-center gap-3 font-bold text-text-secondary text-sm'>
-                    <div className='p-1.5 rounded-lg bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)]'>
-                      {item.icon}
-                    </div>
-                    <span>{item.label}</span>
-                  </div>
-                  <span className='font-bold text-text-primary text-base'>
-                    {item.value.toLocaleString()}
-                  </span>
-                </div>
-                <div
-                  className={`w-full h-2 ${item.bgColor} rounded-full overflow-hidden shadow-inner`}
-                >
-                  <div
-                    className={`h-full ${item.color} transition-all duration-1000 ease-out shadow-lg shadow-current/20`}
-                    style={{ width: `${Math.min(100, item.percentage)}%` }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        ) : (
+          sortedStudentYears.map((item, index) => {
+            const percentageOfTotal =
+              calculatedTotal > 0
+                ? ((item.count / calculatedTotal) * 100).toFixed(1)
+                : '0';
+            const relativeWidth = Math.min(
+              100,
+              Math.max(8, (item.count / maxCount) * 100),
+            );
 
-        {/* Section Siswa (Years Only) */}
-        <div>
-          <div className='flex items-center gap-2 mb-6'>
-            <span className='text-xs items-center px-3 py-1 rounded-full bg-indigo-500/10 text-indigo-600 font-bold uppercase tracking-widest'>
-              Siswa (Per Angkatan)
-            </span>
-            <div className='h-[1px] flex-grow bg-border-color/50'></div>
-          </div>
-          <div className='space-y-4'>
-            {sortedStudentYears.length === 0 ? (
-              <p className='text-sm text-center text-text-tertiary py-4 italic whitespace-normal'>
-                Belum ada data angkatan siswa
-              </p>
-            ) : (
-              sortedStudentYears.map((item, index) => (
-                <div
-                  key={index}
-                  className='flex items-center justify-between p-4 rounded-2xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] hover:border-indigo-500/30 hover:bg-indigo-500/5 transition-all duration-300 shadow-sm'
-                >
-                  <div className='flex items-center gap-4'>
-                    <div className='w-10 h-10 rounded-xl bg-indigo-500/10 flex items-center justify-center shadow-inner'>
-                      <FaCalendarAlt className='text-indigo-500 text-sm' />
+            return (
+              <div
+                key={index}
+                className='p-4 rounded-2xl bg-[color:var(--bg-tertiary)] border border-[color:var(--border-color)] hover:border-indigo-500/40 hover:bg-indigo-500/5 transition-all duration-300 shadow-sm group'
+              >
+                <div className='flex items-center justify-between gap-4 mb-3'>
+                  {/* Left: Angkatan detail */}
+                  <div className='flex items-center gap-3.5'>
+                    <div className='w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500/15 to-purple-500/10 flex items-center justify-center border border-indigo-500/20 text-indigo-500 group-hover:scale-105 transition-transform duration-300 shadow-inner'>
+                      <FaCalendarAlt className='text-base' />
                     </div>
                     <div>
-                      <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
-                        Angkatan
-                      </p>
-                      <p className='text-base font-bold text-text-primary'>
+                      <span className='text-[10px] text-text-tertiary font-extrabold uppercase tracking-widest block mb-0.5'>
+                        Angkatan Siswa
+                      </span>
+                      <p className='text-base font-extrabold text-text-primary group-hover:text-indigo-500 transition-colors'>
                         {item._id}
                       </p>
                     </div>
                   </div>
+
+                  {/* Right: Count and percentage */}
                   <div className='text-right'>
-                    <p className='text-xs text-text-tertiary font-bold uppercase tracking-wider mb-1'>
-                      Jumlah
-                    </p>
-                    <p className='text-lg font-bold text-indigo-500'>
-                      {item.count}{' '}
+                    <div className='flex items-baseline justify-end gap-1.5'>
+                      <span className='text-xl font-black text-indigo-500 dark:text-indigo-400'>
+                        {item.count.toLocaleString()}
+                      </span>
                       <span className='text-xs font-bold text-text-tertiary'>
                         Siswa
                       </span>
-                    </p>
+                    </div>
+                    <span className='inline-block text-[11px] font-bold px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border border-indigo-500/15 mt-0.5'>
+                      {percentageOfTotal}% dari total
+                    </span>
                   </div>
                 </div>
-              ))
-            )}
+
+                {/* Progress bar visual */}
+                <div className='w-full h-2.5 bg-indigo-500/10 rounded-full overflow-hidden p-0.5 shadow-inner'>
+                  <div
+                    className='h-full bg-gradient-to-r from-indigo-500 via-indigo-600 to-purple-500 rounded-full transition-all duration-700 ease-out shadow-sm'
+                    style={{ width: `${relativeWidth}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {/* Summary Footer */}
+      {sortedStudentYears.length > 0 && (
+        <div className='mt-6 pt-5 border-t border-[color:var(--border-color)] grid grid-cols-3 gap-3 text-center'>
+          <div className='p-3 rounded-xl bg-[color:var(--bg-tertiary)]/50 border border-[color:var(--border-color)]/60'>
+            <p className='text-[10px] font-extrabold text-text-tertiary uppercase tracking-wider mb-1'>
+              Total Siswa
+            </p>
+            <p className='text-lg font-black text-indigo-500'>
+              {calculatedTotal.toLocaleString()}
+            </p>
+          </div>
+
+          <div className='p-3 rounded-xl bg-[color:var(--bg-tertiary)]/50 border border-[color:var(--border-color)]/60'>
+            <p className='text-[10px] font-extrabold text-text-tertiary uppercase tracking-wider mb-1'>
+              Jumlah Angkatan
+            </p>
+            <p className='text-lg font-black text-purple-500'>
+              {sortedStudentYears.length}
+            </p>
+          </div>
+
+          <div className='p-3 rounded-xl bg-[color:var(--bg-tertiary)]/50 border border-[color:var(--border-color)]/60'>
+            <p className='text-[10px] font-extrabold text-text-tertiary uppercase tracking-wider mb-1'>
+              Terbanyak
+            </p>
+            <p className='text-lg font-black text-emerald-500 flex items-center justify-center gap-1'>
+              <FaChartLine className='text-xs' />
+              {topAngkatan ? topAngkatan._id : '-'}
+            </p>
           </div>
         </div>
-      </div>
-
-      <div className='mt-8 pt-6 border-t border-[color:var(--border-color)] grid grid-cols-2 gap-8'>
-        <div>
-          <p className='text-xs font-bold text-text-tertiary uppercase tracking-widest mb-1'>
-            Total Alumni
-          </p>
-          <p className='text-xl font-bold text-blue-500'>
-            {totalAlumni.toLocaleString()}
-          </p>
-        </div>
-        <div className='text-right'>
-          <p className='text-xs font-bold text-text-tertiary uppercase tracking-widest mb-1'>
-            Total Siswa
-          </p>
-          <p className='text-xl font-bold text-indigo-500'>
-            {totalStudents.toLocaleString()}
-          </p>
-        </div>
-      </div>
-
+      )}
     </div>
   );
 };
 
 export default AlumniDataProgress;
+

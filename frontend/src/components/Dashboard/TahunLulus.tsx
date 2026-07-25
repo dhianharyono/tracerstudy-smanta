@@ -28,10 +28,12 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
   const hasData = yearStats.length > 0;
 
   // Sort by year to ensure correct sequence
-  const sortedData = [...yearStats].sort((a, b) => parseInt(a._id) - parseInt(b._id));
+  const sortedData = [...yearStats].sort(
+    (a, b) => parseInt(a._id) - parseInt(b._id),
+  );
 
   return (
-    <div className='card h-full flex flex-col'>
+    <div className='card h-full flex flex-col h-[850px]'>
       <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
         <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
           <div className='p-2 bg-indigo-500/10 rounded-lg'>
@@ -55,7 +57,7 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
       ) : (
         <div className='chart-container w-full flex-grow h-[400px]'>
           <div className='w-full h-full'>
-            <ResponsiveContainer width='100%' height="100%">
+            <ResponsiveContainer width='100%' height='100%'>
               <BarChart
                 data={sortedData}
                 margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
@@ -69,7 +71,11 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
                 <XAxis
                   dataKey='_id'
                   stroke='var(--text-tertiary)'
-                  tick={{ fill: 'var(--text-secondary)', fontSize: 13, fontWeight: 600 }}
+                  tick={{
+                    fill: 'var(--text-secondary)',
+                    fontSize: 13,
+                    fontWeight: 600,
+                  }}
                   axisLine={false}
                   tickLine={false}
                   dy={10}
@@ -93,7 +99,11 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
                     padding: '12px',
                   }}
                   itemStyle={{ fontWeight: '800', color: '#4f46e5' }}
-                  labelStyle={{ marginBottom: '4px', fontWeight: 'bold', color: 'var(--indigo-500)' }}
+                  labelStyle={{
+                    marginBottom: '4px',
+                    fontWeight: 'bold',
+                    color: 'var(--indigo-500)',
+                  }}
                   formatter={(value: number) => [`${value} Alumni`, 'Jumlah']}
                   labelFormatter={(value) => `Angkatan Tahun ${value}`}
                 />
@@ -109,7 +119,10 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
                   }}
                 >
                   {sortedData.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -121,11 +134,17 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
       {hasData && (
         <div className='mt-8 pt-8 border-t border-[color:var(--border-color)] flex justify-center gap-12'>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>Lulusan Terbaru</p>
-            <p className='text-xl font-bold text-indigo-500'>{sortedData[sortedData.length - 1]._id}</p>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>
+              Lulusan Terbaru
+            </p>
+            <p className='text-xl font-bold text-indigo-500'>
+              {sortedData[sortedData.length - 1]._id}
+            </p>
           </div>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>Total Alumni</p>
+            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>
+              Total Alumni{' '}
+            </p>
             <p className='text-xl font-bold text-indigo-500'>
               {sortedData.reduce((sum, item) => sum + item.count, 0)}
             </p>

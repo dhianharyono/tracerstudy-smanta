@@ -397,7 +397,7 @@ const StudentUniversities = () => {
             </div>
             <div>
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
-                Total PT Terdata
+                Total Perguran Tinggi
               </p>
               <h3 className='text-2xl font-bold !text-white'>
                 {universities.length}
