@@ -1,142 +1,132 @@
-# Tracer Study Dashboard - SMANTA Alumni
+# Tracer Study Dashboard - SMANTA
 
-Dashboard untuk penelusuran alumni SMA Negeri 1 Tawangsari (SMANTA) menggunakan teknologi MERN Stack dengan TypeScript.
+Aplikasi web **Tracer Study** untuk alumni SMA Negeri 1 Tawangsari (SMANTA) berbasis **MERN Stack** (MongoDB, Express, React, Node.js) dengan **TypeScript**. Aplikasi ini digunakan untuk pendataan alumni, pengisian survei/kuesioner lulusan, pemetaan perguruan tinggi & karir, serta analitik dan pelaporan data bagi pihak sekolah/administrator.
 
-## Fitur
+---
 
-### Untuk Alumni
+## Teknologi yang Digunakan
 
-- Login dan Pendaftaran
-- Pengisian Kuesioner/Survei (Informasi Personal, Perguruan Tinggi, Pekerjaan, Media Sosial)
-- Pencarian Perguruan Tinggi & Jurusan secara Dinamis
-- Pengelolaan Profil
-- Dashboard dengan statistik
-- News/Berita dengan detail
-- Kritik & Saran
+- **Backend**: Node.js, Express.js, TypeScript, MongoDB (Mongoose ORM)
+- **Frontend**: React.js, TypeScript, Vite, React Router, Axios
+- **Styling & UI**: Tailwind CSS, React Icons, Recharts (Visualisasi Data)
+- **Autentikasi**: JWT (JSON Web Tokens), bcryptjs
+- **Code Quality**: ESLint, Prettier, Husky, lint-staged
 
-### Untuk Administrator
+---
 
-- Dashboard Administrasi dengan statistik lengkap
-  - Total Alumni dan Total Student yang terdaftar
-  - Statistik alumni bekerja dan kuliah
-  - Statistik berdasarkan jenis perguruan tinggi (PTN, PTS, Kedinasan)
-  - Grafik statistik jurusan dan tahun lulus
-- Pengelolaan Data Alumni, Student, dan Admin
-- **Master Data Management**: Verifikasi Perguruan Tinggi dan Jurusan baru yang diinput alumni
-- Pengelolaan News/Berita
-- Analisis dan Pelaporan Data
-- Laporan berdasarkan berbagai kategori
-- Manajemen Kritik & Saran
+## Prasyarat
 
-### Fitur Sistem Dinamis (New)
+Sebelum memulai instalasi, pastikan perangkat Anda telah terpasang:
 
-- **Dynamic Master Data**: Daftar Perguruan Tinggi dan Jurusan tidak lagi statis, melainkan dikelola melalui database.
-- **Auto-Sync**: Sistem secara otomatis memindai data alumni yang sudah ada dan memasukkan kampus/jurusan baru ke Master List.
-- **User-Driven Growth**: Alumni dapat menginput nama kampus atau jurusan baru yang belum ada di daftar, dan sistem akan otomatis mendaftarkannya (unverified) untuk admin review.
-- **Idempotent Maintenance**: Server secara otomatis membersihkan duplikasi dan melakukan sinkronisasi data setiap kali dijalankan.
+- **Node.js**: versi 18.x atau lebih baru
+- **npm**: versi 9.x atau lebih baru
+- **MongoDB**: versi 6.0 atau lebih baru (Lokal atau MongoDB Atlas)
 
-## Teknologi
+---
 
-- **Backend**: Node.js, Express, TypeScript, MongoDB (Mongoose)
-- **Frontend**: React, TypeScript, Vite, React Router, Axios
-- **Authentication**: JWT (JSON Web Tokens)
-- **Charts**: Recharts
-- **Styling**: Tailwind CSS, Custom CSS dengan dark theme & glassmorphism
-- **Icons**: React Icons (Font Awesome, Lucide)
-- **Development**: Husky & lint-staged (Pre-commit checks)
+## Panduan Instalasi & Setup
 
-## Script Utama
+### 1. Clone Repository
 
-Di root direktori, Anda dapat menjalankan:
+```bash
+git clone https://github.com/username/tracer-study-smanta.git
+cd tracer-study-smanta
+```
 
-- `npm run dev`: Menjalankan frontend dan backend secara bersamaan.
-- `npm run install:all`: Menginstall semua dependensi (root, frontend, backend).
-- **`npm run lint`**: Mengecek kualitas kode (ESLint) di seluruh proyek.
-- `npm run lint:frontend`: Hanya cek linting di frontend.
-- `npm run lint:backend`: Hanya cek linting di backend.
+### 2. Install Dependencies
 
-## Instalasi
+Jalankan perintah berikut pada root direktori proyek untuk mengunduh seluruh dependensi (root, backend, dan frontend):
 
-1. Clone repository ini
-2. Install dependencies untuk semua bagian:
+```bash
+npm run install:all
+```
+
+---
+
+## Menjalankan Aplikasi
+
+### Mode Pengembangan (Development)
+
+Jalankan backend dan frontend secara simultan dengan satu perintah:
+
+```bash
+npm run dev
+```
+
+Aplikasi dapat diakses melalui browser di:
+
+- **Frontend**: `http://localhost:3000` (atau port yang diberikan oleh Vite)
+- **Backend API**: `http://localhost:5000`
+
+Jika ingin menjalankan server backend atau frontend saja secara terpisah:
+
+- **Backend saja**: `npm run dev:backend`
+- **Frontend saja**: `npm run dev:frontend`
+
+### Pengecekan Kode (Linting)
+
+```bash
+# Mengecek linting seluruh proyek
+npm run lint
+
+# Mengecek linting frontend / backend saja
+npm run lint:frontend
+npm run lint:backend
+```
+
+### Production Build
+
+1. **Build & Start Backend**:
 
    ```bash
-   npm run install:all
+   cd backend
+   npm run build
+   npm start
    ```
 
-3. Setup environment variables:
-
-   - Copy `backend/.env.example` ke `backend/.env`
-   - Edit `backend/.env` dan sesuaikan konfigurasi:
-     ```
-     PORT=5000
-     MONGODB_URI=mongodb://localhost:27017/tracer-study
-     JWT_SECRET=your-secret-key-change-this-in-production
-     NODE_ENV=development
-     ```
-
-4. Pastikan MongoDB sudah berjalan
-
-5. Jalankan aplikasi:
-
+2. **Build Frontend**:
    ```bash
-   npm run dev
+   cd frontend
+   npm run build
    ```
+   File hasil build frontend akan tersimpan di direktori `frontend/dist/`.
 
-   Atau jalankan secara terpisah:
+---
 
-   - Backend: `npm run dev:backend` (port 5000)
-   - Frontend: `npm run dev:frontend` (port 3000)
-
-## Struktur Project
+## Struktur Proyek
 
 ```
-tracer-study/
+tracer-study-smanta/
 ├── backend/
 │   ├── src/
-│   │   ├── models/          # Mongoose Models (User, University, Major, etc.)
-│   │   ├── routes/          # Express Routes
-│   │   ├── middleware/      # Auth & Error Middleware
-│   │   ├── utils/           # Sync & Maintenance Utilities
-│   │   └── server.ts        # Entry point
-│   └── package.json
+│   │   ├── config/          # Konfigurasi aplikasi & database
+│   │   ├── controllers/     # Controller penangan bisnis logika
+│   │   ├── middleware/      # Middleware autentikasi & validasi
+│   │   ├── models/          # Schema MongoDB / Mongoose
+│   │   ├── routes/          # Definisi rute API
+│   │   ├── utils/           # Helper, sinkronisasi & deteksi duplikasi
+│   │   └── server.ts        # Entry point backend Express
+│   ├── .env.example         # Template variabel lingkungan backend
+│   ├── package.json
+│   └── tsconfig.json
 ├── frontend/
 │   ├── src/
-│   │   ├── components/      # UI & Feature Components
-│   │   ├── contexts/        # Auth Context
-│   │   ├── pages/           # Page Layouts
-│   │   └── hooks/           # Custom API Hooks
-│   └── package.json
-└── package.json
+│   │   ├── assets/          # Asset gambar & ikon
+│   │   ├── components/      # Komponen UI reusable
+│   │   ├── contexts/        # State global / Context API
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── pages/           # Komponen halaman utama
+│   │   ├── services/        # Klien HTTP / API call
+│   │   └── App.tsx          # Komponen utama aplikasi & router
+│   ├── package.json
+│   └── vite.config.ts
+├── .gitignore
+├── package.json             # Root package & script otomatisasi
+└── README.md
 ```
 
-## API Endpoints
+---
 
-### Master Data
-- `GET /api/universities` - Ambil semua perguruan tinggi
-- `GET /api/majors` - Ambil semua jurusan
-- `GET /api/universities/search?q=...` - Cari perguruan tinggi
-- `POST /api/universities` - Tambah perguruan tinggi (Auth)
-- `POST /api/majors` - Tambah jurusan (Auth)
+## Lisensi
 
-### Authentication
-- `POST /api/auth/register` - Register user
-- `POST /api/auth/login` - Login
-- `GET /api/auth/me` - Get current user
-
-### Alumni
-- `GET /api/alumni/profile` - Get profile
-- `PUT /api/alumni/profile` - Update profile & auto-sync data
-- `POST /api/alumni/questionnaire` - Submit kuesioner & auto-sync data
-- `PUT /api/alumni/questionnaire` - Update kuesioner & auto-sync data
-
-### Admin
-- `GET /api/admin/dashboard` - Statistik dashboard
-- `GET /api/admin/alumni` - Daftar alumni
-- `PUT /api/admin/alumni/:id` - Update alumni data
-- `DELETE /api/admin/alumni/:id` - Hapus alumni
-- `GET /api/admin/reports` - Laporan tracer study
-
-## License
-
-ISC
+Proyek ini menggunakan lisensi [ISC](LICENSE).
