@@ -140,9 +140,9 @@ const AdminAlumni = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus alumni yang ingin dikirimkan email pengingat.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan alumni yang datanya belum lengkap.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -195,13 +195,13 @@ const AdminAlumni = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -335,7 +335,7 @@ const AdminAlumni = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal membatasi alumni nama tidak lengkap',
+        'Gagal membatasi alumni nama tidak lengkap',
         'error',
       );
     } finally {
@@ -474,9 +474,8 @@ const AdminAlumni = () => {
 
       {/* Filters */}
       <Card
-        className={`mb-6 transition-all duration-300 ${
-          showFilters ? 'block' : 'hidden md:block'
-        }`}
+        className={`mb-6 transition-all duration-300 ${showFilters ? 'block' : 'hidden md:block'
+          }`}
       >
         <div className='flex flex-col gap-4'>
           {/* Filter Card Header */}
@@ -926,15 +925,19 @@ const AdminAlumni = () => {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </TableCell>
                 <TableCell>
                   {alum.updatedAt
                     ? new Date(alum.updatedAt).toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })
                     : '-'}
                 </TableCell>
                 <TableCell>
@@ -952,11 +955,10 @@ const AdminAlumni = () => {
                   <div className='flex gap-1'>
                     <button
                       onClick={() => handleToggleHide(alum)}
-                      className={`rounded p-2 transition-colors ${
-                        alum.isHidden
-                          ? 'text-purple-600 hover:bg-purple-100'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-                      }`}
+                      className={`rounded p-2 transition-colors ${alum.isHidden
+                        ? 'text-purple-600 hover:bg-purple-100'
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                        }`}
                       title={
                         alum.isHidden
                           ? 'Tampilkan User ke Publik'
@@ -994,14 +996,14 @@ const AdminAlumni = () => {
                     {(alum.profile?.graduationYear >=
                       new Date().getFullYear() ||
                       !alum.profile?.graduationYear) && (
-                      <button
-                        onClick={() => setDemotingAlumni(alum)}
-                        className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
-                        title='Ubah ke Student'
-                      >
-                        <FaUndo size={14} />
-                      </button>
-                    )}
+                        <button
+                          onClick={() => setDemotingAlumni(alum)}
+                          className='rounded p-2 text-blue-500 hover:bg-blue-50 hover:text-blue-700 transition-colors dark:hover:bg-blue-900/20'
+                          title='Ubah ke Student'
+                        >
+                          <FaUndo size={14} />
+                        </button>
+                      )}
                     <button
                       onClick={() => handleDelete(alum._id)}
                       className='rounded p-2 text-red-500 hover:bg-red-50 hover:text-red-700 transition-colors dark:hover:bg-red-900/20'
