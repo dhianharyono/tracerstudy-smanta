@@ -44,10 +44,10 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
               : isProfile
                 ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
                 : isUniversity
-                  ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
+                  ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk melengkapi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
                   : isJob
-                    ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah mengisi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
-                    : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk mengisi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
+                    ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah melengkapi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
+                    : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk melengkapi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
         </p>
 
         {/* Action Button */}

@@ -48,6 +48,9 @@ export interface IUser extends Document {
   schoolRole?: 'bk' | 'teacher';
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
+  isEmailVerified?: boolean;
+  emailVerificationToken?: string;
+  emailVerificationExpires?: Date;
   createdAt: Date;
   updatedAt: Date;
   lastActiveAt?: Date;
@@ -146,6 +149,15 @@ const UserSchema = new Schema<IUser>(
       type: String,
     },
     resetPasswordExpires: {
+      type: Date,
+    },
+    isEmailVerified: {
+      type: Boolean,
+    },
+    emailVerificationToken: {
+      type: String,
+    },
+    emailVerificationExpires: {
       type: Date,
     },
     lastActiveAt: {

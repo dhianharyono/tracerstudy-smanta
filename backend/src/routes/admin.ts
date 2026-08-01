@@ -617,7 +617,19 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const filter: any = { role: 'alumni' };
 
     if (name) {
-      filter['profile.fullName'] = { $regex: name, $options: 'i' };
+      const searchRegex = { $regex: name, $options: 'i' };
+      const searchCond = [
+        { 'profile.fullName': searchRegex },
+        { username: searchRegex },
+        { email: searchRegex },
+      ];
+      if (filter['$or']) {
+        const existingOr = filter['$or'];
+        delete filter['$or'];
+        filter['$and'] = [{ $or: existingOr }, { $or: searchCond }];
+      } else {
+        filter['$or'] = searchCond;
+      }
     }
 
     if (university) {

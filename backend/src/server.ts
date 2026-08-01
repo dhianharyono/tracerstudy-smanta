@@ -19,6 +19,7 @@ import schoolRoutes from './routes/school';
 import jobRoutes from './routes/job';
 import universityRoutes from './routes/university';
 import majorRoutes from './routes/major';
+import User from './models/User';
 import { seedUniversities } from './utils/seedUniversities';
 
 dotenv.config();
@@ -120,6 +121,20 @@ const connectToDatabase = async () => {
     
     // Seed universities if collection is empty (run in background)
     seedUniversities();
+
+    // Auto-migrate legacy users (users created before verification feature who don't have a verification token)
+    User.updateMany(
+      {
+        emailVerificationToken: { $exists: false },
+        $or: [
+          { isEmailVerified: false },
+          { isEmailVerified: { $exists: false } },
+        ],
+      },
+      { $set: { isEmailVerified: true } }
+    ).catch((err) =>
+      console.error('Error auto-migrating legacy users email verification:', err)
+    );
   } catch (error) {
     console.error('MongoDB connection error:', error);
     throw error;

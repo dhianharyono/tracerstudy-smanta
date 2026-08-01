@@ -364,3 +364,96 @@ export const sendPasswordResetEmail = async (
     return { success: false, error: error?.message || String(error) };
   }
 };
+
+export const sendEmailVerification = async (
+  toEmail: string,
+  verificationToken: string,
+  username?: string,
+): Promise<{ success: boolean; error?: string }> => {
+  const transporter = getTransporter();
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const verifyUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
+
+  if (!transporter) {
+    const errorMsg =
+      'Email transporter tidak terkonfigurasi. Variabel EMAIL_USER dan EMAIL_PASS belum diisi di backend/.env.';
+    console.warn(`${errorMsg} Dev Mode verify link for ${toEmail}: ${verifyUrl}`);
+    return { success: false, error: errorMsg };
+  }
+
+  const mailOptions = {
+    from: `"Tracer Study SMAN 1 Tawangsari" <${process.env.EMAIL_USER}>`,
+    to: toEmail,
+    subject: 'Verifikasi Email Akun Tracer Study SMAN 1 Tawangsari',
+    html: `
+      <div style="background-color: #f8fafc; padding: 40px 10px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; min-height: 100%;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0;">
+          <!-- HEADER -->
+          <tr>
+            <td style="background: linear-gradient(135deg, #1e40af, #3b82f6); padding: 40px 20px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 0.5px;">TRACER STUDY SMAN 1 TAWANGSARI</h1>
+              <p style="color: #bfdbfe; margin: 6px 0 0 0; font-size: 13px; font-weight: 600;">Konfirmasi Alamat Email Anda</p>
+            </td>
+          </tr>
+
+          <!-- BODY -->
+          <tr>
+            <td style="padding: 40px 30px; color: #334155; line-height: 1.7;">
+              <h2 style="color: #0f172a; margin-top: 0; font-size: 20px; font-weight: 700;">Halo, ${username || 'Pengguna'}! 👋</h2>
+              <p style="margin-bottom: 16px; font-size: 14.5px;">
+                Terima kasih telah mendaftar di platform <strong>Tracer Study SMAN 1 Tawangsari</strong>. Untuk mengaktifkan akun Anda dan mulai menggunakan semua fitur, silakan verifikasi alamat email Anda dengan klik tombol di bawah ini.
+              </p>
+
+              <!-- INFO BOX -->
+              <div style="background-color: #eff6ff; border-left: 4px solid #3b82f6; padding: 16px 18px; margin: 24px 0; border-radius: 0 10px 10px 0;">
+                <p style="margin: 0; font-size: 13.5px; color: #1e40af; font-weight: 600;">
+                  🔒 Tautan verifikasi ini <strong>hanya berlaku selama 24 jam</strong> sejak email ini dikirim. Jika sudah kedaluwarsa, Anda dapat meminta pengiriman ulang dari halaman login.
+                </p>
+              </div>
+
+              <!-- CTA BUTTON -->
+              <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 32px auto;">
+                <tr>
+                  <td align="center" style="border-radius: 12px; background: linear-gradient(135deg, #2563eb, #4f46e5); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);">
+                    <a href="${verifyUrl}" target="_blank" style="display: inline-block; padding: 16px 40px; font-size: 15px; color: #ffffff; text-decoration: none; font-weight: 800; border-radius: 12px; letter-spacing: 0.8px;">
+                      VERIFIKASI EMAIL SAYA
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- FALLBACK LINK -->
+              <p style="margin-top: 24px; font-size: 12px; color: #94a3b8; text-align: center;">
+                Jika tombol di atas tidak berfungsi, salin dan tempel tautan berikut ke browser Anda:
+              </p>
+              <p style="font-size: 11px; color: #64748b; text-align: center; word-break: break-all; background: #f1f5f9; padding: 10px 14px; border-radius: 8px; margin: 6px 0 0;">
+                <a href="${verifyUrl}" style="color: #3b82f6;">${verifyUrl}</a>
+              </p>
+
+              <p style="margin-top: 28px; font-size: 13px; color: #64748b; text-align: center;">
+                Jika Anda tidak merasa mendaftar di platform ini, mohon abaikan email ini. Akun tidak akan diaktifkan.
+              </p>
+            </td>
+          </tr>
+
+          <!-- FOOTER -->
+          <tr>
+            <td style="background-color: #f8fafc; padding: 20px 30px; text-align: center; border-top: 1px solid #e2e8f0; color: #94a3b8; font-size: 12px;">
+              <p style="margin: 0 0 4px 0; font-weight: 600; color: #64748b;">Sistem Informasi Tracer Study SMAN 1 Tawangsari</p>
+              <p style="margin: 0;">Email otomatis ini dikirim ke ${toEmail}</p>
+            </td>
+          </tr>
+        </table>
+      </div>
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`Email verification sent to ${toEmail}: ${info.messageId}`);
+    return { success: true };
+  } catch (error: any) {
+    console.error(`Error sending verification email to ${toEmail}:`, error);
+    return { success: false, error: error?.message || String(error) };
+  }
+};

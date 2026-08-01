@@ -16,6 +16,7 @@ import { UserRole } from './types';
 const AuthLayout = lazy(() => import('./components/auth/AuthLayout'));
 const ForgotPassword = lazy(() => import('./pages/auth/ForgotPassword'));
 const ResetPassword = lazy(() => import('./pages/auth/ResetPassword'));
+const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'));
 const Profile = lazy(() => import('./pages/Profile'));
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 
@@ -157,6 +158,10 @@ function App() {
             <Route
               path='/reset-password'
               element={<ResetPassword />}
+            />
+            <Route
+              path='/verify-email'
+              element={<VerifyEmail />}
             />
 
             {/* Alumni Routes */}

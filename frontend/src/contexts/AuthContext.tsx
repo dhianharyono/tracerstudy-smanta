@@ -21,7 +21,7 @@ interface AuthContextType {
     password: string,
     role: string,
     captchaToken: string,
-  ) => Promise<void>;
+  ) => Promise<{ requiresEmailVerification: boolean; email: string }>;
   logout: () => void;
   updateUser: (newUser: any) => void;
   loading: boolean;
@@ -123,13 +123,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         role,
         captchaToken,
       });
-      const { user: newUser } = response.data;
-      const formattedUser = {
-        ...newUser,
-        id: newUser.id || newUser._id,
+      // Tidak auto-login — kembalikan info verifikasi
+      return {
+        requiresEmailVerification: response.data.requiresEmailVerification ?? true,
+        email: response.data.email ?? email,
       };
-      setUser(formattedUser);
-      localStorage.setItem('user', JSON.stringify(formattedUser));
     } catch (error: any) {
       const serverErrors = error.response?.data?.errors;
       const message =

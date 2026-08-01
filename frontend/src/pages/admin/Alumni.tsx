@@ -500,7 +500,7 @@ const AdminAlumni = () => {
             </span>
             <input
               type='text'
-              placeholder='Cari berdasarkan Nama Alumni, Perguruan Tinggi, atau Pekerjaan...'
+              placeholder='Cari berdasarkan Nama Alumni, Username, Perguruan Tinggi, atau Pekerjaan...'
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className='w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2.5 pl-10 pr-4 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)] shadow-sm'
@@ -772,7 +772,7 @@ const AdminAlumni = () => {
       {/* Table Content */}
       <TableContainer>
         <TableHeader>
-          <TableHeadCell>Nama & Email</TableHeadCell>
+          <TableHeadCell>Nama & Akun</TableHeadCell>
           <TableHeadCell>Pendidikan</TableHeadCell>
           <TableHeadCell>Pekerjaan</TableHeadCell>
           <TableHeadCell>Media Sosial</TableHeadCell>
@@ -830,6 +830,14 @@ const AdminAlumni = () => {
                       )}
                     </div>
                     <div className='text-xs text-[color:var(--text-secondary)] flex flex-wrap items-center gap-1.5 mt-0.5'>
+                      {alum.username && (
+                        <span className='font-medium text-blue-600 dark:text-blue-400'>
+                          @{alum.username}
+                        </span>
+                      )}
+                      {alum.username && alum.email && (
+                        <span className='text-gray-400'>•</span>
+                      )}
                       <span>{alum.email}</span>
                       {alum.isDuplicateEmail && (
                         <span

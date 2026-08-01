@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaCrown, FaTimes, FaArrowRight, FaUniversity } from 'react-icons/fa';
+import { FaCrown, FaTimes, FaUniversity } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 interface MentorshipPromoCardProps {
@@ -74,7 +74,7 @@ const MentorshipPromoCard: React.FC<MentorshipPromoCardProps> = ({
 
         <div className='shrink-0 w-full md:w-auto'>
           <div className='flex items-center justify-center gap-2 rounded-xl bg-white text-indigo-600 px-4 py-2.5 sm:px-5 sm:py-3 font-bold text-sm shadow-md group-hover:translate-x-1 transition-transform w-full md:w-auto'>
-            Ke Profil Saya <FaArrowRight />
+            Ke Profil Saya
           </div>
         </div>
       </div>

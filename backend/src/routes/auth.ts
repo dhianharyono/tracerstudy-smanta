@@ -7,7 +7,7 @@ import { body, validationResult } from 'express-validator';
 import axios from 'axios';
 import User from '../models/User';
 import { authenticate } from '../middleware/auth';
-import { sendPasswordResetEmail } from '../utils/mailer';
+import { sendPasswordResetEmail, sendEmailVerification } from '../utils/mailer';
 
 // Rate limiting untuk login dan register
 const authLimiter = rateLimit({
@@ -106,48 +106,30 @@ router.post(
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
+      // Generate email verification token
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      const hashedVerificationToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+
       const user = new User({
         username,
         email,
         password: hashedPassword,
         role,
+        isEmailVerified: false,
+        emailVerificationToken: hashedVerificationToken,
+        emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 jam
       });
 
       await user.save();
 
-      const jwtSecret = process.env.JWT_SECRET;
-      if (!jwtSecret || jwtSecret === 'secret') {
-        console.warn(
-          'WARNING: Using default or missing JWT_SECRET. This is insecure for production.',
-        );
-      }
+      // Kirim email verifikasi
+      await sendEmailVerification(user.email, verificationToken, user.username);
 
-      const token = jwt.sign({ userId: user._id }, jwtSecret || 'secret', {
-        expiresIn: '2d',
-      });
-
-      // Set cookie for security
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
-      });
-
+      // Jangan auto-login — user harus verifikasi email dulu
       res.status(201).json({
-        user: {
-          id: user._id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          schoolRole: user.schoolRole,
-          questionnaireCompleted: user.questionnaireCompleted,
-          isHidden: user.isHidden,
-          profile: user.profile,
-          university: user.university,
-          job: user.job,
-          badges: user.badges,
-        },
+        requiresEmailVerification: true,
+        email: user.email,
+        message: 'Pendaftaran berhasil! Silakan cek email Anda untuk melakukan verifikasi akun.',
       });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -185,6 +167,15 @@ router.post(
         return res
           .status(400)
           .json({ message: 'Username atau password yang Anda masukkan salah' });
+      }
+
+      // Cek verifikasi email — user lama (yang tidak memiliki token verifikasi atau isEmailVerified bukan false) dianggap sudah verified
+      if (user.isEmailVerified === false && user.emailVerificationToken) {
+        return res.status(403).json({
+          message: 'Email Anda belum diverifikasi. Silakan cek kotak masuk email Anda dan klik tautan verifikasi.',
+          requiresEmailVerification: true,
+          email: user.email,
+        });
       }
 
       const jwtSecret = process.env.JWT_SECRET;
@@ -350,6 +341,106 @@ router.post(
       res.json({
         message: 'Password berhasil diperbarui. Silakan login kembali dengan password baru Anda.',
       });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Verify Email
+router.get(
+  '/verify-email',
+  async (req: Request, res: Response) => {
+    try {
+      const { token } = req.query;
+
+      if (!token || typeof token !== 'string') {
+        return res.status(400).json({ message: 'Token verifikasi tidak valid.' });
+      }
+
+      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+      const user = await User.findOne({
+        emailVerificationToken: hashedToken,
+      });
+
+      if (!user) {
+        return res.status(400).json({
+          message: 'Token verifikasi tidak valid atau sudah kedaluwarsa. Silakan minta pengiriman ulang email verifikasi.',
+          expired: true,
+        });
+      }
+
+      // Jika user sudah terverifikasi sebelumnya (misal dari klik ganda atau email scanner)
+      if (user.isEmailVerified) {
+        return res.json({
+          message: 'Email Anda sudah terverifikasi sebelumnya. Silakan login.',
+          success: true,
+        });
+      }
+
+      // Cek apakah token sudah kedaluwarsa
+      if (user.emailVerificationExpires && user.emailVerificationExpires < new Date()) {
+        return res.status(400).json({
+          message: 'Token verifikasi sudah kedaluwarsa. Silakan minta pengiriman ulang email verifikasi.',
+          expired: true,
+        });
+      }
+
+      user.isEmailVerified = true;
+      await user.save();
+
+      res.json({
+        message: 'Email berhasil diverifikasi! Akun Anda sekarang aktif. Silakan login.',
+        success: true,
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+// Resend Verification Email
+const resendLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 menit
+  max: 1,
+  message: 'Silakan tunggu 60 detik sebelum mengirim ulang email verifikasi.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+router.post(
+  '/resend-verification',
+  resendLimiter,
+  [body('email').isEmail().withMessage('Email tidak valid')],
+  async (req: Request, res: Response) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { email } = req.body;
+      const user = await User.findOne({ email: email.toLowerCase() });
+
+      // Selalu kembalikan response yang sama untuk menghindari user enumeration
+      const genericMessage = 'Jika email terdaftar dan belum diverifikasi, email verifikasi baru telah dikirim.';
+
+      if (!user || user.isEmailVerified === true || user.isEmailVerified === undefined) {
+        return res.json({ message: genericMessage });
+      }
+
+      // Generate token baru
+      const verificationToken = crypto.randomBytes(32).toString('hex');
+      const hashedVerificationToken = crypto.createHash('sha256').update(verificationToken).digest('hex');
+
+      user.emailVerificationToken = hashedVerificationToken;
+      user.emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await user.save();
+
+      await sendEmailVerification(user.email, verificationToken, user.username);
+
+      res.json({ message: genericMessage });
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

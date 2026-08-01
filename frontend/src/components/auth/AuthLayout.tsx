@@ -15,6 +15,8 @@ import {
   FaGraduationCap,
   FaUserGraduate,
   FaUserCheck,
+  FaPaperPlane,
+  FaCheckCircle,
 } from 'react-icons/fa';
 
 interface AuthLayoutProps {
@@ -29,13 +31,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
   const { login, register } = useAuth();
   const toastShown = useRef(false);
 
-  // Active view mode: 'login', 'register', or 'forgot'
-  const [mode, setMode] = useState<'login' | 'register' | 'forgot'>(() => {
+  // Active view mode: 'login', 'register', 'forgot', or 'verify'
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot' | 'verify'>(() => {
     if (location.pathname === '/register') return 'register';
     if (location.pathname === '/login') return 'login';
     if (location.pathname === '/forgot-password') return 'forgot';
     return initialMode;
   });
+
+  // Email yang sedang menunggu verifikasi
+  const [pendingVerifyEmail, setPendingVerifyEmail] = useState('');
 
   // Sync state with URL changes (e.g. browser back/forward)
   useEffect(() => {
@@ -86,7 +91,13 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         navigate('/student');
       }
     } catch (err: any) {
-      setLoginError(err.message || 'Login gagal. Periksa kembali username dan password Anda.');
+      // Cek apakah error karena email belum diverifikasi
+      if (err.message?.includes('belum diverifikasi') || err.__requiresVerification) {
+        // Coba extract email dari error
+        setLoginError(err.message);
+      } else {
+        setLoginError(err.message || 'Login gagal. Periksa kembali username dan password Anda.');
+      }
     } finally {
       setLoginLoading(false);
     }
@@ -151,7 +162,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
     setRegisterLoading(true);
 
     try {
-      await register(
+      const result = await register(
         registerData.username,
         registerData.email,
         registerData.password,
@@ -159,7 +170,10 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         captchaToken
       );
 
-      switchMode('login', 'Pendaftaran berhasil! Silakan login untuk masuk.');
+      // Tampilkan layar "Cek Email"
+      setPendingVerifyEmail(result.email);
+      setMode('verify');
+      navigate('/register', { replace: true, state: {} });
     } catch (err: any) {
       console.error('Registration error:', err);
       setRegisterError(err.message || 'Pendaftaran gagal');
@@ -186,6 +200,115 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       state: successMsg ? { successMessage: successMsg } : {},
     });
   };
+
+  // ------------ RESEND VERIFICATION STATE ------------
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendSuccess, setResendSuccess] = useState('');
+  const [resendError, setResendError] = useState('');
+  const [resendCooldown, setResendCooldown] = useState(0);
+
+  useEffect(() => {
+    if (resendCooldown <= 0) return;
+    const t = setInterval(() => setResendCooldown(prev => prev - 1), 1000);
+    return () => clearInterval(t);
+  }, [resendCooldown]);
+
+  const handleResendVerification = async () => {
+    if (resendCooldown > 0 || resendLoading) return;
+    setResendLoading(true);
+    setResendError('');
+    setResendSuccess('');
+    try {
+      await axios.post('/api/auth/resend-verification', { email: pendingVerifyEmail });
+      setResendSuccess('Email verifikasi baru telah dikirim. Silakan cek kotak masuk Anda.');
+      setResendCooldown(60);
+    } catch (err: any) {
+      setResendError(
+        err.response?.data?.message || err.message || 'Gagal mengirim ulang email verifikasi.'
+      );
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  // Render layar Cek Email (setelah registrasi berhasil)
+  const renderCheckEmailScreen = () => (
+    <div className='w-full max-w-md my-auto space-y-6 animate-fadeIn'>
+      {/* Ikon */}
+      <div className='text-center space-y-3'>
+        <div className='inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/30 mx-auto'>
+          <FaPaperPlane className='text-white text-3xl' />
+        </div>
+        <h2 className='text-2xl font-extrabold text-slate-900 tracking-tight'>
+          Cek Email Anda!
+        </h2>
+        <p className='text-sm text-slate-500 font-medium leading-relaxed'>
+          Kami telah mengirimkan link verifikasi ke
+        </p>
+        <div className='inline-flex items-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-4 py-2'>
+          <FaEnvelope className='text-blue-500 shrink-0' />
+          <span className='text-sm font-bold text-blue-700 break-all'>{pendingVerifyEmail}</span>
+        </div>
+      </div>
+
+      {/* Info Box */}
+      <div className='bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 font-medium space-y-1'>
+        <p className='font-bold text-amber-900'>⏰ Tautan berlaku 24 jam</p>
+        <p>Buka email Anda dan klik tombol <strong>"Verifikasi Email Saya"</strong> untuk mengaktifkan akun.</p>
+      </div>
+
+      {/* Feedback resend */}
+      {resendSuccess && (
+        <div className='flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 p-3.5 text-xs text-emerald-700 font-semibold'>
+          <FaCheckCircle className='text-emerald-500 shrink-0' />
+          <span>{resendSuccess}</span>
+        </div>
+      )}
+      {resendError && (
+        <div className='flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 font-semibold'>
+          <span>{resendError}</span>
+        </div>
+      )}
+
+      {/* Tombol Kirim Ulang */}
+      <motion.button
+        whileHover={{ scale: resendCooldown > 0 || resendLoading ? 1 : 1.01 }}
+        whileTap={{ scale: resendCooldown > 0 || resendLoading ? 1 : 0.98 }}
+        onClick={handleResendVerification}
+        disabled={resendCooldown > 0 || resendLoading}
+        className='w-full rounded-xl border-2 border-blue-600 py-3 px-4 text-sm font-bold text-blue-600 hover:bg-blue-50 transition-all disabled:cursor-not-allowed disabled:opacity-60 disabled:border-slate-300 disabled:text-slate-400'
+      >
+        {resendLoading ? (
+          <span className='flex items-center justify-center gap-2'>
+            <svg className='animate-spin h-4 w-4' fill='none' viewBox='0 0 24 24'>
+              <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4' />
+              <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z' />
+            </svg>
+            Mengirim...
+          </span>
+        ) : resendCooldown > 0 ? (
+          `Kirim Ulang (${resendCooldown}s)`
+        ) : (
+          '📧 Kirim Ulang Email Verifikasi'
+        )}
+      </motion.button>
+
+      {/* Link kembali */}
+      <div className='text-center pt-1'>
+        <button
+          type='button'
+          onClick={() => switchMode('login')}
+          className='inline-flex items-center gap-2 text-xs font-bold text-slate-600 hover:text-blue-600 transition-colors'
+        >
+          <FaArrowLeft size={11} /> Kembali ke halaman Login
+        </button>
+      </div>
+
+      <p className='text-[11px] text-slate-400 font-semibold text-center'>
+        &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
+      </p>
+    </div>
+  );
 
   // ------------ FORGOT PASSWORD STATE ------------
   const [forgotEmail, setForgotEmail] = useState('');
@@ -766,18 +889,20 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       <div className='flex lg:hidden relative w-full h-full overflow-hidden z-10'>
         <AnimatePresence mode='wait' initial={false}>
           <motion.div
-            key={isSignUp ? 'register' : 'auth-left'}
-            initial={{ opacity: 0, x: isSignUp ? '100%' : '-100%' }}
+            key={mode}
+            initial={{ opacity: 0, x: mode === 'register' || mode === 'verify' ? '100%' : '-100%' }}
             animate={{ opacity: 1, x: '0%' }}
-            exit={{ opacity: 0, x: isSignUp ? '-100%' : '100%' }}
+            exit={{ opacity: 0, x: mode === 'register' || mode === 'verify' ? '-100%' : '100%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 28 }}
             className='w-full h-full absolute inset-0 p-6 pt-20 pb-8 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           >
-            {mode === 'register'
-              ? renderRegisterForm()
-              : mode === 'forgot'
-                ? renderForgotPasswordForm()
-                : renderLoginForm()}
+            {mode === 'verify'
+              ? renderCheckEmailScreen()
+              : mode === 'register'
+                ? renderRegisterForm()
+                : mode === 'forgot'
+                  ? renderForgotPasswordForm()
+                  : renderLoginForm()}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -793,11 +918,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
           initial={false}
           className='w-1/2 h-full absolute left-0 top-0 p-12 lg:p-16 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           animate={{
-            opacity: !isSignUp ? 1 : 0,
-            x: !isSignUp ? 0 : -60,
-            scale: !isSignUp ? 1 : 0.95,
-            pointerEvents: !isSignUp ? 'auto' : 'none',
-            zIndex: !isSignUp ? 20 : 10,
+            opacity: !isSignUp && mode !== 'verify' ? 1 : 0,
+            x: !isSignUp && mode !== 'verify' ? 0 : -60,
+            scale: !isSignUp && mode !== 'verify' ? 1 : 0.95,
+            pointerEvents: !isSignUp && mode !== 'verify' ? 'auto' : 'none',
+            zIndex: !isSignUp && mode !== 'verify' ? 20 : 10,
           }}
           transition={springConfig}
         >
@@ -818,6 +943,22 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         >
           {renderRegisterForm()}
         </motion.div>
+
+        {/* VERIFY EMAIL FULL SCREEN PANEL */}
+        <AnimatePresence>
+          {mode === 'verify' && (
+            <motion.div
+              key='verify-panel'
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
+              className='w-full h-full absolute inset-0 z-40 bg-slate-50 flex flex-col justify-center items-center p-12 lg:p-16 overflow-y-auto custom-scrollbar'
+            >
+              {renderCheckEmailScreen()}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* FULL HEIGHT SLIDING OVERLAY PANEL WITH FRAMER MOTION */}
         <motion.div

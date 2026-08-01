@@ -207,7 +207,7 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all duration-200 ${isActive
+        className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${isActive
           ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
           : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
           }`}
@@ -238,8 +238,7 @@ const Layout = () => {
 
   const getNavLinks = () => {
     const SectionLabel = ({ label }: { label: string }) => (
-      <div className='mt-5 mb-2 px-3.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] select-none opacity-80'>
-        <span className='w-1.5 h-1.5 rounded-full bg-[var(--primary)]/40 shrink-0' />
+      <div className='mt-3 mb-1.5 px-3.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] select-none opacity-80'>
         <span>{label}</span>
       </div>
     );
