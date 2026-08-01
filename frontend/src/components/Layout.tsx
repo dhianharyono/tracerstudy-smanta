@@ -207,16 +207,18 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${isActive
-          ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
-          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
-          }`}
+        className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
+            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
+        }`}
       >
         <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${isActive
-            ? 'bg-white/20 text-white'
-            : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] group-hover:scale-105'
-            }`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
+            isActive
+              ? 'bg-white/20 text-white'
+              : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] group-hover:scale-105'
+          }`}
         >
           <Icon className='text-sm transition-transform duration-200 group-hover:scale-110' />
         </span>
@@ -250,7 +252,11 @@ const Layout = () => {
 
           <SectionLabel label='Dashboard' />
           <NavLink to='/alumni' icon={FaThLarge} label='Dashboard' />
-          <NavLink to='/alumni/questionnaire' icon={FaClipboardList} label='Kuesioner' />
+          <NavLink
+            to='/alumni/questionnaire'
+            icon={FaClipboardList}
+            label='Kuesioner'
+          />
 
           <SectionLabel label='Eksplorasi' />
           <NavLink
@@ -390,7 +396,11 @@ const Layout = () => {
           <NavLink
             to='/school/verification'
             icon={FaSync}
-            label={user?.schoolRole === 'bk' ? 'Verifikasi Data' : 'Monitoring Sync Data'}
+            label={
+              user?.schoolRole === 'bk'
+                ? 'Verifikasi Data'
+                : 'Monitoring Sync Data'
+            }
           />
           <SectionLabel label='Lainnya' />
           <NavLink
@@ -463,7 +473,12 @@ const Layout = () => {
     if (isProfilePage) return null;
 
     if (user.isHidden) {
-      return <RestrictedAccess type='hidden_user' role={(user.role === 'admin' ? 'alumni' : user.role) as any} />;
+      return (
+        <RestrictedAccess
+          type='hidden_user'
+          role={(user.role === 'admin' ? 'alumni' : user.role) as any}
+        />
+      );
     }
 
     if (user.role === 'student') {
@@ -479,7 +494,9 @@ const Layout = () => {
       if (isQuestionnairePage) return null;
 
       if (!user.questionnaireCompleted) {
-        return <RestrictedAccess type='questionnaire_incomplete' role='alumni' />;
+        return (
+          <RestrictedAccess type='questionnaire_incomplete' role='alumni' />
+        );
       }
       if (isNameIncomplete(user)) {
         return <RestrictedAccess type='name_incomplete' role='alumni' />;
@@ -506,8 +523,9 @@ const Layout = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-          }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
       >
         {/* Brand Logo & Name */}
         <div className='flex h-[76px] shrink-0 items-center justify-between px-5 border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)]'>
@@ -526,7 +544,11 @@ const Layout = () => {
             className='flex items-center gap-3 group'
           >
             <div className='relative flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-tr from-[var(--primary)]/15 to-blue-500/15 p-1.5 border border-[var(--primary)]/20 transition-all duration-300 group-hover:scale-105 group-hover:border-[var(--primary)]/40 group-hover:shadow-md group-hover:shadow-[var(--primary)]/10'>
-              <img src='/logo.png' alt='Logo SMANTA' className='h-full w-full object-contain filter drop-shadow-sm' />
+              <img
+                src='/logo.png'
+                alt='Logo SMANTA'
+                className='h-full w-full object-contain filter drop-shadow-sm'
+              />
             </div>
             <div className='flex flex-col min-w-0'>
               <div className='flex items-center gap-1.5'>
@@ -576,7 +598,7 @@ const Layout = () => {
                   {user?.profile?.fullName || user?.username}
                 </p>
                 <div className='flex items-center gap-1 mt-0.5'>
-                  <span className='inline-block px-1.5 py-0.5 text-[9px] font-semibold text-[var(--primary)] bg-[var(--primary)]/10 rounded-md truncate max-w-full'>
+                  <span className='inline-block py-0.5 text-[9px] font-semibold text-[var(--primary)] bg-[var(--primary)]/10 rounded-md truncate max-w-full'>
                     {getRoleName()}
                   </span>
                 </div>
@@ -643,7 +665,8 @@ const Layout = () => {
             )}
           </div>
           <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
-            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All right reserved.
+            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari.
+            All right reserved.
           </div>
         </main>
       </div>
