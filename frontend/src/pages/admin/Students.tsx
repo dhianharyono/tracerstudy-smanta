@@ -13,8 +13,6 @@ import {
   FaEyeSlash,
   FaEnvelope,
   FaFilter,
-  FaCheckCircle,
-  FaTimesCircle,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import PageHeader from '@/components/common/PageHeader';

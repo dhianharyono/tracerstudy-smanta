@@ -9,8 +9,6 @@ import {
   FaEnvelope,
   FaLinkedin,
   FaInstagram,
-  FaCheckCircle,
-  FaTimesCircle,
   FaCrown,
   FaEdit,
   FaSearch,
