@@ -74,7 +74,7 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
                 Selamat atas Kelulusanmu! 🥳
               </h2>
               <p className="text-sm text-[color:var(--text-secondary)] mb-6 leading-relaxed">
-                Bulan Mei adalah momen spesial bagi siswa kelas 12. Jika kamu sudah resmi lulus, mari bergabung sebagai bagian dari Keluarga Besar Alumni SMANTA.
+                Kelulusan momen spesial bagi siswa kelas 12. Jika kamu sudah resmi lulus, mari bergabung sebagai bagian dari Keluarga Besar Alumni SMANTA.
               </p>
 
               <div className="bg-blue-50 p-4 rounded-2xl border border-blue-200 mb-8 flex items-start gap-3 text-left">

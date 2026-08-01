@@ -613,6 +613,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
     const duplicate = req.query.duplicate as string;
     const nameIncomplete = req.query.nameIncomplete as string;
     const hiddenStatus = req.query.hiddenStatus as string;
+    const emailVerifiedStatus = req.query.emailVerifiedStatus as string;
 
     const filter: any = { role: 'alumni' };
 
@@ -648,6 +649,12 @@ router.get('/alumni', async (req: Request, res: Response) => {
       filter['isHidden'] = true;
     } else if (hiddenStatus === 'visible') {
       filter['isHidden'] = { $ne: true };
+    }
+
+    if (emailVerifiedStatus === 'verified') {
+      filter['isEmailVerified'] = { $ne: false };
+    } else if (emailVerifiedStatus === 'unverified') {
+      filter['isEmailVerified'] = false;
     }
 
     if (nameIncomplete === 'true') {
@@ -1103,7 +1110,7 @@ router.get('/students', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
     const skip = (page - 1) * limit;
-    const { search, entryYear, graduationYear, status, duplicate, nameIncomplete, hiddenStatus } = req.query;
+    const { search, entryYear, graduationYear, status, duplicate, nameIncomplete, hiddenStatus, emailVerifiedStatus } = req.query;
 
     const query: any = { role: 'student' };
     const andConditions: any[] = [];
@@ -1130,6 +1137,12 @@ router.get('/students', async (req: Request, res: Response) => {
       andConditions.push({ isHidden: true });
     } else if (hiddenStatus === 'visible') {
       andConditions.push({ isHidden: { $ne: true } });
+    }
+
+    if (emailVerifiedStatus === 'verified') {
+      andConditions.push({ isEmailVerified: { $ne: false } });
+    } else if (emailVerifiedStatus === 'unverified') {
+      andConditions.push({ isEmailVerified: false });
     }
 
     if (nameIncomplete === 'true') {

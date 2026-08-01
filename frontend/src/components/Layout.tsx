@@ -207,18 +207,16 @@ const Layout = () => {
     return (
       <Link
         to={to}
-        className={`group relative flex items-center gap-3 px-3 py-2 rounded-xl transition-all duration-200 ${
-          isActive
-            ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
-            : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
-        }`}
+        className={`group relative flex items-center gap-3 px-3 py-1.5 rounded-xl transition-all duration-200 ${isActive
+          ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/25 font-semibold'
+          : 'text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-tertiary)] hover:text-[color:var(--text-primary)] font-medium'
+          }`}
       >
         <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-            isActive
-              ? 'bg-white/20 text-white'
-              : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] group-hover:scale-105'
-          }`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${isActive
+            ? 'bg-white/20 text-white'
+            : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] group-hover:bg-[var(--primary)]/10 group-hover:text-[var(--primary)] group-hover:scale-105'
+            }`}
         >
           <Icon className='text-sm transition-transform duration-200 group-hover:scale-110' />
         </span>
@@ -240,7 +238,7 @@ const Layout = () => {
 
   const getNavLinks = () => {
     const SectionLabel = ({ label }: { label: string }) => (
-      <div className='mt-3 mb-1.5 px-3.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] select-none opacity-80'>
+      <div className='mt-3 mb-1.5 px-3.5 py-1 flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-tertiary)] select-none opacity-80'>
         <span>{label}</span>
       </div>
     );
@@ -523,9 +521,8 @@ const Layout = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-[color:var(--border-color)] bg-[color:var(--bg-card)] transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* Brand Logo & Name */}
         <div className='flex h-[76px] shrink-0 items-center justify-between px-5 border-b border-[color:var(--border-color)] bg-[color:var(--bg-card)]'>
@@ -594,11 +591,11 @@ const Layout = () => {
                 <span className='absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-[color:var(--bg-card)] rounded-full' />
               </div>
               <div className='min-w-0 flex-1'>
-                <p className='truncate text-xs font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors leading-snug'>
+                <p className='uppercase truncate text-xs font-bold text-[color:var(--text-primary)] group-hover:text-[var(--primary)] transition-colors leading-snug'>
                   {user?.profile?.fullName || user?.username}
                 </p>
-                <div className='flex items-center gap-1 mt-0.5'>
-                  <span className='inline-block py-0.5 text-[9px] font-semibold text-[var(--primary)] bg-[var(--primary)]/10 rounded-md truncate max-w-full'>
+                <div className='flex items-center gap-1'>
+                  <span className='uppercase inline-block py-0.5 text-[9px] font-bold text-[var(--primary)] bg-[var(--primary)]/10 rounded-md truncate max-w-full'>
                     {getRoleName()}
                   </span>
                 </div>

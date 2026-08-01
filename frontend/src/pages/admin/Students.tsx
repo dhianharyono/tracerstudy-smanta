@@ -13,6 +13,8 @@ import {
   FaEyeSlash,
   FaEnvelope,
   FaFilter,
+  FaCheckCircle,
+  FaTimesCircle,
 } from 'react-icons/fa';
 import SmartLoader from '@/components/SmartLoader';
 import PageHeader from '@/components/common/PageHeader';
@@ -46,6 +48,7 @@ const AdminStudents = () => {
     duplicate: '',
     nameIncomplete: '',
     hiddenStatus: '',
+    emailVerifiedStatus: '',
   });
   const [formData, setFormData] = useState({
     username: '',
@@ -70,6 +73,7 @@ const AdminStudents = () => {
     filters.duplicate,
     filters.nameIncomplete,
     filters.hiddenStatus,
+    filters.emailVerifiedStatus,
   ]);
 
   // Debounced search
@@ -121,7 +125,7 @@ const AdminStudents = () => {
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal membatasi siswa nama tidak lengkap',
+        'Gagal membatasi siswa nama tidak lengkap',
         'error',
       );
     } finally {
@@ -163,9 +167,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat upgrade status alumni.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -218,13 +222,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -236,9 +240,9 @@ const AdminStudents = () => {
     const defaultVal = filters.graduationYear || '';
     const inputYear = window.prompt(
       'Masukkan Tahun Lulus siswa yang ingin dikirimkan email pengingat kelengkapan data.\n\n' +
-        '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
-        "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
-        'Batal/kosongkan untuk membatalkan.',
+      '- Ketik tahun kelulusan (contoh: 2023) untuk mengirim ke tahun tersebut.\n' +
+      "- Ketik 'semua' untuk mengirim ke seluruh angkatan siswa yang datanya belum lengkap.\n\n" +
+      'Batal/kosongkan untuk membatalkan.',
       defaultVal,
     );
 
@@ -291,13 +295,13 @@ const AdminStudents = () => {
       );
       Toast(
         response.data.message ||
-          'Proses pengiriman email massal telah dimulai!',
+        'Proses pengiriman email massal telah dimulai!',
         'success',
       );
     } catch (error: any) {
       Toast(
         error.response?.data?.message ||
-          'Gagal mengirim email pengingat massal',
+        'Gagal mengirim email pengingat massal',
         'error',
       );
     } finally {
@@ -321,6 +325,9 @@ const AdminStudents = () => {
           nameIncomplete: filters.nameIncomplete,
         }),
         ...(filters.hiddenStatus && { hiddenStatus: filters.hiddenStatus }),
+        ...(filters.emailVerifiedStatus && {
+          emailVerifiedStatus: filters.emailVerifiedStatus,
+        }),
       });
 
       const response = await axios.get(`/api/admin/students?${params}`);
@@ -350,6 +357,7 @@ const AdminStudents = () => {
       duplicate: '',
       nameIncomplete: '',
       hiddenStatus: '',
+      emailVerifiedStatus: '',
     });
     setPagination({ ...pagination, page: 1 });
   };
@@ -647,7 +655,7 @@ const AdminStudents = () => {
           </div>
 
           {/* Filter Dropdowns Grid */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3'>
             <div>
               <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
                 Tahun Masuk
@@ -799,6 +807,37 @@ const AdminStudents = () => {
                 </svg>
               </div>
             </div>
+
+            <div className='relative'>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Verifikasi Email
+              </label>
+              <select
+                name='emailVerifiedStatus'
+                value={filters.emailVerifiedStatus}
+                onChange={handleFilterChange}
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Semua Status</option>
+                <option value='verified'>Terverifikasi</option>
+                <option value='unverified'>Belum Terverifikasi</option>
+              </select>
+              <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
@@ -810,13 +849,14 @@ const AdminStudents = () => {
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
           <TableHeadCell>Tanggal Update</TableHeadCell>
           <TableHeadCell>Status</TableHeadCell>
+          <TableHeadCell>Verifikasi Email</TableHeadCell>
           <TableHeadCell className='text-center'>Aksi</TableHeadCell>
         </TableHeader>
         <TableBody>
           {students.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={6}
+                colSpan={7}
                 className='p-8 text-center text-[color:var(--text-secondary)]'
               >
                 Tidak ada data student.
@@ -895,16 +935,16 @@ const AdminStudents = () => {
                 <TableCell className='text-[color:var(--text-secondary)]'>
                   {student.updatedAt
                     ? new Date(student.updatedAt).toLocaleDateString('id-ID', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })
                     : '-'}
                 </TableCell>
                 <TableCell>
                   {student.profile?.fullName &&
-                  student.profile?.entryYear &&
-                  student.profile?.graduationYear ? (
+                    student.profile?.entryYear &&
+                    student.profile?.graduationYear ? (
                     <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
                       Lengkap
                     </span>
@@ -915,14 +955,24 @@ const AdminStudents = () => {
                   )}
                 </TableCell>
                 <TableCell>
+                  {student.isEmailVerified !== false ? (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
+                      Terverifikasi
+                    </span>
+                  ) : (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-red-50 text-red-700 border-red-200/50'>
+                      Belum
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
                   <div className='flex items-center justify-center gap-1'>
                     <button
                       onClick={() => handleToggleHide(student)}
-                      className={`rounded p-2 transition-colors ${
-                        student.isHidden
-                          ? 'text-purple-600 hover:bg-purple-100'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
-                      }`}
+                      className={`rounded p-2 transition-colors ${student.isHidden
+                        ? 'text-purple-600 hover:bg-purple-100'
+                        : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                        }`}
                       title={
                         student.isHidden
                           ? 'Tampilkan User ke Publik'
@@ -936,8 +986,8 @@ const AdminStudents = () => {
                       )}
                     </button>
                     {student.profile?.fullName &&
-                    student.profile?.entryYear &&
-                    student.profile?.graduationYear ? (
+                      student.profile?.entryYear &&
+                      student.profile?.graduationYear ? (
                       <button
                         onClick={() =>
                           handleSendReminder(

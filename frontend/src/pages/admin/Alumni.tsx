@@ -64,6 +64,7 @@ const AdminAlumni = () => {
     duplicate: '',
     nameIncomplete: '',
     hiddenStatus: 'visible',
+    emailVerifiedStatus: '',
   });
 
   useEffect(() => {
@@ -279,6 +280,8 @@ const AdminAlumni = () => {
         params.append('nameIncomplete', filters.nameIncomplete);
       if (filters.hiddenStatus)
         params.append('hiddenStatus', filters.hiddenStatus);
+      if (filters.emailVerifiedStatus)
+        params.append('emailVerifiedStatus', filters.emailVerifiedStatus);
 
       const response = await axios.get(
         `/api/admin/alumni?${params.toString()}`,
@@ -367,6 +370,7 @@ const AdminAlumni = () => {
       duplicate: '',
       nameIncomplete: '',
       hiddenStatus: '',
+      emailVerifiedStatus: '',
     });
     setSearchTerm('');
     setPagination({ ...pagination, page: 1 });
@@ -507,7 +511,7 @@ const AdminAlumni = () => {
           </div>
 
           {/* Filter Dropdowns Grid */}
-          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-8 gap-3'>
             <div className='relative'>
               <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
                 Perguruan Tinggi
@@ -738,6 +742,38 @@ const AdminAlumni = () => {
                 </svg>
               </div>
             </div>
+
+            <div className='relative'>
+              <label className='block text-xs font-medium text-[color:var(--text-secondary)] mb-1'>
+                Verifikasi Email
+              </label>
+              <select
+                value={filters.emailVerifiedStatus}
+                onChange={(e) =>
+                  handleFilterChange('emailVerifiedStatus', e.target.value)
+                }
+                className='w-full appearance-none rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] py-2 pl-3 pr-8 text-sm outline-none focus:border-[var(--primary)] text-[color:var(--text-primary)]'
+              >
+                <option value=''>Semua Status</option>
+                <option value='verified'>Terverifikasi</option>
+                <option value='unverified'>Belum Terverifikasi</option>
+              </select>
+              <div className='pointer-events-none absolute right-2.5 top-[27px] text-gray-400'>
+                <svg
+                  className='h-4 w-4'
+                  fill='none'
+                  stroke='currentColor'
+                  viewBox='0 0 24 24'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    strokeWidth='2'
+                    d='M19 9l-7 7-7-7'
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </Card>
@@ -778,13 +814,14 @@ const AdminAlumni = () => {
           <TableHeadCell>Tanggal Dibuat</TableHeadCell>
           <TableHeadCell>Tanggal Update</TableHeadCell>
           <TableHeadCell>Survei</TableHeadCell>
+          <TableHeadCell>Verifikasi Email</TableHeadCell>
           <TableHeadCell>Aksi</TableHeadCell>
         </TableHeader>
         <TableBody>
           {alumni.length === 0 ? (
             <TableRow>
               <TableCell
-                colSpan={8}
+                colSpan={9}
                 className='p-8 text-center text-[color:var(--text-secondary)]'
               >
                 Tidak ada data alumni yang ditemukan.
@@ -829,14 +866,6 @@ const AdminAlumni = () => {
                       )}
                     </div>
                     <div className='text-xs text-[color:var(--text-secondary)] flex flex-wrap items-center gap-1.5 mt-0.5'>
-                      {alum.username && (
-                        <span className='font-medium text-blue-600 dark:text-blue-400'>
-                          @{alum.username}
-                        </span>
-                      )}
-                      {alum.username && alum.email && (
-                        <span className='text-gray-400'>•</span>
-                      )}
                       <span>{alum.email}</span>
                       {alum.isDuplicateEmail && (
                         <span
@@ -844,6 +873,14 @@ const AdminAlumni = () => {
                           title='Email terdeteksi ganda (duplikat)'
                         >
                           Ganda (Email)
+                        </span>
+                      )}
+                      {alum.username && alum.email && (
+                        <span className='text-gray-400'>•</span>
+                      )}
+                      {alum.username && (
+                        <span className='font-medium text-blue-600 dark:text-blue-400'>
+                          {alum.username}
                         </span>
                       )}
                     </div>
@@ -942,12 +979,23 @@ const AdminAlumni = () => {
                 </TableCell>
                 <TableCell>
                   {!isUniversityIncomplete(alum) ? (
-                    <span className='flex items-center gap-1 text-xs font-medium text-green-600 dark:text-green-400'>
-                      <FaCheckCircle /> Lengkap
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
+                      Lengkap
                     </span>
                   ) : (
-                    <span className='flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400'>
-                      <FaTimesCircle /> Belum
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-amber-50 text-amber-700 border-amber-200/50'>
+                      Belum
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {alum.isEmailVerified !== false ? (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-green-50 text-green-700 border-green-200/50'>
+                      Terverifikasi
+                    </span>
+                  ) : (
+                    <span className='inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border bg-red-50 text-red-700 border-red-200/50'>
+                      Belum
                     </span>
                   )}
                 </TableCell>
