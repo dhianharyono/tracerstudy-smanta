@@ -928,6 +928,8 @@ const AdminStudents = () => {
                     day: 'numeric',
                     month: 'short',
                     year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
                   })}
                 </TableCell>
                 <TableCell className='text-[color:var(--text-secondary)]'>
@@ -936,6 +938,8 @@ const AdminStudents = () => {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })
                     : '-'}
                 </TableCell>
