@@ -25,6 +25,11 @@ const getTransporter = () => {
   });
 };
 
+const getFrontendUrl = (): string => {
+  const url = process.env.FRONTEND_URL || 'https://tracerstudy-smanta.vercel.app';
+  return url.replace(/\/+$/, '');
+};
+
 export const sendAlumniUpgradeReminder = async (
   toEmail: string,
   fullName: string,
@@ -37,7 +42,7 @@ export const sendAlumniUpgradeReminder = async (
     return { success: false, error: errorMsg };
   }
 
-  const frontendUrl = 'https://tracerstudy-smanta.vercel.app/';
+  const frontendUrl = getFrontendUrl();
   const loginUrl = `${frontendUrl}/login`;
 
   const mailOptions = {
@@ -127,7 +132,7 @@ export const sendAlumniIncompleteReminder = async (
     return { success: false, error: errorMsg };
   }
 
-  const frontendUrl = 'https://tracerstudy-smanta.vercel.app/';
+  const frontendUrl = getFrontendUrl();
   const loginUrl = `${frontendUrl}/login`;
 
   const mailOptions = {
@@ -215,7 +220,7 @@ export const sendStudentIncompleteReminder = async (
     return { success: false, error: errorMsg };
   }
 
-  const frontendUrl = 'https://tracerstudy-smanta.vercel.app/';
+  const frontendUrl = getFrontendUrl();
   const loginUrl = `${frontendUrl}/login`;
 
   const mailOptions = {
@@ -297,7 +302,7 @@ export const sendPasswordResetEmail = async (
   userName?: string,
 ): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const frontendUrl = getFrontendUrl();
   const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
   if (!transporter) {
@@ -371,7 +376,7 @@ export const sendEmailVerification = async (
   username?: string,
 ): Promise<{ success: boolean; error?: string }> => {
   const transporter = getTransporter();
-  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const frontendUrl = getFrontendUrl();
   const verifyUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
   if (!transporter) {
