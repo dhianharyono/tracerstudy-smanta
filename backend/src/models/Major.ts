@@ -30,6 +30,4 @@ const MajorSchema = new Schema<IMajor>(
   }
 );
 
-MajorSchema.index({ name: 1 });
-
 export default mongoose.model<IMajor>('Major', MajorSchema);

@@ -25,10 +25,12 @@ const WelcomCardAlumni: React.FC<WelcomeCardAlumniProps> = ({
 }) => {
   return (
     <div
-      className='card mb-6 border-2 border-[rgba(102,126,234,0.3)]'
+      className='card max-w-sm md:max-w-md lg:max-w-full'
       style={{
         background:
           'linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%)',
+        border: '2px solid rgba(102, 126, 234, 0.3)',
+        marginBottom: '24px',
       }}
     >
       <div className='flex items-center gap-4'>

@@ -41,6 +41,4 @@ const UniversitySchema = new Schema<IUniversity>(
   }
 );
 
-UniversitySchema.index({ name: 1 });
-
 export default mongoose.model<IUniversity>('University', UniversitySchema);
