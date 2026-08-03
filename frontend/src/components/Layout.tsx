@@ -24,7 +24,6 @@ import {
   FaChevronDown,
   FaCrown,
   FaChartPie,
-  FaHome,
   FaSync,
   FaBriefcase,
   FaUserShield,
@@ -352,18 +351,14 @@ const Layout = () => {
     if (user?.role === 'alumni') {
       const alumniGroups: SidebarGroup[] = [
         {
-          category: 'MENU UTAMA',
-          items: [{ name: 'Halaman Utama', href: '/', icon: FaHome }],
-        },
-        {
-          category: 'DASHBOARD & KUESIONER',
+          category: 'NAVIGASI UTAMA',
           items: [
-            { name: 'Dashboard', href: '/alumni', icon: FaThLarge },
-            { name: 'Kuesioner', href: '/alumni/questionnaire', icon: FaClipboardList },
+            { name: 'Dashboard Alumni', href: '/alumni', icon: FaThLarge },
+            { name: 'Kuesioner Tracer', href: '/alumni/questionnaire', icon: FaClipboardList },
           ],
         },
         {
-          category: 'EKSPLORASI ALUMNI',
+          category: 'JEJARING & ALUMNI',
           items: [
             { name: 'Perguruan Tinggi', href: '/alumni/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/alumni/majors', icon: FaBookOpen },
@@ -372,7 +367,7 @@ const Layout = () => {
           ],
         },
         {
-          category: 'SOSIAL & BERITA',
+          category: 'INFORMASI & BERITA',
           items: [
             { name: 'Event Alumni', href: '/alumni/events', icon: FaCalendarAlt },
             { name: 'Berita Alumni', href: '/alumni/news', icon: FaNewspaper, activeCheck: true },
@@ -386,11 +381,11 @@ const Layout = () => {
           ],
         },
         {
-          category: 'LAINNYA',
+          category: 'AKUN & LAINNYA',
           items: [
-            { name: 'Kritik & Saran', href: '/alumni/feedback', icon: FaCommentDots, condition: feedbackMenuVisible },
-            { name: 'Claim Badge', href: '/alumni/claim-badge', icon: FaMedal },
             { name: 'Profil Saya', href: '/alumni/profile', icon: FaUser },
+            { name: 'Klaim Badge', href: '/alumni/claim-badge', icon: FaMedal },
+            { name: 'Kritik & Saran', href: '/alumni/feedback', icon: FaCommentDots, condition: feedbackMenuVisible },
           ],
         },
       ];
@@ -400,13 +395,9 @@ const Layout = () => {
     if (user?.role === 'admin') {
       const adminGroups: SidebarGroup[] = [
         {
-          category: 'MENU UTAMA',
-          items: [{ name: 'Halaman Utama', href: '/', icon: FaHome }],
-        },
-        {
-          category: 'DASHBOARD & STATISTIK',
+          category: 'NAVIGASI & ANALITIK',
           items: [
-            { name: 'Dashboard', href: '/admin', icon: FaThLarge },
+            { name: 'Dashboard Admin', href: '/admin', icon: FaThLarge },
             { name: 'Statistik Website', href: '/admin/stats', icon: FaChartPie },
           ],
         },
@@ -414,39 +405,34 @@ const Layout = () => {
           category: 'MANAJEMEN PENGGUNA',
           items: [
             { name: 'Data Alumni', href: '/admin/alumni', icon: FaUsers },
-            { name: 'Data Student', href: '/admin/students', icon: FaGraduationCap },
+            { name: 'Data Siswa', href: '/admin/students', icon: FaGraduationCap },
             { name: 'Data Admin', href: '/admin/admins', icon: FaUserShield },
             { name: 'Kelola Mentor', href: '/admin/mentors', icon: FaCrown },
             { name: 'User Sekolah', href: '/admin/school-users', icon: FaUserTie },
           ],
         },
         {
-          category: 'EKSPLORASI & DATA MASTER',
+          category: 'DATA MASTER & KAMPUS',
           items: [
             { name: 'Perguruan Tinggi', href: '/admin/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/admin/majors', icon: FaBookOpen },
-            { name: 'Kelola Universitas', href: '/admin/manage-universities', icon: FaBuilding, activeCheck: true },
+            { name: 'Kelola Perguruan Tinggi', href: '/admin/manage-universities', icon: FaBuilding, activeCheck: true },
           ],
         },
         {
-          category: 'KONTEN & MODERASI',
+          category: 'KONTEN & BURSA KERJA',
           items: [
-            { name: 'Manajemen Event', href: '/admin/events', icon: FaCalendarAlt },
-            { name: 'Kelola Badge', href: '/admin/badges', icon: FaMedal },
             { name: 'Kelola Berita', href: '/admin/news', icon: FaNewspaper },
+            { name: 'Manajemen Event', href: '/admin/events', icon: FaCalendarAlt },
             { name: 'Bursa Kerja', href: '/admin/jobs', icon: FaBriefcase, badgeCount: sidebarCounts.pendingJobs },
+            { name: 'Kelola Badge', href: '/admin/badges', icon: FaMedal },
           ],
         },
         {
-          category: 'AUDIT & FEEDBACK',
+          category: 'AUDIT & BANTUAN',
           items: [
             { name: 'Verifikasi Data', href: '/admin/verification-logs', icon: FaHistory },
             { name: 'Kritik & Saran', href: '/admin/feedback', icon: FaCommentDots, badgeCount: sidebarCounts.unrepliedFeedback },
-          ],
-        },
-        {
-          category: 'PENGATURAN',
-          items: [
             { name: 'Profil Admin', href: '/admin/profile', icon: FaUser },
           ],
         },
@@ -457,13 +443,14 @@ const Layout = () => {
     if ((user?.role as string) === 'school') {
       const schoolGroups: SidebarGroup[] = [
         {
-          category: 'MENU UTAMA',
-          items: [{ name: 'Halaman Utama', href: '/', icon: FaHome }],
+          category: 'NAVIGASI UTAMA',
+          items: [
+            { name: 'Dashboard Sekolah', href: '/school', icon: FaThLarge },
+          ],
         },
         {
           category: 'MONITORING & DATA',
           items: [
-            { name: 'Dashboard', href: '/school', icon: FaThLarge },
             { name: 'Data Alumni', href: '/school/alumni', icon: FaUsers },
             { name: 'Perguruan Tinggi', href: '/school/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/school/majors', icon: FaBookOpen },
@@ -475,10 +462,10 @@ const Layout = () => {
           ],
         },
         {
-          category: 'LAINNYA',
+          category: 'AKUN & BANTUAN',
           items: [
-            { name: 'Kritik & Saran', href: '/school/feedback', icon: FaCommentDots },
             { name: 'Profil Sekolah', href: '/school/profile', icon: FaUser },
+            { name: 'Kritik & Saran', href: '/school/feedback', icon: FaCommentDots },
           ],
         },
       ];
@@ -488,13 +475,14 @@ const Layout = () => {
     if (user?.role === 'student') {
       const studentGroups: SidebarGroup[] = [
         {
-          category: 'MENU UTAMA',
-          items: [{ name: 'Halaman Utama', href: '/', icon: FaHome }],
+          category: 'NAVIGASI UTAMA',
+          items: [
+            { name: 'Dashboard Siswa', href: '/student', icon: FaThLarge },
+          ],
         },
         {
-          category: 'EKSPLORASI ALUMNI',
+          category: 'EKSPLORASI KAMPUS & ALUMNI',
           items: [
-            { name: 'Dashboard', href: '/student', icon: FaThLarge },
             { name: 'Perguruan Tinggi', href: '/student/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/student/majors', icon: FaBookOpen },
             { name: 'Data Alumni', href: '/student/alumni', icon: FaUsers },
@@ -508,10 +496,10 @@ const Layout = () => {
           ],
         },
         {
-          category: 'LAINNYA',
+          category: 'AKUN & BANTUAN',
           items: [
-            { name: 'Kritik & Saran', href: '/student/feedback', icon: FaCommentDots, condition: feedbackMenuVisible },
             { name: 'Profil Siswa', href: '/student/profile', icon: FaUser },
+            { name: 'Kritik & Saran', href: '/student/feedback', icon: FaCommentDots, condition: feedbackMenuVisible },
           ],
         },
       ];

@@ -73,7 +73,6 @@ const StudentAlumni = lazy(() => import('./pages/student/Alumni'));
 const StudentFeedback = lazy(() => import('./pages/student/Feedback'));
 const StudentNews = lazy(() => import('./pages/student/News'));
 const StudentNewsDetail = lazy(() => import('./pages/student/NewsDetail'));
-const StudentCollegePlan = lazy(() => import('./pages/student/CollegePlan'));
 const StudentEvents = lazy(() => import('./pages/student/Events'));
 
 const getDashboardPath = (role: UserRole) => {
@@ -254,7 +253,6 @@ function App() {
               <Route index element={<StudentDashboard />} />
               <Route path='universities' element={<StudentUniversities />} />
               <Route path='majors' element={<StudentMajors />} />
-              <Route path='college-plan' element={<StudentCollegePlan />} />
               <Route path='alumni' element={<StudentAlumni />} />
               <Route path='feedback' element={<StudentFeedback />} />
               <Route path='news' element={<StudentNews />} />
