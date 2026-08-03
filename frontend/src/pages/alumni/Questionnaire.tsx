@@ -5,11 +5,7 @@ import axios from 'axios';
 import {
   FaEdit,
   FaSpinner,
-  FaUser,
-  FaBriefcase,
-  FaShareAlt,
   FaSave,
-  FaGraduationCap,
   FaInstagram,
   FaTimes,
 } from 'react-icons/fa';
@@ -36,9 +32,8 @@ const InputField = ({
 }: any) => (
   <div className={noMargin ? '' : 'form-group'}>
     {label && (
-      <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label}{' '}
-        {required && <span className='text-red-500'>*</span>}
+      <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-1.5'>
+        {label} {required && <span className='text-red-500'>*</span>}
       </label>
     )}
     <input
@@ -51,10 +46,10 @@ const InputField = ({
       max={max}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-xl text-xs md:text-sm border border-[color:var(--border-color)] ${disabled
+      className={`w-full rounded-lg text-xs md:text-sm border border-[color:var(--border-color)] ${disabled
         ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
         : 'bg-[color:var(--bg-secondary)]'
-        } px-4 py-3 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+        } px-3.5 py-2 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
           : ''
         }`}
@@ -79,9 +74,8 @@ const SelectField = ({
 }: any) => (
   <div className='form-group'>
     {label && (
-      <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
-        {label}{' '}
-        {required && <span className='text-red-500'>*</span>}
+      <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-1.5'>
+        {label} {required && <span className='text-red-500'>*</span>}
       </label>
     )}
     <div className='relative'>
@@ -91,10 +85,10 @@ const SelectField = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        className={`w-full appearance-none rounded-xl border border-[color:var(--border-color)] ${disabled
+        className={`w-full appearance-none rounded-lg border border-[color:var(--border-color)] ${disabled
           ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
           : 'bg-[color:var(--bg-secondary)]'
-          } px-4 py-3 text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+          } px-3.5 py-2 text-xs md:text-sm text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : ''
           }`}
@@ -106,9 +100,9 @@ const SelectField = ({
           </option>
         ))}
       </select>
-      <div className='pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
+      <div className='pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]'>
         <svg
-          className='h-4 w-4'
+          className='h-3.5 w-3.5'
           fill='none'
           stroke='currentColor'
           viewBox='0 0 24 24'
@@ -277,17 +271,13 @@ const AlumniQuestionnaire = () => {
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
-          axios
-            .get<any[]>('/api/universities')
-            .catch(() => ({ data: [] })),
-          axios
-            .get<any[]>('/api/majors')
-            .catch(() => ({ data: [] })),
+          axios.get<any[]>('/api/universities').catch(() => ({ data: [] })),
+          axios.get<any[]>('/api/majors').catch(() => ({ data: [] })),
         ]);
 
         const rawUnivList = (univRes.data || []).map((u: any) => u.name);
         const rawMajorList = (majorRes.data || []).map((m: any) => m.name);
-        
+
         // Use unique names from API or empty if failed
         const finalUnivList = [...new Set(rawUnivList)].sort() as string[];
         const finalMajorList = [...new Set(rawMajorList)].sort() as string[];
@@ -311,18 +301,22 @@ const AlumniQuestionnaire = () => {
             setFormData({
               profile: {
                 fullName: profile.profile?.fullName || '',
-                gender: (profile.profile?.gender as ProfileData['gender']) || '',
+                gender:
+                  (profile.profile?.gender as ProfileData['gender']) || '',
                 entryYear: profile.profile?.entryYear?.toString() || '',
-                graduationYear: profile.profile?.graduationYear?.toString() || '',
+                graduationYear:
+                  profile.profile?.graduationYear?.toString() || '',
                 lastEducation:
                   (profile.profile
                     ?.lastEducation as ProfileData['lastEducation']) || '',
               },
               university: {
                 name: profile.university?.name || '',
-                type: (profile.university?.type as UniversityData['type']) || '',
+                type:
+                  (profile.university?.type as UniversityData['type']) || '',
                 entryYear: profile.university?.entryYear?.toString() || '',
-                graduationYear: profile.university?.graduationYear?.toString() || '',
+                graduationYear:
+                  profile.university?.graduationYear?.toString() || '',
                 major: profile.university?.major || '',
               },
               universityS2: {
@@ -445,7 +439,14 @@ const AlumniQuestionnaire = () => {
 
   const validateForm = (): boolean => {
     const errors: ValidationErrors = {};
-    const placeholders = ['-', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
+    const placeholders = [
+      '-',
+      'null',
+      'undefined',
+      'belum ada',
+      'tidak ada',
+      '.',
+    ];
 
     const fullName = formData.profile.fullName.trim();
     if (!fullName) {
@@ -453,9 +454,11 @@ const AlumniQuestionnaire = () => {
     } else if (fullName.length < 3) {
       errors['profile.fullName'] = 'Nama lengkap minimal 3 karakter';
     } else if (!/^[a-zA-Z\s.']*$/.test(fullName)) {
-      errors['profile.fullName'] =
-        'Nama lengkap hanya boleh berisi huruf';
-    } else if (/^[.\-_ \s]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
+      errors['profile.fullName'] = 'Nama lengkap hanya boleh berisi huruf';
+    } else if (
+      /^[.\-_ \s]+$/.test(fullName) ||
+      ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())
+    ) {
       errors['profile.fullName'] = 'Nama lengkap tidak valid';
     }
 
@@ -468,8 +471,11 @@ const AlumniQuestionnaire = () => {
     if (!formData.profile.graduationYear) {
       errors['profile.graduationYear'] = 'Tahun lulus SMA wajib diisi';
     }
-    
-    if (!formData.university.name || placeholders.includes(formData.university.name.trim().toLowerCase())) {
+
+    if (
+      !formData.university.name ||
+      placeholders.includes(formData.university.name.trim().toLowerCase())
+    ) {
       errors['university.name'] = 'Nama kampus wajib diisi dengan benar';
     }
     if (!formData.university.type) {
@@ -478,7 +484,10 @@ const AlumniQuestionnaire = () => {
     if (!formData.university.entryYear) {
       errors['university.entryYear'] = 'Tahun masuk kuliah wajib diisi';
     }
-    if (!formData.university.major || placeholders.includes(formData.university.major.trim().toLowerCase())) {
+    if (
+      !formData.university.major ||
+      placeholders.includes(formData.university.major.trim().toLowerCase())
+    ) {
       errors['university.major'] = 'Jurusan kuliah wajib diisi dengan benar';
     }
 
@@ -510,7 +519,11 @@ const AlumniQuestionnaire = () => {
             ? parseInt(formData.profile.graduationYear)
             : undefined,
           isStudying: true,
-          isWorking: !!(formData.job.position || formData.job.institution || formData.job.jobTitle),
+          isWorking: !!(
+            formData.job.position ||
+            formData.job.institution ||
+            formData.job.jobTitle
+          ),
         },
         university: {
           ...formData.university,
@@ -521,9 +534,18 @@ const AlumniQuestionnaire = () => {
             ? parseInt(formData.university.graduationYear)
             : undefined,
         },
-        universityS2: formData.universityS2.name ? formData.universityS2 : undefined,
-        universityS3: formData.universityS3.name ? formData.universityS3 : undefined,
-        job: (formData.job.position || formData.job.institution || formData.job.jobTitle) ? formData.job : undefined,
+        universityS2: formData.universityS2.name
+          ? formData.universityS2
+          : undefined,
+        universityS3: formData.universityS3.name
+          ? formData.universityS3
+          : undefined,
+        job:
+          formData.job.position ||
+            formData.job.institution ||
+            formData.job.jobTitle
+            ? formData.job
+            : undefined,
         socialMedia: {
           email: formData.socialMedia.email?.trim() || undefined,
           linkedin: formData.socialMedia.linkedin?.trim() || undefined,
@@ -560,7 +582,10 @@ const AlumniQuestionnaire = () => {
       if (element) {
         // Temporarily ensure it's visible if hidden (though we'll render it off-screen)
         element.style.display = 'flex';
-        const canvas = await html2canvas(element, { backgroundColor: '#0f172a', scale: 2 });
+        const canvas = await html2canvas(element, {
+          backgroundColor: '#0f172a',
+          scale: 2,
+        });
         element.style.display = 'none';
 
         const imgData = canvas.toDataURL('image/png');
@@ -575,13 +600,17 @@ const AlumniQuestionnaire = () => {
 
   const handleDownloadStory = async () => {
     if (storyImage) {
-      const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+      const userAgent =
+        navigator.userAgent || navigator.vendor || (window as any).opera;
       const isInstagramOrFB = /Instagram|FBAN|FBAV/i.test(userAgent);
       const isMobile = /iPhone|iPad|iPod|Android/i.test(userAgent);
 
       const triggerFallbackDownload = () => {
         if (isInstagramOrFB || isMobile) {
-          Toast('Browser ini memblokir download otomatis. Silakan TAHAN (Long-Press) gambar di atas, lalu pilih "Simpan Gambar / Save Image", kemudian upload ke IG Story Anda secara manual!', 'info');
+          Toast(
+            'Browser ini memblokir download otomatis. Silakan TAHAN (Long-Press) gambar di atas, lalu pilih "Simpan Gambar / Save Image", kemudian upload ke IG Story Anda secara manual!',
+            'info',
+          );
         } else {
           // Fallback to normal download for Desktop / Standard Browsers
           const link = document.createElement('a');
@@ -590,7 +619,10 @@ const AlumniQuestionnaire = () => {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          Toast('Gambar berhasil diunduh! Silakan bagikan ke IG Story Anda.', 'success');
+          Toast(
+            'Gambar berhasil diunduh! Silakan bagikan ke IG Story Anda.',
+            'success',
+          );
         }
       };
 
@@ -598,7 +630,9 @@ const AlumniQuestionnaire = () => {
         try {
           const res = await fetch(storyImage);
           const blob = await res.blob();
-          const file = new File([blob], 'tracer-study-smanta-story.png', { type: blob.type });
+          const file = new File([blob], 'tracer-study-smanta-story.png', {
+            type: blob.type,
+          });
 
           await navigator.share({
             title: 'Tracer Study SMANTA',
@@ -637,9 +671,6 @@ const AlumniQuestionnaire = () => {
         <div className='mb-8 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg shadow-green-500/5'>
           <div className='flex flex-col md:flex-row md:items-center justify-between gap-6'>
             <div className='flex items-start md:items-center gap-4'>
-              <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-green-500/10 text-green-500'>
-                <FaGraduationCap className='text-2xl' />
-              </div>
               <div className='space-y-1'>
                 <h3 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
                   Kuesioner Selesai
@@ -690,17 +721,14 @@ const AlumniQuestionnaire = () => {
 
       <form onSubmit={handleSubmit} className='space-y-6'>
         {/* Personal Information Card */}
-        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
-          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100'>
-              <FaUser className='text-sm md:text-xl' />
-            </div>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg'>
+          <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Informasi Personal
             </h2>
           </div>
 
-          <div className='grid gap-6 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
             <InputField
               label='Nama Lengkap'
               name='profile.fullName'
@@ -775,17 +803,14 @@ const AlumniQuestionnaire = () => {
         </div>
 
         {/* University Section */}
-        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100'>
-              <FaGraduationCap className='text-sm md:text-xl' />
-            </div>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg animate-fade-in'>
+          <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Data Perguruan Tinggi
             </h2>
           </div>
 
-          <div className='grid gap-6 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
             <SearchableSelect
               label='Nama Kampus'
               name='university.name'
@@ -856,17 +881,14 @@ const AlumniQuestionnaire = () => {
 
         {/* S2 University Section */}
         {['s2', 's3'].includes(formData.profile.lastEducation) && (
-          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-100'>
-                <FaGraduationCap className='text-sm md:text-xl' />
-              </div>
+          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg animate-fade-in'>
+            <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
               <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
                 Data Perguruan Tinggi (S2)
               </h2>
             </div>
 
-            <div className='grid gap-6 md:grid-cols-2'>
+            <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
               <SearchableSelect
                 label='Nama Kampus S2'
                 name='universityS2.name'
@@ -893,17 +915,14 @@ const AlumniQuestionnaire = () => {
 
         {/* S3 University Section */}
         {formData.profile.lastEducation === 's3' && (
-          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-            <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-purple-50 text-purple-600 border border-purple-100'>
-                <FaGraduationCap className='text-sm md:text-xl' />
-              </div>
+          <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg animate-fade-in'>
+            <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
               <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
                 Data Perguruan Tinggi (S3)
               </h2>
             </div>
 
-            <div className='grid gap-6 md:grid-cols-2'>
+            <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
               <SearchableSelect
                 label='Nama Kampus S3'
                 name='universityS3.name'
@@ -929,17 +948,14 @@ const AlumniQuestionnaire = () => {
         )}
 
         {/* Job Section */}
-        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg animate-fade-in'>
-          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-amber-50 text-amber-600 border border-amber-100'>
-              <FaBriefcase className='text-sm md:text-xl' />
-            </div>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg animate-fade-in'>
+          <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Data Pekerjaan
             </h2>
           </div>
 
-          <div className='grid gap-6 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-5 md:grid-cols-2'>
             <InputField
               label='Posisi/Jabatan'
               name='job.position'
@@ -971,17 +987,14 @@ const AlumniQuestionnaire = () => {
         </div>
 
         {/* Social Media Section */}
-        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-6 md:p-8 shadow-lg'>
-          <div className='mb-6 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-4'>
-            <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-rose-50 text-rose-600 border border-rose-100'>
-              <FaShareAlt className='text-sm md:text-xl' />
-            </div>
+        <div className='relative z-10 focus-within:z-50 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 md:p-6 shadow-lg'>
+          <div className='mb-4 flex items-center gap-3 border-b border-[color:var(--border-color)] pb-3'>
             <h2 className='text-sm md:text-xl font-bold text-[color:var(--text-primary)] !mb-0'>
               Media Sosial
             </h2>
           </div>
 
-          <div className='grid gap-6 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-5 md:grid-cols-2'>
             <InputField
               label='Email'
               name='socialMedia.email'
@@ -1061,103 +1074,125 @@ const AlumniQuestionnaire = () => {
       </form>
 
       <div
-        id="ig-story-template"
-        className="fixed top-[-9999px] left-[-9999px] w-[1080px] h-[1920px] bg-[#0f172a] text-white flex flex-col justify-center items-center overflow-hidden"
+        id='ig-story-template'
+        className='fixed top-[-9999px] left-[-9999px] w-[1080px] h-[1920px] bg-[#0f172a] text-white flex flex-col justify-center items-center overflow-hidden'
         style={{ display: 'none', background: '#0f172a' }}
       >
         {/* Background Decorative */}
-        <div className="absolute inset-0 w-[1080px] h-[1920px] overflow-hidden pointer-events-none flex justify-center items-center">
-          <div className="absolute top-[-200px] right-[-200px] w-[800px] h-[800px] bg-blue-600 rounded-full blur-[200px] opacity-20"></div>
-          <div className="absolute bottom-[-200px] left-[-200px] w-[800px] h-[800px] bg-purple-600 rounded-full blur-[200px] opacity-20"></div>
+        <div className='absolute inset-0 w-[1080px] h-[1920px] overflow-hidden pointer-events-none flex justify-center items-center'>
+          <div className='absolute top-[-200px] right-[-200px] w-[800px] h-[800px] bg-blue-600 rounded-full blur-[200px] opacity-20'></div>
+          <div className='absolute bottom-[-200px] left-[-200px] w-[800px] h-[800px] bg-purple-600 rounded-full blur-[200px] opacity-20'></div>
         </div>
 
-        <div className="relative z-10 w-full h-[1920px] flex flex-col items-center justify-center p-20 text-center">
-
+        <div className='relative z-10 w-full h-[1920px] flex flex-col items-center justify-center p-20 text-center'>
           {/* Certificate Card */}
-          <div className="bg-[#1e293b]/90 border-[3px] border-blue-500/40 rounded-[4rem] w-full p-20 shadow-[0_0_80px_rgba(59,130,246,0.2)] relative flex flex-col items-center justify-center mx-auto my-auto">
-
+          <div className='bg-[#1e293b]/90 border-[3px] border-blue-500/40 rounded-[4rem] w-full p-20 shadow-[0_0_80px_rgba(59,130,246,0.2)] relative flex flex-col items-center justify-center mx-auto my-auto'>
             {/* Subtle inner border */}
-            <div className="absolute inset-6 border border-blue-400/20 rounded-[3rem] pointer-events-none"></div>
+            <div className='absolute inset-6 border border-blue-400/20 rounded-[3rem] pointer-events-none'></div>
 
             {/* Logo */}
-            <div className="w-48 h-48 bg-[#0f172a] p-8 rounded-full border-4 border-blue-500/30 flex items-center justify-center mb-10 mx-auto shadow-[0_0_30px_rgba(59,130,246,0.2)]">
-              <img src="/logo.png" alt="Logo SMANTA" className="w-full h-full object-contain mx-auto" />
+            <div className='w-48 h-48 bg-[#0f172a] p-8 rounded-full border-4 border-blue-500/30 flex items-center justify-center mb-10 mx-auto shadow-[0_0_30px_rgba(59,130,246,0.2)]'>
+              <img
+                src='/logo.png'
+                alt='Logo SMANTA'
+                className='w-full h-full object-contain mx-auto'
+              />
             </div>
 
-            <h1 className="text-3xl font-bold tracking-[0.3em] text-blue-400 uppercase mb-12 text-center w-full mx-auto">
+            <h1 className='text-3xl font-bold tracking-[0.3em] text-blue-400 uppercase mb-12 text-center w-full mx-auto'>
               Tracer Study Smanta
             </h1>
 
-            <div className="w-64 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto mb-16"></div>
+            <div className='w-64 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent mx-auto mb-16'></div>
 
-            <h2 className="text-[5.5rem] font-bold text-white mb-4 uppercase tracking-widest text-center w-full mx-auto" style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+            <h2
+              className='text-[5.5rem] font-bold text-white mb-4 uppercase tracking-widest text-center w-full mx-auto'
+              style={{ textShadow: '0 4px 20px rgba(0,0,0,0.5)' }}
+            >
               CERTIFICATE
             </h2>
-            <h3 className="text-4xl font-light text-blue-200 tracking-[0.4em] mb-20 text-center w-full mx-auto">
+            <h3 className='text-4xl font-light text-blue-200 tracking-[0.4em] mb-20 text-center w-full mx-auto'>
               OF APPRECIATION
             </h3>
 
-            <p className="text-3xl text-gray-400 font-medium mb-12 text-center w-full mx-auto">
+            <p className='text-3xl text-gray-400 font-medium mb-12 text-center w-full mx-auto'>
               Diberikan dengan bangga kepada:
             </p>
 
-            <div className="bg-[#0f172a]/50 px-16 py-10 rounded-[3rem] border border-blue-500/20 mb-16 w-full max-w-[85%] mx-auto flex flex-col items-center justify-center">
-              <p className="text-6xl font-bold text-white text-center w-full m-0 p-0 leading-normal flex items-center justify-center">
+            <div className='bg-[#0f172a]/50 px-16 py-10 rounded-[3rem] border border-blue-500/20 mb-16 w-full max-w-[85%] mx-auto flex flex-col items-center justify-center'>
+              <p className='text-6xl font-bold text-white text-center w-full m-0 p-0 leading-normal flex items-center justify-center'>
                 {formData.profile.fullName || 'Alumni SMANTA'}
               </p>
             </div>
 
-            <p className="text-3xl text-gray-300 leading-[1.6] max-w-[90%] mx-auto opacity-90 mb-16 text-center w-full">
-              Atas kontribusi positif dan partisipasinya dalam membangun database <span className="text-blue-300 font-bold">Tracer Study SMANTA.</span><br />
+            <p className='text-3xl text-gray-300 leading-[1.6] max-w-[90%] mx-auto opacity-90 mb-16 text-center w-full'>
+              Atas kontribusi positif dan partisipasinya dalam membangun
+              database{' '}
+              <span className='text-blue-300 font-bold'>
+                Tracer Study SMANTA.
+              </span>
+              <br />
               Semoga jejak ini menjadi inspirasi bagi generasi selanjutnya.
             </p>
           </div>
-
         </div>
       </div>
 
       {/* Story Preview Modal */}
-      {showStoryModal && createPortal(
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" style={{ zIndex: 99999 }}>
-          <div className="bg-[color:var(--bg-card)] rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-fade-in flex flex-col max-h-[90vh]">
-            <button
-              onClick={() => setShowStoryModal(false)}
-              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[color:var(--bg-tertiary)] hover:bg-red-500 hover:text-white rounded-full transition-colors"
-            >
-              <FaTimes />
-            </button>
-            <h3 className="text-lg font-bold text-[color:var(--text-primary)] mb-4 text-center mt-2">
-              Template IG Story Anda
-            </h3>
-
-            <div className="flex-1 overflow-y-auto rounded-2xl border-2 border-[color:var(--border-color)] relative">
-              {storyImage ? (
-                <img src={storyImage} alt="IG Story Preview" className="w-full h-auto" />
-              ) : (
-                <div className="flex items-center justify-center h-full w-full py-20">
-                  <div className="animate-spin text-[var(--primary)] text-4xl">
-                    <FaSpinner />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3">
+      {showStoryModal &&
+        createPortal(
+          <div
+            className='fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4'
+            style={{ zIndex: 99999 }}
+          >
+            <div className='bg-[color:var(--bg-card)] rounded-3xl max-w-sm w-full p-6 shadow-2xl relative animate-fade-in flex flex-col max-h-[90vh]'>
               <button
-                onClick={handleDownloadStory}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 p-4 text-sm font-bold text-white shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all"
+                onClick={() => setShowStoryModal(false)}
+                className='absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[color:var(--bg-tertiary)] hover:bg-red-500 hover:text-white rounded-full transition-colors'
               >
-                <FaInstagram className="text-lg" />
-                <span>Bagikan ke IG Story</span>
+                <FaTimes />
               </button>
-              <p className="text-xs text-center text-[color:var(--text-tertiary)] px-4">
-                Gambar ini akan dibagikan ke Instagram Story Anda. Jangan lupa tambahkan Link Sticker <span className="font-bold text-[color:var(--text-secondary)]">https://tracerstudy-smanta.com</span>!
-              </p>
+              <h3 className='text-lg font-bold text-[color:var(--text-primary)] mb-4 text-center mt-2'>
+                Template IG Story Anda
+              </h3>
+
+              <div className='flex-1 overflow-y-auto rounded-2xl border-2 border-[color:var(--border-color)] relative'>
+                {storyImage ? (
+                  <img
+                    src={storyImage}
+                    alt='IG Story Preview'
+                    className='w-full h-auto'
+                  />
+                ) : (
+                  <div className='flex items-center justify-center h-full w-full py-20'>
+                    <div className='animate-spin text-[var(--primary)] text-4xl'>
+                      <FaSpinner />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <div className='mt-6 flex flex-col gap-3'>
+                <button
+                  onClick={handleDownloadStory}
+                  className='w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 p-4 text-sm font-bold text-white shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all'
+                >
+                  <FaInstagram className='text-lg' />
+                  <span>Bagikan ke IG Story</span>
+                </button>
+                <p className='text-xs text-center text-[color:var(--text-tertiary)] px-4'>
+                  Gambar ini akan dibagikan ke Instagram Story Anda. Jangan lupa
+                  tambahkan Link Sticker{' '}
+                  <span className='font-bold text-[color:var(--text-secondary)]'>
+                    https://tracerstudy-smanta.com
+                  </span>
+                  !
+                </p>
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };

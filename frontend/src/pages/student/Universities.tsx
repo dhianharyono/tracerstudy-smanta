@@ -246,16 +246,20 @@ const StudentUniversities = () => {
 
       if (availableYears.length === 0) {
         const currentYear = new Date().getFullYear();
-        const defaultYears = Array.from({ length: 15 }, (_, i) => currentYear - i);
+        const defaultYears = Array.from(
+          { length: 15 },
+          (_, i) => currentYear - i,
+        );
         const extractedYears = new Set<number>();
         response.data.forEach((uni) => {
           uni.alumni?.forEach((alum) => {
-            if (alum.graduationYear) extractedYears.add(Number(alum.graduationYear));
+            if (alum.graduationYear)
+              extractedYears.add(Number(alum.graduationYear));
           });
         });
-        const combined = Array.from(new Set([...extractedYears, ...defaultYears])).sort(
-          (a, b) => b - a,
-        );
+        const combined = Array.from(
+          new Set([...extractedYears, ...defaultYears]),
+        ).sort((a, b) => b - a);
         setAvailableYears(combined);
       }
     } catch (error) {
@@ -331,7 +335,10 @@ const StudentUniversities = () => {
             onChange={(e) => setSelectedYear(e.target.value)}
             className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
           >
-            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+            <option
+              value=''
+              className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+            >
               Semua Tahun
             </option>
             {availableYears.map((year) => (
@@ -348,20 +355,20 @@ const StudentUniversities = () => {
       </div>
 
       {topUniversity && (
-        <Card className='bg-gradient-to-r from-amber-500/25 to-transparent border-l-4 border-l-amber-500 mb-8'>
+        <Card className='bg-gradient-to-r from-blue-600 to-blue-600 border-l-4 border-l-blue-500 mb-8'>
           <div className='flex items-center gap-6'>
-            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+            <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
               <FaTrophy size={28} />
             </div>
             <div className='flex-1 min-w-0'>
               <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-amber-500 sm:hidden' />
-                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
+                <FaTrophy className='text-white-500 sm:hidden' />
+                <p className='text-white text-xs font-bold uppercase tracking-widest'>
                   Kampus Terfavorit Alumni
                 </p>
               </div>
               <h3
-                className='text-xl md:text-2xl font-bold text-[color:var(--text-primary)] truncate'
+                className='text-xl md:text-2xl font-bold text-white truncate'
                 title={topUniversity._id.name}
               >
                 {topUniversity._id.name}
@@ -369,17 +376,18 @@ const StudentUniversities = () => {
               <div className='flex items-center gap-3 mt-2'>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                           ${topUniversity._id.type === 'negeri'
-                      ? 'bg-amber-50 text-amber-700 border-amber-200/50'
-                      : topUniversity._id.type === 'kedinasan'
-                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                        : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                    }`}
+                           ${
+                             topUniversity._id.type === 'negeri'
+                               ? 'bg-blue-50 text-blue-700 border-blue-200/50'
+                               : topUniversity._id.type === 'kedinasan'
+                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                                 : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                           }`}
                 >
                   {topUniversity._id.type || 'Swasta'}
                 </span>
-                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
-                  <span className='text-amber-500'>{topUniversity.count}</span>{' '}
+                <span className='text-sm font-bold text-white'>
+                  <span className='text-white'>{topUniversity.count}</span>{' '}
                   Alumni Bergabung
                 </span>
               </div>
@@ -489,10 +497,11 @@ const StudentUniversities = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${filterType === type.id
-                  ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
-                  : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
-                  }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  filterType === type.id
+                    ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
+                    : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
+                }`}
               >
                 {type.label}
               </button>
@@ -531,12 +540,13 @@ const StudentUniversities = () => {
                       </h4>
                       <span
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
-                                    ${univ._id.type === 'negeri'
-                            ? 'bg-amber-50 text-amber-700 border-amber-200/50'
-                            : univ._id.type === 'kedinasan'
-                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                              : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                          }`}
+                                    ${
+                                      univ._id.type === 'negeri'
+                                        ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                                        : univ._id.type === 'kedinasan'
+                                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                                          : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                                    }`}
                       >
                         {univ._id.type || 'Swasta'}
                       </span>

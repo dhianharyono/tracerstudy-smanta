@@ -87,8 +87,8 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbacks }) => {
                                     </div>
                                 )}
                                 {item.saran && (
-                                    <div className='bg-green-50 dark:bg-green-900/10 p-3 rounded-lg border border-green-100 dark:border-green-900/20'>
-                                        <span className='text-xs font-bold text-green-500 block mb-1 uppercase tracking-wider'>Saran</span>
+                                    <div className='bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg border border-blue-100 dark:border-blue-900/20'>
+                                        <span className='text-xs font-bold text-blue-500 block mb-1 uppercase tracking-wider'>Saran</span>
                                         <p className='text-xs md:text-sm text-[color:var(--text-primary)] line-clamp-2 italic'>
                                             "{item.saran}"
                                         </p>
@@ -165,7 +165,7 @@ const FeedbackList: React.FC<FeedbackListProps> = ({ feedbacks }) => {
 
                                 {selectedFeedback.saran && (
                                     <div>
-                                        <span className='text-xs font-bold text-green-500 block mb-2 uppercase tracking-wider border-b border-green-100 dark:border-green-900/30 pb-1'>Saran Perbaikan</span>
+                                        <span className='text-xs font-bold text-blue-500 block mb-2 uppercase tracking-wider border-b border-green-100 dark:border-green-900/30 pb-1'>Saran Perbaikan</span>
                                         <div className='bg-green-50 dark:bg-green-900/5 p-4 rounded-xl border border-green-100 dark:border-green-900/20'>
                                             <p className='text-sm text-[color:var(--text-primary)] leading-relaxed italic'>
                                                 "{selectedFeedback.saran}"

@@ -223,7 +223,7 @@ const AdminFeedbackDetail = () => {
 
           {/* Saran Section */}
           <div className='relative'>
-            <h3 className='relative z-10 text-lg font-semibold text-green-500 mb-3 ml-2'>
+            <h3 className='flex items-center gap-2 text-lg font-semibold text-[color:var(--text-primary)] mb-4'>
               Saran Perbaikan
             </h3>
             <div className='relative z-10 rounded-xl bg-green-50 p-5 text-[color:var(--text-primary)] border border-green-100'>

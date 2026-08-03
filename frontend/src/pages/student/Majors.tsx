@@ -88,7 +88,9 @@ const MajorDetailModal = ({
               </h2>
               <div className='flex items-center gap-2 text-white/80 mb-10 md:mb-0'>
                 <FaUsers />
-                <span className='font-medium text-xs md:text-base'>{major.count} Alumni Terdaftar</span>
+                <span className='font-medium text-xs md:text-base'>
+                  {major.count} Alumni Terdaftar
+                </span>
               </div>
             </div>
             <button
@@ -103,24 +105,32 @@ const MajorDetailModal = ({
         {/* Body */}
         <div className='p-6 overflow-y-auto bg-[color:var(--bg-secondary)]/30 flex-1'>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
-
             {/* Main Content: University Distribution */}
             <div className='lg:col-span-2 space-y-6'>
               <div className='bg-[color:var(--bg-card)] p-5 rounded-xl border border-[color:var(--border-color)] shadow-sm'>
                 <h3 className='font-bold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
-                  <FaChartPie className='text-[var(--primary)]' /> Sebaran Universitas
+                  <FaChartPie className='text-[var(--primary)]' /> Sebaran
+                  Universitas
                 </h3>
 
                 {/* Top 3 Cards */}
                 <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6'>
                   {top3Universities.map(([univ, count]: any, idx) => (
-                    <div key={idx} className='bg-[color:var(--bg-tertiary)]/50 p-4 rounded-xl border border-[color:var(--border-color)] relative overflow-hidden'>
+                    <div
+                      key={idx}
+                      className='bg-[color:var(--bg-tertiary)]/50 p-4 rounded-xl border border-[color:var(--border-color)] relative overflow-hidden'
+                    >
                       <div className='absolute right-0 top-0 p-2 text-[color:var(--text-tertiary)] opacity-10 font-bold text-5xl'>
                         #{idx + 1}
                       </div>
                       <div className='relative z-10'>
-                        <div className='text-2xl font-bold text-[var(--primary)] mb-1'>{count}</div>
-                        <div className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-4 h-8 leading-tight' title={univ}>
+                        <div className='text-2xl font-bold text-[var(--primary)] mb-1'>
+                          {count}
+                        </div>
+                        <div
+                          className='text-xs font-medium text-[color:var(--text-primary)] line-clamp-4 h-8 leading-tight'
+                          title={univ}
+                        >
                           {univ}
                         </div>
                         <div className='mt-2 h-1.5 w-full bg-slate-100 rounded-full overflow-hidden'>
@@ -140,12 +150,21 @@ const MajorDetailModal = ({
                 {/* List of others */}
                 {otherUniversities.length > 0 && (
                   <div className='space-y-3'>
-                    <h4 className='text-sm font-medium text-[color:var(--text-secondary)]'>Universitas Lainnya</h4>
+                    <h4 className='text-sm font-medium text-[color:var(--text-secondary)]'>
+                      Universitas Lainnya
+                    </h4>
                     <div className='max-h-[200px] overflow-y-auto pr-2 space-y-2'>
                       {otherUniversities.map(([univ, count]: any, idx) => (
-                        <div key={idx} className='flex items-center justify-between p-3 bg-slate-50/50 border border-slate-100 rounded-lg text-sm'>
-                          <span className='truncate flex-1 pr-4' title={univ}>{univ}</span>
-                          <span className='font-semibold text-[color:var(--text-primary)]'>{count}</span>
+                        <div
+                          key={idx}
+                          className='flex items-center justify-between p-3 bg-slate-50/50 border border-slate-100 rounded-lg text-sm'
+                        >
+                          <span className='truncate flex-1 pr-4' title={univ}>
+                            {univ}
+                          </span>
+                          <span className='font-semibold text-[color:var(--text-primary)]'>
+                            {count}
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -158,7 +177,8 @@ const MajorDetailModal = ({
             <div className='space-y-6'>
               <div className='bg-[color:var(--bg-card)] p-5 rounded-xl border border-[color:var(--border-color)] shadow-sm h-full flex flex-col'>
                 <h3 className='font-bold text-[color:var(--text-primary)] mb-4 flex items-center gap-2'>
-                  <FaGraduationCap className='text-[var(--primary)]' /> Alumni Terbaru
+                  <FaGraduationCap className='text-[var(--primary)]' /> Alumni
+                  Terbaru
                 </h3>
 
                 <div className='space-y-4 flex-1'>
@@ -169,7 +189,10 @@ const MajorDetailModal = ({
                         <div className='font-medium text-sm text-[color:var(--text-primary)] truncate'>
                           {alum.name}
                         </div>
-                        <div className='text-xs text-[color:var(--text-secondary)] line-clamp-1' title={alum.university}>
+                        <div
+                          className='text-xs text-[color:var(--text-secondary)] line-clamp-1'
+                          title={alum.university}
+                        >
                           {alum.university}
                         </div>
                         <div className='text-[10px] text-[color:var(--text-tertiary)]'>
@@ -194,7 +217,6 @@ const MajorDetailModal = ({
                 </button>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -223,7 +245,12 @@ const StudentMajors = () => {
     m.alumni.some((a) => a.universityType === 'negeri'),
   ).length;
   const ptsMajorsCount = majors.filter((m) =>
-    m.alumni.some((a) => !a.universityType || a.universityType === 'swasta' || a.universityType === ''),
+    m.alumni.some(
+      (a) =>
+        !a.universityType ||
+        a.universityType === 'swasta' ||
+        a.universityType === '',
+    ),
   ).length;
   const kedinasanMajorsCount = majors.filter((m) =>
     m.alumni.some((a) => a.universityType === 'kedinasan'),
@@ -240,22 +267,28 @@ const StudentMajors = () => {
       if (selectedYear) {
         params.graduationYear = selectedYear;
       }
-      const response = await axios.get<MajorData[]>('/api/student/majors', { params });
+      const response = await axios.get<MajorData[]>('/api/student/majors', {
+        params,
+      });
       setMajors(response.data);
       setFilteredMajors(response.data);
 
       if (availableYears.length === 0) {
         const currentYear = new Date().getFullYear();
-        const defaultYears = Array.from({ length: 15 }, (_, i) => currentYear - i);
+        const defaultYears = Array.from(
+          { length: 15 },
+          (_, i) => currentYear - i,
+        );
         const extractedYears = new Set<number>();
         response.data.forEach((m) => {
           m.alumni?.forEach((alum) => {
-            if (alum.graduationYear) extractedYears.add(Number(alum.graduationYear));
+            if (alum.graduationYear)
+              extractedYears.add(Number(alum.graduationYear));
           });
         });
-        const combined = Array.from(new Set([...extractedYears, ...defaultYears])).sort(
-          (a, b) => b - a,
-        );
+        const combined = Array.from(
+          new Set([...extractedYears, ...defaultYears]),
+        ).sort((a, b) => b - a);
         setAvailableYears(combined);
       }
     } catch (error) {
@@ -281,7 +314,6 @@ const StudentMajors = () => {
   const handleViewAllAlumni = (majorName: string) => {
     navigate(`/${user?.role}/alumni?major=${encodeURIComponent(majorName)}`);
   };
-
 
   if (loading) {
     return <SmartLoader />;
@@ -331,7 +363,10 @@ const StudentMajors = () => {
             onChange={(e) => setSelectedYear(e.target.value)}
             className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
           >
-            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+            <option
+              value=''
+              className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+            >
               Semua Tahun
             </option>
             {availableYears.map((year) => (
@@ -348,28 +383,28 @@ const StudentMajors = () => {
       </div>
 
       {topMajor && (
-        <Card className='bg-gradient-to-r from-amber-500/25 to-transparent border-l-4 border-l-amber-500 mb-8'>
+        <Card className='bg-gradient-to-r from-blue-600 to-blue-600 border-l-4 border-l-blue-500 mb-8'>
           <div className='flex items-center gap-6'>
-            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+            <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
               <FaTrophy size={28} />
             </div>
             <div className='flex-1 min-w-0'>
               <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-amber-500 sm:hidden' />
-                <p className='text-amber-600 text-xs font-bold uppercase tracking-widest'>
+                <FaTrophy className='text-white sm:hidden' />
+                <p className='text-white text-xs font-bold uppercase tracking-widest'>
                   Jurusan Terfavorit Alumni
                 </p>
               </div>
               <h3
-                className='text-xl md:text-2xl font-bold text-[color:var(--text-primary)] truncate'
+                className='text-xl md:text-2xl font-bold text-white truncate'
                 title={topMajor._id}
               >
                 {topMajor._id}
               </h3>
               <div className='flex items-center gap-3 mt-2'>
-                <span className='text-sm font-bold text-[color:var(--text-secondary)]'>
-                  <span className='text-amber-500'>{topMajor.count}</span>{' '}
-                  Alumni Bergabung
+                <span className='text-sm font-bold text-white'>
+                  <span className='text-white'>{topMajor.count}</span> Alumni
+                  Bergabung
                 </span>
               </div>
             </div>
@@ -388,7 +423,9 @@ const StudentMajors = () => {
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                 Total Jurusan
               </p>
-              <h3 className='text-2xl font-bold !text-white'>{majors.length}</h3>
+              <h3 className='text-2xl font-bold !text-white'>
+                {majors.length}
+              </h3>
             </div>
           </div>
         </Card>
@@ -545,6 +582,5 @@ const StudentMajors = () => {
     </div>
   );
 };
-
 
 export default StudentMajors;

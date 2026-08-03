@@ -138,7 +138,7 @@ const PostOpportunity = () => {
   if (loading) return <SmartLoader />;
 
   return (
-    <div className="p-4 md:p-8 animate-fade-in max-w-4xl mx-auto">
+    <div className="p-4 md:p-8 animate-fade-in w-full">
       <div className="mb-6 flex items-center justify-between">
         <button
           onClick={() => navigate('/alumni/jobs')}
@@ -159,116 +159,116 @@ const PostOpportunity = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] p-6 shadow-sm space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Judul Lowongan *</label>
+        <div className="bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] p-5 md:p-6 shadow-sm space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Judul Lowongan *</label>
               <div className="relative">
-                <FaBriefcase className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" />
+                <FaBriefcase className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)] text-sm" />
                 <input
                   type="text" name="title" required
                   value={formData.title} onChange={handleChange}
                   placeholder="Ex: Senior Web Developer"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Perusahaan / Instansi *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Perusahaan / Instansi *</label>
               <div className="relative">
-                <FaBuilding className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" />
+                <FaBuilding className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)] text-sm" />
                 <input
                   type="text" name="company" required
                   value={formData.company} onChange={handleChange}
                   placeholder="Ex: PT. Teknologi Maju"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Kategori *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Kategori *</label>
               <select
                 name="category" required
                 value={formData.category} onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm text-[color:var(--text-primary)]"
               >
                 <option value="">Pilih Kategori</option>
                 {JOB_CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Tipe Pekerjaan *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Tipe Pekerjaan *</label>
               <select
                 name="type" required
                 value={formData.type} onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                className="w-full px-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm text-[color:var(--text-primary)]"
               >
                 <option value="">Pilih Tipe</option>
                 {JOB_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Lokasi *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Lokasi *</label>
               <div className="relative">
-                <FaMapMarkerAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" />
+                <FaMapMarkerAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)] text-sm" />
                 <input
                   type="text" name="location" required
                   value={formData.location} onChange={handleChange}
                   placeholder="Ex: Jakarta / Remote"
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-bold text-[color:var(--text-secondary)]">Batas Akhir (Masa Aktif) *</label>
+            <div className="space-y-1.5">
+              <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Batas Akhir (Masa Aktif) *</label>
               <div className="relative">
-                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" />
+                <FaCalendarAlt className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)] text-sm" />
                 <input
                   type="date" name="expiryDate" required
                   value={formData.expiryDate} onChange={handleChange}
-                  className="w-full pl-11 pr-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                  className="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm text-[color:var(--text-primary)]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-[color:var(--text-secondary)]">Link Pendaftaran / Info Detail (Opsional)</label>
+          <div className="space-y-1.5">
+            <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Link Pendaftaran / Info Detail (Opsional)</label>
             <div className="relative">
-              <FaLink className="absolute left-4 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)]" />
+              <FaLink className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[color:var(--text-tertiary)] text-sm" />
               <input
                 type="url" name="applicationLink"
                 value={formData.applicationLink} onChange={handleChange}
                 placeholder="Ex: https://perusahaan.com/career"
-                className="w-full pl-11 pr-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                className="w-full pl-10 pr-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm"
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-bold text-[color:var(--text-secondary)]">Deskripsi Pekerjaan *</label>
+          <div className="space-y-1.5">
+            <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Deskripsi Pekerjaan *</label>
             <textarea
               name="description" required rows={4}
               value={formData.description} onChange={handleChange}
               placeholder="Jelaskan peran dan tanggung jawab secara singkat..."
-              className="w-full px-4 py-3 rounded-xl bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm resize-none"
+              className="w-full px-3.5 py-2.5 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm resize-none"
             />
           </div>
 
-          <div className="space-y-3">
-            <label className="text-sm font-bold text-[color:var(--text-secondary)]">Persyaratan (Opsional)</label>
+          <div className="space-y-2">
+            <label className="text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]">Persyaratan (Opsional)</label>
             {requirements.map((req, index) => (
               <div key={index} className="flex gap-2">
                 <input
                   type="text" value={req}
                   onChange={(e) => handeRequirementChange(index, e.target.value)}
                   placeholder={`Persyaratan ${index + 1}`}
-                  className="w-full px-4 py-2 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-sm"
+                  className="w-full px-3.5 py-2 rounded-lg bg-[color:var(--bg-secondary)] border border-[color:var(--border-color)] focus:border-[var(--primary)] outline-none text-xs md:text-sm"
                 />
                 <button
                   type="button" onClick={() => removeRequirement(index)}
@@ -280,7 +280,7 @@ const PostOpportunity = () => {
             ))}
             <button
               type="button" onClick={addRequirement}
-              className="flex items-center gap-2 text-xs font-bold text-[var(--primary)] hover:underline"
+              className="flex items-center gap-2 text-xs font-bold text-[var(--primary)] hover:underline pt-1"
             >
               <FaPlus />
               Tambah Persyaratan
@@ -288,10 +288,16 @@ const PostOpportunity = () => {
           </div>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 justify-end">
+          <button
+            type="button" onClick={() => navigate('/alumni/jobs')}
+            className="px-6 py-2.5 bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] text-xs md:text-sm font-bold rounded-xl hover:bg-gray-200"
+          >
+            Batal
+          </button>
           <button
             type="submit" disabled={submitLoading}
-            className="flex-1 py-3 bg-[var(--primary)] text-white font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
+            className="px-8 py-2.5 bg-[var(--primary)] text-white text-xs md:text-sm font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 hover:opacity-90 disabled:opacity-50 flex items-center justify-center gap-2"
           >
             {submitLoading ? 'Memproses...' : (
               <>
@@ -299,12 +305,6 @@ const PostOpportunity = () => {
                 {isEdit ? 'Update & Ajukan Ulang' : 'Posting Lowongan'}
               </>
             )}
-          </button>
-          <button
-            type="button" onClick={() => navigate('/alumni/jobs')}
-            className="px-8 py-3 bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] font-bold rounded-xl hover:bg-gray-200"
-          >
-            Batal
           </button>
         </div>
       </form>

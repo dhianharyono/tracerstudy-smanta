@@ -60,20 +60,25 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     return (
         <div className='form-group' ref={wrapperRef}>
             {label && (
-                <label className='block text-sm font-semibold text-[color:var(--text-secondary)] mb-2'>
+                <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-1.5'>
                     {label}{' '}
                     {required && <span className='text-red-500'>*</span>}
                 </label>
             )}
 
             <div className='relative'>
-                <div className='flex items-center'>
+                <div className={`flex items-center rounded-lg border border-[color:var(--border-color)] ${
+                    disabled
+                        ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+                        : 'bg-[color:var(--bg-secondary)]'
+                } px-3.5 py-2 transition-all focus-within:border-[var(--primary)] focus-within:ring-1 focus-within:ring-[var(--primary)] ${
+                    validationErrors[name]
+                        ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500'
+                        : ''
+                }`}>
                     <input
                         type='text'
-                        className={`w-full bg-transparent py-3 text-[color:var(--text-primary)] outline-none placeholder:text-[color:var(--text-tertiary)] ${disabled
-                            ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-                            : 'bg-[color:var(--bg-secondary)]'
-                            }`}
+                        className='w-full bg-transparent text-xs md:text-sm text-[color:var(--text-primary)] outline-none placeholder:text-[color:var(--text-tertiary)]'
                         placeholder={value || placeholder}
                         required={required}
                         value={isOpen ? searchTerm : value}
@@ -86,7 +91,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                         }}
                         disabled={disabled}
                     />
-                    <div className='flex items-center gap-2 ml-2'>
+                    <div className='flex items-center gap-2 ml-2 shrink-0'>
                         {value && !disabled && (
                             <button
                                 type='button'
@@ -97,21 +102,21 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                             </button>
                         )}
                         <FaChevronDown
-                            className={`h-4 w-4 text-[color:var(--text-tertiary)] transition-transform ${isOpen ? 'rotate-180' : ''
+                            className={`h-3.5 w-3.5 text-[color:var(--text-tertiary)] transition-transform ${isOpen ? 'rotate-180' : ''
                                 }`}
                         />
                     </div>
                 </div>
 
                 {isOpen && !disabled && (
-                    <div className='absolute z-50 mt-2 w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] shadow-xl animate-fade-in max-h-64 overflow-hidden flex flex-col'>
+                    <div className='absolute z-50 mt-1.5 w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] shadow-xl animate-fade-in max-h-64 overflow-hidden flex flex-col'>
                         <div className='overflow-y-auto'>
                             {filteredOptions.length > 0 ? (
                                 filteredOptions.map((option, index) => (
                                     <button
                                         key={index}
                                         type='button'
-                                        className={`w-full px-4 py-3 text-left text-sm transition-colors hover:bg-[color:var(--bg-tertiary)] ${value === option ? 'bg-[var(--primary)] text-white' : 'text-[color:var(--text-primary)]'
+                                        className={`w-full px-3.5 py-2.5 text-left text-xs md:text-sm transition-colors hover:bg-[color:var(--bg-tertiary)] ${value === option ? 'bg-[var(--primary)] text-white' : 'text-[color:var(--text-primary)]'
                                             }`}
                                         onClick={() => handleSelect(option)}
                                     >
@@ -119,7 +124,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                                     </button>
                                 ))
                             ) : (
-                                <div className='px-4 py-3 text-sm text-[color:var(--text-tertiary)]'>
+                                <div className='px-3.5 py-2.5 text-xs md:text-sm text-[color:var(--text-tertiary)]'>
                                     Tidak ada hasil ditemukan
                                 </div>
                             )}
@@ -128,7 +133,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                         {searchTerm && !options.includes(searchTerm) && (
                             <button
                                 type='button'
-                                className='w-full px-4 py-3 text-left text-sm border-t border-[color:var(--border-color)] font-semibold text-[var(--primary)] hover:bg-[color:var(--bg-tertiary)] flex items-center gap-2'
+                                className='w-full px-3.5 py-2.5 text-left text-xs md:text-sm border-t border-[color:var(--border-color)] font-semibold text-[var(--primary)] hover:bg-[color:var(--bg-tertiary)] flex items-center gap-2'
                                 onClick={handleManualInput}
                             >
                                 <FaPlus className='h-3 w-3' />

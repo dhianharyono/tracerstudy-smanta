@@ -13,7 +13,7 @@ const FeedbackStats: React.FC<FeedbackStatsAndProps> = ({ stats }) => {
     return (
         <Card className='mb-8'>
             <div className='flex items-center gap-2 mb-6'>
-                <div className='p-2 rounded-lg bg-yellow-50 text-yellow-600 border border-yellow-200/30'>
+                <div className='p-2 rounded-lg bg-blue-50 text-blue-600 border border-blue-200/30'>
                     <FaChartBar />
                 </div>
                 <h2 className='text-lg font-semibold text-[color:var(--text-primary)] !mb-0'>
@@ -24,10 +24,10 @@ const FeedbackStats: React.FC<FeedbackStatsAndProps> = ({ stats }) => {
             <div className='flex flex-col md:flex-row items-center gap-8'>
                 {/* Average Display */}
                 <div className='flex flex-col items-center justify-center p-4 min-w-[200px] text-center'>
-                    <div className='text-5xl font-bold text-yellow-400 mb-2'>
+                    <div className='text-5xl font-bold text-blue-400 mb-2'>
                         {stats.average ? stats.average.toFixed(1) : '0.0'}
                     </div>
-                    <div className='flex text-yellow-400 text-lg mb-2'>
+                    <div className='flex text-blue-400 text-lg mb-2'>
                         {[1, 2, 3, 4, 5].map((index) => (
                             <FaStar
                                 key={index}
@@ -58,10 +58,10 @@ const FeedbackStats: React.FC<FeedbackStatsAndProps> = ({ stats }) => {
                                 <div className='flex-1 h-2 rounded-full bg-[color:var(--bg-tertiary)] overflow-hidden'>
                                     <div
                                         className={`h-full rounded-full transition-all duration-500 ${rating >= 4
-                                                ? 'bg-green-500'
-                                                : rating >= 3
-                                                    ? 'bg-yellow-500'
-                                                    : 'bg-red-500'
+                                            ? 'bg-blue-500'
+                                            : rating >= 3
+                                                ? 'bg-yellow-500'
+                                                : 'bg-red-500'
                                             }`}
                                         style={{ width: `${percentage}%` }}
                                     />

@@ -37,12 +37,16 @@ const SchoolUniversityList = () => {
       if (selectedYear) {
         params.graduationYear = selectedYear;
       }
-      const response = await axios.get('/api/school/analytics/universities', { params });
+      const response = await axios.get('/api/school/analytics/universities', {
+        params,
+      });
       setUniversities(response.data);
 
       if (availableYears.length === 0) {
         const currentYear = new Date().getFullYear();
-        setAvailableYears(Array.from({ length: 15 }, (_, i) => currentYear - i));
+        setAvailableYears(
+          Array.from({ length: 15 }, (_, i) => currentYear - i),
+        );
       }
     } catch (error) {
       console.error('Error fetching university distribution:', error);
@@ -87,7 +91,10 @@ const SchoolUniversityList = () => {
             onChange={(e) => setSelectedYear(e.target.value)}
             className='bg-transparent text-[color:var(--text-primary)] text-xs sm:text-sm font-medium focus:outline-none cursor-pointer pr-1'
           >
-            <option value='' className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'>
+            <option
+              value=''
+              className='bg-[color:var(--bg-card)] text-[color:var(--text-primary)]'
+            >
               Semua Tahun
             </option>
             {availableYears.map((year) => (
@@ -105,9 +112,9 @@ const SchoolUniversityList = () => {
 
       {/* Stats Cards */}
       {topUniversity && (
-        <Card className='bg-gradient-to-r from-amber-500/25 to-transparent border-l-4 border-l-amber-500 mb-8'>
+        <Card className='bg-gradient-to-r from-blue-600 to-blue-600 border-l-4 border-l-blue-500 mb-8'>
           <div className='flex items-center gap-6'>
-            <div className='hidden sm:flex p-5 bg-amber-500 text-white rounded-2xl shadow-lg shadow-amber-500/30'>
+            <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
               <FaTrophy size={28} />
             </div>
             <div className='flex-1 min-w-0'>
@@ -126,12 +133,13 @@ const SchoolUniversityList = () => {
               <div className='flex items-center gap-3 mt-2'>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                  ${topUniversity.type === 'negeri'
+                  ${
+                    topUniversity.type === 'negeri'
                       ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                       : topUniversity.type === 'kedinasan'
                         ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                         : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
-                    }`}
+                  }`}
                 >
                   {topUniversity.type || 'Swasta'}
                 </span>
@@ -155,7 +163,9 @@ const SchoolUniversityList = () => {
               <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
                 Total Perguran Tinggi
               </p>
-              <h3 className='text-2xl font-bold !text-white'>{universities.length}</h3>
+              <h3 className='text-2xl font-bold !text-white'>
+                {universities.length}
+              </h3>
             </div>
           </div>
         </Card>
@@ -242,10 +252,11 @@ const SchoolUniversityList = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${filterType === type.id
-                  ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
-                  : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
-                  }`}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  filterType === type.id
+                    ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
+                    : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
+                }`}
               >
                 {type.label}
               </button>
@@ -268,7 +279,11 @@ const SchoolUniversityList = () => {
             {filteredUniversities.map((univ, idx) => (
               <div
                 key={idx}
-                onClick={() => navigate(`/school/alumni?university=${encodeURIComponent(univ._id)}`)}
+                onClick={() =>
+                  navigate(
+                    `/school/alumni?university=${encodeURIComponent(univ._id)}`,
+                  )
+                }
                 className='flex flex-col justify-between p-5 rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)] hover:border-[var(--primary)] hover:shadow-md transition-all group cursor-pointer hover:scale-[1.01]'
               >
                 <div className='flex items-start justify-between mb-4'>
@@ -285,12 +300,13 @@ const SchoolUniversityList = () => {
                       </h4>
                       <span
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
-                        ${univ.type === 'negeri'
+                        ${
+                          univ.type === 'negeri'
                             ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                             : univ.type === 'kedinasan'
                               ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                               : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
-                          }`}
+                        }`}
                       >
                         {univ.type || 'Swasta'}
                       </span>
