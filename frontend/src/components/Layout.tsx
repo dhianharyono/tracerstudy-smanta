@@ -361,9 +361,9 @@ const Layout = () => {
         {
           category: 'JEJARING & ALUMNI',
           items: [
+            { name: 'Data Alumni', href: '/alumni/alumni', icon: FaUsers },
             { name: 'Perguruan Tinggi', href: '/alumni/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/alumni/majors', icon: FaBookOpen },
-            { name: 'Data Alumni', href: '/alumni/alumni', icon: FaUsers },
             { name: 'Rekan Seangkatan', href: '/alumni/mutual-alumni', icon: FaUserFriends },
           ],
         },

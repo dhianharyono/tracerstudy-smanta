@@ -233,7 +233,7 @@ const SmartMatch: React.FC = () => {
                             {m.fullName}
                           </h4>
                           {m.isMentor ? (
-                            <span className='px-2 py-0.5 rounded-full text-[10px] font-bold text-green-400 border'>
+                            <span className='px-2 py-0.5 rounded-full text-[10px] font-bold text-emerald-400 border'>
                               ✨ Mentor
                             </span>
                           ) : (
