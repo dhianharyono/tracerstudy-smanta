@@ -58,7 +58,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     };
 
     return (
-        <div className='form-group' ref={wrapperRef}>
+        <div className={`searchable-select-group relative ${isOpen ? 'z-50' : 'z-10'}`} ref={wrapperRef}>
             {label && (
                 <label className='block text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] mb-1.5'>
                     {label}{' '}
@@ -78,7 +78,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 }`}>
                     <input
                         type='text'
-                        className='w-full bg-transparent text-xs md:text-sm text-[color:var(--text-primary)] outline-none placeholder:text-[color:var(--text-tertiary)]'
+                        className='w-full !bg-transparent text-xs md:text-sm text-[color:var(--text-primary)] !outline-none !border-none !border-0 !p-0 focus:!border-0 focus:!ring-0 focus:!outline-none shadow-none placeholder:text-[color:var(--text-tertiary)]'
                         placeholder={value || placeholder}
                         required={required}
                         value={isOpen ? searchTerm : value}
@@ -109,7 +109,7 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
                 </div>
 
                 {isOpen && !disabled && (
-                    <div className='absolute z-50 mt-1.5 w-full rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] shadow-xl animate-fade-in max-h-64 overflow-hidden flex flex-col'>
+                    <div className='absolute z-[9999] mt-1.5 w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] shadow-2xl animate-fade-in max-h-64 overflow-hidden flex flex-col'>
                         <div className='overflow-y-auto'>
                             {filteredOptions.length > 0 ? (
                                 filteredOptions.map((option, index) => (

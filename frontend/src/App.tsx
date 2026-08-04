@@ -67,6 +67,7 @@ const SchoolVerification = lazy(
 
 // Student Pages
 const StudentDashboard = lazy(() => import('./pages/student/Dashboard'));
+const StudentCollegePlan = lazy(() => import('./pages/student/CollegePlan'));
 const StudentUniversities = lazy(() => import('./pages/student/Universities'));
 const StudentMajors = lazy(() => import('./pages/student/Majors'));
 const StudentAlumni = lazy(() => import('./pages/student/Alumni'));
@@ -251,6 +252,7 @@ function App() {
               }
             >
               <Route index element={<StudentDashboard />} />
+              <Route path='college-plan' element={<StudentCollegePlan />} />
               <Route path='universities' element={<StudentUniversities />} />
               <Route path='majors' element={<StudentMajors />} />
               <Route path='alumni' element={<StudentAlumni />} />

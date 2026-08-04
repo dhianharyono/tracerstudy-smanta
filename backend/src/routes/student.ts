@@ -776,19 +776,12 @@ router.post(
       let plan = await CollegePlan.findOne({ user: req.user!._id });
 
       if (plan) {
-        if (plan.lockCount >= 3) {
-          return res
-            .status(400)
-            .json({
-              message: 'Mencapai batas maksimal perubahan data (3 kali).',
-            });
-        }
         plan.targetUniversity = targetUniversity;
         plan.targetMajor = targetMajor;
-        plan.rumpun = rumpun;
-        plan.entryPath = entryPath;
-        plan.readinessStatus = readinessStatus;
-        plan.isAnonymous = isAnonymous;
+        plan.rumpun = rumpun || 'Saintek';
+        plan.entryPath = entryPath || 'SNBP';
+        plan.readinessStatus = readinessStatus || 'Yakin';
+        plan.isAnonymous = typeof isAnonymous === 'boolean' ? isAnonymous : false;
         plan.lockCount += 1;
         await plan.save();
       } else {
@@ -796,10 +789,10 @@ router.post(
           user: req.user!._id,
           targetUniversity,
           targetMajor,
-          rumpun,
-          entryPath,
-          readinessStatus,
-          isAnonymous,
+          rumpun: rumpun || 'Saintek',
+          entryPath: entryPath || 'SNBP',
+          readinessStatus: readinessStatus || 'Yakin',
+          isAnonymous: typeof isAnonymous === 'boolean' ? isAnonymous : false,
           lockCount: 0,
         });
         await plan.save();
@@ -969,6 +962,247 @@ router.post(
           role: user.role,
           questionnaireCompleted: user.questionnaireCompleted
         }
+      });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+// Get Smart College Match & Analytics
+router.get(
+  '/college-plan/match',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      // Menerima override via query atau ambil dari plan user
+      let targetUniv = (req.query.targetUniversity as string) || '';
+      let targetMaj = (req.query.targetMajor as string) || '';
+
+      const userPlan = await CollegePlan.findOne({ user: req.user!._id });
+
+      if (!targetUniv && userPlan?.targetUniversity) {
+        targetUniv = userPlan.targetUniversity;
+      }
+      if (!targetMaj && userPlan?.targetMajor) {
+        targetMaj = userPlan.targetMajor;
+      }
+
+      if (!targetUniv && !targetMaj) {
+        return res.json({
+          hasPlan: false,
+          message: 'Belum ada rencana studi. Silakan atur target perguruan tinggi dan jurusan Anda.',
+        });
+      }
+
+      const univRegex = targetUniv ? new RegExp(targetUniv, 'i') : null;
+      const majRegex = targetMaj ? new RegExp(targetMaj, 'i') : null;
+
+      // 1. Filter alumni berdasarkan target kampus & jurusan
+      const alumniFilter: any = { role: 'alumni' };
+      if (univRegex && majRegex) {
+        alumniFilter.$or = [
+          { 'university.name': univRegex },
+          { 'university.major': majRegex },
+        ];
+      } else if (univRegex) {
+        alumniFilter['university.name'] = univRegex;
+      } else if (majRegex) {
+        alumniFilter['university.major'] = majRegex;
+      }
+
+      const alumniList = await User.find(alumniFilter).select(
+        'username profile.fullName profile.graduationYear university job socialMedia email isMentor'
+      );
+
+      // Hitung exact match (kampus & jurusan sama)
+      const exactMatchAlumni = alumniList.filter((a) => {
+        const uMatch = univRegex ? univRegex.test(a.university?.name || '') : true;
+        const mMatch = majRegex ? majRegex.test(a.university?.major || '') : true;
+        return uMatch && mMatch;
+      });
+
+      // Filter mentor & alumni network
+      const mentors = alumniList
+        .filter((a) => a.isMentor)
+        .map((a) => ({
+          _id: a._id,
+          fullName: a.profile?.fullName || a.username,
+          graduationYear: a.profile?.graduationYear,
+          universityName: a.university?.name || '-',
+          major: a.university?.major || '-',
+          position: a.job?.position || a.job?.jobTitle || 'Mahasiswa / Lulusan',
+          institution: a.job?.institution || '-',
+          isMentor: true,
+          socialMedia: a.socialMedia || {},
+          email: a.email,
+        }));
+
+      // Map daftar seluruh alumni (dengan urutan Mentor terlebih dahulu)
+      const targetAlumniSet = exactMatchAlumni.length > 0 ? exactMatchAlumni : alumniList;
+      const alumniNetwork = targetAlumniSet
+        .map((a) => ({
+          _id: a._id,
+          fullName: a.profile?.fullName || a.username,
+          graduationYear: a.profile?.graduationYear,
+          universityName: a.university?.name || '-',
+          major: a.university?.major || '-',
+          position: a.job?.position || a.job?.jobTitle || 'Mahasiswa / Lulusan',
+          institution: a.job?.institution || '-',
+          isMentor: !!a.isMentor,
+          socialMedia: a.socialMedia || {},
+          email: a.email,
+        }))
+        .sort((a, b) => (b.isMentor ? 1 : 0) - (a.isMentor ? 1 : 0));
+
+      // 2. Realita Karir Alumni (Job Outcomes)
+      const jobPositionsMap: { [key: string]: number } = {};
+      const institutionsMap: { [key: string]: number } = {};
+
+      exactMatchAlumni.forEach((a) => {
+        if (a.job?.position || a.job?.jobTitle) {
+          const pos = a.job.position || a.job.jobTitle || 'Lainnya';
+          jobPositionsMap[pos] = (jobPositionsMap[pos] || 0) + 1;
+        }
+        if (a.job?.institution) {
+          institutionsMap[a.job.institution] = (institutionsMap[a.job.institution] || 0) + 1;
+        }
+      });
+
+      const totalJobs = Object.values(jobPositionsMap).reduce((acc, curr) => acc + curr, 0);
+      const careerOutcomes = Object.entries(jobPositionsMap)
+        .map(([title, count]) => ({
+          title,
+          count,
+          percentage: totalJobs > 0 ? Math.round((count / totalJobs) * 100) : 0,
+        }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 5);
+
+      const topInstitutions = Object.entries(institutionsMap)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([inst]) => inst);
+
+      // 4. Rekomendasi Perguruan Tinggi Alternatif
+      // Mencari perguruan tinggi lain yang memiliki alumni dari jurusan yang dicari (targetMaj)
+      const altMatchFilter: any = {
+        role: 'alumni',
+        'university.name': { $exists: true, $ne: '' },
+      };
+      if (univRegex) {
+        altMatchFilter['university.name'] = { $not: univRegex };
+      }
+      if (majRegex) {
+        altMatchFilter['university.major'] = majRegex;
+      }
+
+      let isSameMajorFound = true;
+      let topAlumniUnivs = await User.aggregate([
+        { $match: altMatchFilter },
+        {
+          $group: {
+            _id: '$university.name',
+            total: { $sum: 1 },
+            mentorCount: { $sum: { $cond: ['$isMentor', 1, 0] } },
+          },
+        },
+        { $sort: { total: -1 } },
+        { $limit: 6 },
+      ]);
+
+      // Fallback jika belum ada kampus lain dengan jurusan yang persis sama
+      if (topAlumniUnivs.length === 0) {
+        isSameMajorFound = false;
+        const fallbackFilter: any = {
+          role: 'alumni',
+          'university.name': { $exists: true, $ne: '' },
+        };
+        if (univRegex) {
+          fallbackFilter['university.name'] = { $not: univRegex };
+        }
+
+        topAlumniUnivs = await User.aggregate([
+          { $match: fallbackFilter },
+          {
+            $group: {
+              _id: '$university.name',
+              total: { $sum: 1 },
+              mentorCount: { $sum: { $cond: ['$isMentor', 1, 0] } },
+            },
+          },
+          { $sort: { total: -1 } },
+          { $limit: 4 },
+        ]);
+      }
+
+      const alternativeUniversities = await Promise.all(
+        topAlumniUnivs.slice(0, 4).map(async (u) => {
+          const alumniQuery: any = {
+            role: 'alumni',
+            'university.name': new RegExp(`^${u._id}$`, 'i'),
+          };
+
+          if (isSameMajorFound && majRegex) {
+            alumniQuery['university.major'] = majRegex;
+          }
+
+          const alumniInUniv = await User.find(alumniQuery)
+            .select('username profile.fullName profile.graduationYear university job isMentor')
+            .limit(5);
+
+          const exactAlumniCount = await User.countDocuments(alumniQuery);
+          const exactMentorCount = await User.countDocuments({
+            ...alumniQuery,
+            isMentor: true,
+          });
+
+          return {
+            name: u._id,
+            isSameMajor: isSameMajorFound,
+            alumniCount: exactAlumniCount,
+            mentorCount: exactMentorCount,
+            alumniList: alumniInUniv.map((a) => ({
+              _id: a._id,
+              fullName: a.profile?.fullName || a.username,
+              graduationYear: a.profile?.graduationYear,
+              major: a.university?.major || targetMaj || '-',
+              position: a.job?.position || a.job?.jobTitle || 'Mahasiswa / Lulusan',
+              institution: a.job?.institution || '-',
+              isMentor: !!a.isMentor,
+            })),
+          };
+        })
+      );
+
+      // 5. Kalkulasi Smart Match Score (0 - 100)
+      let score = 50; // Base score
+
+      // Alumni support (Max 35 point)
+      if (exactMatchAlumni.length >= 5) score += 35;
+      else if (exactMatchAlumni.length >= 2) score += 25;
+      else if (alumniList.length > 0) score += 15;
+
+      // Mentor support (Max 15 point)
+      if (mentors.length >= 3) score += 15;
+      else if (mentors.length >= 1) score += 10;
+
+      const matchScore = Math.min(100, Math.max(20, score));
+
+      res.json({
+        hasPlan: true,
+        targetUniversity: targetUniv,
+        targetMajor: targetMaj,
+        matchScore,
+        alumniCount: alumniList.length,
+        exactMatchAlumniCount: exactMatchAlumni.length,
+        mentorCount: mentors.length,
+        alumniNetwork,
+        mentors,
+        careerOutcomes,
+        topInstitutions,
+        alternativeUniversities,
       });
     } catch (error: any) {
       res.status(500).json({ message: error.message });

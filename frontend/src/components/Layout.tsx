@@ -136,6 +136,7 @@ const Layout = () => {
 
       // Student
       '/student': 'Dashboard Siswa',
+      '/student/college-plan': 'Rencana Studi & Match',
       '/student/universities': 'Perguruan Tinggi',
       '/student/majors': 'Jurusan',
       '/student/alumni': 'Alumni',
@@ -481,11 +482,17 @@ const Layout = () => {
           ],
         },
         {
+          category: 'SMART TOOLS',
+          items: [
+            { name: 'Smart Match', href: '/student/college-plan', icon: FaGraduationCap },
+          ],
+        },
+        {
           category: 'EKSPLORASI KAMPUS & ALUMNI',
           items: [
+            { name: 'Data Alumni', href: '/student/alumni', icon: FaUsers },
             { name: 'Perguruan Tinggi', href: '/student/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/student/majors', icon: FaBookOpen },
-            { name: 'Data Alumni', href: '/student/alumni', icon: FaUsers },
           ],
         },
         {
