@@ -7,9 +7,22 @@ import {
   FaUniversity,
   FaFilter,
   FaCalendarAlt,
+  FaGraduationCap,
+  FaBookOpen,
 } from 'react-icons/fa';
 import Toast from '@/components/toast';
 import ConfirmationModal from '@/components/ConfirmationModal';
+import PageHeader from '@/components/common/PageHeader';
+import Card from '@/components/common/Card';
+import Pagination from '@/components/common/Pagination';
+import {
+  TableContainer,
+  TableHeader,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+} from '@/components/common/Table';
 
 interface Plan {
   _id: string;
@@ -28,6 +41,7 @@ interface Plan {
     };
   };
   createdAt: string;
+  updatedAt?: string;
 }
 
 const AdminCollegePlans = () => {
@@ -47,7 +61,11 @@ const AdminCollegePlans = () => {
     graduationYear: '',
   });
 
-  const [filterOptions, setFilterOptions] = useState({
+  const [filterOptions, setFilterOptions] = useState<{
+    universities: string[];
+    majors: string[];
+    graduationYears: number[];
+  }>({
     universities: [],
     majors: [],
     graduationYears: [],
@@ -58,7 +76,19 @@ const AdminCollegePlans = () => {
 
   useEffect(() => {
     fetchPlans();
-  }, [pagination.page, filters]);
+  }, [pagination.page, filters.university, filters.major, filters.graduationYear]);
+
+  // Debounced search for student name
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (pagination.page !== 1) {
+        setPagination((prev) => ({ ...prev, page: 1 }));
+      } else {
+        fetchPlans();
+      }
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [filters.name]);
 
   const fetchPlans = async () => {
     setLoading(true);
@@ -70,14 +100,12 @@ const AdminCollegePlans = () => {
       if (filters.university) params.university = filters.university;
       if (filters.major) params.major = filters.major;
       if (filters.name) params.name = filters.name;
-      if (filters.graduationYear)
-        params.graduationYear = filters.graduationYear;
+      if (filters.graduationYear) params.graduationYear = filters.graduationYear;
 
       const res = await axios.get('/api/admin/college-plans', { params });
-      setPlans(res.data.plans);
-      setPagination(res.data.pagination);
+      setPlans(res.data.plans || []);
+      setPagination(res.data.pagination || { page: 1, limit: 10, total: 0, pages: 0 });
 
-      // Update filter options if available
       if (res.data.filters) {
         setFilterOptions(res.data.filters);
       }
@@ -102,68 +130,111 @@ const AdminCollegePlans = () => {
     }
   };
 
+  const clearFilters = () => {
+    setFilters({
+      university: '',
+      major: '',
+      name: '',
+      graduationYear: '',
+    });
+  };
+
+  // Stats calculation
+  const totalUniversities = filterOptions.universities.length;
+  const totalMajors = filterOptions.majors.length;
+
   return (
-    <div className='p-6 md:p-8 animate-fade-in space-y-8'>
-      <div className='mb-2 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Monitoring Rencana Kuliah
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-sm md:text-base'>
-          Pantau dan kelola data rencana studi lanjut siswa
-        </p>
+    <div className='p-4 sm:p-6 lg:p-8 page-fade-in space-y-6'>
+      <PageHeader
+        title='Monitoring Rencana Kuliah'
+        description='Pantau dan kelola data rencana studi lanjut siswa yang telah diinputkan'
+      />
+
+      {/* Summary Stat Cards */}
+      <div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
+        <Card className='flex items-center gap-4'>
+          <div className='p-3 bg-blue-500/10 text-blue-600 rounded-xl text-xl shrink-0'>
+            <FaGraduationCap />
+          </div>
+          <div>
+            <p className='text-xs text-[color:var(--text-secondary)] font-medium'>Total Rencana Studi</p>
+            <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>{pagination.total}</h3>
+          </div>
+        </Card>
+
+        <Card className='flex items-center gap-4'>
+          <div className='p-3 bg-indigo-500/10 text-indigo-600 rounded-xl text-xl shrink-0'>
+            <FaUniversity />
+          </div>
+          <div>
+            <p className='text-xs text-[color:var(--text-secondary)] font-medium'>Perguruan Tinggi Target</p>
+            <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>{totalUniversities}</h3>
+          </div>
+        </Card>
+
+        <Card className='flex items-center gap-4'>
+          <div className='p-3 bg-purple-500/10 text-purple-600 rounded-xl text-xl shrink-0'>
+            <FaBookOpen />
+          </div>
+          <div>
+            <p className='text-xs text-[color:var(--text-secondary)] font-medium'>Jurusan Target</p>
+            <h3 className='text-xl font-bold text-[color:var(--text-primary)]'>{totalMajors}</h3>
+          </div>
+        </Card>
       </div>
 
-      {/* Filters */}
-      <div className='bg-[var(--bg-card)] p-6 rounded-3xl border border-[var(--border-color)] shadow-sm'>
-        <div className='flex items-center gap-3 mb-6'>
-          <div className='p-2 bg-[var(--bg-tertiary)] rounded-xl text-[var(--text-primary)]'>
-            <FaFilter />
+      {/* Filter Section */}
+      <Card>
+        <div className='flex items-center justify-between gap-3 mb-4'>
+          <div className='flex items-center gap-2 text-sm font-bold text-[color:var(--text-primary)]'>
+            <FaFilter className='text-[color:var(--primary)]' /> Filter Data Rencana Kuliah
           </div>
-          <div className='font-bold text-[var(--text-primary)]'>
-            Filter Data
-          </div>
+          {(filters.name || filters.university || filters.major || filters.graduationYear) && (
+            <button
+              onClick={clearFilters}
+              className='text-xs font-semibold text-red-500 hover:underline'
+            >
+              Reset Filter
+            </button>
+          )}
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4'>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3'>
           <div className='relative'>
             <input
               type='text'
               placeholder='Cari Nama Siswa...'
               value={filters.name}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, name: e.target.value }))
-              }
-              className='w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-sm focus:ring-2 focus:ring-[var(--primary)] outline-none'
+              onChange={(e) => setFilters((prev) => ({ ...prev, name: e.target.value }))}
+              className='w-full pl-9 pr-3 py-2.5 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-sm text-[color:var(--text-primary)] focus:ring-2 focus:ring-[color:var(--primary)] outline-none transition-all'
             />
-            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]' />
+            <FaSearch className='absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[color:var(--text-tertiary)]' />
           </div>
+
           <div className='relative'>
             <select
               value={filters.university}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, university: e.target.value }))
-              }
-              className='w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-sm focus:ring-2 focus:ring-[var(--primary)] outline-none appearance-none'
+              onChange={(e) => setFilters((prev) => ({ ...prev, university: e.target.value }))}
+              className='w-full pl-9 pr-8 py-2.5 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-sm text-[color:var(--text-primary)] focus:ring-2 focus:ring-[color:var(--primary)] outline-none appearance-none transition-all'
             >
-              <option value=''>Semua Universitas</option>
+              <option value=''>Semua Perguruan Tinggi</option>
               {filterOptions.universities.map((uni: string, idx: number) => (
                 <option key={idx} value={uni}>
                   {uni}
                 </option>
               ))}
             </select>
-            <FaUniversity className='absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]' />
-            <div className='absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-tertiary)] opacity-50'>
+            <FaUniversity className='absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[color:var(--text-tertiary)]' />
+            <div className='absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs text-[color:var(--text-tertiary)] opacity-60'>
               ▼
             </div>
           </div>
+
           <div className='relative'>
             <select
               value={filters.major}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, major: e.target.value }))
-              }
-              className='w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-sm focus:ring-2 focus:ring-[var(--primary)] outline-none appearance-none'
+              onChange={(e) => setFilters((prev) => ({ ...prev, major: e.target.value }))}
+              className='w-full pl-9 pr-8 py-2.5 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-sm text-[color:var(--text-primary)] focus:ring-2 focus:ring-[color:var(--primary)] outline-none appearance-none transition-all'
             >
               <option value=''>Semua Jurusan</option>
               {filterOptions.majors.map((major: string, idx: number) => (
@@ -172,186 +243,138 @@ const AdminCollegePlans = () => {
                 </option>
               ))}
             </select>
-            <FaUserGraduate className='absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]' />
-            <div className='absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-tertiary)] opacity-50'>
+            <FaUserGraduate className='absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[color:var(--text-tertiary)]' />
+            <div className='absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs text-[color:var(--text-tertiary)] opacity-60'>
               ▼
             </div>
           </div>
+
           <div className='relative'>
             <select
               value={filters.graduationYear}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  graduationYear: e.target.value,
-                }))
-              }
-              className='w-full pl-10 pr-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--bg-secondary)] text-sm focus:ring-2 focus:ring-[var(--primary)] outline-none appearance-none'
+              onChange={(e) => setFilters((prev) => ({ ...prev, graduationYear: e.target.value }))}
+              className='w-full pl-9 pr-8 py-2.5 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-sm text-[color:var(--text-primary)] focus:ring-2 focus:ring-[color:var(--primary)] outline-none appearance-none transition-all'
             >
               <option value=''>Semua Angkatan</option>
-              {filterOptions.graduationYears.map(
-                (year: number, idx: number) => (
-                  <option key={idx} value={year}>
-                    {year}
-                  </option>
-                ),
-              )}
+              {filterOptions.graduationYears.map((year: number, idx: number) => (
+                <option key={idx} value={year}>
+                  {year}
+                </option>
+              ))}
             </select>
-            <FaCalendarAlt className='absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]' />
-            <div className='absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[var(--text-tertiary)] opacity-50'>
+            <FaCalendarAlt className='absolute left-3 top-1/2 -translate-y-1/2 text-xs text-[color:var(--text-tertiary)]' />
+            <div className='absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-xs text-[color:var(--text-tertiary)] opacity-60'>
               ▼
             </div>
           </div>
         </div>
-      </div>
+      </Card>
 
-      {/* Table */}
-      <div className='bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm overflow-hidden'>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left border-collapse'>
-            <thead className='bg-[var(--bg-tertiary)] border-b border-[var(--border-color)]'>
-              <tr>
-                <th className='p-6 text-xs font-bold text-[var(--text-secondary)] uppercase'>
-                  Siswa
-                </th>
-                <th className='p-6 text-xs font-bold text-[var(--text-secondary)] uppercase'>
-                  Target Kampus
-                </th>
-                <th className='p-6 text-xs font-bold text-[var(--text-secondary)] uppercase'>
-                  Jurusan
-                </th>
-                <th className='p-6 text-xs font-bold text-[var(--text-secondary)] uppercase'>
-                  Detail
-                </th>
-                <th className='p-6 text-xs font-bold text-[var(--text-secondary)] uppercase text-center'>
-                  Aksi
-                </th>
-              </tr>
-            </thead>
-            <tbody className='divide-y divide-[var(--border-color)]'>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className='p-8 text-center'>
-                    <div className='flex justify-center'>
-                      <div className='h-8 w-8 border-4 border-[color:var(--border-color)] border-t-[var(--primary)] rounded-full animate-spin' />
+      {/* Main Table */}
+      <TableContainer>
+        <TableHeader>
+          <TableHeadCell>Siswa</TableHeadCell>
+          <TableHeadCell>Target Kampus</TableHeadCell>
+          <TableHeadCell>Target Jurusan</TableHeadCell>
+          <TableHeadCell>Terakhir Diperbarui</TableHeadCell>
+          <TableHeadCell className='text-center'>Aksi</TableHeadCell>
+        </TableHeader>
+
+        <TableBody>
+          {loading ? (
+            <TableRow>
+              <TableCell colSpan={5} className='text-center py-12'>
+                <div className='flex justify-center items-center gap-3 text-slate-500'>
+                  <div className='h-6 w-6 border-2 border-[color:var(--border-color)] border-t-[color:var(--primary)] rounded-full animate-spin' />
+                  <span className='text-sm font-medium'>Memuat data rencana kuliah...</span>
+                </div>
+              </TableCell>
+            </TableRow>
+          ) : plans.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className='text-center py-12 text-[color:var(--text-secondary)]'>
+                Belum ada data rencana kuliah yang ditemukan
+              </TableCell>
+            </TableRow>
+          ) : (
+            plans.map((plan) => (
+              <TableRow key={plan._id}>
+                <TableCell>
+                  <div className='space-y-0.5'>
+                    <p className='font-bold text-[color:var(--text-primary)]'>
+                      {plan.user?.profile?.fullName || plan.user?.username || 'Unknown Student'}
+                    </p>
+                    <div className='flex items-center gap-2 text-xs text-[color:var(--text-secondary)]'>
+                      <span>Angkatan: {plan.user?.profile?.graduationYear || '-'}</span>
                     </div>
-                  </td>
-                </tr>
-              ) : plans.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={5}
-                    className='p-8 text-xs md:text-sm text-center text-[var(--text-secondary)]'
-                  >
-                    Tidak ada data ditemukan
-                  </td>
-                </tr>
-              ) : (
-                plans.map((plan) => (
-                  <tr
-                    key={plan._id}
-                    className='hover:bg-[var(--bg-tertiary)] transition-colors'
-                  >
-                    <td className='p-6'>
-                      <div>
-                        <p className='font-bold text-[var(--text-primary)]'>
-                          {plan.user?.profile?.fullName ||
-                            plan.user?.username ||
-                            'Unknown'}
-                        </p>
-                        <p className='text-xs text-[var(--text-secondary)]'>
-                          Angkatan: {plan.user?.profile?.graduationYear || '-'}
-                        </p>
-                      </div>
-                    </td>
-                    <td className='p-6'>
-                      <div className='flex items-center gap-2'>
-                        <FaUniversity className='text-[var(--primary)]' />
-                        <span className='text-sm text-[var(--text-primary)]'>
-                          {plan.targetUniversity}
-                        </span>
-                      </div>
-                    </td>
-                    <td className='p-6'>
-                      <span className='text-sm text-[var(--text-primary)]'>
-                        {plan.targetMajor}
-                      </span>
-                    </td>
-                    <td className='p-6'>
-                      <div className='space-y-1'>
-                        <span className='inline-block px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-700 mr-2'>
-                          {plan.entryPath}
-                        </span>
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold ${
-                            plan.readinessStatus === 'Yakin'
-                              ? 'bg-green-100 text-green-700'
-                              : 'bg-yellow-100 text-yellow-700'
-                          }`}
-                        >
-                          {plan.readinessStatus}
-                        </span>
-                        <div className='text-[10px] text-[var(--text-tertiary)] mt-1'>
-                          Edit: {plan.lockCount}/3
-                        </div>
-                      </div>
-                    </td>
-                    <td className='p-6 text-center'>
-                      <button
-                        onClick={() => {
-                          setDeleteId(plan._id);
-                          setIsDeleteModalOpen(true);
-                        }}
-                        className='p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors'
-                        title='Hapus Data'
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                  </div>
+                </TableCell>
 
-        {/* Pagination */}
-        <div className='p-6 border-t border-[var(--border-color)] flex flex-col md:flex-row justify-between items-center'>
-          <p className='text-sm text-[var(--text-secondary)] mb-4 md:mb-0'>
-            Halaman {pagination.page} dari {pagination.pages} dari{' '}
-            {pagination.total} Data
-          </p>
-          <div className='flex gap-2'>
-            <button
-              disabled={pagination.page === 1}
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, page: prev.page - 1 }))
-              }
-              className='px-4 py-2 text-sm font-bold rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 text-[var(--text-primary)]'
-            >
-              Previous
-            </button>
-            <button
-              disabled={
-                pagination.page === pagination.pages || pagination.pages === 0
-              }
-              onClick={() =>
-                setPagination((prev) => ({ ...prev, page: prev.page + 1 }))
-              }
-              className='px-4 py-2 text-sm font-bold rounded-xl border border-[var(--border-color)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 text-[var(--text-primary)]'
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
+                <TableCell>
+                  <div className='flex items-center gap-2'>
+                    <FaUniversity className='text-[#3b6ebb] shrink-0 text-sm' />
+                    <span className='font-medium text-[color:var(--text-primary)]'>
+                      {plan.targetUniversity}
+                    </span>
+                  </div>
+                </TableCell>
 
+                <TableCell>
+                  <span className='font-medium text-[color:var(--text-primary)]'>
+                    {plan.targetMajor}
+                  </span>
+                </TableCell>
+
+                <TableCell>
+                  <span className='text-xs text-[color:var(--text-secondary)] font-medium'>
+                    {plan.updatedAt || plan.createdAt
+                      ? new Date(plan.updatedAt || plan.createdAt).toLocaleDateString('id-ID', {
+                          day: 'numeric',
+                          month: 'short',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })
+                      : '-'}
+                  </span>
+                </TableCell>
+
+                <TableCell className='text-center'>
+                  <button
+                    onClick={() => {
+                      setDeleteId(plan._id);
+                      setIsDeleteModalOpen(true);
+                    }}
+                    className='p-2 text-rose-500 hover:bg-rose-500/10 rounded-lg transition-colors inline-flex items-center justify-center'
+                    title='Hapus Data Rencana Kuliah'
+                  >
+                    <FaTrash className='text-sm' />
+                  </button>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </TableContainer>
+
+      {/* Pagination */}
+      {pagination.total > 0 && (
+        <Pagination
+          currentPage={pagination.page}
+          totalPages={pagination.pages}
+          totalItems={pagination.total}
+          itemsPerPage={pagination.limit}
+          onPageChange={(page) => setPagination((prev) => ({ ...prev, page }))}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleDelete}
         title='Hapus Data Rencana Kuliah'
-        message='Apakah Anda yakin ingin menghapus data ini? Tindakan ini tidak dapat dibatalkan.'
+        message='Apakah Anda yakin ingin menghapus data rencana kuliah ini? Tindakan ini tidak dapat dibatalkan.'
         confirmText='Hapus'
         cancelText='Batal'
       />

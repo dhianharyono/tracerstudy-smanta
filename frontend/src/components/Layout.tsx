@@ -128,6 +128,7 @@ const Layout = () => {
       '/admin/news': 'Kelola Berita',
       '/admin/stats': 'Statistik Website',
       '/admin/reports': 'Laporan',
+      '/admin/college-plans': 'Rencana Kuliah',
       '/admin/manage-universities': 'Kelola Universitas',
       '/admin/universities': 'Perguruan Tinggi',
       '/admin/majors': 'Jurusan',
@@ -415,6 +416,7 @@ const Layout = () => {
         {
           category: 'DATA MASTER & KAMPUS',
           items: [
+            { name: 'Rencana Kuliah', href: '/admin/college-plans', icon: FaGraduationCap },
             { name: 'Perguruan Tinggi', href: '/admin/universities', icon: FaUniversity },
             { name: 'Jurusan', href: '/admin/majors', icon: FaBookOpen },
             { name: 'Kelola Perguruan Tinggi', href: '/admin/manage-universities', icon: FaBuilding, activeCheck: true },

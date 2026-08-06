@@ -2075,6 +2075,7 @@ router.get('/college-plans', async (req: Request, res: Response) => {
             readinessStatus: 1,
             rumpun: 1,
             createdAt: 1,
+            updatedAt: 1,
             lockCount: 1,
             'user._id': 1,
             'user.username': 1,
