@@ -123,12 +123,22 @@ const PlanForm = ({ onUpdate, onReset }: PlanFormProps) => {
     }
   };
 
-  const handleReset = () => {
-    setFormData({ targetUniversity: '', targetMajor: '' });
-    setUniversityOptions(allUniversities);
-    setMajorOptions(allMajors);
-    if (onReset) {
-      onReset();
+  const handleReset = async () => {
+    try {
+      setLoading(true);
+      await axios.delete('/api/student/college-plan');
+      setFormData({ targetUniversity: '', targetMajor: '' });
+      setUniversityOptions(allUniversities);
+      setMajorOptions(allMajors);
+      setIsEditing(true);
+      Toast('Form dan data rencana kuliah berhasil di-reset', 'info');
+      if (onReset) {
+        onReset();
+      }
+    } catch (error: any) {
+      Toast(error.response?.data?.message || 'Gagal mereset data rencana kuliah', 'error');
+    } finally {
+      setLoading(false);
     }
   };
 

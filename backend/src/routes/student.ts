@@ -804,6 +804,21 @@ router.post(
   },
 );
 
+// Delete/Reset user's college plan
+router.delete(
+  '/college-plan',
+  authenticate,
+  authorize('student'),
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      await CollegePlan.findOneAndDelete({ user: req.user!._id });
+      res.json({ message: 'Rencana kuliah berhasil di-reset' });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
 // Get aggregated stats for college plans
 router.get(
   '/college-plans/stats',
