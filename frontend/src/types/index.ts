@@ -21,6 +21,7 @@ export interface User {
     name?: string;
     type?: string;
     major?: string;
+    entryPath?: string;
   };
 }
 

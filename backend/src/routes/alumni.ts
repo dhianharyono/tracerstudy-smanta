@@ -219,6 +219,9 @@ router.post(
       if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
+      if (university?.name && (!university.entryPath || !university.entryPath.trim())) {
+        return res.status(400).json({ message: 'Jalur masuk perguruan tinggi wajib diisi' });
+      }
 
       const user = await User.findByIdAndUpdate(
         req.user!._id,
@@ -281,6 +284,9 @@ router.put(
       if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
+      if (university?.name && (!university.entryPath || !university.entryPath.trim())) {
+        return res.status(400).json({ message: 'Jalur masuk perguruan tinggi wajib diisi' });
+      }
 
       const user = await User.findByIdAndUpdate(
         req.user!._id,
@@ -299,6 +305,38 @@ router.put(
       ).select('-password');
 
       res.json({ message: 'Questionnaire updated successfully', user });
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  },
+);
+
+router.get(
+  '/entry-paths',
+  authenticate,
+  async (req: Request, res: Response) => {
+    try {
+      const defaultPaths = [
+        'SNBP',
+        'SNBT',
+        'Mandiri',
+        'Kedinasan',
+        'SPAN-PTKIN',
+        'UM-PTKIN',
+        'Prestasi / Beasiswa',
+        'Luar Negeri',
+      ];
+      const dbPaths = await User.distinct('university.entryPath', {
+        role: 'alumni',
+        'university.entryPath': { $exists: true, $nin: [null, '', '-', 'Lainnya'] },
+      });
+
+      const allPaths = Array.from(new Set([...defaultPaths, ...dbPaths])).filter(Boolean);
+      const customPaths = allPaths.filter((p) => !defaultPaths.includes(p)).sort();
+      const standardPaths = defaultPaths.filter((p) => allPaths.includes(p));
+      const sortedPaths = [...standardPaths, ...customPaths];
+
+      res.json(sortedPaths);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
     }

@@ -44,7 +44,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
               : isProfile
                 ? 'Maaf, Anda belum dapat mengakses menu ini. Anda diwajibkan untuk melengkapi data profil (Nama Lengkap, Tahun Masuk, dan Tahun Lulus) terlebih dahulu.'
                 : isUniversity
-                  ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk melengkapi data Perguruan Tinggi di menu Pengaturan Pengguna terlebih dahulu untuk membuka akses.'
+                  ? 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk melengkapi data Perguruan Tinggi di menu kuesioner terlebih dahulu untuk membuka akses.'
                   : isJob
                     ? 'Maaf, Anda belum dapat memposting lowongan. Anda diwajibkan telah melengkapi data Pekerjaan saat ini di kuesioner tracer study terlebih dahulu.'
                     : 'Maaf, dashboard dan data alumni terkunci. Anda diwajibkan untuk melengkapi kuesioner tracer study terlebih dahulu untuk membuka akses.'}
@@ -52,7 +52,7 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
 
         {/* Action Button */}
         <Link
-          to={isHidden || isName || isProfile || isUniversity ? profileLink : '/alumni/questionnaire'}
+          to={isHidden || isName || isProfile ? profileLink : '/alumni/questionnaire'}
           className='text-xs md:text-sm inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-[var(--primary)] to-blue-500 text-white rounded-xl font-bold shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200'
         >
           {isHidden ? (
@@ -69,15 +69,15 @@ const RestrictedAccess: React.FC<RestrictedAccessProps> = ({ type, role }) => {
             </>
           ) : isUniversity ? (
             <>
-              <FaUserEdit /> Isi Data Universitas
+              <FaUserEdit /> Lengkapi Data Universitas
             </>
           ) : isJob ? (
             <>
-              <FaBriefcase /> Isi Data Pekerjaan
+              <FaBriefcase /> Lengkapi Data Pekerjaan
             </>
           ) : (
             <>
-              <FaClipboardList /> Isi Kuesioner Sekarang
+              <FaClipboardList /> Lengkapi Kuesioner Sekarang
             </>
           )}
         </Link>

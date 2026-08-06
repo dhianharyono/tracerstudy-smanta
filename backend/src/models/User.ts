@@ -20,6 +20,7 @@ export interface IUser extends Document {
     entryYear?: number;
     graduationYear?: number;
     major?: string;
+    entryPath?: string;
   };
   universityS2?: {
     name?: string;
@@ -101,6 +102,7 @@ const UserSchema = new Schema<IUser>(
       entryYear: Number,
       graduationYear: Number,
       major: String,
+      entryPath: String,
     },
     universityS2: {
       name: String,

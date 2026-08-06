@@ -46,13 +46,15 @@ const InputField = ({
       max={max}
       disabled={disabled}
       placeholder={placeholder}
-      className={`w-full rounded-lg text-xs md:text-sm border border-[color:var(--border-color)] ${disabled
-        ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-        : 'bg-[color:var(--bg-secondary)]'
-        } px-3.5 py-2 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+      className={`w-full rounded-lg text-xs md:text-sm border border-[color:var(--border-color)] ${
+        disabled
+          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+          : 'bg-[color:var(--bg-secondary)]'
+      } px-3.5 py-2 text-[color:var(--text-primary)] transition-all placeholder:text-[color:var(--text-tertiary)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+        validationErrors[name]
           ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
           : ''
-        }`}
+      }`}
     />
     {validationErrors[name] && (
       <span className='mt-1 text-xs text-red-500'>
@@ -85,13 +87,15 @@ const SelectField = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        className={`w-full appearance-none rounded-lg border border-[color:var(--border-color)] ${disabled
-          ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
-          : 'bg-[color:var(--bg-secondary)]'
-          } px-3.5 py-2 text-xs md:text-sm text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${validationErrors[name]
+        className={`w-full appearance-none rounded-lg border border-[color:var(--border-color)] ${
+          disabled
+            ? 'bg-[color:var(--bg-tertiary)] opacity-70 cursor-not-allowed grayscale-[0.5]'
+            : 'bg-[color:var(--bg-secondary)]'
+        } px-3.5 py-2 text-xs md:text-sm text-[color:var(--text-primary)] transition-all focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] ${
+          validationErrors[name]
             ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
             : ''
-          }`}
+        }`}
       >
         <option value=''>Pilih</option>
         {options.map((opt: any) => (
@@ -138,6 +142,7 @@ interface UniversityData {
   entryYear: string;
   graduationYear: string;
   major: string;
+  entryPath: string;
 }
 
 interface UniversitySData {
@@ -186,6 +191,7 @@ interface AlumniProfile {
     entryYear?: number;
     graduationYear?: number;
     major?: string;
+    entryPath?: string;
   };
   universityS2?: {
     name?: string;
@@ -221,6 +227,7 @@ const initialFormData: FormData = {
     entryYear: '',
     graduationYear: '',
     major: '',
+    entryPath: '',
   },
   universityS2: {
     name: '',
@@ -247,6 +254,7 @@ const AlumniQuestionnaire = () => {
   const { updateUser } = useAuth();
   const [universities, setUniversities] = useState<string[]>([]);
   const [majors, setMajors] = useState<string[]>([]);
+  const [entryPaths, setEntryPaths] = useState<string[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
   const [isReadOnly, setIsReadOnly] = useState(false);
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -267,23 +275,31 @@ const AlumniQuestionnaire = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profileRes, univRes, majorRes] = await Promise.all([
+        const [profileRes, univRes, majorRes, entryPathRes] = await Promise.all([
           axios
             .get<AlumniProfile>('/api/alumni/profile')
             .catch(() => ({ data: null })),
           axios.get<any[]>('/api/universities').catch(() => ({ data: [] })),
           axios.get<any[]>('/api/majors').catch(() => ({ data: [] })),
+          axios.get<string[]>('/api/alumni/entry-paths').catch(() => ({ data: [] })),
         ]);
 
         const rawUnivList = (univRes.data || []).map((u: any) => u.name);
         const rawMajorList = (majorRes.data || []).map((m: any) => m.name);
+        const defaultEntryPaths = ['SNBP', 'SNBT', 'Mandiri', 'Kedinasan', 'SPAN-PTKIN', 'UM-PTKIN', 'Prestasi / Beasiswa', 'Luar Negeri'];
+        const rawEntryPaths = (entryPathRes.data || defaultEntryPaths);
 
         // Use unique names from API or empty if failed
         const finalUnivList = [...new Set(rawUnivList)].sort() as string[];
         const finalMajorList = [...new Set(rawMajorList)].sort() as string[];
+        const allCombinedEntryPaths = Array.from(new Set([...defaultEntryPaths, ...rawEntryPaths])).filter((p) => Boolean(p) && p !== 'Lainnya');
+        const customEntryPaths = allCombinedEntryPaths.filter((p) => !defaultEntryPaths.includes(p)).sort();
+        const standardPaths = defaultEntryPaths.filter((p) => allCombinedEntryPaths.includes(p));
+        const finalEntryPathList = [...standardPaths, ...customEntryPaths];
 
         setUniversities(finalUnivList);
         setMajors(finalMajorList);
+        setEntryPaths(finalEntryPathList);
 
         if (profileRes.data) {
           const profile = profileRes.data;
@@ -318,6 +334,7 @@ const AlumniQuestionnaire = () => {
                 graduationYear:
                   profile.university?.graduationYear?.toString() || '',
                 major: profile.university?.major || '',
+                entryPath: profile.university?.entryPath || '',
               },
               universityS2: {
                 name: profile.universityS2?.name || '',
@@ -490,6 +507,12 @@ const AlumniQuestionnaire = () => {
     ) {
       errors['university.major'] = 'Jurusan kuliah wajib diisi dengan benar';
     }
+    if (
+      !formData.university.entryPath ||
+      placeholders.includes(formData.university.entryPath.trim().toLowerCase())
+    ) {
+      errors['university.entryPath'] = 'Jalur masuk perguruan tinggi wajib diisi';
+    }
 
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
@@ -542,8 +565,8 @@ const AlumniQuestionnaire = () => {
           : undefined,
         job:
           formData.job.position ||
-            formData.job.institution ||
-            formData.job.jobTitle
+          formData.job.institution ||
+          formData.job.jobTitle
             ? formData.job
             : undefined,
         socialMedia: {
@@ -568,7 +591,7 @@ const AlumniQuestionnaire = () => {
     } catch (err: any) {
       setError(
         err.response?.data?.message ||
-        `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`,
+          `Failed to ${isEditMode ? 'update' : 'submit'} questionnaire`,
       );
     } finally {
       setSubmitLoading(false);
@@ -728,7 +751,7 @@ const AlumniQuestionnaire = () => {
             </h2>
           </div>
 
-          <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-2 md:grid-cols-3'>
             <InputField
               label='Nama Lengkap'
               name='profile.fullName'
@@ -810,7 +833,7 @@ const AlumniQuestionnaire = () => {
             </h2>
           </div>
 
-          <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-3 md:grid-cols-3'>
             <SearchableSelect
               label='Nama Kampus'
               name='university.name'
@@ -819,6 +842,30 @@ const AlumniQuestionnaire = () => {
               onChange={handleChange}
               required
               placeholder='Pilih atau cari nama kampus...'
+              disabled={isReadOnly}
+              validationErrors={validationErrors}
+            />
+
+            <SearchableSelect
+              label='Jurusan'
+              name='university.major'
+              value={formData.university.major}
+              options={majors}
+              onChange={handleChange}
+              required
+              placeholder='Pilih atau cari jurusan...'
+              disabled={isReadOnly}
+              validationErrors={validationErrors}
+            />
+
+            <SearchableSelect
+              label='Jalur Masuk Perguruan Tinggi'
+              name='university.entryPath'
+              value={formData.university.entryPath}
+              options={entryPaths}
+              onChange={handleChange}
+              required
+              placeholder='Pilih atau ketik jalur masuk...'
               disabled={isReadOnly}
               validationErrors={validationErrors}
             />
@@ -864,18 +911,6 @@ const AlumniQuestionnaire = () => {
               validationErrors={validationErrors}
               disabled={isReadOnly}
             />
-
-            <SearchableSelect
-              label='Jurusan'
-              name='university.major'
-              value={formData.university.major}
-              options={majors}
-              onChange={handleChange}
-              required
-              placeholder='Pilih atau cari jurusan...'
-              disabled={isReadOnly}
-              validationErrors={validationErrors}
-            />
           </div>
         </div>
 
@@ -888,7 +923,7 @@ const AlumniQuestionnaire = () => {
               </h2>
             </div>
 
-            <div className='grid gap-4 md:gap-2 md:grid-cols-2'>
+            <div className='grid gap-4 md:gap-2 md:grid-cols-3'>
               <SearchableSelect
                 label='Nama Kampus S2'
                 name='universityS2.name'
@@ -955,7 +990,7 @@ const AlumniQuestionnaire = () => {
             </h2>
           </div>
 
-          <div className='grid gap-4 md:gap-5 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-5 md:grid-cols-3'>
             <InputField
               label='Posisi/Jabatan'
               name='job.position'
@@ -994,7 +1029,7 @@ const AlumniQuestionnaire = () => {
             </h2>
           </div>
 
-          <div className='grid gap-4 md:gap-5 md:grid-cols-2'>
+          <div className='grid gap-4 md:gap-5 md:grid-cols-3'>
             <InputField
               label='Email'
               name='socialMedia.email'

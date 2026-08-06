@@ -318,7 +318,7 @@ const StudentUniversities = () => {
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
             Daftar perguruan tinggi tempat alumni melanjutkan studi dan
-            statistikanya.
+            statistiknya.
           </p>
         </div>
 
@@ -376,13 +376,12 @@ const StudentUniversities = () => {
               <div className='flex items-center gap-3 mt-2'>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                           ${
-                             topUniversity._id.type === 'negeri'
-                               ? 'bg-blue-50 text-blue-700 border-blue-200/50'
-                               : topUniversity._id.type === 'kedinasan'
-                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                                 : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                           }`}
+                           ${topUniversity._id.type === 'negeri'
+                      ? 'bg-blue-50 text-blue-700 border-blue-200/50'
+                      : topUniversity._id.type === 'kedinasan'
+                        ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                        : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                    }`}
                 >
                   {topUniversity._id.type || 'Swasta'}
                 </span>
@@ -497,11 +496,10 @@ const StudentUniversities = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
-                  filterType === type.id
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${filterType === type.id
                     ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
                     : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
-                }`}
+                  }`}
               >
                 {type.label}
               </button>
@@ -540,13 +538,12 @@ const StudentUniversities = () => {
                       </h4>
                       <span
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
-                                    ${
-                                      univ._id.type === 'negeri'
-                                        ? 'bg-amber-50 text-amber-700 border-amber-200/50'
-                                        : univ._id.type === 'kedinasan'
-                                          ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
-                                          : 'bg-pink-50 text-pink-700 border-pink-200/50'
-                                    }`}
+                                    ${univ._id.type === 'negeri'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200/50'
+                            : univ._id.type === 'kedinasan'
+                              ? 'bg-emerald-50 text-emerald-700 border-emerald-200/50'
+                              : 'bg-pink-50 text-pink-700 border-pink-200/50'
+                          }`}
                       >
                         {univ._id.type || 'Swasta'}
                       </span>

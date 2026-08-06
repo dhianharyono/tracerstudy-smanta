@@ -74,7 +74,7 @@ const SchoolUniversityList = () => {
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
             Daftar perguruan tinggi tempat alumni melanjutkan studi dan
-            statistikanya.
+            statistiknya.
           </p>
         </div>
 
@@ -133,13 +133,12 @@ const SchoolUniversityList = () => {
               <div className='flex items-center gap-3 mt-2'>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
-                  ${
-                    topUniversity.type === 'negeri'
+                  ${topUniversity.type === 'negeri'
                       ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                       : topUniversity.type === 'kedinasan'
                         ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                         : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
-                  }`}
+                    }`}
                 >
                   {topUniversity.type || 'Swasta'}
                 </span>
@@ -252,11 +251,10 @@ const SchoolUniversityList = () => {
               <button
                 key={type.id}
                 onClick={() => setFilterType(type.id)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
-                  filterType === type.id
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${filterType === type.id
                     ? 'bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20'
                     : 'bg-[color:var(--bg-tertiary)] text-[color:var(--text-secondary)] hover:bg-[color:var(--bg-secondary)] hover:text-[color:var(--text-primary)] border border-[color:var(--border-color)]'
-                }`}
+                  }`}
               >
                 {type.label}
               </button>
@@ -300,13 +298,12 @@ const SchoolUniversityList = () => {
                       </h4>
                       <span
                         className={`inline-block mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border
-                        ${
-                          univ.type === 'negeri'
+                        ${univ.type === 'negeri'
                             ? 'bg-amber-500/10 text-amber-600 border-amber-500/20'
                             : univ.type === 'kedinasan'
                               ? 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20'
                               : 'bg-pink-500/10 text-pink-600 border-pink-500/20'
-                        }`}
+                          }`}
                       >
                         {univ.type || 'Swasta'}
                       </span>

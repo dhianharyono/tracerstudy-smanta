@@ -346,7 +346,7 @@ const StudentMajors = () => {
             Jurusan & Program Studi
           </h1>
           <p className='text-[color:var(--text-secondary)] text-sm md:text-base mt-1'>
-            Persebaran Alumni berdasarkan jurusan dan statistikanya.
+            Persebaran Alumni berdasarkan jurusan dan statistiknya.
           </p>
         </div>
 

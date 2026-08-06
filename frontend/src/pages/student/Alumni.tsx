@@ -175,7 +175,7 @@ const StudentAlumni = () => {
       {/* Header Section */}
       <PageHeader
         title='Data Lengkap Alumni'
-        description='Temukan informasi lengkap tentang Alumni disini'
+        description='Temukan informasi lengkap tentang Alumni disini, data yang ditampilkan adalah alumni yang sudah mengisi kuesioner secara lengkap'
       >
         <button
           onClick={() => setShowFilters(!showFilters)}

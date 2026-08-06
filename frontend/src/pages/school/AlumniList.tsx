@@ -359,6 +359,11 @@ const SchoolAlumniList = () => {
                           <p className='text-xs text-[color:var(--text-secondary)] max-w-[200px] whitespace-normal w-full break-words leading-tight mt-1'>
                             {person.university?.major}
                           </p>
+                          {person.university?.entryPath && (
+                            <span className='inline-block mt-1 px-2 py-0.5 text-[10px] font-medium bg-blue-500/10 text-blue-500 rounded border border-blue-500/20'>
+                              Jalur: {person.university.entryPath}
+                            </span>
+                          )}
                         </div>
                       ) : (
                         <span className='text-[color:var(--text-tertiary)] italic'>

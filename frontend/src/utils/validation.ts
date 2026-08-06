@@ -4,6 +4,7 @@ export const isUniversityIncomplete = (obj: any) => {
   const univ = obj.university || (obj.name !== undefined ? obj : null);
   const universityName = (univ?.name || obj.universityName || '').trim();
   const major = (univ?.major || obj.major || '').trim();
+  const entryPath = (univ?.entryPath || obj.entryPath || '').trim();
   
   const placeholders = ['-', '', 'null', 'undefined', 'belum ada', 'tidak ada', '.'];
   
@@ -12,6 +13,10 @@ export const isUniversityIncomplete = (obj: any) => {
   }
   
   if (!major || placeholders.includes(major.toLowerCase())) {
+    return true;
+  }
+
+  if (!entryPath || placeholders.includes(entryPath.toLowerCase())) {
     return true;
   }
 
