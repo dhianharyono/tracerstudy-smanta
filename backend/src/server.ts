@@ -35,8 +35,6 @@ app.use(
         defaultSrc: ["'self'"],
         scriptSrc: [
           "'self'",
-          "'unsafe-inline'",
-          "'unsafe-eval'",
           'https://www.google.com',
           'https://www.gstatic.com',
         ],
