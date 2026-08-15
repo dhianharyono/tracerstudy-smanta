@@ -1,5 +1,9 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
-mongoose.connect('mongodb+srv://smata_ts:JoXV8vS9sXtwHJy1@tracerstudy.b8xquhw.mongodb.net/?appName=TracerStudy').then(async () => {
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/tracer-study';
+
+mongoose.connect(MONGODB_URI).then(async () => {
     const query = { role: 'alumni' };
     const andConditions = [];
     const jobExistsQuery = {
