@@ -16,19 +16,28 @@ import Toast from '@/components/toast';
 import { useAuth } from '@/contexts/AuthContext';
 import SmartLoader from '@/components/SmartLoader';
 
-const Profile = () => {
+interface ProfileProps {
+  isModal?: boolean;
+  onClose?: () => void;
+}
+
+const Profile: React.FC<ProfileProps> = ({ isModal = false, onClose }) => {
   const { updateUser, user } = useAuth();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!user);
   const [saving, setSaving] = useState(false);
 
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [entryYear, setEntryYear] = useState<number | ''>('');
-  const [graduationYear, setGraduationYear] = useState<number | ''>('');
+  const [username, setUsername] = useState(user?.username || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [fullName, setFullName] = useState(user?.profile?.fullName || '');
+  const [entryYear, setEntryYear] = useState<number | ''>(
+    user?.profile?.entryYear || '',
+  );
+  const [graduationYear, setGraduationYear] = useState<number | ''>(
+    user?.profile?.graduationYear || '',
+  );
   const [savedGraduationYear, setSavedGraduationYear] = useState<number | null>(
-    null,
+    user?.profile?.graduationYear || null,
   );
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -37,7 +46,7 @@ const Profile = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showGraduationModal, setShowGraduationModal] = useState(false);
   const [graduating, setGraduating] = useState(false);
-  const [isMentor, setIsMentor] = useState(false);
+  const [isMentor, setIsMentor] = useState(user?.isMentor || false);
   const [hasUniversityData, setHasUniversityData] = useState(false);
 
   useEffect(() => {
@@ -150,6 +159,12 @@ const Profile = () => {
       } else {
         fetchProfile();
       }
+
+      if (isModal && onClose) {
+        setTimeout(() => {
+          onClose();
+        }, 800);
+      }
     } catch (error: any) {
       console.error('Error updating profile:', error);
       Toast(
@@ -190,243 +205,266 @@ const Profile = () => {
   };
 
   if (loading) {
+    if (isModal) {
+      return (
+        <div className='flex flex-col items-center justify-center py-20 sm:py-28'>
+          <div className='relative animate-bounce mb-3'>
+            <img
+              src='/logo.png'
+              alt='Loading...'
+              className='w-12 h-12 object-contain'
+            />
+          </div>
+          <p className='text-xs font-medium text-slate-400 animate-pulse'>
+            Memuat data profil...
+          </p>
+        </div>
+      );
+    }
     return <SmartLoader />;
   }
 
   return (
-    <div className='p-4 md:p-8 animate-fade-in'>
-      <div className='mb-8 text-center md:text-left'>
-        <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
-          Profil Pengguna
-        </h1>
-        <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
-          Kelola data diri dan password akun Anda
-        </p>
-      </div>
-
-      <form onSubmit={handleUpdateProfile} className='space-y-6'>
-        {/* Mentorship Status for Alumni */}
-        {user?.role === 'alumni' && hasUniversityData && (
-          <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-indigo-900 via-indigo-800 to-purple-900 shadow-xl transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-900/20'>
-            {/* Background Decorations */}
-            <div className='absolute top-0 right-0 -mr-20 -mt-20 h-40 w-40 sm:h-64 sm:w-64 rounded-full bg-white/10 blur-3xl opacity-50' />
-            <div className='absolute bottom-0 left-0 -ml-20 -mb-20 h-24 w-24 sm:h-40 sm:w-40 rounded-full bg-purple-500/20 blur-2xl' />
-
-            <div className='relative p-4 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6'>
-              <div className='flex items-start gap-4 sm:gap-5'>
-                <div className='flex h-12 w-12 sm:h-16 sm:w-16 shrink-0 items-center justify-center rounded-2xl bg-white/10 shadow-inner backdrop-blur-md border border-white/10'>
-                  <FaGraduationCap className='text-2xl sm:text-3xl text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' />
-                </div>
-                <div className='text-white space-y-0 sm:space-y-2'>
-                  <div className='flex items-center'>
-                    <div className='text:sm md:text-xl font-bold !mb-0 tracking-tight'>
-                      Status Mentorship
-                    </div>
-                  </div>
-                  <div className='text-indigo-100/90 text-xs sm:text-sm leading-relaxed max-w-xl font-medium'>
-                    {isMentor
-                      ? 'Profil Anda akan tampil sebagai Mentor dan akan ditampilkan kepada siswa bahwa Anda bersedia membantu mereka.'
-                      : 'Dengan menjadi mentor, Anda dapat membimbing siswa dalam memilih jurusan dan memberikan wawasan berharga tentang pengalaman kuliah Anda.'}
-                  </div>
-                </div>
-              </div>
-
-              <div className='flex items-center justify-between md:justify-end gap-4 bg-white/10 rounded-xl p-3 sm:p-4 backdrop-blur-sm border border-white/10 w-full md:w-auto'>
-                <div className='text-left md:text-right'>
-                  <span
-                    className={`block text-sm font-bold ${isMentor ? 'text-amber-300' : 'text-indigo-200'
-                      }`}
-                  >
-                    {isMentor ? 'Aktif' : 'Nonaktif'}
-                  </span>
-                  <span className='text-[10px] sm:text-xs text-indigo-300 font-medium'>
-                    {isMentor ? 'Siap membimbing' : 'Geser untuk aktifkan'}
-                  </span>
-                </div>
-
-                <button
-                  type='button'
-                  onClick={() => setIsMentor(!isMentor)}
-                  className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-indigo-900 ${isMentor ? 'bg-amber-400' : 'bg-indigo-950/50'
-                    }`}
-                >
-                  <span className='sr-only'>Toggle Mentorship</span>
-                  <span
-                    aria-hidden='true'
-                    className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMentor
-                      ? 'translate-x-5 sm:translate-x-6'
-                      : 'translate-x-0'
-                      }`}
-                  />
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-        {/* Personal Info Section */}
-        <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
-          <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
-            <div className='flex items-center gap-3'>
-              <div className='p-2 bg-blue-500/10 rounded-lg text-blue-500'>
-                <FaUser className='text-xl' />
-              </div>
-              <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
-                Data Diri
-              </h2>
-            </div>
-          </div>
-
-          <div className='p-6 grid gap-6 md:grid-cols-2'>
-            <div className='space-y-2'>
-              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaIdBadge className='text-xs' /> Nama Lengkap{' '}
-                <span className='text-red-500 text-xs'>*</span>
-              </label>
-              <input
-                type='text'
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                placeholder='Masukkan nama lengkap'
-                required
-              />
-            </div>
-
-            <div className='space-y-2'>
-              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaUser className='text-xs' /> Username{' '}
-                <span className='text-red-500 text-xs'>*</span>
-              </label>
-              <input
-                type='text'
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                placeholder='Username'
-                required
-              />
-            </div>
-
-            <div className='space-y-2 md:col-span-2'>
-              <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                <FaEnvelope className='text-xs' /> Email{' '}
-                <span className='text-red-500 text-xs'>*</span>
-              </label>
-              <input
-                type='email'
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                placeholder='Email'
-                required
-              />
-            </div>
-
-            {(user?.role as string) !== 'admin' && (user?.role as string) !== 'school' && (
-              <div className='space-y-2'>
-                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaIdBadge className='text-xs' /> Tahun Masuk{' '}
-                  <span className='text-red-500 text-xs'>*</span>
-                </label>
-                <input
-                  type='number'
-                  value={entryYear}
-                  onChange={(e) =>
-                    setEntryYear(e.target.value ? parseInt(e.target.value) : '')
-                  }
-                  className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                  placeholder='Contoh: 2023'
-                  min='1900'
-                  max='2100'
-                  required
-                />
-              </div>
-            )}
-
-            {(user?.role as string) !== 'admin' && (user?.role as string) !== 'school' && (
-              <div className='space-y-2'>
-                <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)] flex items-center gap-2'>
-                  <FaGraduationCap className='text-xs' /> Tahun Lulus{' '}
-                  <span className='text-red-500 text-xs'>*</span>
-                </label>
-                <input
-                  type='number'
-                  value={graduationYear}
-                  onChange={(e) =>
-                    setGraduationYear(
-                      e.target.value ? parseInt(e.target.value) : '',
-                    )
-                  }
-                  className='text-xs md:text-sm w-full px-4 py-3 rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] text-[color:var(--text-primary)] focus:ring-2 focus:ring-[var(--primary)] outline-none transition-all'
-                  placeholder='Contoh: 2026'
-                  min='1900'
-                  max='2100'
-                  required
-                />
-              </div>
-            )}
-          </div>
+    <div className={isModal ? 'animate-fade-in' : 'p-4 md:p-8 animate-fade-in'}>
+      {!isModal && (
+        <div className='mb-8 text-center md:text-left'>
+          <h1 className='text-lg md:text-2xl font-bold text-[color:var(--text-primary)] !mb-0'>
+            Profil Pengguna
+          </h1>
+          <p className='text-[color:var(--text-secondary)] text-xs md:text-sm'>
+            Kelola data diri dan password akun Anda
+          </p>
         </div>
+      )}
 
-        {/* Graduation Alert for Students */}
-        {user?.role === 'student' &&
-          savedGraduationYear &&
-          (new Date().getFullYear() > savedGraduationYear ||
-            (new Date().getFullYear() === savedGraduationYear &&
-              (new Date().getMonth() > 4 ||
-                (new Date().getMonth() === 4 && new Date().getDate() >= 4)))) && (
-            <div className='bg-gradient-to-r from-green-500/10 to-blue-500/10 rounded-2xl border border-green-500/30 overflow-hidden shadow-sm'>
-              <div className='p-6'>
-                <div className='flex flex-col md:flex-row items-start md:items-center justify-between gap-4'>
-                  <div className='flex items-start gap-0 md:gap-4'>
-                    <div className='invisible w-0 h-0 p-0 md:p-3 bg-green-500/20 rounded-xl text-green-500'>
-                      <FaGraduationCap className='text-2xl' />
-                    </div>
-                    <div>
-                      <h3 className='text-lg font-bold text-[color:var(--text-primary)] mb-1'>
-                        Selamat! Anda Sudah Lulus
-                      </h3>
-                      <p className='text-xs md:text-sm text-[color:var(--text-secondary)] mb-2'>
-                        Tahun lulus Anda adalah {graduationYear}. Anda dapat
-                        mengkonversi akun Anda menjadi akun alumni.
-                      </p>
-                      <p className='text-[10px] md:text-xs text-[color:var(--text-tertiary)]'>
-                        Dengan menjadi alumni, Anda dapat mengisi kuesioner dan
-                        berbagi pengalaman dengan siswa lainnya.
-                      </p>
-                    </div>
+      <form onSubmit={handleUpdateProfile} className='flex flex-col min-h-full'>
+        <div className={isModal ? 'p-6 sm:p-8 space-y-6 flex-1' : 'space-y-6 flex-1'}>
+          {/* Mentorship Status for Alumni */}
+          {user?.role === 'alumni' && hasUniversityData && (
+            <div className='relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white shadow-lg border border-indigo-500/30 p-5 sm:p-6 transition-all'>
+              {/* Background Glow */}
+              <div className='absolute top-0 right-0 -mr-16 -mt-16 h-48 w-48 rounded-full bg-blue-500/15 blur-3xl pointer-events-none' />
+              <div className='absolute bottom-0 left-0 -ml-16 -mb-16 h-36 w-36 rounded-full bg-purple-500/15 blur-2xl pointer-events-none' />
+
+              <div className='relative flex flex-col sm:flex-row sm:items-center justify-between gap-5'>
+                <div className='flex items-start gap-4'>
+                  <div className='flex h-12 w-12 sm:h-14 sm:w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 shadow-inner backdrop-blur-md border border-white/15'>
+                    <FaGraduationCap className='text-2xl sm:text-3xl text-amber-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]' />
                   </div>
+                  <div className='space-y-1 max-w-xl'>
+                    <div className='flex items-center gap-2'>
+                      <h3 className='text-sm sm:text-base font-bold text-white tracking-tight !mb-0'>
+                        Status Mentorship
+                      </h3>
+                    </div>
+                    <p className='text-indigo-100/85 text-xs sm:text-sm leading-relaxed font-normal'>
+                      {isMentor
+                        ? 'Profil Anda aktif sebagai Mentor dan dapat membimbing adik kelas dalam pemilihan jurusan dan dunia perkuliahan.'
+                        : 'Aktifkan status mentor jika Anda bersedia memberikan bimbingan dan berbagi pengalaman kampus kepada siswa.'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className='flex items-center justify-between sm:justify-end gap-4 bg-white/10 rounded-2xl px-4 py-3 backdrop-blur-md border border-white/10 shrink-0 self-stretch sm:self-center min-w-[180px]'>
+                  <div className='text-left sm:text-right'>
+                    <span
+                      className={`block text-xs sm:text-sm font-bold ${
+                        isMentor ? 'text-amber-300' : 'text-indigo-200'
+                      }`}
+                    >
+                      {isMentor ? 'Aktif' : 'Nonaktif'}
+                    </span>
+                    <span className='text-[11px] text-indigo-300 font-medium whitespace-nowrap block'>
+                      {isMentor ? 'Siap membimbing' : 'Geser untuk aktifkan'}
+                    </span>
+                  </div>
+
                   <button
                     type='button'
-                    onClick={() => setShowGraduationModal(true)}
-                    className='flex w-full text-sm md:w-fit justify-center items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-xl font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
+                    onClick={() => setIsMentor(!isMentor)}
+                    className={`relative inline-flex h-7 w-12 sm:h-8 sm:w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-amber-400 focus:ring-offset-2 focus:ring-offset-slate-900 ${
+                      isMentor ? 'bg-amber-400' : 'bg-white/20'
+                    }`}
                   >
-                    <FaGraduationCap /> Lulus Sekarang
+                    <span className='sr-only'>Toggle Mentorship</span>
+                    <span
+                      aria-hidden='true'
+                      className={`pointer-events-none inline-block h-6 w-6 sm:h-7 sm:w-7 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
+                        isMentor ? 'translate-x-5 sm:translate-x-6' : 'translate-x-0'
+                      }`}
+                    />
                   </button>
                 </div>
               </div>
             </div>
           )}
 
-        {/* Password Section */}
-        {(user?.role as string) === 'school' ? (
-          <div className='bg-[var(--primary)]/5 rounded-2xl border border-[var(--primary)]/20 overflow-hidden shadow-sm'>
-            <div className='p-6'>
-              <div className='flex items-start gap-4'>
-                <div className='p-3 bg-[var(--primary)]/10 text-[var(--primary)] rounded-xl shrink-0'>
-                  <FaLock className='text-xl' />
+          {/* Personal Info Section */}
+          <div className='bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs'>
+            <div className='px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between'>
+              <div className='flex items-center gap-3'>
+                <div className='h-8 w-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold'>
+                  <FaUser />
                 </div>
                 <div>
-                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] mb-1'>
+                  <h2 className='text-sm font-bold text-slate-800 leading-tight !mb-0'>
+                    Data Diri
+                  </h2>
+                  <p className='text-[10px] text-slate-400 font-medium'>
+                    Informasi identitas akun Anda
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className='p-6 sm:p-7 grid gap-5 sm:grid-cols-2'>
+              <div className='space-y-1.5'>
+                <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                  <FaIdBadge className='text-xs text-slate-400' /> Nama Lengkap{' '}
+                  <span className='text-rose-500 text-xs'>*</span>
+                </label>
+                <input
+                  type='text'
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  className='text-xs sm:text-sm w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                  placeholder='Masukkan nama lengkap'
+                  required
+                />
+              </div>
+
+              <div className='space-y-1.5'>
+                <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                  <FaUser className='text-xs text-slate-400' /> Username{' '}
+                  <span className='text-rose-500 text-xs'>*</span>
+                </label>
+                <input
+                  type='text'
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className='text-xs sm:text-sm w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                  placeholder='Username'
+                  required
+                />
+              </div>
+
+              <div className={`space-y-1.5 ${(user?.role as string) === 'admin' || (user?.role as string) === 'school' ? 'sm:col-span-2' : ''}`}>
+                <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                  <FaEnvelope className='text-xs text-slate-400' /> Email{' '}
+                  <span className='text-rose-500 text-xs'>*</span>
+                </label>
+                <input
+                  type='email'
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className='text-xs sm:text-sm w-full px-4 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                  placeholder='Email'
+                  required
+                />
+              </div>
+
+              {(user?.role as string) !== 'admin' && (user?.role as string) !== 'school' && (
+                <div className='grid grid-cols-2 gap-3'>
+                  <div className='space-y-1.5'>
+                    <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                      <FaIdBadge className='text-xs text-slate-400' /> Tahun Masuk{' '}
+                      <span className='text-rose-500 text-xs'>*</span>
+                    </label>
+                    <input
+                      type='number'
+                      value={entryYear}
+                      onChange={(e) =>
+                        setEntryYear(e.target.value ? parseInt(e.target.value) : '')
+                      }
+                      className='text-xs sm:text-sm w-full px-3.5 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                      placeholder='Contoh: 2023'
+                      min='1900'
+                      max='2100'
+                      required
+                    />
+                  </div>
+
+                  <div className='space-y-1.5'>
+                    <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                      <FaGraduationCap className='text-xs text-slate-400' /> Tahun Lulus{' '}
+                      <span className='text-rose-500 text-xs'>*</span>
+                    </label>
+                    <input
+                      type='number'
+                      value={graduationYear}
+                      onChange={(e) =>
+                        setGraduationYear(
+                          e.target.value ? parseInt(e.target.value) : '',
+                        )
+                      }
+                      className='text-xs sm:text-sm w-full px-3.5 py-2.5 sm:py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                      placeholder='Contoh: 2026'
+                      min='1900'
+                      max='2100'
+                      required
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Graduation Alert for Students */}
+          {user?.role === 'student' &&
+            savedGraduationYear &&
+            (new Date().getFullYear() > savedGraduationYear ||
+              (new Date().getFullYear() === savedGraduationYear &&
+                (new Date().getMonth() > 4 ||
+                  (new Date().getMonth() === 4 && new Date().getDate() >= 4)))) && (
+              <div className='bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-2xl border border-emerald-500/30 overflow-hidden shadow-xs'>
+                <div className='p-6'>
+                  <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4'>
+                    <div className='flex items-start gap-3.5'>
+                      <div className='p-3 bg-emerald-500/20 rounded-xl text-emerald-600 shrink-0'>
+                        <FaGraduationCap className='text-2xl' />
+                      </div>
+                      <div>
+                        <h3 className='text-base font-bold text-slate-900 !mb-1'>
+                          Selamat! Anda Sudah Lulus
+                        </h3>
+                        <p className='text-xs sm:text-sm text-slate-600 mb-1'>
+                          Tahun lulus Anda adalah {graduationYear}. Anda dapat mengonversi akun Anda menjadi akun alumni.
+                        </p>
+                        <p className='text-[10px] text-slate-500'>
+                          Dengan menjadi alumni, Anda dapat mengisi kuesioner tracer study dan berbagi pengalaman kampus.
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type='button'
+                      onClick={() => setShowGraduationModal(true)}
+                      className='flex w-full sm:w-auto justify-center items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-emerald-600 to-blue-600 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap cursor-pointer'
+                    >
+                      <FaGraduationCap /> Lulus Sekarang
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          {/* Password Section */}
+          {(user?.role as string) === 'school' ? (
+            <div className='bg-blue-50/50 rounded-2xl border border-blue-200/60 p-5 overflow-hidden shadow-xs'>
+              <div className='flex items-start gap-3.5'>
+                <div className='p-2.5 bg-blue-100 text-blue-600 rounded-xl shrink-0'>
+                  <FaLock className='text-lg' />
+                </div>
+                <div>
+                  <h2 className='text-sm font-bold text-slate-900 !mb-0.5'>
                     Keamanan Password
                   </h2>
-                  <p className='text-xs md:text-sm text-[color:var(--text-secondary)] leading-relaxed'>
+                  <p className='text-xs text-slate-600 leading-relaxed'>
                     Jika Anda perlu mengganti password, silakan hubungi kami melalui Instagram:{' '}
                     <a
                       href='https://www.instagram.com/tracerstudysmanta/'
                       target='_blank'
                       rel='noopener noreferrer'
-                      className='inline-block font-bold text-[var(--primary)] hover:opacity-80 underline underline-offset-2 transition-colors mt-1'
+                      className='font-bold text-blue-600 hover:underline underline-offset-2 transition-colors'
                     >
                       @tracerstudysmanta
                     </a>
@@ -434,97 +472,113 @@ const Profile = () => {
                 </div>
               </div>
             </div>
-          </div>
-        ) : (
-          <div className='bg-[color:var(--bg-card)] rounded-2xl border border-[color:var(--border-color)] overflow-hidden shadow-sm'>
-            <div className='p-6 border-b border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/30'>
-              <div className='flex flex-col sm:flex-row sm:items-center justify-between gap-4'>
-                <div className='flex items-center gap-3'>
-                  <div className='p-2 bg-red-500/10 rounded-lg text-red-500'>
-                    <FaLock className='text-xl' />
+          ) : (
+            <div className='bg-white rounded-2xl border border-slate-200/80 overflow-hidden shadow-xs'>
+              <div className='px-6 py-4 border-b border-slate-100 bg-slate-50/50'>
+                <div className='flex items-center justify-between gap-4'>
+                  <div className='flex items-center gap-3'>
+                    <div className='h-8 w-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center text-sm font-bold'>
+                      <FaLock />
+                    </div>
+                    <div>
+                      <h2 className='text-sm font-bold text-slate-800 leading-tight !mb-0'>
+                        Ubah Password
+                      </h2>
+                      <p className='text-[10px] text-slate-400 font-medium'>
+                        Perbarui kata sandi akun Anda untuk keamanan
+                      </p>
+                    </div>
                   </div>
-                  <h2 className='text-sm md:text-lg font-bold text-[color:var(--text-primary)] !mb-0'>
-                    Ubah Password
-                  </h2>
-                </div>
-                <button
-                  type='button'
-                  onClick={() => {
-                    setShowPasswordFields(!showPasswordFields);
-                    if (showPasswordFields) {
-                      setPassword('');
-                      setConfirmPassword('');
-                    }
-                  }}
-                  className={`text-sm font-bold px-4 py-2.5 rounded-xl transition-all w-full sm:w-auto text-center ${showPasswordFields
-                    ? 'bg-[color:var(--bg-secondary)] text-[color:var(--text-secondary)] border border-[color:var(--border-color)]'
-                    : 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                  <button
+                    type='button'
+                    onClick={() => {
+                      setShowPasswordFields(!showPasswordFields);
+                      if (showPasswordFields) {
+                        setPassword('');
+                        setConfirmPassword('');
+                      }
+                    }}
+                    className={`text-xs font-bold px-4 py-2 rounded-xl transition-all cursor-pointer ${
+                      showPasswordFields
+                        ? 'bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200'
+                        : 'bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200/60'
                     }`}
-                >
-                  {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
-                </button>
+                  >
+                    {showPasswordFields ? 'Batal Ubah' : 'Ganti Password'}
+                  </button>
+                </div>
               </div>
+
+              {showPasswordFields && (
+                <div className='p-6 grid gap-5 sm:grid-cols-2 animate-slide-down border-t border-slate-100'>
+                  <div className='space-y-1.5'>
+                    <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                      <FaLock className='text-[10px] text-slate-400' /> Password Baru
+                    </label>
+                    <div className='relative'>
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className='text-xs sm:text-sm w-full px-4 py-2.5 sm:py-3 pr-11 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                        placeholder='Masukkan password baru'
+                        required={showPasswordFields}
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className='absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer'
+                        tabIndex={-1}
+                      >
+                        {showPassword ? <FaEyeSlash className='text-sm' /> : <FaEye className='text-sm' />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className='space-y-1.5'>
+                    <label className='text-xs font-semibold text-slate-700 flex items-center gap-1.5'>
+                      <FaLock className='text-[10px] text-slate-400' /> Konfirmasi Password
+                    </label>
+                    <div className='relative'>
+                      <input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className='text-xs sm:text-sm w-full px-4 py-2.5 sm:py-3 pr-11 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-800 placeholder-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all'
+                        placeholder='Ulangi password baru'
+                        required={showPasswordFields}
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className='absolute inset-y-0 right-0 px-3.5 flex items-center text-slate-400 hover:text-slate-600 transition-colors cursor-pointer'
+                        tabIndex={-1}
+                      >
+                        {showConfirmPassword ? <FaEyeSlash className='text-sm' /> : <FaEye className='text-sm' />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
+          )}
+        </div>
 
-            {showPasswordFields && (
-              <div className='p-6 grid gap-6 md:grid-cols-2 animate-slide-down'>
-                <div className='space-y-2 relative'>
-                  <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
-                    Password Baru
-                  </label>
-                  <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
-                    <FaLock />
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
-                    placeholder='Masukkan password baru'
-                    required={showPasswordFields}
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowPassword(!showPassword)}
-                    className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-
-                <div className='space-y-2 relative'>
-                  <label className='text-xs md:text-sm font-semibold text-[color:var(--text-secondary)]'>
-                    Konfirmasi Password
-                  </label>
-                  <div className='absolute top-6 inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[color:var(--text-tertiary)]'>
-                    <FaLock />
-                  </div>
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className='text-xs md:text-sm w-full rounded-xl border border-[color:var(--border-color)] bg-[color:var(--bg-secondary)] py-3 pl-10 pr-12 text-[color:var(--text-primary)] placeholder-gray-400 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)] mobile:text-base'
-                    placeholder='Ulangi password baru'
-                    required={showPasswordFields}
-                  />
-                  <button
-                    type='button'
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className='absolute right-0 top-2 h-full px-3 text-[color:var(--text-tertiary)] hover:text-[color:var(--text-primary)] transition-colors'
-                  >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        <div className='flex justify-end'>
+        {/* Sticky Action Footer */}
+        <div className={`sticky bottom-0 px-6 sm:px-8 py-4 bg-white/95 backdrop-blur-md border-t border-slate-100 flex items-center justify-end gap-3 z-10 shadow-xs mt-auto ${!isModal ? 'rounded-2xl border' : ''}`}>
+          {isModal && onClose && (
+            <button
+              type='button'
+              onClick={onClose}
+              className='px-5 py-2.5 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 font-bold text-xs sm:text-sm transition-all cursor-pointer'
+            >
+              Batal
+            </button>
+          )}
           <button
             type='submit'
             disabled={saving}
-            className='w-full md:w-fit justify-center flex items-center gap-2 px-8 py-3 bg-[var(--primary)] text-white rounded-xl font-bold shadow-lg shadow-[var(--primary)]/30 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:hover:scale-100'
+            className='flex items-center gap-2 px-6 sm:px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-xs sm:text-sm shadow-md shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-[1.01] active:scale-[0.99] transition-all disabled:opacity-50 cursor-pointer'
           >
             {saving ? (
               <>
@@ -532,9 +586,9 @@ const Profile = () => {
                 Menyimpan...
               </>
             ) : (
-              <div className='flex gap-2 items-center text-sm'>
+              <>
                 <FaSave /> Simpan Perubahan
-              </div>
+              </>
             )}
           </button>
         </div>

@@ -1,8 +1,7 @@
 import SmartLoader from '@/components/SmartLoader';
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { FaCrown, FaHome } from 'react-icons/fa';
+import { FaCrown } from 'react-icons/fa';
 import { useAuth } from '../../contexts/AuthContext';
 import TopUniversities from '@/components/Dashboard/TopUniversities';
 import Statistic from '@/components/Dashboard/Statistic';
@@ -161,12 +160,6 @@ const AlumniDashboard = () => {
             Selamat datang kembali di Tracer Study
           </p>
         </div>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:border-blue-400 text-slate-700 hover:text-[#3b6ebb] font-semibold text-xs rounded-xl shadow-xs transition-all shrink-0"
-        >
-          <FaHome className="text-[#3b6ebb]" /> Halaman Utama
-        </Link>
       </div>
 
       <WelcomCardAlumni
