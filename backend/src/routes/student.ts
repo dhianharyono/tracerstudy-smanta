@@ -198,7 +198,7 @@ router.get(
         .populate('badges')
         .skip(skip)
         .limit(limit)
-        .sort({ 'profile.graduationYear': -1, createdAt: -1 });
+        .sort({ 'profile.graduationYear': -1, createdAt: -1, _id: -1 });
 
       const total = await User.countDocuments(filter);
 
@@ -509,7 +509,7 @@ router.get('/news', async (req: AuthenticatedRequest, res: Response) => {
 
     const news = await query
       .populate('author', 'username')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
 
     // Get read news IDs for this user
     const readNews = await NewsRead.find({ user: req.user!._id }).select(
@@ -698,7 +698,7 @@ router.get('/feedback/list', authenticate, authorize('student'), async (req: Req
   try {
     const feedbacks = await Feedback.find()
       .select('rating kritik saran reply createdAt role')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
     res.json(feedbacks);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -921,7 +921,7 @@ router.get(
 
       const plansQuery = CollegePlan.find(filter)
         .populate('user', 'username profile.fullName profile.graduationYear')
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1, _id: -1 });
 
       const plans = await plansQuery;
 

@@ -274,7 +274,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
         
         const alumni = await User.find(query)
             .select('profile university job questionnaireCompleted email isVerifiedBySchool verifiedAt')
-            .sort({ 'profile.graduationYear': -1, 'profile.fullName': 1 })
+            .sort({ 'profile.graduationYear': -1, 'profile.fullName': 1, _id: -1 })
             .limit(parseInt(limit as string))
             .skip(skip);
 
@@ -404,7 +404,7 @@ router.get('/feedback/list', async (req: Request, res: Response) => {
     try {
         const feedbacks = await Feedback.find()
             .select('rating kritik saran reply createdAt role')
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1, _id: -1 });
         res.json(feedbacks);
     } catch (error: any) {
         res.status(500).json({ message: error.message });

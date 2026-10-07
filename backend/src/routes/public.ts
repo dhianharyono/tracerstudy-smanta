@@ -114,7 +114,7 @@ router.get('/news', async (req: Request, res: Response) => {
     try {
         const news = await News.find({ isPublished: true, type: 'all' })
             .populate('author', 'username')
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: -1, _id: -1 })
             .limit(3);
         res.json(news);
     } catch (error: any) {
@@ -128,7 +128,7 @@ router.get('/testimonials', async (req: Request, res: Response) => {
     try {
         const testimonials = await Feedback.find({ showOnLandingPage: true })
             .populate('user', 'profile.fullName role')
-            .sort({ createdAt: -1 })
+            .sort({ createdAt: -1, _id: -1 })
             .limit(5);
         res.json(testimonials);
     } catch (error: any) {

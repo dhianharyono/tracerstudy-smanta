@@ -548,7 +548,7 @@ router.get('/mentors', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
 
     const total = await User.countDocuments(filter);
 
@@ -664,7 +664,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
         { 'profile.fullName': '' },
         { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
         { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
-        { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+        { 'profile.fullName': { $regex: /^[^a-zA-Z\s.'’,-]+$/ } },
         { 'profile.fullName': { $not: /\s/ } },
       ];
       filter['$or'] = nameIncompleteConditions;
@@ -719,7 +719,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ updatedAt: -1 });
+      .sort({ updatedAt: -1, _id: -1 });
 
     const total = await User.countDocuments(filter);
 
@@ -732,7 +732,7 @@ router.get('/alumni', async (req: Request, res: Response) => {
       const fn = (u.profile?.fullName || '').trim();
       const placeholders = ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'];
       const isSingleWord = !fn.includes(' ');
-      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.']+$/.test(fn);
+      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.'’,-]+$/.test(fn);
 
       return u;
     });
@@ -929,7 +929,7 @@ router.patch('/alumni/hide-all-incomplete', async (req: Request, res: Response) 
       { 'profile.fullName': '' },
       { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
       { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
-      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.'’,-]+$/ } },
       { 'profile.fullName': { $not: /\s/ } },
     ];
 
@@ -1154,7 +1154,7 @@ router.get('/students', async (req: Request, res: Response) => {
           { 'profile.fullName': '' },
           { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
           { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
-          { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+          { 'profile.fullName': { $regex: /^[^a-zA-Z\s.'’,-]+$/ } },
           { 'profile.fullName': { $not: /\s/ } },
         ]
       });
@@ -1206,7 +1206,7 @@ router.get('/students', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ updatedAt: -1 });
+      .sort({ updatedAt: -1, _id: -1 });
 
     const total = await User.countDocuments(query);
 
@@ -1219,7 +1219,7 @@ router.get('/students', async (req: Request, res: Response) => {
       const fn = (u.profile?.fullName || '').trim();
       const placeholders = ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'];
       const isSingleWord = !fn.includes(' ');
-      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.']+$/.test(fn);
+      u.isNameIncomplete = !fn || fn.length < 3 || isSingleWord || placeholders.includes(fn.toLowerCase()) || !/^[a-zA-Z\s.'’,-]+$/.test(fn);
 
       return u;
     });
@@ -1248,7 +1248,7 @@ router.patch('/students/hide-all-incomplete', async (req: Request, res: Response
       { 'profile.fullName': '' },
       { $expr: { $lt: [{ $strLenCP: { $ifNull: ['$profile.fullName', ''] } }, 3] } },
       { 'profile.fullName': { $in: ['-', '.', 'null', 'undefined', 'belum ada', 'tidak ada'] } },
-      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.']+$/ } },
+      { 'profile.fullName': { $regex: /^[^a-zA-Z\s.'’,-]+$/ } },
       { 'profile.fullName': { $not: /\s/ } },
     ];
 
@@ -1443,7 +1443,7 @@ router.get('/admins', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
 
     const total = await User.countDocuments({ role: 'admin' });
 
@@ -1571,7 +1571,7 @@ router.get('/school-users', async (req: Request, res: Response) => {
       .select('-password')
       .skip(skip)
       .limit(limit)
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
 
     const total = await User.countDocuments({ role: 'school' });
 
@@ -1671,7 +1671,7 @@ router.get('/audit-logs', async (req: Request, res: Response) => {
     const skip = (page - 1) * limit;
 
     const logs = await AuditLog.find()
-      .sort({ timestamp: -1 })
+      .sort({ timestamp: -1, _id: -1 })
       .skip(skip)
       .limit(limit);
 
@@ -1728,7 +1728,7 @@ router.get('/news', async (req: Request, res: Response) => {
 
     const news = await query
       .populate('author', 'username')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
     res.json(news);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -1819,7 +1819,7 @@ router.get('/feedback', async (req: Request, res: Response) => {
   try {
     const feedbacks = await Feedback.find()
       .populate('user', 'username role')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
     res.json(feedbacks);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
@@ -2202,27 +2202,40 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
     let failCount = 0;
     const errors: { email: string; error: string }[] = [];
 
-    for (const student of targetStudents) {
-      if (!student.email) {
-        failCount++;
-        errors.push({
-          email: student.username || 'unknown',
-          error: 'Siswa tidak memiliki alamat email.',
-        });
-        continue;
-      }
-      const name = student.profile?.fullName || student.username;
-      const result = isUpgrade
-        ? await sendAlumniUpgradeReminder(student.email, name)
-        : await sendStudentIncompleteReminder(student.email, name);
-      if (result.success) {
-        successCount++;
-      } else {
-        failCount++;
-        errors.push({
-          email: student.email,
-          error: result.error || 'Gagal mengirim email.',
-        });
+    // Process in chunks of 15 to speed up execution while avoiding SMTP rate limits
+    const CHUNK_SIZE = 15;
+    for (let i = 0; i < targetStudents.length; i += CHUNK_SIZE) {
+      const chunk = targetStudents.slice(i, i + CHUNK_SIZE);
+      
+      await Promise.all(
+        chunk.map(async (student) => {
+          if (!student.email) {
+            failCount++;
+            errors.push({
+              email: student.username || 'unknown',
+              error: 'Siswa tidak memiliki alamat email.',
+            });
+            return;
+          }
+          const name = student.profile?.fullName || student.username;
+          const result = isUpgrade
+            ? await sendAlumniUpgradeReminder(student.email, name)
+            : await sendStudentIncompleteReminder(student.email, name);
+          if (result.success) {
+            successCount++;
+          } else {
+            failCount++;
+            errors.push({
+              email: student.email,
+              error: result.error || 'Gagal mengirim email.',
+            });
+          }
+        })
+      );
+
+      // Add a 1 second delay between chunks to let SMTP servers breathe
+      if (i + CHUNK_SIZE < targetStudents.length) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 
@@ -2301,25 +2314,38 @@ router.post('/alumni/send-reminder', async (req: Request, res: Response) => {
     let failCount = 0;
     const errors: { email: string; error: string }[] = [];
 
-    for (const alum of targetAlumni) {
-      if (!alum.email) {
-        failCount++;
-        errors.push({
-          email: alum.username || 'unknown',
-          error: 'Alumni tidak memiliki alamat email.',
-        });
-        continue;
-      }
-      const name = alum.profile?.fullName || alum.username;
-      const result = await sendAlumniIncompleteReminder(alum.email, name);
-      if (result.success) {
-        successCount++;
-      } else {
-        failCount++;
-        errors.push({
-          email: alum.email,
-          error: result.error || 'Gagal mengirim email.',
-        });
+    // Process in chunks of 15 to speed up execution while avoiding SMTP rate limits
+    const CHUNK_SIZE = 15;
+    for (let i = 0; i < targetAlumni.length; i += CHUNK_SIZE) {
+      const chunk = targetAlumni.slice(i, i + CHUNK_SIZE);
+      
+      await Promise.all(
+        chunk.map(async (alum) => {
+          if (!alum.email) {
+            failCount++;
+            errors.push({
+              email: alum.username || 'unknown',
+              error: 'Alumni tidak memiliki alamat email.',
+            });
+            return;
+          }
+          const name = alum.profile?.fullName || alum.username;
+          const result = await sendAlumniIncompleteReminder(alum.email, name);
+          if (result.success) {
+            successCount++;
+          } else {
+            failCount++;
+            errors.push({
+              email: alum.email,
+              error: result.error || 'Gagal mengirim email.',
+            });
+          }
+        })
+      );
+
+      // Add a 1 second delay between chunks to let SMTP servers breathe
+      if (i + CHUNK_SIZE < targetAlumni.length) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
 

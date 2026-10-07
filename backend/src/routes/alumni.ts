@@ -42,7 +42,7 @@ router.get(
       const alumni = await User.find(query)
         .select('-password')
         .populate('badges')
-        .sort({ 'profile.fullName': 1 });
+        .sort({ 'profile.fullName': 1, _id: 1 });
 
       const maskedAlumni = alumni.map(a => {
         const alumniObj = (a as any).toObject();
@@ -96,7 +96,7 @@ router.get(
       })
         .select('-password -email -socialMedia.email')
         .populate('badges')
-        .sort({ 'profile.fullName': 1 });
+        .sort({ 'profile.fullName': 1, _id: 1 });
 
       res.json(mutualAlumni);
     } catch (error: any) {
@@ -148,7 +148,7 @@ router.put(
       const fullName = profile?.fullName?.trim();
       if (fullName) {
         if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-        if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+        if (!/^[a-zA-Z\s.'’,-]+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf, spasi, titik, koma, tanda hubung, dan tanda kutip' });
         if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
           return res.status(400).json({ message: 'Nama lengkap tidak valid' });
         }
@@ -215,7 +215,7 @@ router.post(
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
       if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-      if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+      if (!/^[a-zA-Z\s.'’,-]+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf, spasi, titik, koma, tanda hubung, dan tanda kutip' });
       if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
@@ -280,7 +280,7 @@ router.put(
       const fullName = profile?.fullName?.trim();
       if (!fullName) return res.status(400).json({ message: 'Nama lengkap wajib diisi' });
       if (fullName.length < 3) return res.status(400).json({ message: 'Nama lengkap terlalu pendek (minimal 3 karakter)' });
-      if (!/^[a-zA-Z\s.']+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf' });
+      if (!/^[a-zA-Z\s.'’,-]+$/.test(fullName)) return res.status(400).json({ message: 'Nama lengkap hanya boleh berisi huruf, spasi, titik, koma, tanda hubung, dan tanda kutip' });
       if (/^[._\s-]+$/.test(fullName) || ['null', 'undefined', '-', '.'].includes(fullName.toLowerCase())) {
         return res.status(400).json({ message: 'Nama lengkap tidak valid' });
       }
@@ -732,7 +732,7 @@ router.get(
 
       const news = await query
         .populate('author', 'username')
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1, _id: -1 });
 
       const readNews = await NewsRead.find({ user: req.user!._id }).select(
         'news',
@@ -885,7 +885,7 @@ router.get('/feedback/list', authenticate, authorize('alumni'), async (req: Requ
   try {
     const feedbacks = await Feedback.find()
       .select('rating kritik saran reply createdAt role')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1, _id: -1 });
     res.json(feedbacks);
   } catch (error: any) {
     res.status(500).json({ message: error.message });

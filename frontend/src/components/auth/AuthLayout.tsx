@@ -96,7 +96,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         // Coba extract email dari error
         setLoginError(err.message);
       } else {
-        setLoginError(err.message || 'Login gagal. Periksa kembali username dan password Anda.');
+        setLoginError(err.message || 'Login gagal. Periksa kembali username/email dan password Anda.');
       }
     } finally {
       setLoginLoading(false);
@@ -481,7 +481,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       <form onSubmit={handleLoginSubmit} className='flex flex-col gap-5'>
         <div className='flex flex-col gap-2'>
           <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
-            Username
+            Username / Email
           </label>
           <div className='relative'>
             <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
@@ -492,7 +492,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               value={loginUsername}
               onChange={(e) => setLoginUsername(e.target.value)}
               required
-              placeholder='Masukkan username Anda'
+              placeholder='Masukkan username atau email Anda'
               className='w-full rounded-xl border border-slate-200 bg-white py-3.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
           </div>

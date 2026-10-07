@@ -1,6 +1,10 @@
 import nodemailer from 'nodemailer';
 
+let cachedTransporter: nodemailer.Transporter | null = null;
+
 const getTransporter = () => {
+  if (cachedTransporter) return cachedTransporter;
+
   const host = process.env.EMAIL_HOST || 'smtp.gmail.com';
   const port = parseInt(process.env.EMAIL_PORT || '587');
   const secure = process.env.EMAIL_SECURE === 'true' || port === 465;
@@ -14,7 +18,7 @@ const getTransporter = () => {
     return null;
   }
 
-  return nodemailer.createTransport({
+  cachedTransporter = nodemailer.createTransport({
     host,
     port,
     secure,
@@ -22,7 +26,12 @@ const getTransporter = () => {
       user,
       pass,
     },
+    pool: true,
+    maxConnections: 5,
+    maxMessages: 100,
   });
+
+  return cachedTransporter;
 };
 
 const getFrontendUrl = (): string => {

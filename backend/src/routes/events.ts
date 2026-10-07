@@ -33,7 +33,7 @@ router.get('/', async (req: AuthenticatedRequest, res: Response) => {
         // If limit is set, we probably want the *next* upcoming events, or closest to now.
         // Existing code sorts by date: 1 (ascending).
 
-        let dbQuery = Event.find(query).populate('badgeId').sort({ date: 1 });
+        let dbQuery = Event.find(query).populate('badgeId').sort({ date: 1, _id: 1 });
 
         if (limit > 0) {
             dbQuery = dbQuery.limit(limit);
@@ -172,7 +172,7 @@ router.get('/:id/registrations', async (req: AuthenticatedRequest, res: Response
 
         const registrations = await EventRegistration.find({ eventId })
             .populate('userId', 'profile.fullName university.name university.major') // adapt fields as needed
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1, _id: -1 });
 
         res.json(registrations);
     } catch (error: any) {

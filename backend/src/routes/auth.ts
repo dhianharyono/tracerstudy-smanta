@@ -143,7 +143,7 @@ router.post(
   authLimiter,
   loginLimiter,
   [
-    body('username').notEmpty().withMessage('Username is required'),
+    body('username').notEmpty().withMessage('Username atau email diperlukan'),
     body('password').notEmpty().withMessage('Password is required'),
   ],
   async (req: Request, res: Response) => {
@@ -155,10 +155,12 @@ router.post(
 
       const { username, password } = req.body;
 
-      const user = await User.findOne({ username }).populate('badges');
+      const user = await User.findOne({ 
+        $or: [{ username: username }, { email: username }] 
+      }).populate('badges');
       if (!user) {
         return res.status(400).json({
-          message: 'Username atau password yang Anda masukkan salah',
+          message: 'Username/Email atau password yang Anda masukkan salah',
         });
       }
 
@@ -166,7 +168,7 @@ router.post(
       if (!isMatch) {
         return res
           .status(400)
-          .json({ message: 'Username atau password yang Anda masukkan salah' });
+          .json({ message: 'Username/Email atau password yang Anda masukkan salah' });
       }
 
       // Cek verifikasi email — user lama (yang tidak memiliki token verifikasi atau isEmailVerified bukan false) dianggap sudah verified

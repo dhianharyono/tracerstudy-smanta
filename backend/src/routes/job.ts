@@ -41,7 +41,7 @@ router.get(
 
       const jobs = await Job.find(query)
         .populate('postedBy', 'profile.fullName profile.graduationYear')
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1, _id: -1 });
 
       res.json(jobs);
     } catch (error: any) {
@@ -60,7 +60,7 @@ router.get(
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       const jobs = await Job.find({ postedBy: req.user!._id })
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1, _id: -1 });
       res.json(jobs);
     } catch (error: any) {
       res.status(500).json({ message: error.message });
@@ -85,7 +85,7 @@ router.get(
 
       const jobs = await Job.find(query)
         .populate('postedBy', 'username profile.fullName')
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1, _id: -1 });
       res.json(jobs);
     } catch (error: any) {
       res.status(500).json({ message: error.message });

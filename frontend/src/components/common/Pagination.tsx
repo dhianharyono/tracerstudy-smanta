@@ -16,6 +16,11 @@ const Pagination = ({
     itemsPerPage,
     onPageChange,
 }: PaginationProps) => {
+    const handlePageChange = (page: number) => {
+        onPageChange(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     if (totalItems === 0) return null;
 
     const startItem = (currentPage - 1) * itemsPerPage + 1;
@@ -30,7 +35,7 @@ const Pagination = ({
             </div>
             <div className='flex items-center gap-2'>
                 <button
-                    onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+                    onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
                     className='flex items-center justify-center gap-1 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-3 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
                 >
@@ -42,7 +47,7 @@ const Pagination = ({
                 </div>
 
                 <button
-                    onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
+                    onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                     disabled={currentPage >= totalPages}
                     className='flex items-center justify-center gap-1 rounded-lg border border-[color:var(--border-color)] bg-[color:var(--bg-card)] px-3 py-2 text-sm font-medium text-[color:var(--text-secondary)] transition-colors hover:bg-[color:var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed'
                 >
