@@ -41,7 +41,7 @@ const visualContainerVariants: Variants = {
 
 const HeroSection = ({ stats, loading }: HeroSectionProps) => {
   return (
-    <section className='relative min-h-[85vh] lg:min-h-[100vh] flex items-center pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-700 text-white'>
+    <section className='relative min-h-[85svh] lg:min-h-[100svh] flex items-center pt-[calc(env(safe-area-inset-top)+6rem)] pb-16 sm:pt-32 sm:pb-20 md:pt-40 md:pb-28 overflow-hidden px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-700 text-white'>
       {/* Dot Grid Pattern Overlay */}
       <div className='absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none z-0'></div>
 
@@ -176,7 +176,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
             >
               <Link
                 to='/register'
-                className='text-xs md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold shadow-xl shadow-blue-950/20 transition-colors group'
+                className='text-sm md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 min-h-[48px] rounded-full font-bold shadow-xl shadow-blue-950/20 transition-colors group'
               >
                 Mulai Kontribusi
               </Link>
@@ -189,7 +189,7 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
             >
               <a
                 href='#stats'
-                className='text-xs md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-full font-bold hover:bg-white/10 transition-colors'
+                className='text-sm md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 min-h-[48px] rounded-full font-bold hover:bg-white/10 transition-colors'
               >
                 Lihat Statistik
               </a>
@@ -245,24 +245,25 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
               className='absolute top-[8%] left-[-2%] z-20 p-3 rounded-2xl bg-white/90 backdrop-blur-md border border-white/20 text-slate-800 shadow-xl flex items-center gap-2.5 cursor-pointer'
             >
               <div className='flex -space-x-2 md:-space-x-2.5'>
-                {[1, 2, 3].map((i) => (
+                {[
+                  { bg: 'bg-blue-500', ch: 'A' },
+                  { bg: 'bg-indigo-500', ch: 'S' },
+                  { bg: 'bg-emerald-500', ch: 'M' },
+                ].map((a, i) => (
                   <div
                     key={i}
-                    className='w-6 h-6 rounded-full border border-white bg-slate-200 overflow-hidden shrink-0 shadow-sm'
+                    aria-hidden='true'
+                    className={`w-6 h-6 rounded-full border border-white ${a.bg} flex items-center justify-center text-[9px] font-bold text-white shrink-0 shadow-sm`}
                   >
-                    <img
-                      src={`https://i.pravatar.cc/100?img=${i + 20}`}
-                      alt='Alumni Avatar'
-                      className='w-full h-full object-cover'
-                    />
+                    {a.ch}
                   </div>
                 ))}
               </div>
               <div className='text-left'>
-                <p className='text-[8px] font-extrabold uppercase tracking-wider text-blue-600'>
+                <p className='text-[10px] font-extrabold uppercase tracking-wider text-blue-600'>
                   Total Alumni
                 </p>
-                <p className='text-[10px] font-bold text-slate-800'>
+                <p className='text-xs font-bold text-slate-800'>
                   +{loading ? '...' : stats?.totalAlumni || 0} Alumni
                 </p>
               </div>
@@ -300,10 +301,10 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
                 </svg>
               </div>
               <div className='text-left'>
-                <p className='text-[8px] font-extrabold uppercase tracking-wider text-green-600'>
+                <p className='text-[10px] font-extrabold uppercase tracking-wider text-green-600'>
                   Status Data
                 </p>
-                <p className='text-[10px] font-bold text-slate-800'>
+                <p className='text-xs font-bold text-slate-800'>
                   100% Terverifikasi
                 </p>
               </div>
@@ -323,9 +324,9 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
                 default: { duration: 0.5, delay: 0.9 },
               }}
               whileHover={{ scale: 1.12, rotate: 2 }}
-              className='absolute top-[16%] right-[0%] z-20 py-1.5 px-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-lg flex items-center gap-1 cursor-pointer'
+              className='absolute top-[16%] right-[0%] z-20 py-1.5 px-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-650 text-white shadow-lg flex items-center gap-1 cursor-pointer max-[359px]:hidden'
             >
-              <span className='text-[9px] font-bold tracking-widest uppercase'>
+              <span className='text-[10px] font-bold tracking-widest uppercase'>
                 SMANTA Juara!
               </span>
             </motion.div>

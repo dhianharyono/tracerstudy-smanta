@@ -28,7 +28,7 @@ const MissionSection = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ duration: 0.8, ease: 'easeOut' }}
-      className='py-20 px-4 sm:px-6 relative overflow-hidden bg-slate-50'
+      className='py-14 sm:py-20 px-4 sm:px-6 relative overflow-hidden bg-slate-50'
     >
       <div className='max-w-5xl mx-auto'>
         <motion.div
@@ -36,7 +36,7 @@ const MissionSection = () => {
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true }}
-          className='bg-white p-8 md:p-16 rounded-[2.5rem] border border-slate-200/80 shadow-xl relative overflow-hidden'
+          className='bg-white p-6 sm:p-8 md:p-16 rounded-3xl md:rounded-[2.5rem] border border-slate-200/80 shadow-xl relative overflow-hidden'
         >
           {/* Floating subtle background element */}
           <motion.div

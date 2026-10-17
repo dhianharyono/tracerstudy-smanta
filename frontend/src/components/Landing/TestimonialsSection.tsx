@@ -14,7 +14,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
-      className='py-20 px-4 sm:px-6 bg-white border-t border-slate-200/50'
+      className='py-14 sm:py-20 px-4 sm:px-6 bg-white border-t border-slate-200/50'
     >
       <div className='max-w-7xl mx-auto'>
         <motion.div
@@ -22,7 +22,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className='text-center mb-16 space-y-4'
+          className='text-center mb-10 sm:mb-16 space-y-4'
         >
           <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Apa Kata Alumni & Siswa?
@@ -34,9 +34,9 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
         </motion.div>
 
         {loading ? (
-          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden w-full'>
+          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x scroll-px-4 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden w-full'>
             {[1, 2, 3].map((i) => (
-              <div key={i} className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-slate-50/50 p-6 md:p-8 rounded-[2.5rem] border border-slate-200 shadow-md animate-pulse flex flex-col h-[250px] md:h-[300px]'>
+              <div key={i} className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-start bg-slate-50/50 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-slate-200 shadow-md animate-pulse flex flex-col h-[250px] md:h-[300px]'>
                 <div className='w-8 h-8 md:w-10 md:h-10 bg-slate-100 rounded-full mb-4 md:mb-6'></div>
                 <div className='space-y-3 mb-6 md:mb-8 flex-grow mt-2'>
                   <div className='h-3 md:h-4 bg-slate-100 rounded w-full'></div>
@@ -54,7 +54,8 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
             ))}
           </div>
         ) : (
-          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
+          <>
+          <div className='flex overflow-x-auto pt-4 pb-8 px-2 -mt-4 gap-6 md:gap-8 snap-x scroll-px-4 no-scrollbar [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden'>
             {testimonials.length > 0 ? (
               testimonials.map((item, idx) => (
                 <motion.div
@@ -64,7 +65,7 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.08, duration: 0.6, ease: [0.215, 0.61, 0.355, 1.0] }}
                   whileHover={{ y: -4, scale: 1.015 }}
-                  className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-center bg-slate-50/40 p-6 md:p-8 rounded-[2.5rem] border border-slate-200/80 shadow-md relative overflow-hidden flex flex-col hover:bg-white hover:shadow-xl transition-all duration-300 cursor-default group'
+                  className='min-w-[280px] sm:min-w-[320px] md:min-w-[400px] snap-start bg-slate-50/40 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-slate-200/80 shadow-md relative overflow-hidden flex flex-col hover:bg-white hover:shadow-xl transition-all duration-300 cursor-default group'
                 >
                   <motion.div
                     whileHover={{ scale: 1.15, rotate: -4 }}
@@ -98,13 +99,19 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
                 </motion.div>
               ))
             ) : (
-              <div className='w-full text-center py-16 md:py-20 bg-slate-50 rounded-[2.5rem] border-2 border-dashed border-slate-200/70'>
+              <div className='w-full text-center py-16 md:py-20 bg-slate-50 rounded-3xl md:rounded-[2.5rem] border-2 border-dashed border-slate-200/70'>
                 <p className='text-xs md:text-sm text-slate-400 font-semibold italic'>
                   Belum ada testimoni terbaru.
                 </p>
               </div>
             )}
           </div>
+            {testimonials.length > 1 && (
+              <p className='mt-1 text-center text-[11px] font-semibold text-slate-400 xl:hidden'>
+                Geser ke samping untuk melihat testimoni lainnya →
+              </p>
+            )}
+          </>
         )}
       </div>
     </motion.section>

@@ -26,7 +26,7 @@ const StatCard: React.FC<StatCardProps> = ({
       viewport={{ once: true }}
       transition={{ delay, duration: 0.6, ease: [0.215, 0.61, 0.355, 1.0] }}
       whileHover={{ y: -8, scale: 1.03 }}
-      className='bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 cursor-default group'
+      className='bg-white p-6 md:p-8 rounded-3xl md:rounded-[2rem] border border-slate-200/80 shadow-md hover:shadow-xl transition-all duration-300 cursor-default group'
     >
       <motion.div
         whileHover={{ scale: 1.15, rotate: 6 }}
@@ -38,7 +38,7 @@ const StatCard: React.FC<StatCardProps> = ({
       <h4 className='text-3xl md:text-5xl font-bold text-slate-900 mb-1 md:mb-2 tracking-tight'>
         {value || 0}
       </h4>
-      <p className='font-bold text-slate-400 uppercase text-[9px] md:text-xs tracking-widest mt-1.5'>
+      <p className='font-bold text-slate-400 uppercase text-[10px] sm:text-xs tracking-widest mt-1.5'>
         {label}
       </p>
     </motion.div>

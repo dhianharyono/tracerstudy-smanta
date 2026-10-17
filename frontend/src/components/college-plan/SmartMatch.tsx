@@ -192,11 +192,11 @@ const SmartMatch: React.FC = () => {
       <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
         {/* Card 1: Mentors & Alumni Network */}
         <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
-          <div className='flex items-center justify-between'>
+          <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
             <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
               Jaringan Alumni & Mentor
             </h3>
-            <span className='text-xs text-indigo-400 border px-2.5 py-1 rounded-full font-bold'>
+            <span className='text-xs text-indigo-400 border px-2.5 py-1 rounded-full font-bold whitespace-nowrap self-start sm:self-auto'>
               {data.exactMatchAlumniCount} Alumni Sejurusan
             </span>
           </div>
@@ -220,7 +220,7 @@ const SmartMatch: React.FC = () => {
             }
 
             return (
-              <div className='space-y-3 max-h-[360px] overflow-y-auto pr-1 custom-scrollbar'>
+              <div className='space-y-3 lg:max-h-[360px] lg:overflow-y-auto lg:pr-1 custom-scrollbar'>
                 {displayAlumni.map((m) => (
                   <div
                     key={m._id}
@@ -381,17 +381,17 @@ const SmartMatch: React.FC = () => {
                 key={idx}
                 className='p-5 bg-[var(--bg-secondary)]/50 rounded-2xl border border-[var(--border-color)] hover:border-blue-500/40 transition-all space-y-3'
               >
-                <div className='flex items-center justify-between pb-2 border-b border-[var(--border-color)]/60'>
-                  <h4 className='text-sm font-bold text-[var(--text-primary)] line-clamp-1'>
+                <div className='flex flex-col gap-2 pb-2 border-b border-[var(--border-color)]/60 sm:flex-row sm:items-center sm:justify-between'>
+                  <h4 className='text-sm font-bold text-[var(--text-primary)] line-clamp-2 sm:line-clamp-1'>
                     {alt.name}
                   </h4>
-                  <div className='flex items-center gap-2 text-xs'>
-                    <span className='px-2.5 py-0.5 rounded-full text-indigo-400 border font-bold'>
+                  <div className='flex flex-wrap items-center gap-2 text-xs'>
+                    <span className='px-2.5 py-0.5 rounded-full text-indigo-400 border font-bold whitespace-nowrap'>
                       {alt.isSameMajor !== false
                         ? `${alt.alumniCount} Alumni Sejurusan`
                         : `${alt.alumniCount} Alumni Kampus Ini`}
                     </span>
-                    <span className='px-2.5 py-0.5 rounded-full text-[#703f1d] border font-bold'>
+                    <span className='px-2.5 py-0.5 rounded-full text-[#703f1d] border font-bold whitespace-nowrap'>
                       {alt.mentorCount} Mentor
                     </span>
                   </div>
@@ -405,7 +405,7 @@ const SmartMatch: React.FC = () => {
                         ? `Daftar Alumni Sejurusan (${data.targetMajor}):`
                         : `Daftar Alumni di ${alt.name}:`}
                     </div>
-                    <div className='space-y-1.5 max-h-[240px] overflow-y-auto pr-1 custom-scrollbar'>
+                    <div className='space-y-1.5 lg:max-h-[240px] lg:overflow-y-auto lg:pr-1 custom-scrollbar'>
                       {alt.alumniList.map((a) => (
                         <div
                           key={a._id}

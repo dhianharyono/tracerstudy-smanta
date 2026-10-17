@@ -159,7 +159,10 @@ const MajorDetailModal = ({
                           key={idx}
                           className='flex items-center justify-between p-3 bg-slate-50/50 border border-slate-100 rounded-lg text-sm'
                         >
-                          <span className='truncate flex-1 pr-4' title={univ}>
+                          <span
+                            className='line-clamp-2 sm:line-clamp-1 flex-1 pr-4'
+                            title={univ}
+                          >
                             {univ}
                           </span>
                           <span className='font-semibold text-[color:var(--text-primary)]'>
@@ -384,27 +387,23 @@ const StudentMajors = () => {
 
       {topMajor && (
         <Card className='bg-gradient-to-r from-blue-600 to-blue-600 border-l-4 border-l-blue-500 mb-8'>
-          <div className='flex items-center gap-6'>
-            <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
-              <FaTrophy size={28} />
+          <div className='flex items-start gap-3 sm:items-center sm:gap-5'>
+            <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white ring-1 ring-white/25 shadow-sm'>
+              <FaTrophy className='text-xl' />
             </div>
             <div className='flex-1 min-w-0'>
-              <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-white sm:hidden' />
-                <p className='text-white text-xs font-bold uppercase tracking-widest'>
-                  Jurusan Terfavorit Alumni
-                </p>
-              </div>
+              <p className='text-white/80 text-[10px] font-bold uppercase tracking-wider'>
+                Jurusan Terfavorit Alumni
+              </p>
               <h3
-                className='text-xl md:text-2xl font-bold text-white truncate'
+                className='text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug'
                 title={topMajor._id}
               >
                 {topMajor._id}
               </h3>
-              <div className='flex items-center gap-3 mt-2'>
+              <div className='flex flex-wrap items-center gap-2 mt-2'>
                 <span className='text-sm font-bold text-white'>
-                  <span className='text-white'>{topMajor.count}</span> Alumni
-                  Bergabung
+                  {topMajor.count} Alumni Bergabung
                 </span>
               </div>
             </div>

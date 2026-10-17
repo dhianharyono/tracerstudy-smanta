@@ -32,8 +32,12 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
     (a, b) => parseInt(a._id) - parseInt(b._id),
   );
 
+  // Di layar kecil, beri lebar minimum per batang agar grafik tetap terbaca
+  // (bisa digeser horizontal) alih-alih diperas sampai tidak terbaca.
+  const chartMinWidth = Math.max(320, sortedData.length * 34 + 56);
+
   return (
-    <div className='card h-full flex flex-col h-[850px]'>
+    <div className='card h-full flex flex-col'>
       <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
         <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
           <div className='p-2 bg-indigo-500/10 rounded-lg'>
@@ -55,13 +59,13 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
           </div>
         </div>
       ) : (
-        <div className='chart-container w-full flex-grow h-[400px]'>
-          <div className='w-full h-full'>
+        <div className='chart-container w-full flex-grow h-[400px] overflow-x-auto overflow-y-hidden custom-scrollbar-thin pb-2'>
+          <div className='h-full' style={{ minWidth: chartMinWidth }}>
             <ResponsiveContainer width='100%' height='100%'>
               <BarChart
                 data={sortedData}
-                margin={{ top: 20, right: 30, left: 10, bottom: 20 }}
-                barSize={45}
+                margin={{ top: 20, right: 20, left: 10, bottom: 20 }}
+                barSize={22}
               >
                 <CartesianGrid
                   strokeDasharray='3 3'
@@ -129,6 +133,12 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
             </ResponsiveContainer>
           </div>
         </div>
+      )}
+
+      {hasData && sortedData.length > 8 && (
+        <p className='mt-1 text-center text-[11px] font-semibold text-slate-400 lg:hidden'>
+          Geser grafik ke samping untuk melihat semua tahun →
+        </p>
       )}
 
       {hasData && (

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion, Variants } from 'framer-motion';
 import { FaGraduationCap, FaUsers, FaSchool } from 'react-icons/fa';
 
@@ -23,15 +24,22 @@ const cardVariants: Variants = {
 };
 
 const FeaturesSection = () => {
+  const [activeTab, setActiveTab] = useState(0);
+  const tabs = [
+    { label: 'Siswa', icon: FaGraduationCap, active: 'text-blue-600' },
+    { label: 'Alumni', icon: FaUsers, active: 'text-indigo-600' },
+    { label: 'Sekolah', icon: FaSchool, active: 'text-emerald-600' },
+  ];
+
   return (
-    <section className='py-20 px-4 sm:px-6 bg-white'>
+    <section className='py-14 sm:py-20 px-4 sm:px-6 bg-white'>
       <div className='max-w-7xl mx-auto'>
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className='text-center mb-20 space-y-4'
+          className='text-center mb-10 sm:mb-20 space-y-4'
         >
           <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Fitur Siswa, Alumni, dan Sekolah
@@ -42,19 +50,39 @@ const FeaturesSection = () => {
           </p>
         </motion.div>
 
+        {/* Mobile & tablet tab switcher (di desktop ketiga kartu tampil berdampingan) */}
+        <div className='lg:hidden flex bg-slate-100 rounded-full p-1 mb-8 max-w-md mx-auto'>
+          {tabs.map((t, i) => (
+            <button
+              key={t.label}
+              type='button'
+              onClick={() => setActiveTab(i)}
+              aria-pressed={activeTab === i}
+              className={`flex-1 flex items-center justify-center gap-1.5 px-3 min-h-[44px] rounded-full text-xs font-bold transition-all ${
+                activeTab === i
+                  ? `bg-white shadow-sm ${t.active}`
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              <t.icon className='w-3.5 h-3.5' />
+              {t.label}
+            </button>
+          ))}
+        </div>
+
         <motion.div
           variants={containerVariants}
           initial='hidden'
           whileInView='visible'
           viewport={{ once: true, margin: '-50px' }}
-          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10'
+          className='grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-10'
         >
           {/* Student Features */}
           <motion.div
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className='bg-blue-50/30 p-6 md:p-8 rounded-[2.5rem] border border-blue-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300'
+            className={`bg-blue-50/30 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-blue-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300 ${activeTab === 0 ? 'block' : 'hidden'} lg:block`}
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>
@@ -119,7 +147,7 @@ const FeaturesSection = () => {
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className='bg-indigo-50/30 p-6 md:p-8 rounded-[2.5rem] border border-indigo-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300'
+            className={`bg-indigo-50/30 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-indigo-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300 ${activeTab === 1 ? 'block' : 'hidden'} lg:block`}
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>
@@ -184,7 +212,7 @@ const FeaturesSection = () => {
             variants={cardVariants}
             whileHover={{ y: -8, scale: 1.02 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            className='bg-emerald-50/30 p-6 md:p-8 rounded-[2.5rem] border border-emerald-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300 md:col-span-2 lg:col-span-1'
+            className={`bg-emerald-50/30 p-6 md:p-8 rounded-3xl md:rounded-[2.5rem] border border-emerald-100/70 shadow-md relative overflow-hidden group hover:shadow-2xl hover:bg-white transition-all duration-300 ${activeTab === 2 ? 'block' : 'hidden'} lg:block`}
           >
             <div className='absolute top-0 right-0 w-32 h-32 bg-emerald-500/5 rounded-bl-full group-hover:scale-110 transition-transform'></div>
             <div className='relative z-10'>

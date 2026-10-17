@@ -18,14 +18,14 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
   return (
     <section
       id='stats'
-      className='py-20 px-4 sm:px-6 relative bg-slate-50 border-t border-slate-200/50 scroll-mt-24'
+      className='py-14 sm:py-20 px-4 sm:px-6 relative bg-slate-50 border-t border-slate-200/50 scroll-mt-24'
     >
       <div className='max-w-7xl mx-auto'>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className='text-center mb-16 space-y-4'
+          className='text-center mb-10 sm:mb-16 space-y-4'
         >
           <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Statistik Tracer Study
@@ -123,7 +123,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
           </div>
         ) : (
           <>
-            <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-16'>
+            <div className='grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8 mb-10 sm:mb-16'>
               <StatCard
                 icon={FaUsers}
                 label='Total Siswa'
@@ -158,7 +158,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               />
             </div>
 
-            <div className='mb-16'>
+            <div className='mb-10 sm:mb-16'>
               <div className='mb-8 text-center md:text-left'>
                 <h4 className='text-2xl md:text-3xl font-bold text-slate-900 tracking-tight'>
                   Distribusi Perguruan Tinggi
@@ -228,7 +228,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               className='grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8'
             >
               {/* Top Colleges panel */}
-              <div className='bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
+              <div className='bg-white p-6 md:p-8 rounded-3xl md:rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
                 <div className='flex items-center justify-between mb-8'>
                   <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Top 10 Perguruan Tinggi
@@ -244,10 +244,13 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
                   {stats?.topUniversities?.map((uni: any, idx: number) => (
                     <div key={idx} className='group'>
                       <div className='flex justify-between items-center mb-1.5'>
-                        <span className='text-xs md:text-sm font-extrabold text-slate-800 group-hover:text-blue-600 transition-colors truncate max-w-[70%]'>
+                        <span
+                          title={uni._id}
+                          className='text-xs md:text-sm font-extrabold text-slate-800 group-hover:text-blue-600 transition-colors truncate max-w-[74%] sm:max-w-[70%]'
+                        >
                           {uni._id}
                         </span>
-                        <span className='text-[10px] md:text-xs font-bold text-slate-400 shrink-0'>
+                        <span className='text-[11px] md:text-xs font-bold text-slate-400 shrink-0'>
                           {uni.count} Alumni
                         </span>
                       </div>
@@ -275,7 +278,7 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
               </div>
 
               {/* Popular Majors panel */}
-              <div className='bg-white p-6 md:p-8 rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
+              <div className='bg-white p-6 md:p-8 rounded-3xl md:rounded-[2rem] border border-slate-200/80 shadow-md shadow-slate-100/50'>
                 <div className='flex items-center justify-between mb-8'>
                   <h5 className='text-lg md:text-xl font-bold text-slate-900 tracking-tight'>
                     Jurusan Populer

@@ -356,24 +356,21 @@ const StudentUniversities = () => {
 
       {topUniversity && (
         <Card className='bg-gradient-to-r from-blue-600 to-blue-600 border-l-4 border-l-blue-500 mb-8'>
-          <div className='flex items-center gap-6'>
-            <div className='mb-6 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-600 p-6 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6'>
-              <FaTrophy size={28} />
+          <div className='flex items-start gap-3 sm:items-center sm:gap-5'>
+            <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white ring-1 ring-white/25 shadow-sm'>
+              <FaTrophy className='text-xl' />
             </div>
             <div className='flex-1 min-w-0'>
-              <div className='flex items-center gap-2 mb-1'>
-                <FaTrophy className='text-white-500 sm:hidden' />
-                <p className='text-white text-xs font-bold uppercase tracking-widest'>
-                  Kampus Terfavorit Alumni
-                </p>
-              </div>
+              <p className='text-white/80 text-[10px] font-bold uppercase tracking-wider'>
+                Kampus Terfavorit Alumni
+              </p>
               <h3
-                className='text-xl md:text-2xl font-bold text-white truncate'
+                className='text-lg sm:text-xl md:text-2xl font-bold text-white leading-snug'
                 title={topUniversity._id.name}
               >
                 {topUniversity._id.name}
               </h3>
-              <div className='flex items-center gap-3 mt-2'>
+              <div className='flex flex-wrap items-center gap-2 mt-2'>
                 <span
                   className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase border
                            ${topUniversity._id.type === 'negeri'
@@ -386,8 +383,7 @@ const StudentUniversities = () => {
                   {topUniversity._id.type || 'Swasta'}
                 </span>
                 <span className='text-sm font-bold text-white'>
-                  <span className='text-white'>{topUniversity.count}</span>{' '}
-                  Alumni Bergabung
+                  {topUniversity.count} Alumni Bergabung
                 </span>
               </div>
             </div>

@@ -52,8 +52,8 @@ const LandingPage = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-          ? 'bg-white/80 backdrop-blur-md shadow-md border-b border-slate-200/50 py-2.5'
-          : 'bg-transparent py-4'
+          ? 'bg-white/80 backdrop-blur-md shadow-md border-b border-slate-200/50 pb-2.5 pt-[calc(env(safe-area-inset-top)+0.625rem)]'
+          : 'bg-transparent pb-4 pt-[calc(env(safe-area-inset-top)+1rem)]'
           }`}
       >
         <div className='w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center transition-all duration-300'>
@@ -71,7 +71,7 @@ const LandingPage = () => {
                 TRACER STUDY
               </div>
               <p
-                className={`text-[7px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
+                className={`text-[9px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
                   }`}
               >
                 SMAN 1 Tawangsari
@@ -89,7 +89,7 @@ const LandingPage = () => {
                         ? '/student'
                         : '/alumni'
                   }
-                  className={`flex items-center gap-1.5 text-[10px] md:text-sm font-bold px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                  className={`flex items-center gap-1.5 text-xs md:text-sm font-bold px-4 md:px-6 min-h-[44px] rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
                     : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
                     }`}
@@ -98,7 +98,7 @@ const LandingPage = () => {
                 </Link>
                 <button
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className={`text-[10px] md:text-sm font-semibold transition-colors px-1 md:px-4 py-2 ${isScrolled
+                  className={`text-xs md:text-sm font-semibold transition-colors px-2 md:px-4 min-h-[44px] inline-flex items-center ${isScrolled
                     ? 'text-red-500 hover:text-red-650'
                     : 'text-red-200 hover:text-red-100'
                     }`}
@@ -110,7 +110,7 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/login'
-                  className={`flex items-center gap-1 text-[10px] md:text-sm font-semibold transition-colors px-2 md:px-4 py-2 ${isScrolled
+                  className={`flex items-center gap-1 text-xs md:text-sm font-semibold transition-colors px-3 md:px-4 min-h-[44px] ${isScrolled
                     ? 'text-slate-650 hover:text-blue-600'
                     : 'text-white/90 hover:text-slate-300'
                     }`}
@@ -119,7 +119,7 @@ const LandingPage = () => {
                 </Link>
                 <Link
                   to='/register'
-                  className={`flex items-center gap-1 text-[10px] md:text-sm font-extrabold px-4 md:px-6 py-2 md:py-2.5 rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                  className={`flex items-center gap-1 text-xs md:text-sm font-extrabold px-5 md:px-6 min-h-[44px] rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
                     : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
                     }`}
@@ -149,7 +149,7 @@ const LandingPage = () => {
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className='py-24 px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden'
+        className='py-16 sm:py-24 px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 relative overflow-hidden'
       >
         {/* Modern decorative rings */}
         <motion.div
@@ -180,8 +180,10 @@ const LandingPage = () => {
             transition={{ delay: 0.1 }}
             className='text-sm md:text-xl text-blue-100/90 max-w-2xl mx-auto px-4 md:px-0 font-medium leading-relaxed'
           >
-            Mari berkontribusi untuk SMANTA, almamater kita tercinta. <br />
-            Daftar dan berikan kontribusi Anda sekarang juga, <br />
+            Mari berkontribusi untuk SMANTA, almamater kita tercinta.{' '}
+            <br className='hidden sm:block' />
+            Daftar dan berikan kontribusi Anda sekarang juga,{' '}
+            <br className='hidden sm:block' />
             hanya butuh waktu 2 menit!
           </motion.p>
           <motion.div
@@ -219,7 +221,7 @@ const LandingPage = () => {
                 >
                   <Link
                     to='/register'
-                    className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
+                    className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
                   >
                     Kontribusi Sekarang
                   </Link>
@@ -232,7 +234,7 @@ const LandingPage = () => {
                 >
                   <Link
                     to='/login'
-                    className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-xs md:text-base hover:bg-blue-800/60 transition-colors inline-block'
+                    className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base hover:bg-blue-800/60 transition-colors inline-block'
                   >
                     Masuk Kembali
                   </Link>
@@ -244,7 +246,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* Premium Footer */}
-      <footer className='bg-white border-t border-slate-200/80 pt-16 pb-12 px-4 sm:px-6 relative z-10'>
+      <footer className='bg-white border-t border-slate-200/80 pt-12 sm:pt-16 pb-[calc(env(safe-area-inset-bottom)+2.5rem)] sm:pb-12 px-4 sm:px-6 relative z-10'>
         <div className='max-w-7xl mx-auto'>
           <div className='grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-100'>
             {/* Branding Column */}
@@ -269,8 +271,8 @@ const LandingPage = () => {
               </p>
             </div>
 
-            {/* Quick Links Column */}
-            <div className='md:col-span-3 text-center md:text-left' />
+            {/* Quick Links Column (placeholder, hanya untuk ruang di desktop) */}
+            <div className='hidden md:block md:col-span-3' />
 
             {/* Developed By Column */}
             <div className='md:col-span-3 text-center md:text-left space-y-3'>
@@ -302,12 +304,18 @@ const LandingPage = () => {
               reserved.
             </div>
             <div className='flex gap-6'>
-              <span className='hover:text-slate-600 transition-colors cursor-pointer'>
-                Syarat & Ketentuan
-              </span>
-              <span className='hover:text-slate-600 transition-colors cursor-pointer'>
+              <button
+                type='button'
+                className='hover:text-slate-600 focus:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded transition-colors cursor-pointer py-1'
+              >
+                Syarat &amp; Ketentuan
+              </button>
+              <button
+                type='button'
+                className='hover:text-slate-600 focus:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded transition-colors cursor-pointer py-1'
+              >
                 Kebijakan Privasi
-              </span>
+              </button>
             </div>
           </div>
         </div>
@@ -339,7 +347,7 @@ const LandingPage = () => {
             whileHover={{ scale: 1.1, y: -2 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className='fixed bottom-6 right-6 z-50 p-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all border border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/30 flex items-center justify-center'
+            className='fixed bottom-[calc(env(safe-area-inset-bottom)+1rem)] right-4 sm:bottom-6 sm:right-6 z-50 p-3 sm:p-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/20 hover:bg-blue-700 hover:shadow-xl hover:shadow-blue-500/30 transition-all border border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-500/30 flex items-center justify-center'
             aria-label='Scroll to top'
           >
             <FaArrowUp className='text-lg' />

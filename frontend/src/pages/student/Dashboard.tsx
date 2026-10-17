@@ -163,7 +163,7 @@ const StudentDashboard = () => {
         </div>
         <Link
           to="/"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:border-blue-400 text-slate-700 hover:text-[#3b6ebb] font-semibold text-xs rounded-xl shadow-xs transition-all shrink-0"
+          className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[40px] bg-white border border-slate-200 hover:border-blue-400 text-slate-700 hover:text-[#3b6ebb] font-semibold text-xs rounded-xl shadow-xs transition-all shrink-0"
         >
           <FaHome className="text-[#3b6ebb]" /> Halaman Utama
         </Link>

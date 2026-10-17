@@ -48,7 +48,7 @@ const StatCard = ({
   bgClass,
   description,
 }: StatCardProps) => (
-  <div className='group relative overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
+  <div className='group relative h-full overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
     {/* Soft decorative background shape */}
     <div
       className={`absolute -right-6 -top-6 h-24 w-24 rounded-full ${bgClass} opacity-40 transition-transform group-hover:scale-110`}
@@ -75,7 +75,6 @@ const StatCard = ({
 
 const Statistic = ({ stats }: { stats: StatsObject }) => {
   const { user } = useAuth();
-  const isStudent = user?.role === 'student';
   const isAdmin = user?.role === 'admin';
 
   const totalAlumni = Number(stats?.totalAlumni || 0);
@@ -138,7 +137,16 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
       <div className='space-y-6 mb-8'>
         <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
           {mainStats.map((item, index) => (
-            <StatCard key={index} {...item} />
+            <div
+              key={index}
+              className={
+                index === mainStats.length - 1 && mainStats.length % 2 === 1
+                  ? 'col-span-2 md:col-span-1'
+                  : ''
+              }
+            >
+              <StatCard {...item} />
+            </div>
           ))}
         </div>
 
@@ -176,13 +184,18 @@ const Statistic = ({ stats }: { stats: StatsObject }) => {
   ];
 
   return (
-    <div
-      className={`grid grid-cols-2 ${
-        isStudent ? 'lg:grid-cols-3' : 'lg:grid-cols-3'
-      } gap-4 mb-8`}
-    >
+    <div className='grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8'>
       {statItems.map((item, index) => (
-        <StatCard key={index} {...item} />
+        <div
+          key={index}
+          className={
+            index === statItems.length - 1 && statItems.length % 2 === 1
+              ? 'col-span-2 lg:col-span-1'
+              : ''
+          }
+        >
+          <StatCard {...item} />
+        </div>
       ))}
     </div>
   );
