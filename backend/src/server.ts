@@ -11,6 +11,8 @@ import authRoutes from './routes/auth';
 import alumniRoutes from './routes/alumni';
 import adminRoutes from './routes/admin';
 import studentRoutes from './routes/student';
+import aiMatchRoutes from './routes/aiMatch';
+import smartMatchChatRoutes from './routes/smartMatchChat';
 import userRoutes from './routes/user';
 import eventRoutes from './routes/events';
 import analyticsRoutes from './routes/analytics';
@@ -186,6 +188,8 @@ app.use(async (req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/alumni', alumniRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/student/college-plan/ai-match', aiMatchRoutes);
+app.use('/api/smart-match/chat', smartMatchChatRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);

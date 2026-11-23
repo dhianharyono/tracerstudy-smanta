@@ -32,6 +32,7 @@ const AlumniEventHub = lazy(() => import('./pages/alumni/EventHub'));
 const ManageMyJobs = lazy(() => import('./pages/alumni/ManageMyJobs'));
 const PostOpportunity = lazy(() => import('./pages/alumni/PostOpportunity'));
 const Opportunities = lazy(() => import('./pages/shared/Opportunities'));
+const AlumniAiAssistant = lazy(() => import('./pages/alumni/AiAssistant'));
 
 // Admin Pages
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
@@ -57,6 +58,9 @@ const AdminJobManagement = lazy(
   () => import('./pages/admin/AdminOpportunityManagement'),
 );
 const AdminUniversities = lazy(() => import('./pages/admin/AdminUniversities'));
+const AdminAiAssistant = lazy(() => import('./pages/admin/AiAssistant'));
+const AdminAiLogs = lazy(() => import('./pages/admin/AiLogs'));
+const AdminAiSettings = lazy(() => import('./pages/admin/AiSettings'));
 
 const SchoolDashboard = lazy(() => import('./pages/school/Dashboard'));
 const SchoolAlumniList = lazy(() => import('./pages/school/AlumniList'));
@@ -188,6 +192,7 @@ function App() {
               <Route path='universities' element={<StudentUniversities />} />
               <Route path='majors' element={<StudentMajors />} />
               <Route path='alumni' element={<StudentAlumni />} />
+              <Route path='ai-assistant' element={<AlumniAiAssistant />} />
             </Route>
 
             {/* Admin Routes */}
@@ -221,6 +226,9 @@ function App() {
                 element={<AdminVerificationLogs />}
               />
               <Route path='jobs' element={<AdminJobManagement />} />
+              <Route path='ai-assistant' element={<AdminAiAssistant />} />
+              <Route path='ai-logs' element={<AdminAiLogs />} />
+              <Route path='ai-settings' element={<AdminAiSettings />} />
               <Route path='profile' element={<Profile />} />
             </Route>
 

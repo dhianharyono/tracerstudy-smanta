@@ -35,6 +35,8 @@ import {
   FaBookOpen,
   FaUserFriends,
   FaCalendarAlt,
+  FaRobot,
+  FaCogs,
 } from 'react-icons/fa';
 import './Layout.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -42,6 +44,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const menuMap: Record<string, string> = {
   // Alumni
   '/alumni': 'Dashboard Alumni',
+  '/alumni/ai-assistant': 'SMANTA AI',
   '/alumni/questionnaire': 'Kuesioner',
   '/alumni/events': 'Event Alumni',
   '/alumni/mutual-alumni': 'Rekan Seangkatan',
@@ -55,6 +58,9 @@ const menuMap: Record<string, string> = {
 
   // Admin
   '/admin': 'Dashboard Admin',
+  '/admin/ai-assistant': 'SMANTA AI',
+  '/admin/ai-logs': 'Log Interaksi AI',
+  '/admin/ai-settings': 'Pengaturan AI',
   '/admin/alumni': 'Data Alumni',
   '/admin/students': 'Data Student',
   '/admin/admins': 'Data Admin',
@@ -73,7 +79,7 @@ const menuMap: Record<string, string> = {
 
   // Student
   '/student': 'Dashboard Siswa',
-  '/student/college-plan': 'Rencana Studi & Match',
+  '/student/college-plan': 'SMANTA AI',
   '/student/universities': 'Perguruan Tinggi',
   '/student/majors': 'Jurusan',
   '/student/alumni': 'Alumni',
@@ -110,6 +116,9 @@ const getMenuCategory = (pathname: string, role?: string): string => {
     if (pathname === '/alumni' || pathname === '/alumni/questionnaire') {
       return 'Navigasi Utama';
     }
+    if (pathname === '/alumni/ai-assistant') {
+      return 'Asisten AI';
+    }
     if (
       pathname === '/alumni/alumni' ||
       pathname === '/alumni/universities' ||
@@ -136,6 +145,9 @@ const getMenuCategory = (pathname: string, role?: string): string => {
   if (role === 'admin' || pathname.startsWith('/admin')) {
     if (pathname === '/admin' || pathname === '/admin/stats') {
       return 'Navigasi & Analitik';
+    }
+    if (pathname === '/admin/ai-assistant' || pathname === '/admin/ai-logs') {
+      return 'Asisten AI';
     }
     if (
       pathname === '/admin/alumni' ||
@@ -176,7 +188,7 @@ const getMenuCategory = (pathname: string, role?: string): string => {
       return 'Navigasi Utama';
     }
     if (pathname === '/student/college-plan') {
-      return 'Smart Tools';
+      return 'Asisten AI';
     }
     if (
       pathname === '/student/alumni' ||
@@ -396,19 +408,17 @@ const Layout = () => {
                               [item.name]: !isOpen,
                             }))
                           }
-                          className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer ${
-                            isChildActive
-                              ? 'bg-blue-50/80 text-blue-900 border border-blue-200/80 font-bold'
-                              : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
-                          }`}
+                          className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer ${isChildActive
+                            ? 'bg-blue-50/80 text-blue-900 border border-blue-200/80 font-bold'
+                            : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
+                            }`}
                         >
                           <div className='flex items-center gap-3'>
                             <Icon
-                              className={`text-sm shrink-0 transition-transform duration-200 ${
-                                isChildActive
-                                  ? 'text-blue-600'
-                                  : 'text-slate-400'
-                              }`}
+                              className={`text-sm shrink-0 transition-transform duration-200 ${isChildActive
+                                ? 'text-blue-600'
+                                : 'text-slate-400'
+                                }`}
                             />
                             <span className='truncate'>{item.name}</span>
                           </div>
@@ -431,28 +441,25 @@ const Layout = () => {
                                   key={child.href}
                                   to={child.href}
                                   onClick={() => setIsMobileMenuOpen(false)}
-                                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 ${
-                                    isSubActive
-                                      ? 'bg-gradient-to-r from-[#3b6ebb] to-blue-600 text-white font-bold shadow-xs'
-                                      : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
-                                  }`}
+                                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 ${isSubActive
+                                    ? 'bg-gradient-to-r from-[#3b6ebb] to-blue-600 text-white font-bold shadow-xs'
+                                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
+                                    }`}
                                 >
                                   <SubIcon
-                                    className={`text-xs shrink-0 ${
-                                      isSubActive
-                                        ? 'text-white'
-                                        : 'text-slate-400'
-                                    }`}
+                                    className={`text-xs shrink-0 ${isSubActive
+                                      ? 'text-white'
+                                      : 'text-slate-400'
+                                      }`}
                                   />
                                   <span className='truncate'>{child.name}</span>
                                   {typeof child.badgeCount === 'number' &&
                                     child.badgeCount > 0 && (
                                       <span
-                                        className={`ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${
-                                          isSubActive
-                                            ? 'bg-white text-blue-700'
-                                            : 'bg-rose-500 text-white animate-pulse'
-                                        }`}
+                                        className={`ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${isSubActive
+                                          ? 'bg-white text-blue-700'
+                                          : 'bg-rose-500 text-white animate-pulse'
+                                          }`}
                                       >
                                         {child.badgeCount > 99
                                           ? '99+'
@@ -478,18 +485,16 @@ const Layout = () => {
                       key={item.href || item.name}
                       to={item.href!}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 group ${
-                        isActive
-                          ? 'bg-blue-50/90 text-blue-900 border border-blue-200/80 shadow-xs font-bold'
-                          : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
-                      }`}
+                      className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 group ${isActive
+                        ? 'bg-blue-50/90 text-blue-900 border border-blue-200/80 shadow-xs font-bold'
+                        : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
+                        }`}
                     >
                       <Icon
-                        className={`text-sm shrink-0 transition-transform duration-200 group-hover:scale-110 ${
-                          isActive
-                            ? 'text-blue-600'
-                            : 'text-slate-400 group-hover:text-slate-600'
-                        }`}
+                        className={`text-sm shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive
+                          ? 'text-blue-600'
+                          : 'text-slate-400 group-hover:text-slate-600'
+                          }`}
                       />
                       <span className='truncate'>{item.name}</span>
                       {typeof item.badgeCount === 'number' &&
@@ -524,6 +529,16 @@ const Layout = () => {
               name: 'Kuesioner Tracer',
               href: '/alumni/questionnaire',
               icon: FaClipboardList,
+            },
+          ],
+        },
+        {
+          category: 'ASISTEN AI',
+          items: [
+            {
+              name: 'SMANTA AI',
+              href: '/alumni/ai-assistant',
+              icon: FaRobot,
             },
           ],
         },
@@ -597,6 +612,26 @@ const Layout = () => {
           ],
         },
         {
+          category: 'ASISTEN AI',
+          items: [
+            {
+              name: 'SMANTA AI',
+              href: '/admin/ai-assistant',
+              icon: FaRobot,
+            },
+            {
+              name: 'Log Interaksi AI',
+              href: '/admin/ai-logs',
+              icon: FaHistory,
+            },
+            {
+              name: 'Kelola AI',
+              href: '/admin/ai-settings',
+              icon: FaCogs,
+            },
+          ],
+        },
+        {
           category: 'MANAJEMEN PENGGUNA',
           items: [
             { name: 'Data Alumni', href: '/admin/alumni', icon: FaUsers },
@@ -617,11 +652,6 @@ const Layout = () => {
         {
           category: 'DATA MASTER & KAMPUS',
           items: [
-            {
-              name: 'Rencana Kuliah',
-              href: '/admin/college-plans',
-              icon: FaGraduationCap,
-            },
             {
               name: 'Perguruan Tinggi',
               href: '/admin/universities',
@@ -725,10 +755,10 @@ const Layout = () => {
           ],
         },
         {
-          category: 'SMART TOOLS',
+          category: 'ASISTEN AI',
           items: [
             {
-              name: 'Smart Match',
+              name: 'SMANTA AI',
               href: '/student/college-plan',
               icon: FaGraduationCap,
             },
@@ -846,6 +876,11 @@ const Layout = () => {
   };
 
   const restrictedComponent = getRestrictedAccessComponent();
+  const isSmantaAiPage =
+    location.pathname === '/student/college-plan' ||
+    location.pathname === '/college-plan' ||
+    location.pathname === '/admin/ai-assistant' ||
+    location.pathname === '/alumni/ai-assistant';
 
   return (
     <div className='flex h-screen bg-[color:var(--bg-primary)] text-[color:var(--text-primary)] transition-colors duration-200 overflow-hidden font-sans'>
@@ -859,9 +894,8 @@ const Layout = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-slate-200/80 bg-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed inset-y-0 left-0 z-50 flex w-[280px] flex-col border-r border-slate-200/80 bg-white transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         {/* Brand Logo & Name */}
         <div className='flex h-16 shrink-0 items-center justify-between gap-3 px-5 border-b border-slate-200/80 bg-white'>
@@ -917,157 +951,179 @@ const Layout = () => {
       {/* Main Content Wrapper */}
       <div className='flex min-w-0 flex-1 flex-col'>
         {/* Top Header Navbar */}
-        <header className='sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md transition-colors shadow-xs'>
-          {/* Left: Mobile Toggle & Mobile Logo / Desktop Breadcrumbs */}
-          <div className='flex items-center gap-3 min-w-0'>
-            {/* Mobile Menu Toggle Button */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className='rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 lg:hidden transition-colors'
-              aria-label='Buka Menu Navigasi'
-            >
-              {isMobileMenuOpen ? (
-                <FaTimes className='h-5 w-5' />
-              ) : (
-                <FaBars className='h-5 w-5' />
-              )}
-            </button>
+        {!isSmantaAiPage ? (
+          <header className='sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md transition-colors shadow-xs'>
+            {/* Left: Mobile Toggle & Mobile Logo / Desktop Breadcrumbs */}
+            <div className='flex items-center gap-3 min-w-0'>
+              {/* Mobile Menu Toggle Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className='rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-800 lg:hidden transition-colors'
+                aria-label='Buka Menu Navigasi'
+              >
+                {isMobileMenuOpen ? (
+                  <FaTimes className='h-5 w-5' />
+                ) : (
+                  <FaBars className='h-5 w-5' />
+                )}
+              </button>
 
-            {/* Mobile Brand / Title */}
-            <div className='flex items-center gap-2 lg:hidden min-w-0'>
-              <img
-                src='/logo.png'
-                alt='Logo'
-                className='h-8 w-8 object-contain shrink-0'
-              />
-              <div className='min-w-0'>
-                <div className='text-[13px] font-bold leading-tight tracking-tight text-slate-900 truncate'>
-                  TRACER STUDY
+              {/* Mobile Brand / Title */}
+              <div className='flex items-center gap-2 lg:hidden min-w-0'>
+                <img
+                  src='/logo.png'
+                  alt='Logo'
+                  className='h-8 w-8 object-contain shrink-0'
+                />
+                <div className='min-w-0'>
+                  <div className='text-[13px] font-bold leading-tight tracking-tight text-slate-900 truncate'>
+                    TRACER STUDY
+                  </div>
+                  <p className='text-[9px] sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider truncate'>
+                    SMAN 1 TAWANGSARI
+                  </p>
                 </div>
-                <p className='text-[9px] sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider truncate'>
-                  SMAN 1 TAWANGSARI
-                </p>
+              </div>
+
+              {/* Desktop Breadcrumbs */}
+              <div className='hidden lg:flex items-center gap-2 text-sm'>
+                <span className='text-slate-400 font-medium'>
+                  {getMenuCategory(location.pathname, user?.role)}
+                </span>
+                <FaChevronRight className='text-[10px] text-slate-300' />
+                <span className='font-bold text-slate-800 tracking-tight'>
+                  {getPageTitle(location.pathname)}
+                </span>
               </div>
             </div>
 
-            {/* Desktop Breadcrumbs */}
-            <div className='hidden lg:flex items-center gap-2 text-sm'>
-              <span className='text-slate-400 font-medium'>
-                {getMenuCategory(location.pathname, user?.role)}
-              </span>
-              <FaChevronRight className='text-[10px] text-slate-300' />
-              <span className='font-bold text-slate-800 tracking-tight'>
-                {getPageTitle(location.pathname)}
-              </span>
+            {/* Right: User Profile Dropdown */}
+            <div className='flex items-center gap-2 sm:gap-3 shrink-0'>
+              {/* User Profile Pill Dropdown Trigger */}
+              <div className='relative' ref={userDropdownRef}>
+                <button
+                  type='button'
+                  onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
+                  className='flex items-center gap-2 p-1 sm:gap-2.5 sm:px-2.5 sm:py-1 rounded-2xl hover:bg-slate-100/80 transition-all duration-200 focus:outline-none group cursor-pointer text-left'
+                  aria-expanded={isUserDropdownOpen}
+                  aria-haspopup='true'
+                  aria-label={`Menu profil ${user?.profile?.fullName || user?.username || 'Pengguna'}`}
+                >
+                  {/* Custom Avatar with Blue gradient */}
+                  <div className='h-9 w-9 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs border border-blue-500/30 group-hover:scale-105 transition-transform'>
+                    {getUserInitial()}
+                  </div>
+
+                  {/* Name and Role (disembunyikan di layar sangat kecil agar header tidak berdesakan) */}
+                  <div className='hidden sm:flex flex-col min-w-0 text-left max-w-[120px] sm:max-w-[160px] md:max-w-[200px]'>
+                    <span className='text-xs font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors leading-tight'>
+                      {user?.profile?.fullName || user?.username || 'Pengguna'}
+                    </span>
+                    <span className='text-[10px] text-slate-500 font-semibold truncate leading-tight mt-0.5'>
+                      {getRoleBadgeLabel()}
+                    </span>
+                  </div>
+
+                  {/* Dropdown Chevron Icon */}
+                  <FaChevronDown
+                    className={`h-3 w-3 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ml-0.5 sm:ml-1 shrink-0 ${isUserDropdownOpen ? 'rotate-180 text-blue-600' : ''
+                      }`}
+                  />
+                </button>
+
+                {/* Dropdown Menu */}
+                {isUserDropdownOpen && (
+                  <div className='absolute right-0 mt-2 w-64 rounded-2xl bg-white shadow-xl shadow-slate-900/10 border border-slate-200/80 py-2 z-50 animate-fade-in'>
+                    {/* User Profile Header */}
+                    <div className='px-4 py-3 border-b border-slate-100 flex items-center gap-3'>
+                      <div className='h-10 w-10 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs border border-blue-500/30'>
+                        {getUserInitial()}
+                      </div>
+                      <div className='flex flex-col min-w-0 flex-1'>
+                        <span className='text-xs font-bold text-slate-800 truncate'>
+                          {user?.profile?.fullName ||
+                            user?.username ||
+                            'Pengguna'}
+                        </span>
+                        <span className='text-[10px] text-slate-500 truncate font-medium'>
+                          {user?.email || user?.username || ''}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Menu Options */}
+                    <div className='px-2 py-1.5 space-y-0.5'>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setIsUserDropdownOpen(false);
+                          setIsProfileModalOpen(true);
+                        }}
+                        className='w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer text-left'
+                      >
+                        <FaUser className='h-3.5 w-3.5 text-slate-400' />
+                        <span>Profil Saya</span>
+                      </button>
+                      <Link
+                        to='/'
+                        onClick={() => setIsUserDropdownOpen(false)}
+                        className='flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors'
+                      >
+                        <FaHome className='h-3.5 w-3.5 text-slate-400' />
+                        <span>Halaman Utama</span>
+                      </Link>
+                    </div>
+
+                    <div className='my-1 border-t border-slate-100' />
+
+                    {/* Logout Action */}
+                    <div className='px-2 pt-0.5'>
+                      <button
+                        type='button'
+                        onClick={() => {
+                          setIsUserDropdownOpen(false);
+                          setIsLogoutModalOpen(true);
+                        }}
+                        className='w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer text-left'
+                      >
+                        <FaSignOutAlt className='h-3.5 w-3.5 text-rose-500' />
+                        <span>Keluar Aplikasi</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-
-          {/* Right: User Profile Dropdown */}
-          <div className='flex items-center gap-2 sm:gap-3 shrink-0'>
-            {/* User Profile Pill Dropdown Trigger */}
-            <div className='relative' ref={userDropdownRef}>
-              <button
-                type='button'
-                onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                className='flex items-center gap-2 p-1 sm:gap-2.5 sm:px-2.5 sm:py-1 rounded-2xl hover:bg-slate-100/80 transition-all duration-200 focus:outline-none group cursor-pointer text-left'
-                aria-expanded={isUserDropdownOpen}
-                aria-haspopup='true'
-                aria-label={`Menu profil ${user?.profile?.fullName || user?.username || 'Pengguna'}`}
-              >
-                {/* Custom Avatar with Blue gradient */}
-                <div className='h-9 w-9 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs border border-blue-500/30 group-hover:scale-105 transition-transform'>
-                  {getUserInitial()}
-                </div>
-
-                {/* Name and Role (disembunyikan di layar sangat kecil agar header tidak berdesakan) */}
-                <div className='hidden sm:flex flex-col min-w-0 text-left max-w-[120px] sm:max-w-[160px] md:max-w-[200px]'>
-                  <span className='text-xs font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors leading-tight'>
-                    {user?.profile?.fullName || user?.username || 'Pengguna'}
-                  </span>
-                  <span className='text-[10px] text-slate-500 font-semibold truncate leading-tight mt-0.5'>
-                    {getRoleBadgeLabel()}
-                  </span>
-                </div>
-
-                {/* Dropdown Chevron Icon */}
-                <FaChevronDown
-                  className={`h-3 w-3 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ml-0.5 sm:ml-1 shrink-0 ${
-                    isUserDropdownOpen ? 'rotate-180 text-blue-600' : ''
-                  }`}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isUserDropdownOpen && (
-                <div className='absolute right-0 mt-2 w-64 rounded-2xl bg-white shadow-xl shadow-slate-900/10 border border-slate-200/80 py-2 z-50 animate-fade-in'>
-                  {/* User Profile Header */}
-                  <div className='px-4 py-3 border-b border-slate-100 flex items-center gap-3'>
-                    <div className='h-10 w-10 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs border border-blue-500/30'>
-                      {getUserInitial()}
-                    </div>
-                    <div className='flex flex-col min-w-0 flex-1'>
-                      <span className='text-xs font-bold text-slate-800 truncate'>
-                        {user?.profile?.fullName ||
-                          user?.username ||
-                          'Pengguna'}
-                      </span>
-                      <span className='text-[10px] text-slate-500 truncate font-medium'>
-                        {user?.email || user?.username || ''}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Menu Options */}
-                  <div className='px-2 py-1.5 space-y-0.5'>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        setIsUserDropdownOpen(false);
-                        setIsProfileModalOpen(true);
-                      }}
-                      className='w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors cursor-pointer text-left'
-                    >
-                      <FaUser className='h-3.5 w-3.5 text-slate-400' />
-                      <span>Profil Saya</span>
-                    </button>
-                    <Link
-                      to='/'
-                      onClick={() => setIsUserDropdownOpen(false)}
-                      className='flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors'
-                    >
-                      <FaHome className='h-3.5 w-3.5 text-slate-400' />
-                      <span>Halaman Utama</span>
-                    </Link>
-                  </div>
-
-                  <div className='my-1 border-t border-slate-100' />
-
-                  {/* Logout Action */}
-                  <div className='px-2 pt-0.5'>
-                    <button
-                      type='button'
-                      onClick={() => {
-                        setIsUserDropdownOpen(false);
-                        setIsLogoutModalOpen(true);
-                      }}
-                      className='w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 hover:text-rose-700 transition-colors cursor-pointer text-left'
-                    >
-                      <FaSignOutAlt className='h-3.5 w-3.5 text-rose-500' />
-                      <span>Keluar Aplikasi</span>
-                    </button>
-                  </div>
-                </div>
+          </header>
+        ) : (
+          /* Floating Hamburger Toggle Button for Mobile when Header is hidden (Murni icon borderless, no-bg, no-shadow) */
+          <div className='lg:hidden fixed top-3 left-4 z-40'>
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className='p-1.5 text-slate-600 hover:text-slate-900 transition-colors flex items-center justify-center cursor-pointer focus:outline-none'
+              aria-label='Buka Menu Navigasi'
+            >
+              {isMobileMenuOpen ? (
+                <FaTimes className='h-4 w-4 sm:h-5 sm:w-5' />
+              ) : (
+                <FaBars className='h-4 w-4 sm:h-5 sm:w-5' />
               )}
-            </div>
+            </button>
           </div>
-        </header>
+        )}
 
         {/* Page Content */}
         <main
           ref={mainRef}
-          className='flex-1 flex flex-col overflow-y-auto scroll-smooth'
+          className={`flex-1 flex flex-col ${
+            isSmantaAiPage ? 'overflow-hidden' : 'overflow-y-auto scroll-smooth'
+          }`}
         >
-          <div className='w-full flex-grow flex flex-col animate-fade-in pb-8'>
+          <div
+            className={`w-full flex-grow flex flex-col animate-fade-in ${
+              isSmantaAiPage ? 'p-0 h-full overflow-hidden' : 'pb-8'
+            }`}
+          >
             {restrictedComponent ? (
               restrictedComponent
             ) : (
@@ -1086,10 +1142,12 @@ const Layout = () => {
               </Suspense>
             )}
           </div>
-          <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
-            &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari.
-            All right reserved.
-          </div>
+          {!isSmantaAiPage && (
+            <div className='w-full shrink-0 py-4 text-center text-[10px] md:text-sm text-[color:var(--text-tertiary)] bg-[color:var(--bg-card)] border-t border-[color:var(--border-color)]'>
+              &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari.
+              All right reserved.
+            </div>
+          )}
         </main>
       </div>
       {/* Profile Modal with Full-Screen Blur Backdrop */}

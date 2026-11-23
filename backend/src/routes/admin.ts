@@ -10,6 +10,9 @@ import Badge from '../models/Badge';
 import CollegePlan from '../models/CollegePlan';
 import University from '../models/University';
 import Job from '../models/Job';
+import AiLog from '../models/AiLog';
+import AiConfig from '../models/AiConfig';
+import axios from 'axios';
 import { ensureUniversityExists, inferUniversityType, syncAllReferencedUniversities } from '../utils/universityHelper';
 import { ensureMajorExists } from '../utils/majorHelper';
 import { sendAlumniUpgradeReminder, sendAlumniIncompleteReminder, sendStudentIncompleteReminder } from '../utils/mailer';
@@ -801,20 +804,20 @@ router.get('/alumni/:id', async (req: Request, res: Response) => {
 // Update alumni
 router.put('/alumni/:id', async (req: Request, res: Response) => {
   try {
-      const { university } = req.body;
-      if (university?.name) {
-        await ensureUniversityExists(university.name, (req as any).user._id, university.type);
-      }
-      
-      if (university?.major) {
-        await ensureMajorExists(university.major, (req as any).user._id);
-      }
+    const { university } = req.body;
+    if (university?.name) {
+      await ensureUniversityExists(university.name, (req as any).user._id, university.type);
+    }
 
-      const alumni = await User.findOneAndUpdate(
-        { _id: req.params.id, role: 'alumni' },
-        req.body,
-        { new: true, runValidators: true },
-      ).select('-password');
+    if (university?.major) {
+      await ensureMajorExists(university.major, (req as any).user._id);
+    }
+
+    const alumni = await User.findOneAndUpdate(
+      { _id: req.params.id, role: 'alumni' },
+      req.body,
+      { new: true, runValidators: true },
+    ).select('-password');
 
     if (!alumni) {
       return res.status(404).json({ message: 'Alumni not found' });
@@ -879,8 +882,8 @@ router.patch('/alumni/:id/demote', async (req: Request, res: Response) => {
   try {
     const alumni = await User.findOneAndUpdate(
       { _id: req.params.id, role: 'alumni' },
-      { 
-        $set: { 
+      {
+        $set: {
           role: 'student',
           questionnaireCompleted: false,
           isVerifiedBySchool: false,
@@ -890,7 +893,7 @@ router.patch('/alumni/:id/demote', async (req: Request, res: Response) => {
           'university.major': '',
           'university.type': '',
           badges: []
-        } 
+        }
       },
       { new: true }
     ).select('-password');
@@ -2206,7 +2209,7 @@ router.post('/students/send-reminder', async (req: Request, res: Response) => {
     const CHUNK_SIZE = 15;
     for (let i = 0; i < targetStudents.length; i += CHUNK_SIZE) {
       const chunk = targetStudents.slice(i, i + CHUNK_SIZE);
-      
+
       await Promise.all(
         chunk.map(async (student) => {
           if (!student.email) {
@@ -2292,7 +2295,7 @@ router.post('/alumni/send-reminder', async (req: Request, res: Response) => {
       targetAlumni = [alum];
     } else {
       const query: any = { role: 'alumni' };
-      
+
       // We only want alumni whose data is incomplete
       query['$or'] = [
         { questionnaireCompleted: { $ne: true } },
@@ -2318,7 +2321,7 @@ router.post('/alumni/send-reminder', async (req: Request, res: Response) => {
     const CHUNK_SIZE = 15;
     for (let i = 0; i < targetAlumni.length; i += CHUNK_SIZE) {
       const chunk = targetAlumni.slice(i, i + CHUNK_SIZE);
-      
+
       await Promise.all(
         chunk.map(async (alum) => {
           if (!alum.email) {
@@ -2649,7 +2652,7 @@ router.put('/universities/:id', async (req: Request, res: Response) => {
       });
       if (conflict) {
         return res.status(400).json({
-          message: `Perguruan tinggi "${newName}" sudah terdaftar di database.`,
+          message: `Perguruan tinggi "${newName}" sudah terdaftar.`,
         });
       }
     }
@@ -2758,6 +2761,369 @@ router.delete('/universities/:id', async (req: Request, res: Response) => {
     res.json({ message: `Perguruan tinggi "${name}" berhasil dihapus.` });
   } catch (error: any) {
     res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// ==========================================
+// AI LOGS & MONITORING ENDPOINTS
+// ==========================================
+
+/**
+ * GET /api/admin/ai-logs
+ * Mengambil log penggunaan AI dengan filter, pencarian, pagination, dan ringkasan metrik.
+ */
+router.get('/ai-logs', async (req: Request, res: Response) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page as string, 10) || 1);
+    const limit = Math.max(1, Math.min(100, parseInt(req.query.limit as string, 10) || 15));
+    const roleFilter = (req.query.role as string) || '';
+    const statusFilter = (req.query.status as string) || '';
+    const search = (req.query.search as string || '').trim();
+
+    const query: any = {};
+
+    if (roleFilter && roleFilter !== 'all') {
+      query['user.role'] = roleFilter;
+    }
+
+    if (statusFilter && statusFilter !== 'all') {
+      query['status'] = statusFilter;
+    }
+
+    if (search) {
+      const searchRegex = new RegExp(search, 'i');
+      query.$or = [
+        { 'user.fullName': searchRegex },
+        { 'user.username': searchRegex },
+        { 'user.email': searchRegex },
+        { query: searchRegex },
+      ];
+    }
+
+    const skip = (page - 1) * limit;
+
+    const [logs, total, totalSuccess, totalError, distinctUsers, metricsAggregate] = await Promise.all([
+      AiLog.find(query)
+        .sort({ timestamp: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      AiLog.countDocuments(query),
+      AiLog.countDocuments({ status: 'success' }),
+      AiLog.countDocuments({ status: 'error' }),
+      AiLog.distinct('user.userId'),
+      AiLog.aggregate([
+        {
+          $group: {
+            _id: null,
+            avgLatency: { $avg: '$latencyMs' },
+            totalChars: { $sum: '$tokensEstimated.totalChars' },
+          },
+        },
+      ]),
+    ]);
+
+    const totalAll = totalSuccess + totalError;
+    const successRate = totalAll > 0 ? Number(((totalSuccess / totalAll) * 100).toFixed(1)) : 100;
+    const avgLatency = metricsAggregate.length > 0 && metricsAggregate[0].avgLatency
+      ? Math.round(metricsAggregate[0].avgLatency)
+      : 0;
+    const totalChars = metricsAggregate.length > 0 && metricsAggregate[0].totalChars
+      ? metricsAggregate[0].totalChars
+      : 0;
+
+    res.json({
+      logs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit) || 1,
+      },
+      metrics: {
+        totalInteractions: totalAll,
+        successCount: totalSuccess,
+        errorCount: totalError,
+        successRate,
+        uniqueUsersCount: distinctUsers.length,
+        avgLatencyMs: avgLatency,
+        totalCharsEstimated: totalChars,
+      },
+    });
+  } catch (error: any) {
+    console.error('Error fetching AI logs:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+// ==========================================
+// AI CONFIGURATION ENDPOINTS (KELOLA AI)
+// ==========================================
+
+const maskApiKey = (key?: string): string => {
+  if (!key) return '';
+  const trimmed = key.trim();
+  if (trimmed.length <= 8) return '********';
+  return `${trimmed.slice(0, 6)}...${trimmed.slice(-4)}`;
+};
+
+/**
+ * GET /api/admin/ai-config
+ * Mengambil konfigurasi AI saat ini (dengan masking pada API key).
+ */
+router.get('/ai-config', async (_req: Request, res: Response) => {
+  try {
+    let config = await AiConfig.findOne().sort({ updatedAt: -1 });
+
+    if (!config) {
+      config = new AiConfig({
+        apiKey: process.env.GEMINI_API_KEY || '',
+        selectedModel: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+        temperature: 0.7,
+        maxTokens: 2048,
+        isActive: true,
+      });
+      await config.save();
+    }
+
+    const rawApiKey = (config.apiKey || process.env.GEMINI_API_KEY || '').trim();
+    const rawKeys: string[] = [];
+    if (Array.isArray(config.apiKeys)) {
+      config.apiKeys.forEach((k) => {
+        if (typeof k === 'string' && k.trim()) rawKeys.push(k.trim());
+      });
+    }
+    if (rawApiKey) {
+      rawApiKey.split(/[\n,]+/).map((k) => k.trim()).filter(Boolean).forEach((k) => rawKeys.push(k));
+    }
+    const uniqueKeys = Array.from(new Set(rawKeys));
+
+    res.json({
+      config: {
+        _id: config._id,
+        hasApiKey: Boolean(rawApiKey || uniqueKeys.length > 0),
+        maskedApiKey: maskApiKey(rawApiKey),
+        keyCount: uniqueKeys.length,
+        selectedModel: config.selectedModel || 'gemini-1.5-flash',
+        temperature: config.temperature ?? 0.7,
+        maxTokens: config.maxTokens ?? 2048,
+        isActive: config.isActive !== false,
+        systemInstructionOverride: config.systemInstructionOverride || '',
+        lastTestedAt: config.lastTestedAt,
+        testStatus: config.testStatus,
+        testMessage: config.testMessage,
+        updatedAt: config.updatedAt,
+      },
+      availableModels: [
+        {
+          id: 'gemini-flash-lite-latest',
+          name: 'Gemini Flash-Lite Latest',
+          tag: 'Paling Stabil & Cepat',
+          speed: 'Super Cepat',
+          description: 'Rilis stabil resmi terbaru dari Google Gemini Flash Lite dengan ketersediaan kuota tinggi.',
+        },
+        {
+          id: 'gemini-3.5-flash-lite',
+          name: 'Gemini 3.5 Flash Lite',
+          tag: 'Generasi 3.5 Lite',
+          speed: 'Sangat Cepat',
+          description: 'Model generasi 3.5 yang dioptimalkan untuk kecepatan ekstra tinggi dan efisiensi percakapan.',
+        },
+        {
+          id: 'gemini-flash-latest',
+          name: 'Gemini Flash Latest',
+          tag: 'Terbaru',
+          speed: 'Ultra Cepat',
+          description: 'Versi rilis stabil terbaru dari lini Gemini Flash dengan penalaran multimodal cerdas.',
+        },
+        {
+          id: 'gemini-3.8-flash',
+          name: 'Gemini 3.8 Flash',
+          tag: 'Generasi 3.8',
+          speed: 'Ultra Cepat',
+          description: 'Model generasi 3.8 dengan kemampuan analitis tingkat lanjut (mengalami demand tinggi pada jam sibuk).',
+        },
+        {
+          id: 'gemini-3.5-flash',
+          name: 'Gemini 3.5 Flash',
+          tag: 'Generasi 3.5 Flash',
+          speed: 'Ultra Cepat',
+          description: 'Model generasi 3.5 dengan pemrosesan kontekstual tingkat lanjut dan penalaran mendalam.',
+        },
+        {
+          id: 'gemini-3.6-flash',
+          name: 'Gemini 3.6 Flash',
+          tag: 'Generasi 3.6 Preview',
+          speed: 'Ultra Cepat',
+          description: 'Model generasi 3.6 pratinjau dengan kemampuan penalaran dan pemahaman multimodal terkini.',
+        },
+      ],
+    });
+  } catch (error: any) {
+    console.error('Error fetching AI config:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+/**
+ * PUT /api/admin/ai-config
+ * Memperbarui pengaturan AI (API Key, model, temperature, maxTokens, status).
+ */
+router.put('/ai-config', async (req: Request, res: Response) => {
+  try {
+    const {
+      apiKey,
+      selectedModel,
+      temperature,
+      maxTokens,
+      isActive,
+      systemInstructionOverride,
+    } = req.body;
+
+    let config = await AiConfig.findOne().sort({ updatedAt: -1 });
+    if (!config) {
+      config = new AiConfig({});
+    }
+
+    // Jika apiKey dikirim dan bukan string kosong/masking
+    if (typeof apiKey === 'string' && apiKey.trim() && !apiKey.includes('...')) {
+      const splitKeys = apiKey
+        .split(/[\n,]+/)
+        .map((k: string) => k.trim())
+        .filter(Boolean);
+      config.apiKey = splitKeys[0] || apiKey.trim();
+      config.apiKeys = splitKeys;
+    }
+
+    if (selectedModel) config.selectedModel = selectedModel.trim();
+    if (typeof temperature === 'number') config.temperature = Math.max(0, Math.min(2, temperature));
+    if (typeof maxTokens === 'number') config.maxTokens = Math.max(256, Math.min(8192, maxTokens));
+    if (typeof isActive === 'boolean') config.isActive = isActive;
+    if (typeof systemInstructionOverride === 'string') {
+      config.systemInstructionOverride = systemInstructionOverride.trim();
+    }
+
+    config.updatedBy = {
+      userId: (req as any).user?._id,
+      username: (req as any).user?.username || 'admin',
+    };
+
+    await config.save();
+
+    res.json({
+      message: 'Pengaturan AI berhasil diperbarui.',
+      config: {
+        _id: config._id,
+        hasApiKey: Boolean(config.apiKey || process.env.GEMINI_API_KEY),
+        maskedApiKey: maskApiKey(config.apiKey || process.env.GEMINI_API_KEY || ''),
+        selectedModel: config.selectedModel,
+        temperature: config.temperature,
+        maxTokens: config.maxTokens,
+        isActive: config.isActive,
+        systemInstructionOverride: config.systemInstructionOverride,
+        lastTestedAt: config.lastTestedAt,
+        testStatus: config.testStatus,
+        testMessage: config.testMessage,
+      },
+    });
+  } catch (error: any) {
+    console.error('Error updating AI config:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+});
+
+/**
+ * POST /api/admin/ai-config/test
+ * Menguji koneksi ping ke Google Gemini API menggunakan API key dan model yang dipilih.
+ */
+router.post('/ai-config/test', async (req: Request, res: Response) => {
+  const startTime = Date.now();
+  try {
+    const { apiKey: keyInput, selectedModel: modelInput } = req.body;
+
+    let config = await AiConfig.findOne().sort({ updatedAt: -1 });
+    const targetApiKey =
+      (typeof keyInput === 'string' && keyInput.trim() && !keyInput.includes('...')
+        ? keyInput.trim()
+        : config?.apiKey || process.env.GEMINI_API_KEY || '').trim();
+
+    const targetModel =
+      (typeof modelInput === 'string' && modelInput.trim()
+        ? modelInput.trim()
+        : config?.selectedModel || process.env.GEMINI_MODEL || 'gemini-2.5-flash').trim();
+
+    if (!targetApiKey) {
+      return res.status(400).json({
+        success: false,
+        message: 'Kunci API Gemini belum diisi. Masukkan kunci API terlebih dahulu sebelum menguji.',
+      });
+    }
+
+    const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(
+      targetModel
+    )}:generateContent?key=${encodeURIComponent(targetApiKey)}`;
+
+    const response = await axios.post(
+      testUrl,
+      {
+        contents: [
+          {
+            role: 'user',
+            parts: [{ text: 'Halo, respon kata PONG jika kamu aktif.' }],
+          },
+        ],
+        generationConfig: {
+          temperature: 0.1,
+          maxOutputTokens: 20,
+        },
+      },
+      {
+        timeout: 15000,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+
+    const latencyMs = Date.now() - startTime;
+    const candidateText =
+      response.data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '';
+
+    if (!config) {
+      config = new AiConfig({});
+    }
+    config.lastTestedAt = new Date();
+    config.testStatus = 'success';
+    config.testMessage = `Koneksi berhasil (${latencyMs}ms). Respon: "${candidateText.slice(0, 40)}"`;
+    await config.save();
+
+    res.json({
+      success: true,
+      latencyMs,
+      modelUsed: targetModel,
+      replyPreview: candidateText,
+      message: `Koneksi ke Google Gemini (${targetModel}) berhasil terhubung (${latencyMs} ms)!`,
+    });
+  } catch (error: any) {
+    const latencyMs = Date.now() - startTime;
+    const errorDetail =
+      error.response?.data?.error?.message || error.message || 'Gagal menghubungi Gemini API';
+
+    try {
+      const config = await AiConfig.findOne().sort({ updatedAt: -1 });
+      if (config) {
+        config.lastTestedAt = new Date();
+        config.testStatus = 'failed';
+        config.testMessage = `Gagal: ${errorDetail.slice(0, 150)}`;
+        await config.save();
+      }
+    } catch {
+      // Abaikan kegagalan penyimpanan status ke database saat handling error
+    }
+
+    res.status(error.response?.status || 502).json({
+      success: false,
+      latencyMs,
+      message: `Uji koneksi gagal: ${errorDetail}`,
+    });
   }
 });
 

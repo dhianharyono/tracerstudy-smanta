@@ -1,31 +1,63 @@
-import React, { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import axios from 'axios';
 import {
-  FaGraduationCap,
-  FaUserGraduate,
-  FaBriefcase,
-  FaLinkedin,
-  FaInstagram,
-  FaEnvelope,
   FaMagic,
-  FaBuilding,
+  FaGraduationCap,
+  FaUniversity,
+  FaSyncAlt,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaLightbulb,
   FaInfoCircle,
+  FaRedo,
+  FaUsers,
+  FaUserGraduate,
+  FaCompass,
+  FaCalendarAlt,
+  FaBuilding,
+  FaBriefcase,
 } from 'react-icons/fa';
 
-interface AlumniItem {
-  _id: string;
-  fullName: string;
-  graduationYear?: number;
-  universityName?: string;
-  major: string;
-  position: string;
-  institution?: string;
-  isMentor?: boolean;
-  socialMedia?: {
-    linkedin?: string;
-    instagram?: string;
-  };
-  email?: string;
+const AI_MATCH_ENDPOINT = '/api/student/college-plan/ai-match';
+const REQUEST_TIMEOUT_MS = 60000;
+
+const LOADING_MESSAGES = [
+  'Mengambil data alumni SMANTA...',
+  'Menganalisis data alumni...',
+  'Menghitung peluang dan peminat...',
+  'Menyusun strategi dan alternatif...',
+];
+
+type PeluangLabel = 'Tinggi' | 'Sedang' | 'Rendah';
+
+interface AiStrategy {
+  judul: string;
+  detail: string;
+}
+
+interface AiAlternativeCampus {
+  nama: string;
+  jurusan: string;
+  alasan: string;
+}
+
+interface AiAlternativeMajor {
+  nama: string;
+  alasan: string;
+}
+
+interface AiAnalysis {
+  ringkasan: string;
+  peluangLabel: PeluangLabel;
+  peluangAlasan: string[];
+  kekuatan: string[];
+  risiko: string[];
+  strategi: AiStrategy[];
+  alternatifKampus: AiAlternativeCampus[];
+  jurusanAlternatif: AiAlternativeMajor[];
+  langkah: string[];
+  catatanData: string;
 }
 
 interface CareerOutcome {
@@ -34,421 +66,608 @@ interface CareerOutcome {
   percentage: number;
 }
 
-interface AlternativeUniv {
-  name: string;
-  isSameMajor?: boolean;
-  alumniCount: number;
-  mentorCount: number;
-  alumniList?: AlumniItem[];
+interface MatchStats {
+  alumniTotal: number;
+  exactAlumni: number;
+  sameMajorAlumni: number;
+  mentors: number;
+  peminat: number;
+  topInstitutions: string[];
+  careerOutcomes: CareerOutcome[];
 }
 
-interface MatchData {
+interface AiMatchResponse {
   hasPlan: boolean;
   message?: string;
-  targetUniversity?: string;
-  targetMajor?: string;
-  matchScore?: number;
-  alumniCount?: number;
-  exactMatchAlumniCount?: number;
-  mentorCount?: number;
-  alumniNetwork?: AlumniItem[];
-  mentors?: AlumniItem[];
-  careerOutcomes?: CareerOutcome[];
-  topInstitutions?: string[];
-  alternativeUniversities?: AlternativeUniv[];
+  targetUniversity?: string | null;
+  targetMajor?: string | null;
+  rumpun?: string | null;
+  entryPath?: string | null;
+  readinessStatus?: string | null;
+  ai?: AiAnalysis;
+  stats?: MatchStats;
+  generatedAt?: string;
+  cached?: boolean;
 }
 
-const SmartMatch: React.FC = () => {
-  const [data, setData] = useState<MatchData | null>(null);
+const PELUANG_STYLES: Record<
+  PeluangLabel,
+  { badge: string; dot: string; label: string }
+> = {
+  Tinggi: {
+    badge: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30',
+    dot: 'bg-emerald-400',
+    label: 'Peluang Tinggi',
+  },
+  Sedang: {
+    badge: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
+    dot: 'bg-amber-400',
+    label: 'Peluang Sedang',
+  },
+  Rendah: {
+    badge: 'bg-rose-500/10 text-rose-400 border-rose-500/30',
+    dot: 'bg-rose-400',
+    label: 'Peluang Rendah',
+  },
+};
+
+const normalizeLabel = (label?: string): PeluangLabel =>
+  label === 'Tinggi' || label === 'Rendah' ? label : 'Sedang';
+
+const getErrorMessage = (error: unknown): string => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as { message?: string } | undefined;
+    if (data && typeof data.message === 'string' && data.message.trim()) {
+      return data.message;
+    }
+    if (error.code === 'ECONNABORTED') {
+      return 'Analisis AI melebihi batas waktu. Coba lagi beberapa saat.';
+    }
+    if (!error.response) {
+      return 'Tidak dapat terhubung ke server. Periksa koneksimu lalu coba lagi.';
+    }
+  }
+  return 'Gagal membuat analisis AI. Coba lagi sebentar.';
+};
+
+const formatGeneratedAt = (value?: string): string | null => {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+  try {
+    return date.toLocaleString('id-ID', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+  } catch {
+    return date.toLocaleString();
+  }
+};
+
+const LoadingSkeleton = ({
+  step,
+  refresh,
+}: {
+  step: number;
+  refresh: boolean;
+}) => (
+  <div className='space-y-6 animate-fade-in'>
+    <div className='p-6 md:p-8 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-5'>
+      <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'>
+        <FaMagic /> Smart Match AI
+      </div>
+      <div className='h-7 bg-gray-700/40 rounded-xl w-2/3 max-w-sm' />
+      <div className='h-4 bg-gray-700/30 rounded-xl w-1/3 max-w-[180px]' />
+
+      <div className='flex items-start gap-3 p-4 rounded-2xl bg-indigo-500/5 border border-indigo-500/20'>
+        <span className='mt-0.5 inline-block w-4 h-4 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin shrink-0' />
+        <div className='space-y-1'>
+          <p className='text-xs md:text-sm font-bold text-[var(--text-primary)]'>
+            {refresh ? 'Memperbarui analisis...' : LOADING_MESSAGES[step]}
+          </p>
+          <p className='text-[11px] md:text-xs text-[var(--text-secondary)]'>
+            Proses ini biasanya 5-25 detik karena AI membaca data alumni dan
+            peminat. Mohon jangan tutup halaman.
+          </p>
+        </div>
+      </div>
+
+      <div className='space-y-2 animate-pulse'>
+        <div className='h-3 bg-gray-700/30 rounded w-full' />
+        <div className='h-3 bg-gray-700/30 rounded w-11/12' />
+        <div className='h-3 bg-gray-700/30 rounded w-4/5' />
+      </div>
+    </div>
+
+    <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+      {[0, 1].map((index) => (
+        <div
+          key={index}
+          className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4 animate-pulse'
+        >
+          <div className='h-5 bg-gray-700/40 rounded-lg w-1/3' />
+          <div className='h-3 bg-gray-700/30 rounded w-full' />
+          <div className='h-3 bg-gray-700/30 rounded w-10/12' />
+          <div className='h-3 bg-gray-700/30 rounded w-9/12' />
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const NoticeState = ({
+  icon,
+  title,
+  message,
+  action,
+}: {
+  icon: ReactNode;
+  title: string;
+  message: string;
+  action?: ReactNode;
+}) => (
+  <div className='p-8 bg-[var(--bg-card)] rounded-3xl border border-dashed border-[var(--border-color)] text-center space-y-4 animate-fade-in'>
+    <div className='inline-flex p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 text-3xl'>
+      {icon}
+    </div>
+    <h3 className='text-base md:text-lg font-bold text-[var(--text-primary)]'>
+      {title}
+    </h3>
+    <p className='text-xs md:text-sm text-[var(--text-secondary)] max-w-md mx-auto'>
+      {message}
+    </p>
+    {action}
+  </div>
+);
+
+const StatChip = ({
+  icon,
+  value,
+  label,
+}: {
+  icon: ReactNode;
+  value: number;
+  label: string;
+}) => (
+  <div className='flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl bg-[var(--bg-secondary)]/60 border border-[var(--border-color)] min-w-0'>
+    <span className='text-indigo-400 text-base shrink-0'>{icon}</span>
+    <div className='min-w-0'>
+      <p className='text-sm font-extrabold text-[var(--text-primary)] leading-tight'>
+        {value}
+      </p>
+      <p className='text-[10px] md:text-[11px] text-[var(--text-tertiary)] leading-tight truncate'>
+        {label}
+      </p>
+    </div>
+  </div>
+);
+
+const SmartMatch = () => {
+  const [data, setData] = useState<AiMatchResponse | null>(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loadingStep, setLoadingStep] = useState(0);
+  const requestIdRef = useRef(0);
 
-  useEffect(() => {
-    fetchMatchData();
-  }, []);
+  const fetchAnalysis = useCallback(async (refresh = false) => {
+    const requestId = ++requestIdRef.current;
+    setError(null);
+    setLoading(true);
+    setRefreshing(refresh);
 
-  const fetchMatchData = async () => {
     try {
-      setLoading(true);
-      const res = await axios.get('/api/student/college-plan/match');
+      const res = await axios.post<AiMatchResponse>(
+        AI_MATCH_ENDPOINT,
+        refresh ? { refresh: true } : {},
+        { timeout: REQUEST_TIMEOUT_MS },
+      );
+      if (requestId !== requestIdRef.current) return;
       setData(res.data);
     } catch (err) {
-      console.error('Failed to fetch smart match data:', err);
+      if (requestId !== requestIdRef.current) return;
+      console.error('Failed to fetch AI match analysis:', err);
+      setError(getErrorMessage(err));
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        setLoading(false);
+        setRefreshing(false);
+      }
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void fetchAnalysis();
+  }, [fetchAnalysis]);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingStep(0);
+      return;
+    }
+    const timer = window.setInterval(() => {
+      setLoadingStep((prev) => Math.min(prev + 1, LOADING_MESSAGES.length - 1));
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [loading]);
 
   if (loading) {
+    return <LoadingSkeleton step={loadingStep} refresh={refreshing} />;
+  }
+
+  if (error) {
     return (
-      <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] animate-pulse space-y-4'>
-        <div className='h-8 bg-gray-700/40 rounded-xl w-1/3'></div>
-        <div className='h-32 bg-gray-700/30 rounded-2xl'></div>
+      <div className='space-y-4'>
+        <NoticeState
+          icon={<FaExclamationTriangle />}
+          title='Analisis AI belum berhasil'
+          message={error}
+          action={
+            <button
+              type='button'
+              onClick={() => void fetchAnalysis()}
+              className='inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all bg-[var(--primary)] text-white hover:bg-opacity-90 active:scale-95 shadow-md shadow-[var(--primary)]/20'
+            >
+              <FaRedo /> Coba Lagi
+            </button>
+          }
+        />
       </div>
     );
   }
 
   if (!data || !data.hasPlan) {
     return (
-      <div className='p-8 bg-[var(--bg-card)] rounded-3xl border border-dashed border-[var(--border-color)] text-center space-y-4'>
-        <div className='inline-flex p-4 rounded-2xl bg-indigo-500/10 text-indigo-400 text-3xl'>
-          <FaMagic />
-        </div>
-        <h3 className='text-base md:text-lg font-bold text-[var(--text-primary)]'>
-          Analisis Smart Match Belum Aktif
-        </h3>
-        <p className='text-xs md:text-sm text-[var(--text-secondary)] max-w-md mx-auto'>
-          {data?.message ||
-            'Silakan pilih target Perguruan Tinggi dan Jurusan impianmu pada form di atas untuk mengaktifkan analisa kecocokan & rekomendasi alumni.'}
-        </p>
-      </div>
+      <NoticeState
+        icon={<FaMagic />}
+        title='Smart Match AI Belum Aktif'
+        message={
+          data?.message ||
+          'Silakan pilih target Perguruan Tinggi dan Jurusan impianmu pada form di atas untuk memulai analisis AI berbasis data alumni.'
+        }
+      />
     );
   }
 
-  const score = data.matchScore || 50;
+  const ai = data.ai;
+  const stats = data.stats;
+  const label = normalizeLabel(ai?.peluangLabel);
+  const style = PELUANG_STYLES[label];
+  const generatedAt = formatGeneratedAt(data.generatedAt);
 
-  const getScoreBadge = (val: number) => {
-    if (val >= 75) {
-      return {
-        label: 'Sangat Cocok',
-        color: 'bg-emerald text-emerald-400',
-      };
-    }
-    if (val >= 50) {
-      return {
-        label: 'Cukup Potensial',
-        color: 'bg-amber-500/10 text-amber-400 border-amber-500/30',
-      };
-    }
-    return {
-      label: 'Tantangan Tinggi',
-      color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30',
-    };
-  };
+  if (!ai) {
+    return (
+      <NoticeState
+        icon={<FaExclamationTriangle />}
+        title='Respons analisis tidak lengkap'
+        message='Server tidak mengirimkan hasil analisis AI. Coba jalankan analisis ulang.'
+        action={
+          <button
+            type='button'
+            onClick={() => void fetchAnalysis(true)}
+            className='inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all bg-[var(--primary)] text-white hover:bg-opacity-90 active:scale-95 shadow-md shadow-[var(--primary)]/20'
+          >
+            <FaSyncAlt /> Analisis Ulang
+          </button>
+        }
+      />
+    );
+  }
 
-  const badge = getScoreBadge(score);
+  const hasKekuatan = ai.kekuatan.length > 0;
+  const hasRisiko = ai.risiko.length > 0;
 
   return (
     <div className='space-y-6 animate-fade-in'>
-      {/* Header   */}
-      <div className='p-6 md:p-8 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm relative z-20'>
-        <div className='flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10'>
-          <div className='space-y-2'>
+      {/* Header: target + label peluang */}
+      <div className='p-6 md:p-8 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-5'>
+        <div className='flex flex-col md:flex-row md:items-start md:justify-between gap-5'>
+          <div className='space-y-2 min-w-0'>
             <div className='inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20'>
-              <FaMagic className='text-indigo-400' /> Smart Match Analytics
+              <FaMagic className='text-indigo-400' /> Smart Match AI
             </div>
-            <h2 className='text-xl md:text-2xl font-bold text-[var(--text-primary)]'>
-              {data.targetUniversity}
+            <h2 className='text-xl md:text-2xl font-bold text-[var(--text-primary)] break-words'>
+              {data.targetUniversity || 'Target kampus belum diisi'}
             </h2>
-            <p className='text-sm text-[var(--text-secondary)] flex items-center gap-2'>
-              <FaGraduationCap className='text-indigo-400 text-base' /> {data.targetMajor}
+            <p className='text-sm text-[var(--text-secondary)] flex items-start gap-2'>
+              <FaGraduationCap className='text-indigo-400 text-base mt-0.5 shrink-0' />
+              <span className='break-words'>
+                {data.targetMajor || 'Target jurusan belum diisi'}
+                {data.entryPath ? ` • Jalur ${data.entryPath}` : ''}
+              </span>
             </p>
           </div>
 
-          {/* Match Score Indicator */}
-          <div className='flex items-center gap-4 bg-[var(--bg-secondary)] p-4 rounded-2xl border border-[var(--border-color)] relative z-30'>
-            <div className='relative flex items-center justify-center w-16 h-16 rounded-2xl bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-2xl font-extrabold text-[var(--primary)]'>
-              {score}
-              <span className='text-xs font-normal opacity-70'>%</span>
-            </div>
-            <div>
-              <div className='group relative flex items-center gap-1.5 text-xs text-[var(--text-tertiary)] uppercase tracking-wider font-bold cursor-pointer'>
-                <span>Match Score</span>
-                <FaInfoCircle className='text-indigo-400 text-sm group-hover:scale-110 transition-transform' />
-
-                {/* Hover Tooltip */}
-                <div className='absolute right-0 top-full mt-2 w-72 md:w-80 p-4 bg-[var(--bg-card)] rounded-2xl border border-[var(--border-color)] shadow-2xl opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-200 z-[9999] normal-case text-left font-normal space-y-2.5'>
-                  <div className='flex items-center gap-2 text-xs font-bold text-[var(--text-primary)] border-b border-[var(--border-color)] pb-2'>
-                    <FaInfoCircle className='text-indigo-400 text-sm' />
-                    <span>Penjelasan Match Score</span>
-                  </div>
-
-                  <p className='text-xs text-[var(--text-secondary)] leading-relaxed'>
-                    Indikator kelayakan rencana studi berdasarkan ketersediaan alumni & mentor SMANTA:
-                  </p>
-
-                  <ul className='text-[11px] text-[var(--text-secondary)] space-y-1.5 list-disc pl-4'>
-                    <li><strong>Skor Dasar:</strong> 50 Poin</li>
-                    <li><strong>Alumni Sejurusan:</strong> hingga +35 Poin (≥5 alumni SMANTA sejurusan)</li>
-                    <li><strong>Mentor Aktif:</strong> hingga +15 Poin (≥3 mentor aktif)</li>
-                  </ul>
-
-                  <div className='pt-2 border-t border-[var(--border-color)] text-[10px] text-[var(--text-tertiary)] font-semibold flex justify-between gap-1'>
-                    <span>🟢 ≥75%: Sangat Cocok</span>
-                    <span>🟡 50-74%: Cukup Cocok</span>
-                  </div>
-                </div>
-              </div>
-              <div
-                className={`mt-1 text-xs font-bold ${badge.color}`}
-              >
-                {badge.label}
-              </div>
-            </div>
+          <div className='flex flex-col items-start md:items-end gap-2 shrink-0'>
+            <span
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-2xl border text-xs md:text-sm font-extrabold ${style.badge}`}
+            >
+              <span className={`w-2 h-2 rounded-full ${style.dot}`} />
+              {style.label}
+            </span>
+            <button
+              type='button'
+              onClick={() => void fetchAnalysis(true)}
+              disabled={refreshing}
+              className='inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold border border-[var(--border-color)] text-[var(--text-secondary)] hover:text-[var(--primary)] hover:border-[var(--primary)]/40 transition-all disabled:opacity-60 disabled:cursor-not-allowed'
+            >
+              <FaSyncAlt className={refreshing ? 'animate-spin' : ''} />
+              Analisis Ulang
+            </button>
+            {data.cached && (
+              <span className='inline-flex items-center gap-1.5 text-[10px] md:text-[11px] text-[var(--text-tertiary)]'>
+                <FaInfoCircle /> Hasil tersimpan (cache 30 menit)
+              </span>
+            )}
           </div>
         </div>
+
+        {ai.ringkasan && (
+          <p className='text-sm md:text-base text-[var(--text-secondary)] leading-relaxed'>
+            {ai.ringkasan}
+          </p>
+        )}
+
+        {ai.peluangAlasan.length > 0 && (
+          <ul className='space-y-1.5'>
+            {ai.peluangAlasan.map((reason, index) => (
+              <li
+                key={index}
+                className='flex items-start gap-2 text-xs md:text-sm text-[var(--text-secondary)]'
+              >
+                <FaCheckCircle className='text-indigo-400 text-[11px] mt-1 shrink-0' />
+                <span>{reason}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {stats && (
+          <div className='grid grid-cols-2 md:grid-cols-4 gap-2.5 pt-1'>
+            <StatChip
+              icon={<FaUserGraduate />}
+              value={stats.exactAlumni}
+              label='Alumni sejurusan & kampus'
+            />
+            <StatChip
+              icon={<FaUsers />}
+              value={stats.sameMajorAlumni}
+              label='Alumni sejurusan'
+            />
+            <StatChip
+              icon={<FaCompass />}
+              value={stats.mentors}
+              label='Mentor aktif'
+            />
+            <StatChip
+              icon={<FaMagic />}
+              value={stats.peminat}
+              label='Peminat target ini'
+            />
+          </div>
+        )}
       </div>
 
-      {/* Grid 2 Kolom untuk Mentor & Realita Karir */}
-      <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
-        {/* Card 1: Mentors & Alumni Network */}
-        <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
-          <div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+      {/* Kekuatan vs Risiko */}
+      {(hasKekuatan || hasRisiko) && (
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-3'>
             <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
-              Jaringan Alumni & Mentor
+              <FaCheckCircle className='text-emerald-400' /> Kekuatan
             </h3>
-            <span className='text-xs text-indigo-400 border px-2.5 py-1 rounded-full font-bold whitespace-nowrap self-start sm:self-auto'>
-              {data.exactMatchAlumniCount} Alumni Sejurusan
-            </span>
+            {hasKekuatan ? (
+              <ul className='space-y-2'>
+                {ai.kekuatan.map((item, index) => (
+                  <li
+                    key={index}
+                    className='flex items-start gap-2.5 text-xs md:text-sm text-[var(--text-secondary)] p-3 rounded-2xl bg-emerald-500/5 border border-emerald-500/15'
+                  >
+                    <span className='w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0' />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className='text-xs text-[var(--text-tertiary)] italic'>
+                Data kekuatan belum cukup untuk dianalisis.
+              </p>
+            )}
           </div>
 
-          {(() => {
-            const displayAlumni =
-              data.alumniNetwork && data.alumniNetwork.length > 0
-                ? data.alumniNetwork
-                : data.mentors || [];
-
-            if (displayAlumni.length === 0) {
-              return (
-                <div className='p-6 text-center text-[var(--text-tertiary)] bg-[var(--bg-secondary)]/30 rounded-2xl border border-dashed border-[var(--border-color)] space-y-1'>
-                  <FaUserGraduate className='mx-auto text-2xl opacity-40 mb-1' />
-                  <p className='text-xs font-medium'>Belum ada alumni terdaftar untuk jurusan ini.</p>
-                  <p className='text-[11px] opacity-70'>
-                    Total {data.alumniCount} alumni terdaftar di {data.targetUniversity}.
-                  </p>
-                </div>
-              );
-            }
-
-            return (
-              <div className='space-y-3 lg:max-h-[360px] lg:overflow-y-auto lg:pr-1 custom-scrollbar'>
-                {displayAlumni.map((m) => (
-                  <div
-                    key={m._id}
-                    className='p-4 bg-[var(--bg-secondary)]/50 rounded-2xl border border-[var(--border-color)] hover:border-indigo-500/40 transition-all space-y-2'
+          <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-3'>
+            <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
+              <FaExclamationTriangle className='text-rose-400' /> Risiko
+            </h3>
+            {hasRisiko ? (
+              <ul className='space-y-2'>
+                {ai.risiko.map((item, index) => (
+                  <li
+                    key={index}
+                    className='flex items-start gap-2.5 text-xs md:text-sm text-[var(--text-secondary)] p-3 rounded-2xl bg-rose-500/5 border border-rose-500/15'
                   >
-                    <div className='flex items-start justify-between gap-2'>
-                      <div>
-                        <div className='flex items-center gap-2 flex-wrap'>
-                          <h4 className='text-sm font-bold text-[var(--text-primary)]'>
-                            {m.fullName}
-                          </h4>
-                          {m.isMentor ? (
-                            <span className='px-2 py-0.5 rounded-full text-[10px] font-bold text-emerald-400 border'>
-                              ✨ Mentor
-                            </span>
-                          ) : (
-                            <span className='px-2 py-0.5 rounded-full text-[10px] font-medium text-gray-400 border'>
-                              🎓 Alumni
-                            </span>
-                          )}
-                        </div>
-                        <p className='text-xs text-[var(--text-secondary)] mt-0.5'>
-                          {m.universityName ? `${m.universityName} • ` : ''}
-                          <span className='font-bold text-[var(--text-primary)]'>{m.major}</span>{' '}
-                          <span className='text-[var(--text-tertiary)]'>({m.graduationYear || 'Alumni'})</span>
-                        </p>
-                        <p className='text-xs text-brown-300 font-medium mt-0.5'>
-                          💼 {m.position} {m.institution && m.institution !== '-' ? `di ${m.institution}` : ''}
-                        </p>
-                      </div>
-                    </div>
+                    <span className='w-1.5 h-1.5 rounded-full bg-rose-400 mt-1.5 shrink-0' />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className='text-xs text-[var(--text-tertiary)] italic'>
+                Tidak ada risiko khusus yang terdeteksi dari data.
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
-                    <div className='flex items-center gap-2 pt-2 border-t border-[var(--border-color)]/50'>
-                      <span className='text-[10px] text-[var(--text-tertiary)] font-semibold'>Kontak:</span>
-                      {m.email || m.socialMedia?.linkedin || m.socialMedia?.instagram ? (
-                        <>
-                          {m.email && (
-                            <a
-                              href={`mailto:${m.email}`}
-                              target='_blank'
-                              rel='noreferrer'
-                              className='p-1.5 rounded-lg bg-[var(--bg-card)] hover:bg-indigo-600/30 text-[var(--text-secondary)] hover:text-indigo-300 transition-colors text-xs border border-[var(--border-color)]'
-                              title={m.email}
-                            >
-                              <FaEnvelope />
-                            </a>
-                          )}
-                          {m.socialMedia?.instagram && (
-                            <a
-                              href={
-                                m.socialMedia.instagram.startsWith('http')
-                                  ? m.socialMedia.instagram
-                                  : `https://instagram.com/${m.socialMedia.instagram.replace('@', '')}`
-                              }
-                              target='_blank'
-                              rel='noreferrer'
-                              className='p-1.5 rounded-lg hover:bg-pink-600/30 text-pink-400 transition-colors text-xs border border-pink-500/20'
-                              title='Instagram'
-                            >
-                              <FaInstagram />
-                            </a>
-                          )}
-                          {m.socialMedia?.linkedin && (
-                            <a
-                              href={m.socialMedia.linkedin}
-                              target='_blank'
-                              rel='noreferrer'
-                              className='p-1.5 rounded-lg hover:bg-blue-600/30 text-blue-400 transition-colors text-xs border border-blue-500/20'
-                              title='LinkedIn'
-                            >
-                              <FaLinkedin />
-                            </a>
-                          )}
-                        </>
-                      ) : (
-                        <span className='text-[10px] italic text-[var(--text-tertiary)] opacity-70'>
-                          Belum menyantumkan kontak
-                        </span>
-                      )}
-                    </div>
+      {/* Strategi */}
+      {ai.strategi.length > 0 && (
+        <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
+          <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
+            <FaLightbulb className='text-amber-400' /> Strategi Masuk
+          </h3>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-3'>
+            {ai.strategi.map((item, index) => (
+              <div
+                key={index}
+                className='p-4 rounded-2xl bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] space-y-1.5'
+              >
+                <p className='text-sm font-bold text-[var(--text-primary)]'>
+                  {item.judul}
+                </p>
+                <p className='text-xs md:text-sm text-[var(--text-secondary)] leading-relaxed'>
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Alternatif kampus & jurusan */}
+      {(ai.alternatifKampus.length > 0 || ai.jurusanAlternatif.length > 0) && (
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          {ai.alternatifKampus.length > 0 && (
+            <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
+              <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
+                <FaUniversity className='text-indigo-400' /> Alternatif Kampus
+              </h3>
+              <div className='space-y-3'>
+                {ai.alternatifKampus.map((item, index) => (
+                  <div
+                    key={index}
+                    className='p-4 rounded-2xl bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] space-y-1'
+                  >
+                    <p className='text-sm font-bold text-[var(--text-primary)]'>
+                      {item.nama}
+                    </p>
+                    {item.jurusan && (
+                      <p className='text-[11px] md:text-xs font-semibold text-indigo-400'>
+                        {item.jurusan}
+                      </p>
+                    )}
+                    <p className='text-xs text-[var(--text-secondary)] leading-relaxed'>
+                      {item.alasan}
+                    </p>
                   </div>
                 ))}
               </div>
-            );
-          })()}
-        </div>
+            </div>
+          )}
 
-        {/* Card 2: Realita Prospek Karir Alumni */}
+          {ai.jurusanAlternatif.length > 0 && (
+            <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
+              <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
+                <FaGraduationCap className='text-teal-400' /> Jurusan Alternatif
+              </h3>
+              <div className='space-y-3'>
+                {ai.jurusanAlternatif.map((item, index) => (
+                  <div
+                    key={index}
+                    className='p-4 rounded-2xl bg-[var(--bg-secondary)]/50 border border-[var(--border-color)] space-y-1'
+                  >
+                    <p className='text-sm font-bold text-[var(--text-primary)]'>
+                      {item.nama}
+                    </p>
+                    <p className='text-xs text-[var(--text-secondary)] leading-relaxed'>
+                      {item.alasan}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Langkah berikutnya */}
+      {ai.langkah.length > 0 && (
         <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
           <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
-            Realita Karir Alumni SMANTA
+            <FaCalendarAlt className='text-emerald-400' /> Langkah 1-3 Bulan ke
+            Depan
           </h3>
+          <ol className='space-y-2.5'>
+            {ai.langkah.map((item, index) => (
+              <li
+                key={index}
+                className='flex items-start gap-3 text-xs md:text-sm text-[var(--text-secondary)]'
+              >
+                <span className='w-6 h-6 shrink-0 rounded-full bg-[var(--primary)]/15 text-[var(--primary)] text-[11px] font-extrabold flex items-center justify-center'>
+                  {index + 1}
+                </span>
+                <span className='pt-0.5'>{item}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
 
-          {data.careerOutcomes && data.careerOutcomes.length > 0 ? (
-            <div className='space-y-4'>
+      {/* Data pendukung: prospek karir & institusi */}
+      {stats &&
+        (stats.careerOutcomes.length > 0 ||
+          stats.topInstitutions.length > 0) && (
+          <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-4'>
+            <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
+              <FaBriefcase className='text-teal-400' /> Prospek Karir Alumni
+            </h3>
+
+            {stats.careerOutcomes.length > 0 && (
               <div className='space-y-3'>
-                {data.careerOutcomes.map((c, idx) => (
-                  <div key={idx} className='space-y-1'>
-                    <div className='flex justify-between text-xs font-semibold'>
-                      <span className='text-[var(--text-primary)]'>{c.title}</span>
-                      <span className='text-emerald-400 font-bold'>{c.percentage}% ({c.count} alumni)</span>
+                {stats.careerOutcomes.map((item, index) => (
+                  <div key={index} className='space-y-1'>
+                    <div className='flex justify-between gap-3 text-xs font-semibold'>
+                      <span className='text-[var(--text-primary)] truncate'>
+                        {item.title}
+                      </span>
+                      <span className='text-emerald-400 font-bold whitespace-nowrap'>
+                        {item.percentage}% ({item.count} alumni)
+                      </span>
                     </div>
                     <div className='w-full bg-[var(--bg-secondary)] rounded-full h-2 overflow-hidden'>
                       <div
                         className='bg-gradient-to-r from-emerald-500 to-teal-400 h-2 rounded-full transition-all duration-500'
-                        style={{ width: `${Math.max(c.percentage, 8)}%` }}
-                      ></div>
+                        style={{ width: `${Math.max(item.percentage, 8)}%` }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
+            )}
 
-              {data.topInstitutions && data.topInstitutions.length > 0 && (
-                <div className='pt-3 border-t border-[var(--border-color)]'>
-                  <div className='text-xs text-[var(--text-secondary)] font-semibold mb-2 flex items-center gap-1.5'>
-                    <FaBuilding className='text-teal-400' /> Top Tempat Kerja Alumni:
-                  </div>
-                  <div className='flex flex-wrap gap-1.5'>
-                    {data.topInstitutions.map((inst, idx) => (
-                      <span
-                        key={idx}
-                        className='text-blue text-xs font-medium'
-                      >
-                        💼 {inst}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className='p-6 text-center text-[var(--text-tertiary)] bg-[var(--bg-secondary)]/30 rounded-2xl border border-dashed border-[var(--border-color)] space-y-1'>
-              <FaBriefcase className='mx-auto text-2xl opacity-40 mb-1' />
-              <p className='text-xs font-medium'>Data karir lulusan jurusan ini belum cukup melimpah.</p>
-              <p className='text-[11px] opacity-70'>
-                Alumni SMANTA yang lulus dari jurusan ini sebagian besar masih menempuh studi aktif.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Card 3 (Full Width): Rekomendasi Kampus Alternatif Sejurusan */}
-      <div className='p-6 bg-[var(--bg-card)] rounded-3xl border border-[var(--border-color)] shadow-sm space-y-5'>
-        <div className='flex items-center justify-between flex-wrap gap-2'>
-          <h3 className='text-base font-bold text-[var(--text-primary)] flex items-center gap-2'>
-            Kampus Alternatif untuk Jurusan {data.targetMajor}
-          </h3>
-          <span className='text-xs text-[var(--text-tertiary)]'>
-            Berdasarkan sebaran alumni SMANTA sejurusan
-          </span>
-        </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-          {data.alternativeUniversities && data.alternativeUniversities.length > 0 ? (
-            data.alternativeUniversities.map((alt, idx) => (
-              <div
-                key={idx}
-                className='p-5 bg-[var(--bg-secondary)]/50 rounded-2xl border border-[var(--border-color)] hover:border-blue-500/40 transition-all space-y-3'
-              >
-                <div className='flex flex-col gap-2 pb-2 border-b border-[var(--border-color)]/60 sm:flex-row sm:items-center sm:justify-between'>
-                  <h4 className='text-sm font-bold text-[var(--text-primary)] line-clamp-2 sm:line-clamp-1'>
-                    {alt.name}
-                  </h4>
-                  <div className='flex flex-wrap items-center gap-2 text-xs'>
-                    <span className='px-2.5 py-0.5 rounded-full text-indigo-400 border font-bold whitespace-nowrap'>
-                      {alt.isSameMajor !== false
-                        ? `${alt.alumniCount} Alumni Sejurusan`
-                        : `${alt.alumniCount} Alumni Kampus Ini`}
+            {stats.topInstitutions.length > 0 && (
+              <div className='pt-3 border-t border-[var(--border-color)] space-y-2'>
+                <p className='text-xs text-[var(--text-secondary)] font-semibold flex items-center gap-1.5'>
+                  <FaBuilding className='text-teal-400' /> Institusi tempat kerja
+                  alumni:
+                </p>
+                <div className='flex flex-wrap gap-1.5'>
+                  {stats.topInstitutions.map((institution, index) => (
+                    <span
+                      key={index}
+                      className='text-[11px] px-2.5 py-1 rounded-full bg-[var(--bg-secondary)]/60 border border-[var(--border-color)] text-[var(--text-secondary)]'
+                    >
+                      {institution}
                     </span>
-                    <span className='px-2.5 py-0.5 rounded-full text-[#703f1d] border font-bold whitespace-nowrap'>
-                      {alt.mentorCount} Mentor
-                    </span>
-                  </div>
+                  ))}
                 </div>
-
-                {/* List Alumni di Kampus Alternatif Ini */}
-                {alt.alumniList && alt.alumniList.length > 0 ? (
-                  <div className='space-y-2 pt-1'>
-                    <div className='text-[11px] font-bold text-[var(--text-tertiary)] uppercase tracking-wider'>
-                      {alt.isSameMajor !== false
-                        ? `Daftar Alumni Sejurusan (${data.targetMajor}):`
-                        : `Daftar Alumni di ${alt.name}:`}
-                    </div>
-                    <div className='space-y-1.5 lg:max-h-[240px] lg:overflow-y-auto lg:pr-1 custom-scrollbar'>
-                      {alt.alumniList.map((a) => (
-                        <div
-                          key={a._id}
-                          className='flex items-start justify-between p-2.5 bg-[var(--bg-card)] rounded-xl border border-[var(--border-color)]/60 text-xs gap-2'
-                        >
-                          <div>
-                            <span className='font-bold text-[var(--text-primary)]'>
-                              {a.fullName}
-                            </span>
-                            <span className='text-[var(--text-tertiary)] ml-1'>
-                              ({a.graduationYear || 'Alumni'})
-                            </span>
-                            <p className='text-[11px] font-bold text-blue-400 mt-0.5 flex items-center gap-1'>
-                              🎓 {a.major}
-                            </p>
-                            {a.position && (
-                              <p className='text-[11px] text-[var(--text-secondary)] font-medium mt-0.5'>
-                                💼 {a.position} {a.institution && a.institution !== '-' ? `di ${a.institution}` : ''}
-                              </p>
-                            )}
-                          </div>
-                          {a.isMentor && (
-                            <span className='px-2 py-0.5 rounded text-[9px] font-bold text-emerald-400 border rounded-lg shrink-0 mt-0.5'>
-                              Mentor
-                            </span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className='text-xs text-[var(--text-tertiary)] italic'>
-                    Belum ada detail alumni sejurusan di kampus ini.
-                  </p>
-                )}
               </div>
-            ))
-          ) : (
-            <p className='text-xs text-[var(--text-tertiary)] col-span-2'>
-              Belum ada alternatif kampus yang terdeteksi.
-            </p>
-          )}
-        </div>
+            )}
+          </div>
+        )}
+
+      {/* Footer catatan data */}
+      <div className='flex flex-col gap-2 px-1 pb-2 text-[10px] md:text-[11px] text-[var(--text-tertiary)]'>
+        {ai.catatanData && (
+          <p className='flex items-start gap-2'>
+            <FaInfoCircle className='mt-0.5 shrink-0' />
+            <span>{ai.catatanData}</span>
+          </p>
+        )}
+        <p className='opacity-80'>
+          Analisis dihasilkan AI dari data alumni SMANTA
+          {generatedAt ? ` • ${generatedAt}` : ''}
+          {data.cached ? ' • dari cache' : ''}
+        </p>
       </div>
     </div>
   );
