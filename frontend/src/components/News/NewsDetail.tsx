@@ -36,29 +36,29 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
   };
 
   return (
-    <article className='p-4 sm:p-6 lg:p-8 pb-20 page-fade-in'>
+    <article className='max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 pb-20 page-fade-in'>
       <button
         onClick={handleBack}
-        className='group flex items-center gap-2 text-[var(--text-secondary)] hover:text-[var(--primary)] mb-8 transition-colors'
+        className='group inline-flex items-center gap-2 text-xs sm:text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] mb-6 transition-colors cursor-pointer'
       >
         <div className='p-2 rounded-full group-hover:bg-[var(--bg-tertiary)] transition-colors'>
-          <FaArrowLeft />
+          <FaArrowLeft className='text-xs sm:text-sm' />
         </div>
         <span className='font-medium'>Kembali</span>
       </button>
 
-      <header className='mb-5'>
-        <h1 className='text-sm md:text-2xl font-bold text-[var(--text-primary)] mb-6 leading-tight'>
+      <header className='mb-6'>
+        <h1 className='text-lg sm:text-xl md:text-3xl font-extrabold text-[var(--text-primary)] mb-4 leading-snug'>
           {news.title}
         </h1>
 
         <div className='flex items-center gap-3'>
-          <FaUserCircle className='text-xl md:text-3xl text-[var(--text-tertiary)]' />
+          <FaUserCircle className='text-2xl md:text-3xl text-[var(--text-tertiary)] shrink-0' />
           <div className='text-xs md:text-sm'>
-            <div className='font-medium text-[var(--text-primary)]'>
+            <div className='font-semibold text-[var(--text-primary)]'>
               {news.author?.username || 'Admin'}
             </div>
-            <div className='flex items-center gap-2 text-[var(--text-secondary)]'>
+            <div className='flex items-center gap-2 text-[var(--text-secondary)] flex-wrap text-xs'>
               <span>
                 {new Date(news.createdAt).toLocaleDateString('id-ID', {
                   month: 'short',
@@ -68,17 +68,18 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
               </span>
               <span>•</span>
               <span className='flex items-center gap-1'>
-                <FaClock />
+                <FaClock className='text-[10px]' />
                 {calculateReadTime(news.content)}
               </span>
               {news.isPublished !== undefined && (
                 <>
                   <span>•</span>
                   <span
-                    className={`px-2 py-0.5 rounded text-xs ${news.isPublished
+                    className={`px-2 py-0.5 rounded text-[11px] font-medium ${
+                      news.isPublished
                         ? 'bg-green-100 text-green-700'
                         : 'bg-yellow-100 text-yellow-700'
-                      }`}
+                    }`}
                   >
                     {news.isPublished ? 'Published' : 'Draft'}
                   </span>
@@ -89,84 +90,101 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
         </div>
       </header>
 
-      <div className='border-t border-[var(--border-color)] my-5'></div>
+      <div className='border-t border-[var(--border-color)] my-6'></div>
 
       <div
-        className='prose prose-lg dark:prose-invert max-w-none text-sm'
+        className='news-content text-sm sm:text-base leading-relaxed text-[var(--text-primary)]'
         dangerouslySetInnerHTML={{ __html: news.content }}
       />
 
-      {/* Custom styles for content that might escape Tailwind typography */}
+      {/* Custom styles for news content formatting */}
       <style>{`
-        .prose img {
+        .news-content {
+          line-height: 1.65;
+          word-break: break-word;
+        }
+        .news-content p {
+          margin-top: 0;
+          margin-bottom: 0.65rem;
+          line-height: 1.65;
+          color: var(--text-primary);
+        }
+        /* Tangani paragraf kosong bawaan editor Quill (<p><br></p>) agar tidak membuat jarak melonjak jauh */
+        .news-content p:empty,
+        .news-content p:has(> br:only-child) {
+          margin-bottom: 0.35rem;
+          min-height: 0.8rem;
+        }
+        .news-content img {
           border-radius: 8px;
-          margin: 1.5rem auto;
+          margin: 1.25rem auto;
           box-shadow: var(--shadow-md);
           max-width: 100%;
           height: auto;
           display: block;
         }
-        .prose p {
-          margin-bottom: 1.25rem;
-          line-height: 1.7;
-          color: var(--text-primary);
-        }
-        .prose h1, .prose h2, .prose h3 {
+        .news-content h1, .news-content h2, .news-content h3, .news-content h4 {
           color: var(--text-primary);
           font-weight: 700;
-          margin-top: 2rem;
-          margin-bottom: 1rem;
-          line-height: 1.3;
+          margin-top: 1.5rem;
+          margin-bottom: 0.6rem;
+          line-height: 1.35;
         }
-        .prose a {
+        .news-content h1 { font-size: 1.5rem; }
+        .news-content h2 { font-size: 1.3rem; }
+        .news-content h3 { font-size: 1.15rem; }
+        .news-content a {
           color: var(--primary);
           text-decoration: underline;
         }
-        .prose blockquote {
+        .news-content blockquote {
           border-left: 4px solid var(--primary);
           padding-left: 1rem;
-          margin: 1.5rem 0;
+          margin: 1rem 0;
           font-style: italic;
           color: var(--text-secondary);
         }
-        .prose ul {
+        .news-content ul {
           list-style-type: disc;
-          margin-left: 1.5rem;
-          margin-bottom: 1.25rem;
+          margin-left: 1.25rem;
+          margin-top: 0.25rem;
+          margin-bottom: 0.75rem;
           padding-left: 0.5rem;
         }
-        .prose ol {
+        .news-content ol {
           list-style-type: decimal;
-          margin-left: 1.5rem;
-          margin-bottom: 1.25rem;
+          margin-left: 1.25rem;
+          margin-top: 0.25rem;
+          margin-bottom: 0.75rem;
           padding-left: 0.5rem;
         }
-        .prose li {
-          margin-bottom: 0.5rem;
+        .news-content li {
+          margin-bottom: 0.25rem;
+          line-height: 1.6;
           color: var(--text-primary);
         }
-        .prose strong {
+        .news-content strong {
           color: var(--text-primary);
           font-weight: 700;
         }
         /* Quill Alignment Support */
-        .ql-align-center {
+        .news-content .ql-align-center {
           text-align: center;
         }
-        .ql-align-right {
+        .news-content .ql-align-right {
           text-align: right;
         }
-        .ql-align-justify {
+        .news-content .ql-align-justify {
           text-align: justify;
         }
         /* Quill Indentation Support */
-        .ql-indent-1 { padding-left: 3em; }
-        .ql-indent-2 { padding-left: 6em; }
-        .ql-indent-3 { padding-left: 9em; }
+        .news-content .ql-indent-1 { padding-left: 2em; }
+        .news-content .ql-indent-2 { padding-left: 4em; }
+        .news-content .ql-indent-3 { padding-left: 6em; }
         /* Quill Size Support */
-        .ql-size-small { font-size: 0.8em; }
-        .ql-size-large { font-size: 1.5em; }
-        .ql-size-huge { font-size: 2.5em; }
+        .news-content .ql-size-small { font-size: 0.85em; }
+        .news-content .ql-size-large { font-size: 1.3em; }
+        .news-content .ql-size-huge { font-size: 1.8em; }
       `}</style>
     </article>
   );
