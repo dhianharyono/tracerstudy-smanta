@@ -89,22 +89,23 @@ const GraduationConfirmationModal = ({ isOpen, onClose, onSuccess }: GraduationC
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-row items-center gap-2 sm:gap-3 w-full">
                 <button
                   onClick={handleConfirm}
                   disabled={loading}
-                  className="w-full py-4 px-6 bg-[color:var(--primary)] hover:bg-[color:var(--primary-dark)] text-white font-bold rounded-2xl shadow-lg shadow-[var(--primary)]/30 transition-all flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50"
+                  className="flex-1 py-2.5 px-3 sm:py-3.5 sm:px-5 text-xs sm:text-sm font-bold bg-[color:var(--primary)] hover:bg-[color:var(--primary-dark)] text-white rounded-xl sm:rounded-2xl shadow-md shadow-[var(--primary)]/30 transition-all flex items-center justify-center gap-1.5 sm:gap-3 active:scale-[0.98] disabled:opacity-50 whitespace-nowrap"
                 >
                   {loading ? 'Memproses...' : (
                     <>
-                      <FaCheckCircle /> Yes, Saya Sudah Lulus!
+                      <FaCheckCircle className="text-sm sm:text-base shrink-0" />
+                      <span>Yes, Saya Sudah Lulus!</span>
                     </>
                   )}
                 </button>
                 <button
                   onClick={onClose}
                   disabled={loading}
-                  className="w-full py-3 px-6 text-[color:var(--text-secondary)] font-bold rounded-2xl hover:bg-[color:var(--bg-tertiary)] transition-all grayscale opacity-70 hover:opacity-100 disabled:opacity-50"
+                  className="flex-1 py-2.5 px-3 sm:py-3.5 sm:px-5 text-xs sm:text-sm font-bold text-[color:var(--text-secondary)] rounded-xl sm:rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-tertiary)]/60 hover:bg-[color:var(--bg-tertiary)] transition-all grayscale opacity-70 hover:opacity-100 disabled:opacity-50 whitespace-nowrap"
                 >
                   Belum, Masih Berjuang
                 </button>

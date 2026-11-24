@@ -42,8 +42,8 @@ const News = ({ data }: NewsProps) => {
     <div className='card flex flex-col h-full overflow-hidden group'>
       {/* Header */}
       <div className='flex items-center justify-between mb-8'>
-        <h2 className='text-lg md:text-xl flex items-center gap-3 font-bold text-[color:var(--text-primary)]'>
-          <div className='p-2 bg-amber-500/10 rounded-lg group-hover:rotate-12 transition-transform duration-300'>
+        <h2 className='text-sm sm:text-base flex items-center gap-2.5 font-bold text-[color:var(--text-primary)]'>
+          <div className='p-1.5 sm:p-2 bg-amber-500/10 rounded-lg sm:rounded-xl group-hover:rotate-12 transition-transform duration-300'>
             <FaNewspaper className='text-amber-500' />
           </div>
           <span>Informasi SMANTA</span>

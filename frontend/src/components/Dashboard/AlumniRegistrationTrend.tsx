@@ -95,15 +95,15 @@ const AlumniRegistrationTrend = () => {
     <div className='card h-full flex flex-col'>
       {/* Header section */}
       <div className='flex flex-wrap gap-4 items-center justify-between mb-6'>
-        <div className='flex items-center gap-3'>
-          <div className='p-2.5 bg-blue-500/10 rounded-xl text-blue-600'>
-            <FaUserPlus className='text-xl' />
+        <div className='flex items-center gap-2.5 sm:gap-3'>
+          <div className='p-1.5 sm:p-2 bg-blue-500/10 rounded-xl text-blue-600'>
+            <FaUserPlus className='text-base sm:text-xl' />
           </div>
           <div>
-            <h2 className='text-lg md:text-xl text-[color:var(--text-primary)] font-bold m-0'>
+            <h2 className='text-sm sm:text-base text-[color:var(--text-primary)] font-bold m-0'>
               Tren Registrasi {roleLabel}
             </h2>
-            <p className='text-xs md:text-sm text-[color:var(--text-secondary)] m-0'>
+            <p className='text-[10px] sm:text-xs text-[color:var(--text-secondary)] m-0'>
               Analisis grafik pendaftaran {roleLabel.toLowerCase()} berdasarkan tanggal dibuat
             </p>
           </div>
@@ -188,38 +188,38 @@ const AlumniRegistrationTrend = () => {
       </div>
 
       {/* Stats Summary Badge Bar */}
-      <div className='grid grid-cols-2 sm:grid-cols-2 gap-3 mb-6'>
-        <div className='p-3.5 bg-blue-500/5 border border-blue-500/10 rounded-xl flex items-center justify-between'>
+      <div className='grid grid-cols-2 sm:grid-cols-2 gap-2 sm:gap-3 mb-6'>
+        <div className='p-2.5 sm:p-3.5 bg-blue-500/5 border border-blue-500/10 rounded-xl flex items-center justify-between'>
           <div>
-            <p className='text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
+            <p className='text-[10px] sm:text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
               Pendaftar Baru (Periode Ini)
             </p>
-            <p className='text-xl font-bold text-blue-600 m-0'>
-              {totalNewInPeriod.toLocaleString('id-ID')} <span className='text-xs font-normal text-blue-600/70'>{roleLabel}</span>
+            <p className='text-base sm:text-lg md:text-xl font-bold text-blue-600 m-0'>
+              {totalNewInPeriod.toLocaleString('id-ID')} <span className='text-[10px] sm:text-xs font-normal text-blue-600/70'>{roleLabel}</span>
             </p>
           </div>
-          <div className='p-2 bg-blue-500/10 rounded-lg text-blue-600'>
-            <FaUserPlus />
+          <div className='p-1.5 sm:p-2 bg-blue-500/10 rounded-lg text-blue-600 shrink-0'>
+            <FaUserPlus className='text-xs sm:text-base' />
           </div>
         </div>
 
-        <div className='p-3.5 bg-indigo-500/5 border border-indigo-500/10 rounded-xl flex items-center justify-between'>
+        <div className='p-2.5 sm:p-3.5 bg-indigo-500/5 border border-indigo-500/10 rounded-xl flex items-center justify-between'>
           <div>
-            <p className='text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
+            <p className='text-[10px] sm:text-xs font-medium text-[color:var(--text-tertiary)] uppercase tracking-wider mb-0.5'>
               {viewMode === 'new' ? 'Puncak Registrasi' : 'Total Akumulasi Terdaftar'}
             </p>
-            <p className='text-xl font-bold text-indigo-600 m-0'>
+            <p className='text-base sm:text-lg md:text-xl font-bold text-indigo-600 m-0'>
               {viewMode === 'new' ? (
                 <>
                   {peakItem.count.toLocaleString('id-ID')}{' '}
-                  <span className='text-xs font-normal text-indigo-600/70'>
+                  <span className='text-[10px] sm:text-xs font-normal text-indigo-600/70'>
                     {roleLabel} ({formatLabel(peakItem.date) || '-'})
                   </span>
                 </>
               ) : (
                 <>
                   {latestCumulative.toLocaleString('id-ID')}{' '}
-                  <span className='text-xs font-normal text-indigo-600/70'>{roleLabel}</span>
+                  <span className='text-[10px] sm:text-xs font-normal text-indigo-600/70'>{roleLabel}</span>
                 </>
               )}
             </p>

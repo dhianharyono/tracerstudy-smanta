@@ -71,7 +71,7 @@ const MajorDetailModal = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header with background pattern/color */}
-        <div className='relative overflow-hidden bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white p-8 mb-0'>
+        <div className='relative overflow-hidden bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)] text-white p-4 sm:p-8 mb-0'>
           <div className='absolute top-0 right-0 -mt-4 -mr-4 text-white/10'>
             <FaBook size={150} />
           </div>
@@ -83,10 +83,10 @@ const MajorDetailModal = ({
                   Program Studi
                 </span>
               </div>
-              <h2 className='text-sm md:text-2xl font-bold leading-tight mb-2'>
+              <h2 className='text-sm sm:text-lg md:text-2xl font-bold leading-tight mb-1.5 sm:mb-2 !text-white text-white'>
                 {major._id}
               </h2>
-              <div className='flex items-center gap-2 text-white/80 mb-10 md:mb-0'>
+              <div className='flex items-center gap-2 text-white/80 mb-1 sm:mb-0'>
                 <FaUsers />
                 <span className='font-medium text-xs md:text-base'>
                   {major.count} Alumni Terdaftar
@@ -103,7 +103,7 @@ const MajorDetailModal = ({
         </div>
 
         {/* Body */}
-        <div className='p-6 overflow-y-auto bg-[color:var(--bg-secondary)]/30 flex-1'>
+        <div className='p-3.5 sm:p-6 overflow-y-auto bg-[color:var(--bg-secondary)]/30 flex-1'>
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
             {/* Main Content: University Distribution */}
             <div className='lg:col-span-2 space-y-6'>
@@ -118,13 +118,13 @@ const MajorDetailModal = ({
                   {top3Universities.map(([univ, count]: any, idx) => (
                     <div
                       key={idx}
-                      className='bg-[color:var(--bg-tertiary)]/50 p-4 rounded-xl border border-[color:var(--border-color)] relative overflow-hidden'
+                      className='bg-[color:var(--bg-tertiary)]/50 p-2.5 sm:p-4 rounded-xl border border-[color:var(--border-color)] relative overflow-hidden'
                     >
                       <div className='absolute right-0 top-0 p-2 text-[color:var(--text-tertiary)] opacity-10 font-bold text-5xl'>
                         #{idx + 1}
                       </div>
                       <div className='relative z-10'>
-                        <div className='text-2xl font-bold text-[var(--primary)] mb-1'>
+                        <div className='text-lg sm:text-2xl font-bold text-[var(--primary)] mb-1'>
                           {count}
                         </div>
                         <div
@@ -413,16 +413,16 @@ const StudentMajors = () => {
 
       {/* Stats Cards */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
-        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-white/20 rounded-xl backdrop-blur-sm'>
+            <div className='p-3 bg-blue-500/10 text-blue-500 rounded-xl'>
               <FaBook size={20} />
             </div>
             <div>
-              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
                 Total Jurusan
               </p>
-              <h3 className='text-2xl font-bold !text-white'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {majors.length}
               </h3>
             </div>

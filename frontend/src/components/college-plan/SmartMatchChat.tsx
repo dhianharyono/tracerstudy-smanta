@@ -637,26 +637,28 @@ export const SmartMatchChat: React.FC<SmartMatchChatProps> = ({
         } bg-[var(--bg-card)] shadow-sm overflow-hidden overflow-x-hidden ${className}`}
     >
       {/* Top Fixed / Sticky Navigation Bar: Model Selector (Kiri) & Tombol Aksi (Kanan) */}
-      <div className='shrink-0 h-14 bg-white px-4 sm:px-6 md:px-8 flex items-center justify-between z-20 border-b border-slate-100'>
+      <div className='shrink-0 h-14 bg-white pl-11 pr-2.5 sm:px-6 md:px-8 flex items-center justify-between gap-1.5 sm:gap-3 z-20 border-b border-slate-100 min-w-0'>
         {/* Sisi Kiri: Model Selector Popover */}
-        <div className='relative' ref={modelDropdownRef}>
+        <div className='relative min-w-0' ref={modelDropdownRef}>
           <button
             type='button'
             onClick={() => setIsModelDropdownOpen(!isModelDropdownOpen)}
-            className='inline-flex items-center gap-2 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold shadow-2xs hover:border-slate-300 transition-all cursor-pointer'
+            className='inline-flex items-center gap-1.5 sm:gap-2 px-2 py-1.5 sm:px-3 sm:py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-[11px] sm:text-xs font-semibold shadow-2xs hover:border-slate-300 transition-all cursor-pointer whitespace-nowrap'
             title='Pilih Model AI'
           >
             <span className='w-2 h-2 rounded-full bg-blue-600 shrink-0' />
-            <span className='max-w-[130px] sm:max-w-[180px] truncate text-slate-800'>{activeModelObj.name}</span>
+            <span className='max-w-[90px] xs:max-w-[110px] sm:max-w-[180px] truncate text-slate-800 text-[11px] sm:text-xs'>
+              {activeModelObj.name}
+            </span>
             <FaChevronDown
-              className={`text-[10px] text-slate-400 transition-transform duration-200 ${
+              className={`text-[9px] sm:text-[10px] text-slate-400 transition-transform duration-200 shrink-0 ${
                 isModelDropdownOpen ? 'rotate-180' : ''
               }`}
             />
           </button>
 
           {isModelDropdownOpen && (
-            <div className='absolute left-0 top-full mt-2 w-72 sm:w-80 bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-30 animate-fade-in'>
+            <div className='absolute left-0 top-full mt-2 w-72 sm:w-80 max-w-[calc(100vw-32px)] bg-white border border-slate-200 shadow-xl rounded-2xl p-4 z-30 animate-fade-in'>
               <div className='mb-3'>
                 <h4 className='text-xs font-bold uppercase tracking-wider text-slate-900'>
                   PILIHAN MODEL AI
@@ -715,23 +717,24 @@ export const SmartMatchChat: React.FC<SmartMatchChatProps> = ({
         </div>
 
         {/* Sisi Kanan: Aksi Chat */}
-        <div className='flex items-center gap-2 sm:gap-3'>
+        <div className='flex items-center gap-1.5 sm:gap-2.5 shrink-0'>
           {/* Tombol 1: + Percakapan Baru (Pill Clean) */}
           <button
             type='button'
             onClick={handleNewConversation}
-            className='inline-flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-medium shadow-2xs hover:border-slate-300 transition-all cursor-pointer'
+            className='inline-flex items-center gap-1.5 sm:gap-2 px-2.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-700 text-[11px] sm:text-sm font-medium shadow-2xs hover:border-slate-300 transition-all cursor-pointer whitespace-nowrap'
             title='Mulai Percakapan Baru'
           >
-            <FaPlus className='text-xs text-blue-600' />
-            <span>Percakapan Baru</span>
+            <FaPlus className='text-[10px] sm:text-xs text-blue-600 shrink-0' />
+            <span className='hidden sm:inline whitespace-nowrap'>Percakapan Baru</span>
+            <span className='sm:hidden inline whitespace-nowrap text-[11px]'>Baru</span>
           </button>
 
           {/* Tombol 2: History (Icon Jam / Clock) */}
           <button
             type='button'
             onClick={() => setIsHistoryOpen(!isHistoryOpen)}
-            className={`p-2 sm:p-2.5 rounded-full border transition-all cursor-pointer flex items-center justify-center ${isHistoryOpen
+            className={`p-1.5 sm:p-2.5 w-8 h-8 sm:w-9 sm:h-9 rounded-full border transition-all cursor-pointer flex items-center justify-center shrink-0 ${isHistoryOpen
               ? 'bg-blue-50 border-blue-200 text-blue-600'
               : 'border-slate-200/90 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
@@ -745,7 +748,7 @@ export const SmartMatchChat: React.FC<SmartMatchChatProps> = ({
           <button
             type='button'
             onClick={handleClearCurrentChat}
-            className='p-2 sm:p-2.5 rounded-full border border-slate-200/90 text-slate-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all cursor-pointer flex items-center justify-center'
+            className='p-1.5 sm:p-2.5 w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-slate-200/90 text-slate-500 hover:text-red-600 hover:border-red-200 hover:bg-red-50/50 transition-all cursor-pointer flex items-center justify-center shrink-0'
             title='Hapus percakapan aktif'
             aria-label='Hapus percakapan aktif'
           >

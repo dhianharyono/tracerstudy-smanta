@@ -24,11 +24,11 @@ const TestimonialsSection = ({ testimonials, loading }: TestimonialsSectionProps
           transition={{ duration: 0.6 }}
           className='text-center mb-10 sm:mb-16 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
+          <h3 className='text-xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Apa Kata Alumni & Siswa?
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
-          <p className='text-sm md:text-base text-slate-500 font-medium'>
+          <p className='text-xs sm:text-sm md:text-base text-slate-500 font-medium'>
             Suara komunitas tentang peran Tracer Study bagi kemajuan SMANTA.
           </p>
         </motion.div>

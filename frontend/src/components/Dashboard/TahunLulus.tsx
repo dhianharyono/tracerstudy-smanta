@@ -39,8 +39,8 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
   return (
     <div className='card h-full flex flex-col'>
       <div className='flex flex-wrap gap-2 items-center justify-between mb-8'>
-        <div className='text-lg md:text-xl flex items-center gap-3 text-text-primary font-bold'>
-          <div className='p-2 bg-indigo-500/10 rounded-lg'>
+        <div className='text-sm sm:text-base flex items-center gap-2.5 text-text-primary font-bold'>
+          <div className='p-1.5 sm:p-2 bg-indigo-500/10 rounded-lg sm:rounded-xl'>
             <FaChartBar className='text-indigo-500' />
           </div>
           <span>Statistik Data Tahun Lulus Alumni</span>
@@ -142,20 +142,20 @@ const TahunLulus = ({ data }: TahunLulusProps) => {
       )}
 
       {hasData && (
-        <div className='mt-8 pt-8 border-t border-[color:var(--border-color)] flex justify-center gap-12'>
+        <div className='mt-8 pt-6 sm:pt-8 border-t border-[color:var(--border-color)] flex justify-center gap-8 sm:gap-12'>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>
+            <p className='text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-text-tertiary font-bold mb-1 sm:mb-2'>
               Lulusan Terbaru
             </p>
-            <p className='text-xl font-bold text-indigo-500'>
+            <p className='text-base sm:text-lg md:text-xl font-bold text-indigo-500'>
               {sortedData[sortedData.length - 1]._id}
             </p>
           </div>
           <div className='text-center'>
-            <p className='text-xs uppercase tracking-[0.2em] text-text-tertiary font-bold mb-2'>
+            <p className='text-[10px] sm:text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-text-tertiary font-bold mb-1 sm:mb-2'>
               Total Alumni{' '}
             </p>
-            <p className='text-xl font-bold text-indigo-500'>
+            <p className='text-base sm:text-lg md:text-xl font-bold text-indigo-500'>
               {sortedData.reduce((sum, item) => sum + item.count, 0)}
             </p>
           </div>

@@ -87,72 +87,72 @@ const UniversityDetailModal = ({
         >
           {/* Hero Header */}
           <div
-            className={`relative h-48 bg-gradient-to-br ${headerGradient} p-8 flex flex-col justify-end`}
+            className={`relative h-32 sm:h-48 bg-gradient-to-br ${headerGradient} p-4 sm:p-8 flex flex-col justify-end`}
           >
-            <div className='absolute top-6 right-6'>
+            <div className='absolute top-3 right-3 sm:top-6 sm:right-6'>
               <button
                 onClick={onClose}
-                className='p-2 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all'
+                className='p-1.5 sm:p-2 bg-white/10 hover:bg-white/20 rounded-full text-white backdrop-blur-md transition-all'
               >
                 <FaTimes />
               </button>
             </div>
-            <div className='flex items-center gap-4'>
-              <div className='w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center shadow-2xl'>
-                <FaUniversity className='text-3xl text-white' />
+            <div className='flex items-center gap-3 sm:gap-4'>
+              <div className='w-11 h-11 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl bg-white/20 backdrop-blur-xl border border-white/30 flex items-center justify-center shadow-2xl shrink-0'>
+                <FaUniversity className='text-lg sm:text-3xl text-white' />
               </div>
               <div>
-                <div className='flex items-center gap-2 mb-1'>
+                <div className='flex items-center gap-2 mb-0.5 sm:mb-1'>
                   <span className='px-2 py-0.5 rounded-full bg-white/20 text-[9px] font-bold text-white uppercase tracking-wider backdrop-blur-md border border-white/20'>
                     {university._id.type || 'Swasta'}
                   </span>
                 </div>
-                <h2 className='text-xl md:text-2xl font-bold text-white leading-tight'>
+                <h2 className='text-base sm:text-xl md:text-2xl font-bold text-white leading-tight'>
                   {university._id.name}
                 </h2>
               </div>
             </div>
           </div>
 
-          <div className='flex-1 overflow-y-auto p-8 custom-scrollbar'>
-            <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+          <div className='flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar'>
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8'>
               {/* Stats Left */}
-              <div className='space-y-6'>
+              <div className='space-y-4 sm:space-y-6'>
                 <div className='grid grid-cols-1 gap-4'>
                   <div
-                    className={`p-6 rounded-3xl ${brandBg} border ${brandBorder} flex items-center justify-between`}
+                    className={`p-3.5 sm:p-6 rounded-2xl sm:rounded-3xl ${brandBg} border ${brandBorder} flex items-center justify-between`}
                   >
                     <div>
-                      <p className='text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-1'>
+                      <p className='text-[9px] sm:text-[10px] font-bold text-text-tertiary uppercase tracking-widest mb-0.5 sm:mb-1'>
                         Jumlah Alumni
                       </p>
-                      <p className={`text-3xl font-bold ${brandColor}`}>
+                      <p className={`text-xl sm:text-3xl font-bold ${brandColor}`}>
                         {university.count}
                       </p>
                     </div>
                     <div
-                      className={`w-12 h-12 rounded-2xl ${brandBg} flex items-center justify-center`}
+                      className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl ${brandBg} flex items-center justify-center shrink-0`}
                     >
-                      <FaUsers className={`${brandColor} text-xl`} />
+                      <FaUsers className={`${brandColor} text-base sm:text-xl`} />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className='text-xs font-bold text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                  <h3 className='text-[11px] sm:text-xs font-bold text-text-primary uppercase tracking-widest mb-2.5 sm:mb-4 flex items-center gap-2'>
                     <FaBook className={brandColor} /> Jurusan Terpopuler
                   </h3>
                   <div className='space-y-2'>
                     {topMajors.map(([major, count]: any, idx) => (
                       <div
                         key={idx}
-                        className={`flex items-center justify-between p-3 rounded-2xl bg-slate-50/50 border border-slate-200/60 hover:${brandBorder} transition-colors`}
+                        className={`flex items-center justify-between p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-slate-50/50 border border-slate-200/60 hover:${brandBorder} transition-colors`}
                       >
-                        <span className='text-[11px] font-bold text-text-secondary truncate pr-2'>
+                        <span className='text-[10px] sm:text-[11px] font-bold text-text-secondary truncate pr-2'>
                           {major}
                         </span>
                         <span
-                          className={`text-[10px] font-bold ${brandColor} whitespace-nowrap ${brandBg} px-2 py-0.5 rounded-lg`}
+                          className={`text-[9px] sm:text-[10px] font-bold ${brandColor} whitespace-nowrap ${brandBg} px-2 py-0.5 rounded-lg`}
                         >
                           {count} Siswa
                         </span>
@@ -164,29 +164,29 @@ const UniversityDetailModal = ({
 
               {/* Right List */}
               <div>
-                <h3 className='text-xs font-bold text-text-primary uppercase tracking-widest mb-4 flex items-center gap-2'>
+                <h3 className='text-[11px] sm:text-xs font-bold text-text-primary uppercase tracking-widest mb-2.5 sm:mb-4 flex items-center gap-2'>
                   <FaGraduationCap className={brandColor} /> Alumni Terbaru
                 </h3>
-                <div className='space-y-3'>
+                <div className='space-y-2 sm:space-y-3'>
                   {university.alumni.slice(0, 4).map((alum, idx) => (
                     <div
                       key={idx}
-                      className={`flex items-center gap-3 p-3 rounded-2xl border border-slate-200/60 bg-slate-50/50 hover:${brandBorder} transition-colors`}
+                      className={`flex items-center gap-2.5 sm:gap-3 p-2 sm:p-3 rounded-xl sm:rounded-2xl border border-slate-200/60 bg-slate-50/50 hover:${brandBorder} transition-colors`}
                     >
                       <div
-                        className={`w-10 h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white font-bold text-xs shadow-lg`}
+                        className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-tr ${avatarGradient} flex items-center justify-center text-white font-bold text-xs shadow-lg shrink-0`}
                       >
                         {alum.name.charAt(0)}
                       </div>
                       <div className='min-w-0'>
-                        <p className='text-sm font-bold text-text-primary truncate'>
+                        <p className='text-xs sm:text-sm font-bold text-text-primary truncate'>
                           {alum.name}
                         </p>
-                        <p className='text-[10px] font-bold text-text-tertiary truncate'>
+                        <p className='text-[9px] sm:text-[10px] font-bold text-text-tertiary truncate'>
                           {alum.major}
                         </p>
                         <p
-                          className={`text-[9px] font-bold ${brandColor} uppercase mt-1`}
+                          className={`text-[8px] sm:text-[9px] font-bold ${brandColor} uppercase mt-0.5 sm:mt-1`}
                         >
                           Angkatan {alum.graduationYear}
                         </p>
@@ -198,10 +198,10 @@ const UniversityDetailModal = ({
             </div>
           </div>
 
-          <div className='p-6 bg-slate-50/50 border-t border-slate-200/60'>
+          <div className='p-3 sm:p-6 bg-slate-50/50 border-t border-slate-200/60'>
             <button
               onClick={() => onViewAll(university._id.name)}
-              className={`w-full py-4 ${buttonBg} text-white rounded-2xl font-bold shadow-xl flex items-center justify-center gap-3 transition-all active:scale-[0.98]`}
+              className={`w-full py-2.5 sm:py-4 ${buttonBg} text-white rounded-xl sm:rounded-2xl text-xs sm:text-base font-bold shadow-xl flex items-center justify-center gap-2 sm:gap-3 transition-all active:scale-[0.98]`}
             >
               Lihat Informasi Selengkapnya <FaArrowRight />
             </button>
@@ -393,16 +393,16 @@ const StudentUniversities = () => {
 
       {/* Stats Cards */}
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
-        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-white/20 rounded-xl backdrop-blur-sm'>
+            <div className='p-3 bg-blue-500/10 text-blue-500 rounded-xl'>
               <FaUniversity size={20} />
             </div>
             <div>
-              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
-                Total Perguran Tinggi
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Total Perguruan Tinggi
               </p>
-              <h3 className='text-2xl font-bold !text-white'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {universities.length}
               </h3>
             </div>

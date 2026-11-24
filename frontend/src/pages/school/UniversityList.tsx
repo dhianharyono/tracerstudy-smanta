@@ -153,16 +153,16 @@ const SchoolUniversityList = () => {
       )}
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6'>
-        <Card className='bg-gradient-to-br from-blue-500 to-blue-600 text-white border-none shadow-lg'>
+        <Card className='bg-[color:var(--bg-card)] border border-[color:var(--border-color)] shadow-sm'>
           <div className='flex items-center gap-4'>
-            <div className='p-3 bg-white/20 rounded-xl backdrop-blur-sm'>
+            <div className='p-3 bg-blue-500/10 text-blue-500 rounded-xl'>
               <FaUniversity size={20} />
             </div>
             <div>
-              <p className='text-blue-100 text-[10px] font-bold uppercase tracking-wider'>
-                Total Perguran Tinggi
+              <p className='text-[color:var(--text-secondary)] text-[10px] font-bold uppercase tracking-wider'>
+                Total Perguruan Tinggi
               </p>
-              <h3 className='text-2xl font-bold !text-white'>
+              <h3 className='text-2xl font-bold text-[color:var(--text-primary)]'>
                 {universities.length}
               </h3>
             </div>

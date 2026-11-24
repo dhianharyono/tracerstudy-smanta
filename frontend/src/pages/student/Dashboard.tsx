@@ -1,6 +1,4 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import SmartLoader from '@/components/SmartLoader';
@@ -161,12 +159,6 @@ const StudentDashboard = () => {
             Selamat datang kembali di Tracer Study
           </p>
         </div>
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 px-4 py-2.5 min-h-[40px] bg-white border border-slate-200 hover:border-blue-400 text-slate-700 hover:text-[#3b6ebb] font-semibold text-xs rounded-xl shadow-xs transition-all shrink-0"
-        >
-          <FaHome className="text-[#3b6ebb]" /> Halaman Utama
-        </Link>
       </div>
 
       <WelcomeCard

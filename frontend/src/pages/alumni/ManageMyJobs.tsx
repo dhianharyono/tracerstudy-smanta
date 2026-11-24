@@ -132,10 +132,10 @@ const ManageMyJobs = () => {
         </div>
         <Link
           to='/alumni/jobs/new'
-          className='flex items-center justify-center gap-2 px-6 py-3 bg-[var(--primary)] text-white font-bold rounded-xl shadow-lg shadow-[var(--primary)]/20 hover:opacity-90 transition-all'
+          className='w-fit inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold bg-[var(--primary)] text-white rounded-xl shadow-md shadow-[var(--primary)]/20 hover:opacity-90 transition-all'
         >
           <FaPlus />
-          Posting Loker
+          <span>Posting Loker</span>
         </Link>
       </div>
 

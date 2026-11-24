@@ -57,28 +57,28 @@ const LandingPage = () => {
           }`}
       >
         <div className='w-full px-4 sm:px-8 md:px-12 lg:px-16 xl:px-20 flex justify-between items-center transition-all duration-300'>
-          <div className='flex items-center gap-2 md:gap-3'>
+          <div className='flex items-center gap-1.5 sm:gap-2 md:gap-3'>
             <img
               src='/logo.png'
               alt='Smanta Logo'
-              className='h-8 w-8 md:h-12 md:w-12 filter drop-shadow-sm'
+              className='h-6 w-6 sm:h-8 sm:w-8 md:h-12 md:w-12 filter drop-shadow-sm'
             />
             <div className='block'>
               <div
-                className={`text-xs md:text-lg font-bold leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
+                className={`text-[10px] sm:text-xs md:text-lg font-bold leading-none tracking-tight transition-colors duration-300 ${isScrolled ? 'text-slate-900' : 'text-white'
                   }`}
               >
                 TRACER STUDY
               </div>
               <p
-                className={`text-[9px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
+                className={`text-[7.5px] sm:text-[9px] md:text-[10px] uppercase font-bold tracking-wider mt-0.5 transition-colors duration-300 ${isScrolled ? 'text-slate-500' : 'text-blue-100/80'
                   }`}
               >
                 SMAN 1 Tawangsari
               </p>
             </div>
           </div>
-          <div className='flex items-center gap-1.5 md:gap-4'>
+          <div className='flex items-center gap-1 sm:gap-1.5 md:gap-4'>
             {user ? (
               <>
                 <Link
@@ -89,7 +89,7 @@ const LandingPage = () => {
                         ? '/student'
                         : '/alumni'
                   }
-                  className={`flex items-center gap-1.5 text-xs md:text-sm font-bold px-4 md:px-6 min-h-[44px] rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                  className={`flex items-center gap-1 text-[11px] sm:text-xs md:text-sm font-bold px-2.5 py-1 min-h-[26px] sm:px-4 sm:py-1.5 sm:min-h-[32px] md:px-6 md:py-2.5 md:min-h-[40px] rounded-full shadow-md transition-all hover:scale-105 duration-300 ${isScrolled
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
                     : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
                     }`}
@@ -98,7 +98,7 @@ const LandingPage = () => {
                 </Link>
                 <button
                   onClick={() => setIsLogoutModalOpen(true)}
-                  className={`text-xs md:text-sm font-semibold transition-colors px-2 md:px-4 min-h-[44px] inline-flex items-center ${isScrolled
+                  className={`text-[11px] sm:text-xs md:text-sm font-semibold transition-colors px-1.5 sm:px-2.5 md:px-4 min-h-[26px] sm:min-h-[32px] md:min-h-[40px] inline-flex items-center cursor-pointer ${isScrolled
                     ? 'text-red-500 hover:text-red-650'
                     : 'text-red-200 hover:text-red-100'
                     }`}
@@ -110,7 +110,7 @@ const LandingPage = () => {
               <>
                 <Link
                   to='/login'
-                  className={`flex items-center gap-1 text-xs md:text-sm font-semibold transition-colors px-3 md:px-4 min-h-[44px] ${isScrolled
+                  className={`flex items-center gap-1 text-[11px] sm:text-xs md:text-sm font-semibold transition-colors px-1.5 sm:px-2.5 md:px-3.5 min-h-[26px] sm:min-h-[32px] md:min-h-[40px] ${isScrolled
                     ? 'text-slate-650 hover:text-blue-600'
                     : 'text-white/90 hover:text-slate-300'
                     }`}
@@ -119,7 +119,7 @@ const LandingPage = () => {
                 </Link>
                 <Link
                   to='/register'
-                  className={`flex items-center gap-1 text-xs md:text-sm font-extrabold px-5 md:px-6 min-h-[44px] rounded-full shadow-lg transition-all hover:scale-105 duration-300 ${isScrolled
+                  className={`flex items-center gap-1 text-[11px] sm:text-xs md:text-sm font-extrabold px-2.5 py-1 min-h-[26px] sm:px-4 sm:py-1.5 sm:min-h-[32px] md:px-6 md:py-2.5 md:min-h-[40px] rounded-full shadow-md transition-all hover:scale-105 duration-300 ${isScrolled
                     ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-blue-500/25 hover:shadow-blue-500/45'
                     : 'bg-white text-blue-600 shadow-black/10 hover:bg-blue-50'
                     }`}
@@ -137,7 +137,7 @@ const LandingPage = () => {
         </div>
       </motion.nav>
 
-      <HeroSection stats={stats} loading={loading} />
+      <HeroSection stats={stats} loading={loading} user={user} />
       <MissionSection />
       <FeaturesSection />
       <StatsSection stats={stats} loading={loading} />
@@ -169,16 +169,16 @@ const LandingPage = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className='text-2xl md:text-5xl font-bold text-white leading-tight tracking-tight'
+            className='text-xl sm:text-3xl md:text-5xl font-bold text-white leading-tight tracking-tight'
           >
-            Siap Menjadi Bagian Dari Perubahan ?
+            Siap jadi Bagian Dari Perubahan ?
           </motion.div>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className='text-sm md:text-xl text-blue-100/90 max-w-2xl mx-auto px-4 md:px-0 font-medium leading-relaxed'
+            className='text-xs sm:text-base md:text-xl text-blue-100/90 max-w-2xl mx-auto px-2 md:px-0 font-medium leading-relaxed'
           >
             Mari berkontribusi untuk SMANTA, almamater kita tercinta.{' '}
             <br className='hidden sm:block' />
@@ -191,13 +191,14 @@ const LandingPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className='flex flex-row gap-4 justify-center px-4 md:px-0'
+            className='flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 md:px-0 max-w-xs sm:max-w-none mx-auto'
           >
             {user ? (
               <motion.div
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.96 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                className='w-full sm:w-auto'
               >
                 <Link
                   to={
@@ -207,7 +208,7 @@ const LandingPage = () => {
                         ? '/student'
                         : '/alumni'
                   }
-                  className='bg-white text-blue-700 px-6 py-3.5 md:px-10 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
+                  className='w-full sm:w-auto bg-white text-blue-700 px-6 py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-flex justify-center items-center'
                 >
                   Kembali ke Dashboard
                 </Link>
@@ -215,26 +216,28 @@ const LandingPage = () => {
             ) : (
               <>
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.04, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className='w-full sm:w-auto'
                 >
                   <Link
                     to='/register'
-                    className='bg-white text-blue-700 px-6 py-3.5 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-block'
+                    className='w-full sm:w-auto bg-white text-blue-700 px-6 py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base shadow-xl hover:bg-slate-50 transition-colors inline-flex justify-center items-center'
                   >
                     Kontribusi Sekarang
                   </Link>
                 </motion.div>
 
                 <motion.div
-                  whileHover={{ scale: 1.05, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileHover={{ scale: 1.04, y: -2 }}
+                  whileTap={{ scale: 0.96 }}
                   transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+                  className='w-full sm:w-auto'
                 >
                   <Link
                     to='/login'
-                    className='bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-base hover:bg-blue-800/60 transition-colors inline-block'
+                    className='w-full sm:w-auto bg-blue-800/40 backdrop-blur-md text-white border-2 border-white/30 px-6 py-2.5 md:px-8 md:py-3.5 rounded-full font-bold text-xs sm:text-sm md:text-base hover:bg-blue-800/60 transition-colors inline-flex justify-center items-center'
                   >
                     Masuk Kembali
                   </Link>
@@ -246,7 +249,7 @@ const LandingPage = () => {
       </motion.section>
 
       {/* Premium Footer */}
-      <footer className='bg-white border-t border-slate-200/80 pt-12 sm:pt-16 pb-[calc(env(safe-area-inset-bottom)+2.5rem)] sm:pb-12 px-4 sm:px-6 relative z-10'>
+      <footer className='bg-white border-t border-slate-200/80 pt-12 sm:pt-16 pb-24 sm:pb-12 px-4 sm:px-6 relative z-10'>
         <div className='max-w-7xl mx-auto'>
           <div className='grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-slate-100'>
             {/* Branding Column */}
@@ -298,12 +301,11 @@ const LandingPage = () => {
           </div>
 
           {/* Bottom Copyright Row */}
-          <div className='pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400 text-center md:text-left'>
+          <div className='pt-8 pb-4 sm:pb-0 flex flex-col md:flex-row justify-between items-center gap-4 text-xs font-bold text-slate-400 text-center md:text-left'>
             <div>
-              &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari.
             </div>
-            <div className='flex gap-6'>
+            <div className='flex flex-wrap justify-center gap-6'>
               <button
                 type='button'
                 className='hover:text-slate-600 focus:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 rounded transition-colors cursor-pointer py-1'

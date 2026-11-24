@@ -1,11 +1,12 @@
 import { motion, Variants } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
-import { LandingPageStats } from '@/types';
+import { LandingPageStats, User } from '@/types';
 
 interface HeroSectionProps {
   stats: LandingPageStats | null;
   loading: boolean;
+  user?: User | null;
 }
 
 // Animation Variants
@@ -39,7 +40,14 @@ const visualContainerVariants: Variants = {
   },
 };
 
-const HeroSection = ({ stats, loading }: HeroSectionProps) => {
+const HeroSection = ({ stats, loading, user }: HeroSectionProps) => {
+  const dashboardLink =
+    user?.role === 'admin'
+      ? '/admin'
+      : user?.role === 'student'
+        ? '/student'
+        : '/alumni';
+
   return (
     <section className='relative min-h-[85svh] lg:min-h-[100svh] flex items-center pt-[calc(env(safe-area-inset-top)+6rem)] pb-16 sm:pt-32 sm:pb-20 md:pt-40 md:pb-28 overflow-hidden px-4 sm:px-6 bg-gradient-to-br from-blue-600 via-blue-500 to-indigo-700 text-white'>
       {/* Dot Grid Pattern Overlay */}
@@ -131,65 +139,67 @@ const HeroSection = ({ stats, loading }: HeroSectionProps) => {
           viewport={{ once: true }}
           className='space-y-6 md:space-y-8 text-center lg:text-left lg:col-span-7'
         >
-          {/* Top Pill Badge */}
-          <motion.div variants={itemVariants}>
-            <div className='inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white px-4 py-2 rounded-full text-[10px] md:text-xs font-extrabold uppercase tracking-widest mx-auto lg:mx-0 shadow-inner backdrop-blur-xs'>
-              <span className='relative flex h-2 w-2'>
-                <span className='animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-300 opacity-75'></span>
-                <span className='relative inline-flex rounded-full h-2 w-2 bg-white'></span>
-              </span>
-              Tracer Study SMANTA
-            </div>
-          </motion.div>
+          {/* Heading and Paragraph Subtitle */}
+          <div className='space-y-[5px] sm:space-y-2.5'>
+            <motion.h1
+              variants={itemVariants}
+              className='text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.18] sm:leading-[1.12] lg:leading-[1.08] tracking-tight text-white'
+            >
+              Membangun <br className='hidden lg:block' />
+              <span className='text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-blue-50'>
+                Database & Kolaborasi
+              </span>{' '}
+              Alumni SMANTA
+            </motion.h1>
 
-          {/* Heading */}
-          <motion.h1
-            variants={itemVariants}
-            className='text-4xl sm:text-6xl lg:text-6xl font-bold leading-[1.08] tracking-tight text-white'
-          >
-            Membangun <br className='hidden lg:block' />
-            <span className='text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-blue-50'>
-              Database & Kolaborasi
-            </span>{' '}
-            Alumni SMANTA
-          </motion.h1>
-
-          {/* Paragraph Subtitle */}
-          <motion.p
-            variants={itemVariants}
-            className='text-sm sm:text-base md:text-lg text-blue-50/90 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium'
-          >
-            Bukan sekadar database alumni, tapi jembatan komunikasi dan
-            kolaborasi yang nyata antara siswa, alumni, dan sekolah SMAN 1
-            Tawangsari.
-          </motion.p>
+            <motion.p
+              variants={itemVariants}
+              className='text-xs sm:text-base md:text-lg text-blue-50/90 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-medium'
+            >
+              Bukan sekadar database alumni, tapi jembatan komunikasi dan
+              kolaborasi yang nyata antara siswa, alumni, dan sekolah SMAN 1
+              Tawangsari.
+            </motion.p>
+          </div>
 
           {/* CTA Buttons with Spring Physics */}
           <motion.div
             variants={itemVariants}
-            className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start px-4 sm:px-0 pt-2 h-auto sm:h-14'
+            className='flex flex-row items-center justify-center lg:justify-start gap-2 sm:gap-4 pt-1 sm:pt-2 mt-4 sm:mt-6 w-full max-w-sm sm:max-w-none mx-auto lg:mx-0'
           >
             <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              className='flex-1 sm:flex-initial w-full sm:w-auto'
             >
               <Link
-                to='/register'
-                className='text-sm md:text-base flex items-center justify-center gap-2 bg-white text-blue-600 hover:text-blue-700 px-8 sm:px-10 min-h-[48px] rounded-full font-bold shadow-xl shadow-blue-950/20 transition-colors group'
+                to={user ? dashboardLink : '/register'}
+                className='text-[11px] sm:text-sm md:text-base flex items-center justify-center gap-1.5 sm:gap-2 bg-white text-blue-600 hover:text-blue-700 px-2.5 py-1.5 sm:px-6 sm:py-2.5 min-h-[32px] sm:min-h-[42px] rounded-full font-bold shadow-lg shadow-blue-950/20 transition-colors group whitespace-nowrap w-full sm:w-auto'
               >
-                Mulai Kontribusi
+                {user ? (
+                  <>
+                    <span className='hidden sm:inline'>Kembali ke Dashboard</span>
+                    <span className='sm:hidden inline'>Ke Dashboard</span>
+                  </>
+                ) : (
+                  <>
+                    <span className='hidden sm:inline'>Kontribusi Sekarang</span>
+                    <span className='sm:hidden inline'>Kontribusi</span>
+                  </>
+                )}
               </Link>
             </motion.div>
 
             <motion.div
-              whileHover={{ scale: 1.05, y: -2 }}
+              whileHover={{ scale: 1.04, y: -2 }}
               whileTap={{ scale: 0.96 }}
               transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+              className='flex-1 sm:flex-initial w-full sm:w-auto'
             >
               <a
                 href='#stats'
-                className='text-sm md:text-base flex items-center justify-center gap-2 bg-transparent text-white border-2 border-white/30 hover:border-white px-8 sm:px-10 min-h-[48px] rounded-full font-bold hover:bg-white/10 transition-colors'
+                className='text-[11px] sm:text-sm md:text-base flex items-center justify-center gap-1.5 sm:gap-2 bg-transparent text-white border border-white/30 hover:border-white px-2.5 py-1.5 sm:px-6 sm:py-2.5 min-h-[32px] sm:min-h-[42px] rounded-full font-bold hover:bg-white/10 transition-colors whitespace-nowrap w-full sm:w-auto'
               >
                 Lihat Statistik
               </a>

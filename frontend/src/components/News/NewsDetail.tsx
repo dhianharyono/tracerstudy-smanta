@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router-dom';
-import { FaUserCircle, FaArrowLeft, FaClock } from 'react-icons/fa';
+import { FaUserCircle, FaClock } from 'react-icons/fa';
 import { stripHtml } from '../../utils/helpers';
 
 interface NewsDetailProps {
@@ -16,17 +15,7 @@ interface NewsDetailProps {
   onBack?: () => void;
 }
 
-const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
-  const navigate = useNavigate();
-
-  const handleBack = () => {
-    if (onBack) {
-      onBack();
-    } else {
-      navigate(-1);
-    }
-  };
-
+const NewsDetail = ({ news }: NewsDetailProps) => {
   const calculateReadTime = (content: string) => {
     const text = stripHtml(content);
     const wordsPerMinute = 200;
@@ -37,16 +26,6 @@ const NewsDetail = ({ news, onBack }: NewsDetailProps) => {
 
   return (
     <article className='max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 pb-20 page-fade-in'>
-      <button
-        onClick={handleBack}
-        className='group inline-flex items-center gap-2 text-xs sm:text-sm text-[var(--text-secondary)] hover:text-[var(--primary)] mb-6 transition-colors cursor-pointer'
-      >
-        <div className='p-2 rounded-full group-hover:bg-[var(--bg-tertiary)] transition-colors'>
-          <FaArrowLeft className='text-xs sm:text-sm' />
-        </div>
-        <span className='font-medium'>Kembali</span>
-      </button>
-
       <header className='mb-6'>
         <h1 className='text-lg sm:text-xl md:text-3xl font-extrabold text-[var(--text-primary)] mb-4 leading-snug'>
           {news.title}

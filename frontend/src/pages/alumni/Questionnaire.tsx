@@ -704,19 +704,19 @@ const AlumniQuestionnaire = () => {
                 </p>
               </div>
             </div>
-            <div className='flex flex-col sm:flex-row w-full md:w-auto gap-3 mt-4 md:mt-0'>
+            <div className='flex flex-row items-center gap-2 sm:gap-3 mt-3 md:mt-0 w-full sm:w-auto'>
               <button
                 onClick={handleShareIG}
-                className='flex items-center justify-center gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]'
+                className='flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500 px-3 py-2 sm:px-6 sm:py-3 text-[11px] sm:text-xs md:text-sm font-bold text-white shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap'
               >
-                <FaInstagram className='text-base' />
+                <FaInstagram className='text-sm sm:text-base shrink-0' />
                 <span>Share ke IG Story</span>
               </button>
               <button
                 onClick={() => setIsReadOnly(false)}
-                className='flex items-center justify-center gap-2 rounded-xl bg-[var(--primary)] px-6 py-3 text-xs md:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all'
+                className='flex-1 sm:flex-initial flex items-center justify-center gap-1.5 sm:gap-2 rounded-xl bg-[var(--primary)] px-3 py-2 sm:px-6 sm:py-3 text-[11px] sm:text-xs md:text-sm font-bold text-white shadow-lg shadow-[var(--primary)]/20 hover:scale-[1.02] active:scale-[0.98] transition-all whitespace-nowrap'
               >
-                <FaEdit className='text-base' />
+                <FaEdit className='text-sm sm:text-base shrink-0' />
                 <span>Edit Data</span>
               </button>
             </div>

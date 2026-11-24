@@ -838,21 +838,21 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         {/* Back to Home Button */}
         <Link
           to='/'
-          className='pointer-events-auto inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-700 hover:text-blue-650 transition-all group bg-white/90 backdrop-blur-md px-3 sm:px-4 py-2 rounded-full border border-slate-200/90 shadow-md shrink-0'
+          className='pointer-events-auto inline-flex items-center gap-1.5 sm:gap-2 text-[11px] sm:text-sm font-bold text-slate-700 hover:text-blue-650 transition-all group bg-white/90 backdrop-blur-md px-2.5 py-1 sm:px-4 sm:py-2 rounded-full border border-slate-200/90 shadow-md shrink-0'
         >
-          <div className='p-1.5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-all'>
-            <FaArrowLeft size={11} />
+          <div className='p-1 sm:p-1.5 rounded-full bg-slate-100 text-slate-600 group-hover:bg-blue-600 group-hover:text-white transition-all'>
+            <FaArrowLeft className='text-[9px] sm:text-[11px]' />
           </div>
           <span className='hidden sm:inline'>Kembali ke Beranda</span>
           <span className='inline sm:hidden'>Beranda</span>
         </Link>
 
         {/* Mobile View Top Mode Switcher Pill with Framer Motion Layout Animation */}
-        <div className='pointer-events-auto flex lg:hidden bg-slate-200/90 p-1 rounded-full border border-slate-300/80 shadow-inner text-xs font-bold backdrop-blur-md shrink-0 relative'>
+        <div className='pointer-events-auto flex lg:hidden bg-slate-200/90 p-0.5 sm:p-1 rounded-full border border-slate-300/80 shadow-inner text-[11px] sm:text-xs font-bold backdrop-blur-md shrink-0 relative'>
           <button
             type='button'
             onClick={() => switchMode('login')}
-            className={`relative px-3.5 py-1.5 rounded-full transition-colors duration-200 ${!isSignUp ? 'text-blue-650 font-extrabold' : 'text-slate-600 hover:text-slate-900'
+            className={`relative px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full transition-colors duration-200 ${!isSignUp ? 'text-blue-650 font-extrabold' : 'text-slate-600 hover:text-slate-900'
               }`}
           >
             {!isSignUp && (
@@ -868,7 +868,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
           <button
             type='button'
             onClick={() => switchMode('register')}
-            className={`relative px-3.5 py-1.5 rounded-full transition-colors duration-200 ${isSignUp ? 'text-blue-650 font-extrabold' : 'text-slate-600 hover:text-slate-900'
+            className={`relative px-2.5 py-1 sm:px-3.5 sm:py-1.5 rounded-full transition-colors duration-200 ${isSignUp ? 'text-blue-650 font-extrabold' : 'text-slate-600 hover:text-slate-900'
               }`}
           >
             {isSignUp && (

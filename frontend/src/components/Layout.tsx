@@ -373,7 +373,7 @@ const Layout = () => {
 
   const renderNavGroups = (groups: SidebarGroup[]) => {
     return (
-      <div className='space-y-4 pb-4'>
+      <div className='space-y-2 sm:space-y-2.5 pb-2'>
         {groups.map((group) => {
           const visibleItems = group.items.filter(
             (item) => item.condition === undefined || item.condition === true,
@@ -382,12 +382,12 @@ const Layout = () => {
           if (visibleItems.length === 0) return null;
 
           return (
-            <div key={group.category} className='space-y-1'>
-              <div className='px-3 text-[10px] font-black uppercase tracking-wider text-slate-400/90 select-none'>
+            <div key={group.category} className='space-y-0.5 sm:space-y-1'>
+              <div className='px-2.5 py-0.5 text-[8.5px] sm:text-[9.5px] font-black uppercase tracking-wider text-slate-400/90 select-none'>
                 {group.category}
               </div>
 
-              <div className='space-y-1'>
+              <div className='space-y-0.5 sm:space-y-1'>
                 {visibleItems.map((item) => {
                   if (item.children && item.children.length > 0) {
                     const isChildActive = item.children.some((child) =>
@@ -399,7 +399,7 @@ const Layout = () => {
                     const Icon = item.icon;
 
                     return (
-                      <div key={item.name} className='space-y-1'>
+                      <div key={item.name} className='space-y-0.5 sm:space-y-1'>
                         <button
                           type='button'
                           onClick={() =>
@@ -408,14 +408,14 @@ const Layout = () => {
                               [item.name]: !isOpen,
                             }))
                           }
-                          className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer ${isChildActive
+                          className={`w-full flex items-center justify-between px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-[12px] font-semibold transition-all duration-200 cursor-pointer ${isChildActive
                             ? 'bg-blue-50/80 text-blue-900 border border-blue-200/80 font-bold'
                             : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
                             }`}
                         >
-                          <div className='flex items-center gap-3'>
+                          <div className='flex items-center gap-2.5'>
                             <Icon
-                              className={`text-sm shrink-0 transition-transform duration-200 ${isChildActive
+                              className={`text-xs sm:text-sm shrink-0 transition-transform duration-200 ${isChildActive
                                 ? 'text-blue-600'
                                 : 'text-slate-400'
                                 }`}
@@ -430,7 +430,7 @@ const Layout = () => {
                         </button>
 
                         {isOpen && (
-                          <div className='pl-3.5 space-y-1 border-l-2 border-slate-200/80 ml-5 my-1'>
+                          <div className='pl-3.5 space-y-0.5 sm:space-y-1 border-l-2 border-slate-200/80 ml-4 sm:ml-5 my-0.5 sm:my-1'>
                             {item.children.map((child) => {
                               const isSubActive = child.activeCheck
                                 ? location.pathname.startsWith(child.href)
@@ -441,7 +441,7 @@ const Layout = () => {
                                   key={child.href}
                                   to={child.href}
                                   onClick={() => setIsMobileMenuOpen(false)}
-                                  className={`flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-[13px] transition-all duration-200 ${isSubActive
+                                  className={`flex items-center gap-2 sm:gap-2.5 px-2.5 py-1.5 rounded-lg sm:rounded-xl text-[10.5px] sm:text-[11.5px] transition-all duration-200 ${isSubActive
                                     ? 'bg-gradient-to-r from-[#3b6ebb] to-blue-600 text-white font-bold shadow-xs'
                                     : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
                                     }`}
@@ -456,7 +456,7 @@ const Layout = () => {
                                   {typeof child.badgeCount === 'number' &&
                                     child.badgeCount > 0 && (
                                       <span
-                                        className={`ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-[10px] font-bold ${isSubActive
+                                        className={`ml-auto flex h-4 sm:h-5 min-w-[16px] sm:min-w-[20px] items-center justify-center rounded-full px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-bold ${isSubActive
                                           ? 'bg-white text-blue-700'
                                           : 'bg-rose-500 text-white animate-pulse'
                                           }`}
@@ -485,13 +485,13 @@ const Layout = () => {
                       key={item.href || item.name}
                       to={item.href!}
                       onClick={() => setIsMobileMenuOpen(false)}
-                      className={`flex items-center gap-3 px-3.5 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 group ${isActive
+                      className={`flex items-center gap-2.5 px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-lg sm:rounded-xl text-[11px] sm:text-[12px] font-semibold transition-all duration-200 group ${isActive
                         ? 'bg-blue-50/90 text-blue-900 border border-blue-200/80 shadow-xs font-bold'
                         : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900 border border-transparent'
                         }`}
                     >
                       <Icon
-                        className={`text-sm shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive
+                        className={`text-xs sm:text-sm shrink-0 transition-transform duration-200 group-hover:scale-110 ${isActive
                           ? 'text-blue-600'
                           : 'text-slate-400 group-hover:text-slate-600'
                           }`}
@@ -499,7 +499,7 @@ const Layout = () => {
                       <span className='truncate'>{item.name}</span>
                       {typeof item.badgeCount === 'number' &&
                         item.badgeCount > 0 && (
-                          <span className='ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1.5 text-[10px] font-bold text-white shadow-sm shadow-rose-500/40 animate-pulse'>
+                          <span className='ml-auto flex h-4 sm:h-5 min-w-[16px] sm:min-w-[20px] items-center justify-center rounded-full bg-rose-500 px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-bold text-white shadow-sm shadow-rose-500/40 animate-pulse'>
                             {item.badgeCount > 99 ? '99+' : item.badgeCount}
                           </span>
                         )}
@@ -898,7 +898,7 @@ const Layout = () => {
           }`}
       >
         {/* Brand Logo & Name */}
-        <div className='flex h-16 shrink-0 items-center justify-between gap-3 px-5 border-b border-slate-200/80 bg-white'>
+        <div className='flex h-[58px] sm:h-16 shrink-0 items-center justify-between gap-3 sm:gap-4 px-6 sm:px-7 border-b border-slate-200/80 bg-white'>
           <Link
             to={
               user
@@ -911,27 +911,27 @@ const Layout = () => {
                       : '/school'
                 : '/'
             }
-            className='flex items-center gap-3.5 group min-w-0 flex-1'
+            className='flex items-center gap-2.5 sm:gap-3.5 group min-w-0 flex-1'
           >
             <img
               src='/logo.png'
               alt='Logo SMANTA'
-              className='h-11 w-11 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105'
+              className='h-[30px] w-[30px] sm:h-8 sm:w-8 md:h-9 md:w-9 object-contain shrink-0 transition-transform duration-300 group-hover:scale-105'
             />
             <div className='flex flex-col min-w-0 justify-center'>
-              <span className='font-extrabold text-slate-900 text-[14px] tracking-tight leading-tight group-hover:text-blue-600 transition-colors truncate'>
+              <span className='font-extrabold text-slate-900 text-[12px] sm:text-[13px] md:text-[14px] tracking-tight leading-tight group-hover:text-blue-600 transition-colors truncate'>
                 TRACER STUDY
               </span>
-              <span className='text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 truncate'>
+              <span className='text-[8px] sm:text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-0.5 truncate leading-tight'>
                 SMAN 1 TAWANGSARI
               </span>
             </div>
           </Link>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className='rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 lg:hidden transition-colors'
+            className='rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700 lg:hidden transition-colors -mr-1'
           >
-            <FaTimes className='text-sm' />
+            <FaTimes className='text-xs' />
           </button>
         </div>
 
@@ -941,8 +941,8 @@ const Layout = () => {
         </nav>
 
         {/* Subtle Sidebar Footer */}
-        <div className='p-3 border-t border-slate-100 bg-slate-50/50 text-center select-none'>
-          <p className='text-[10px] font-semibold text-slate-400'>
+        <div className='p-2 sm:p-2.5 border-t border-slate-100 bg-slate-50/50 text-center select-none'>
+          <p className='text-[9px] sm:text-[10px] font-semibold text-slate-400'>
             Tracer Study &bull; SMANTA
           </p>
         </div>
@@ -952,9 +952,9 @@ const Layout = () => {
       <div className='flex min-w-0 flex-1 flex-col'>
         {/* Top Header Navbar */}
         {!isSmantaAiPage ? (
-          <header className='sticky top-0 z-30 flex h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md transition-colors shadow-xs'>
+          <header className='sticky top-0 z-30 flex h-[58px] sm:h-16 shrink-0 items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md transition-colors shadow-xs'>
             {/* Left: Mobile Toggle & Mobile Logo / Desktop Breadcrumbs */}
-            <div className='flex items-center gap-3 min-w-0'>
+            <div className='flex items-center gap-2 sm:gap-3 min-w-0'>
               {/* Mobile Menu Toggle Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -962,9 +962,9 @@ const Layout = () => {
                 aria-label='Buka Menu Navigasi'
               >
                 {isMobileMenuOpen ? (
-                  <FaTimes className='h-5 w-5' />
+                  <FaTimes className='h-[18px] w-[18px] sm:h-5 sm:w-5' />
                 ) : (
-                  <FaBars className='h-5 w-5' />
+                  <FaBars className='h-[18px] w-[18px] sm:h-5 sm:w-5' />
                 )}
               </button>
 
@@ -973,13 +973,13 @@ const Layout = () => {
                 <img
                   src='/logo.png'
                   alt='Logo'
-                  className='h-8 w-8 object-contain shrink-0'
+                  className='h-[30px] w-[30px] sm:h-8 sm:w-8 object-contain shrink-0'
                 />
                 <div className='min-w-0'>
-                  <div className='text-[13px] font-bold leading-tight tracking-tight text-slate-900 truncate'>
+                  <div className='text-[12px] sm:text-[13px] font-bold leading-tight tracking-tight text-slate-900 truncate'>
                     TRACER STUDY
                   </div>
-                  <p className='text-[9px] sm:text-[10px] font-medium text-slate-500 uppercase tracking-wider truncate'>
+                  <p className='text-[8px] sm:text-[9px] md:text-[10px] font-medium text-slate-500 uppercase tracking-wider truncate leading-tight mt-0.5'>
                     SMAN 1 TAWANGSARI
                   </p>
                 </div>
@@ -1004,13 +1004,13 @@ const Layout = () => {
                 <button
                   type='button'
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                  className='flex items-center gap-2 p-1 sm:gap-2.5 sm:px-2.5 sm:py-1 rounded-2xl hover:bg-slate-100/80 transition-all duration-200 focus:outline-none group cursor-pointer text-left'
+                  className='flex items-center gap-1.5 p-1 sm:gap-2.5 sm:px-2.5 sm:py-1 rounded-2xl hover:bg-slate-100/80 transition-all duration-200 focus:outline-none group cursor-pointer text-left'
                   aria-expanded={isUserDropdownOpen}
                   aria-haspopup='true'
                   aria-label={`Menu profil ${user?.profile?.fullName || user?.username || 'Pengguna'}`}
                 >
                   {/* Custom Avatar with Blue gradient */}
-                  <div className='h-9 w-9 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-xs border border-blue-500/30 group-hover:scale-105 transition-transform'>
+                  <div className='h-8 w-8 sm:h-9 sm:w-9 shrink-0 rounded-xl bg-gradient-to-tr from-[#3b6ebb] to-blue-600 flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-xs border border-blue-500/30 group-hover:scale-105 transition-transform'>
                     {getUserInitial()}
                   </div>
 
@@ -1026,7 +1026,7 @@ const Layout = () => {
 
                   {/* Dropdown Chevron Icon */}
                   <FaChevronDown
-                    className={`h-3 w-3 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ml-0.5 sm:ml-1 shrink-0 ${isUserDropdownOpen ? 'rotate-180 text-blue-600' : ''
+                    className={`h-2.5 w-2.5 sm:h-3 sm:w-3 text-slate-400 group-hover:text-slate-600 transition-transform duration-200 ml-0.5 sm:ml-1 shrink-0 ${isUserDropdownOpen ? 'rotate-180 text-blue-600' : ''
                       }`}
                   />
                 </button>

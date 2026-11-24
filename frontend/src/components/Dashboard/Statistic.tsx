@@ -48,7 +48,7 @@ const StatCard = ({
   bgClass,
   description,
 }: StatCardProps) => (
-  <div className='group relative h-full overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
+  <div className='group relative h-full overflow-hidden rounded-2xl border border-[color:var(--border-color)] bg-[color:var(--bg-card)] p-4 sm:p-5 transition-all hover:shadow-lg hover:translate-y-[-2px]'>
     {/* Soft decorative background shape */}
     <div
       className={`absolute -right-6 -top-6 h-24 w-24 rounded-full ${bgClass} opacity-40 transition-transform group-hover:scale-110`}
@@ -56,18 +56,18 @@ const StatCard = ({
 
     <div className='relative z-10 flex items-start justify-between'>
       <div>
-        <p className='text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-secondary)] mb-1.5'>
+        <p className='text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[color:var(--text-secondary)] mb-1 sm:mb-1.5'>
           {title}
         </p>
-        <h3 className='text-3xl font-bold text-[color:var(--text-primary)] tracking-tight'>
+        <h3 className='text-xl sm:text-2xl md:text-3xl font-bold text-[color:var(--text-primary)] tracking-tight'>
           {value !== undefined ? value : 0}
         </h3>
-        {description && <div className='mt-2.5'>{description}</div>}
+        {description && <div className='mt-2 sm:mt-2.5'>{description}</div>}
       </div>
       <div
-        className={`flex h-11 w-11 items-center justify-center rounded-xl border border-current/20 ${bgClass} ${colorClass} shrink-0`}
+        className={`flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-xl border border-current/20 ${bgClass} ${colorClass} shrink-0`}
       >
-        <Icon className='text-lg' />
+        <Icon className='text-sm sm:text-lg' />
       </div>
     </div>
   </div>

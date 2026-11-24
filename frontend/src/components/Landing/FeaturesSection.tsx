@@ -41,11 +41,11 @@ const FeaturesSection = () => {
           transition={{ duration: 0.6 }}
           className='text-center mb-10 sm:mb-20 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
+          <h3 className='text-xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Fitur Siswa, Alumni, dan Sekolah
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
-          <p className='text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium'>
+          <p className='text-xs sm:text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium'>
             Dirancang untuk memudahkan interaksi dan memberikan manfaat nyata bagi seluruh ekosistem SMANTA.
           </p>
         </motion.div>

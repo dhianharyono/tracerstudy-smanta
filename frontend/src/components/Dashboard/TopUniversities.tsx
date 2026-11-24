@@ -28,8 +28,10 @@ const TopUniversities = ({ data }: TopUniversitiesProps) => {
 
   return (
     <div className='card h-full flex flex-col'>
-      <h2 className='text-lg md:text-xl mb-6 flex items-center gap-3 text-text-primary font-bold'>
-        <FaUniversity className="text-blue-500" />
+      <h2 className='text-sm sm:text-base mb-6 flex items-center gap-2.5 text-text-primary font-bold'>
+        <div className='p-1.5 sm:p-2 bg-blue-500/10 rounded-lg sm:rounded-xl text-blue-500'>
+          <FaUniversity />
+        </div>
         <span>Top 10 Perguruan Tinggi</span>
       </h2>
       {!hasData ? (

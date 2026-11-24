@@ -27,11 +27,11 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
           viewport={{ once: true }}
           className='text-center mb-10 sm:mb-16 space-y-4'
         >
-          <h3 className='text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
+          <h3 className='text-xl sm:text-3xl md:text-4xl font-bold text-slate-900 tracking-tight'>
             Statistik Tracer Study
           </h3>
           <div className='w-16 md:w-20 h-1.5 bg-gradient-to-r from-blue-600 to-indigo-650 mx-auto rounded-full'></div>
-          <p className='text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium'>
+          <p className='text-xs sm:text-sm md:text-base text-slate-500 max-w-2xl mx-auto font-medium'>
             Pantau pencapaian alumni kita di berbagai sektor dan perguruan
             tinggi favorit.
           </p>
@@ -160,10 +160,10 @@ const StatsSection = ({ stats, loading }: StatsSectionProps) => {
 
             <div className='mb-10 sm:mb-16'>
               <div className='mb-8 text-center md:text-left'>
-                <h4 className='text-2xl md:text-3xl font-bold text-slate-900 tracking-tight'>
+                <h4 className='text-lg sm:text-xl md:text-2xl font-bold text-slate-900 tracking-tight'>
                   Distribusi Perguruan Tinggi
                 </h4>
-                <p className='text-sm md:text-base text-slate-500 mt-2 font-medium'>
+                <p className='text-xs sm:text-sm text-slate-500 mt-2 font-medium'>
                   Persebaran alumni SMANTA berdasarkan tipe institusi pendidikan
                   tinggi.
                 </p>
