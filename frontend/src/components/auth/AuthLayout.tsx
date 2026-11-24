@@ -449,24 +449,24 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
 
   // Reusable Login Form JSX
   const renderLoginForm = () => (
-    <div className='w-full max-w-md my-auto space-y-6 animate-fadeIn'>
+    <div className='w-full max-w-md my-auto space-y-3.5 sm:space-y-6 animate-fadeIn'>
       {/* Header */}
-      <div className='text-center space-y-2'>
-        <div className='inline-flex items-center justify-center p-3 bg-blue-50 rounded-2xl shadow-sm mb-1'>
-          <img src='/logo.png' alt='Logo SMANTA' className='h-12 w-12 filter drop-shadow-sm' />
+      <div className='text-center space-y-1.5 sm:space-y-2'>
+        <div className='inline-flex items-center justify-center p-2 sm:p-3 bg-blue-50 rounded-2xl shadow-sm mb-0.5 sm:mb-1'>
+          <img src='/logo.png' alt='Logo SMANTA' className='h-9 w-9 sm:h-12 sm:w-12 filter drop-shadow-sm' />
         </div>
-        <h2 className='text-2xl font-extrabold text-slate-900 tracking-tight'>
+        <h2 className='text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight'>
           Selamat Datang
         </h2>
-        <p className='text-xs sm:text-sm text-slate-500 font-bold'>
+        <p className='text-[11px] sm:text-xs text-slate-500 font-bold'>
           Silahkan masuk ke akun Tracer Study SMANTA
         </p>
       </div>
 
       {/* Error Message */}
       {loginError && (
-        <div className='flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-xs text-red-700 font-semibold shadow-sm animate-slide-up'>
-          <svg className='h-5 w-5 shrink-0 text-red-500' fill='currentColor' viewBox='0 0 20 20'>
+        <div className='flex items-center gap-2.5 sm:gap-3 rounded-xl border border-red-200 bg-red-50 p-3 sm:p-4 text-xs text-red-700 font-semibold shadow-sm animate-slide-up'>
+          <svg className='h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-red-500' fill='currentColor' viewBox='0 0 20 20'>
             <path
               fillRule='evenodd'
               d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
@@ -478,14 +478,14 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       )}
 
       {/* Login Form */}
-      <form onSubmit={handleLoginSubmit} className='flex flex-col gap-5'>
-        <div className='flex flex-col gap-2'>
-          <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
+      <form onSubmit={handleLoginSubmit} className='flex flex-col gap-3.5 sm:gap-5'>
+        <div className='flex flex-col gap-1.5 sm:gap-2'>
+          <label className='block text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400'>
             Username / Email
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
-              <FaUser />
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
+              <FaUser size={13} />
             </div>
             <input
               type='text'
@@ -493,18 +493,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={(e) => setLoginUsername(e.target.value)}
               required
               placeholder='Masukkan username atau email Anda'
-              className='w-full rounded-xl border border-slate-200 bg-white py-3.5 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 sm:py-3.5 pl-9 sm:pl-10 pr-4 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
           </div>
         </div>
 
-        <div className='flex flex-col gap-2'>
-          <label className='block text-xs font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1.5 sm:gap-2'>
+          <label className='block text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400'>
             Password
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
-              <FaLock />
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
+              <FaLock size={13} />
             </div>
             <input
               type={showLoginPassword ? 'text' : 'password'}
@@ -512,21 +512,21 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={(e) => setLoginPassword(e.target.value)}
               required
               placeholder='Masukkan password Anda'
-              className='w-full rounded-xl border border-slate-200 bg-white py-3.5 pl-10 pr-12 text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 sm:py-3.5 pl-9 sm:pl-10 pr-11 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
             <button
               type='button'
               onClick={() => setShowLoginPassword(!showLoginPassword)}
-              className='absolute right-0 top-0 h-full px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
+              className='absolute right-0 top-0 h-full px-3 sm:px-3.5 text-slate-400 hover:text-slate-650 transition-colors'
             >
               {showLoginPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
             </button>
           </div>
-          <div className='flex justify-end items-center mt-1'>
+          <div className='flex justify-end items-center mt-0.5 sm:mt-1'>
             <button
               type='button'
               onClick={() => switchMode('forgot')}
-              className='text-xs font-bold text-blue-650 hover:text-blue-700 hover:underline transition-colors'
+              className='text-[11px] sm:text-xs font-bold text-blue-650 hover:text-blue-700 hover:underline transition-colors'
             >
               Lupa Password?
             </button>
@@ -538,11 +538,11 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
           whileTap={{ scale: 0.99 }}
           type='submit'
           disabled={loginLoading}
-          className='w-full rounded-xl bg-gradient-to-r from-blue-600 via-blue-650 to-indigo-650 py-3.5 px-4 text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 disabled:cursor-not-allowed disabled:opacity-70 mt-2'
+          className='w-full rounded-xl bg-gradient-to-r from-blue-600 via-blue-650 to-indigo-650 py-2.5 sm:py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 disabled:cursor-not-allowed disabled:opacity-70 mt-1 sm:mt-2'
         >
           {loginLoading ? (
             <span className='flex items-center justify-center gap-2'>
-              <svg className='animate-spin h-5 w-5 text-white' fill='none' viewBox='0 0 24 24'>
+              <svg className='animate-spin h-4 w-4 sm:h-5 sm:w-5 text-white' fill='none' viewBox='0 0 24 24'>
                 <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'></circle>
                 <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path>
               </svg>
@@ -555,9 +555,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       </form>
 
       {/* Mobile Switch Link & Footer */}
-      <div className='text-center pt-4'>
-        <div className='lg:hidden pt-4 border-t border-slate-200/80'>
-          <p className='text-xs text-slate-500 font-semibold'>
+      <div className='text-center pt-2 sm:pt-4'>
+        <div className='lg:hidden pt-2.5 sm:pt-4 border-t border-slate-200/80'>
+          <p className='text-[11px] sm:text-xs text-slate-500 font-semibold'>
             Belum memiliki akun?{' '}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -569,7 +569,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
             </motion.button>
           </p>
         </div>
-        <p className='text-[11px] text-slate-400 font-semibold mt-2'>
+        <p className='text-[10px] sm:text-[11px] text-slate-400 font-semibold mt-1.5 sm:mt-2'>
           &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
         </p>
       </div>
@@ -578,24 +578,24 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
 
   // Reusable Register Form JSX
   const renderRegisterForm = () => (
-    <div className='w-full max-w-md my-auto space-y-4'>
+    <div className='w-full max-w-md my-auto space-y-2 sm:space-y-4'>
       {/* Header */}
-      <div className='text-center space-y-1.5'>
-        <div className='inline-flex items-center justify-center p-2.5 bg-blue-50 rounded-2xl shadow-sm mb-1'>
-          <img src='/logo.png' alt='Logo SMANTA' className='h-10 w-10 filter drop-shadow-sm' />
+      <div className='text-center space-y-1 sm:space-y-1.5'>
+        <div className='inline-flex items-center justify-center p-2 sm:p-2.5 bg-blue-50 rounded-2xl shadow-sm mb-0.5 sm:mb-1'>
+          <img src='/logo.png' alt='Logo SMANTA' className='h-8 w-8 sm:h-10 sm:w-10 filter drop-shadow-sm' />
         </div>
-        <h2 className='text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight'>
+        <h2 className='text-lg sm:text-2xl font-extrabold text-slate-900 tracking-tight'>
           Buat Akun Baru
         </h2>
-        <p className='text-xs sm:text-sm text-slate-500 font-bold'>
+        <p className='text-[10px] sm:text-xs text-slate-500 font-bold'>
           Bergabung dan berkontribusi di Tracer Study SMANTA
         </p>
       </div>
 
       {/* Error Message */}
       {registerError && (
-        <div className='flex items-center gap-3 rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-700 font-semibold shadow-sm animate-slide-up'>
-          <svg className='h-5 w-5 shrink-0 text-red-500' fill='currentColor' viewBox='0 0 20 20'>
+        <div className='flex items-center gap-2.5 sm:gap-3 rounded-xl border border-red-200 bg-red-50 p-2.5 sm:p-3.5 text-xs text-red-700 font-semibold shadow-sm animate-slide-up'>
+          <svg className='h-4 w-4 sm:h-5 sm:w-5 shrink-0 text-red-500' fill='currentColor' viewBox='0 0 20 20'>
             <path
               fillRule='evenodd'
               d='M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z'
@@ -607,46 +607,46 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       )}
 
       {/* Register Form */}
-      <form onSubmit={handleRegisterSubmit} className='flex flex-col gap-3'>
+      <form onSubmit={handleRegisterSubmit} className='flex flex-col gap-2 sm:gap-3'>
         {/* Role Selector */}
-        <div className='flex flex-col gap-1.5'>
-          <label className='block text-[11px] font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1 sm:gap-1.5'>
+          <label className='block text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400'>
             Pilih Akun
           </label>
-          <div className='grid grid-cols-2 gap-3'>
+          <div className='grid grid-cols-2 gap-2 sm:gap-3'>
             <button
               type='button'
               onClick={() => setRegisterData({ ...registerData, role: 'alumni' })}
-              className={`relative rounded-xl border-2 p-2.5 transition-all duration-200 flex items-center justify-center gap-2 text-center ${registerData.role === 'alumni'
+              className={`relative rounded-xl border-2 py-1.5 px-2 sm:p-2.5 transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-center ${registerData.role === 'alumni'
                 ? 'border-blue-600 bg-blue-50/60 text-blue-650 font-extrabold ring-1 ring-blue-500/30'
                 : 'border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-100/50'
                 }`}
             >
               <FaUserGraduate className={registerData.role === 'alumni' ? 'text-blue-600' : 'text-slate-400'} />
-              <span className='text-xs'>Alumni</span>
+              <span className='text-[11px] sm:text-xs'>Alumni</span>
             </button>
 
             <button
               type='button'
               onClick={() => setRegisterData({ ...registerData, role: 'student' })}
-              className={`relative rounded-xl border-2 p-2.5 transition-all duration-200 flex items-center justify-center gap-2 text-center ${registerData.role === 'student'
+              className={`relative rounded-xl border-2 py-1.5 px-2 sm:p-2.5 transition-all duration-200 flex items-center justify-center gap-1.5 sm:gap-2 text-center ${registerData.role === 'student'
                 ? 'border-blue-600 bg-blue-50/60 text-blue-650 font-extrabold ring-1 ring-blue-500/30'
                 : 'border-slate-200 bg-white text-slate-700 font-bold hover:bg-slate-100/50'
                 }`}
             >
               <FaGraduationCap className={registerData.role === 'student' ? 'text-blue-600' : 'text-slate-400'} />
-              <span className='text-xs'>Siswa Aktif</span>
+              <span className='text-[11px] sm:text-xs'>Siswa Aktif</span>
             </button>
           </div>
         </div>
 
         {/* Username */}
-        <div className='flex flex-col gap-1.5'>
-          <label className='block text-[11px] font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1 sm:gap-1.5'>
+          <label className='block text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400'>
             Username
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
               <FaUser size={13} />
             </div>
             <input
@@ -656,18 +656,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={handleRegisterChange}
               required
               placeholder='Buat username'
-              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2 sm:py-2.5 pl-8 sm:pl-9 pr-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
           </div>
         </div>
 
         {/* Email */}
-        <div className='flex flex-col gap-1.5'>
-          <label className='block text-[11px] font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1 sm:gap-1.5'>
+          <label className='block text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400'>
             Email
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
               <FaEnvelope size={13} />
             </div>
             <input
@@ -677,18 +677,18 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={handleRegisterChange}
               required
               placeholder='alamat@email.com'
-              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-4 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2 sm:py-2.5 pl-8 sm:pl-9 pr-3 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
           </div>
         </div>
 
         {/* Password */}
-        <div className='flex flex-col gap-1.5'>
-          <label className='block text-[11px] font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1 sm:gap-1.5'>
+          <label className='block text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400'>
             Password
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
               <FaLock size={13} />
             </div>
             <input
@@ -698,7 +698,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={handleRegisterChange}
               required
               placeholder='Buat password kuat'
-              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-10 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2 sm:py-2.5 pl-8 sm:pl-9 pr-10 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
             <button
               type='button'
@@ -711,7 +711,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
 
           {/* Password Strength Requirements Checklist */}
           {registerData.password.length > 0 && (
-            <div className='grid grid-cols-2 gap-x-2 gap-y-1 p-2.5 rounded-xl bg-slate-50 border border-slate-200/80 animate-slide-up text-[10px]'>
+            <div className='grid grid-cols-2 gap-x-2 gap-y-1 p-2 rounded-xl bg-slate-50 border border-slate-200/80 animate-slide-up text-[9px] sm:text-[10px]'>
               {[
                 { label: 'Min. 8 Karakter', met: registerData.password.length >= 8 },
                 { label: 'Huruf Besar & Kecil', met: /[a-z]/.test(registerData.password) && /[A-Z]/.test(registerData.password) },
@@ -734,12 +734,12 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         </div>
 
         {/* Confirm Password */}
-        <div className='flex flex-col gap-1.5'>
-          <label className='block text-[11px] font-bold uppercase tracking-widest text-slate-400'>
+        <div className='flex flex-col gap-1 sm:gap-1.5'>
+          <label className='block text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-slate-400'>
             Konfirmasi Password
           </label>
           <div className='relative'>
-            <div className='absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400'>
+            <div className='absolute inset-y-0 left-0 pl-3 sm:pl-3.5 flex items-center pointer-events-none text-slate-400'>
               <FaLock size={13} />
             </div>
             <input
@@ -749,7 +749,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
               onChange={handleRegisterChange}
               required
               placeholder='Ulangi password'
-              className='w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-9 pr-10 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
+              className='w-full rounded-xl border border-slate-200 bg-white py-2 sm:py-2.5 pl-8 sm:pl-9 pr-10 text-xs sm:text-sm text-slate-800 placeholder-slate-400 shadow-sm transition-all focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20'
             />
             <button
               type='button'
@@ -773,7 +773,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
         </div>
 
         {/* ReCAPTCHA Container */}
-        <div className='flex justify-center py-0.5 overflow-hidden transform scale-90 origin-center'>
+        <div className='flex justify-center py-0.5 overflow-hidden transform scale-[0.82] sm:scale-90 origin-center'>
           <ReCAPTCHA
             ref={captchaRef}
             sitekey={siteKey}
@@ -788,7 +788,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
           whileTap={{ scale: 0.99 }}
           type='submit'
           disabled={registerLoading}
-          className='w-full rounded-xl bg-gradient-to-r from-blue-600 via-blue-650 to-indigo-650 py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 disabled:cursor-not-allowed disabled:opacity-70 mt-1'
+          className='w-full rounded-xl bg-gradient-to-r from-blue-600 via-blue-650 to-indigo-650 py-2.5 sm:py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-lg shadow-blue-500/25 transition-all hover:shadow-blue-500/40 disabled:cursor-not-allowed disabled:opacity-70 mt-1'
         >
           {registerLoading ? (
             <span className='flex items-center justify-center gap-2'>
@@ -802,9 +802,9 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
       </form>
 
       {/* Mobile Switch Link & Footer */}
-      <div className='text-center pt-2'>
-        <div className='lg:hidden pt-3 border-t border-slate-200/80'>
-          <p className='text-xs text-slate-500 font-semibold'>
+      <div className='text-center pt-1.5 sm:pt-2'>
+        <div className='lg:hidden pt-2.5 sm:pt-3 border-t border-slate-200/80'>
+          <p className='text-[11px] sm:text-xs text-slate-500 font-semibold'>
             Sudah punya akun?{' '}
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -816,7 +816,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
             </motion.button>
           </p>
         </div>
-        <p className='text-[11px] text-slate-400 font-semibold mt-1'>
+        <p className='text-[10px] sm:text-[11px] text-slate-400 font-semibold mt-1'>
           &copy; {new Date().getFullYear()} Tracer Study SMAN 1 Tawangsari
         </p>
       </div>
@@ -894,7 +894,7 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ initialMode = 'login' }) => {
             animate={{ opacity: 1, x: '0%' }}
             exit={{ opacity: 0, x: mode === 'register' || mode === 'verify' ? '-100%' : '100%' }}
             transition={{ type: 'spring', stiffness: 260, damping: 28 }}
-            className='w-full h-full absolute inset-0 p-6 pt-20 pb-8 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
+            className='w-full h-full absolute inset-0 px-4 py-4 pt-14 sm:p-6 sm:pt-20 pb-8 flex flex-col justify-center items-center overflow-y-auto custom-scrollbar'
           >
             {mode === 'verify'
               ? renderCheckEmailScreen()
